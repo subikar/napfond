@@ -1,0 +1,80 @@
+/**
+ * GoMage Social Connector Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use
+ * @version      Release: 1.0
+ * @since        Class available since Release 1.0
+ */ 
+ 
+/* Header Fast Links
+-------------------------------------------------- */
+.header .links li{
+  float: none;
+  display: inline-block;
+  vertical-align: middle;
+  }
+.header .gs-list{
+  padding: 0 !important;
+  }
+  
+/* Fixed height for Google + */
+.gs-login [id^="___signin"]{
+  height: 20px !important;
+  vertical-align: middle !important;
+  }
+.header .gs-list.last,
+.header .gs-list .last{
+  background: none !important;
+  padding-right: 0 !important;
+  }
+  
+/* Lightcheckout
+-------------------------------------------------- */
+html .glc-login-and-paypal #gcheckout-login-link,
+html .glc-login-and-paypal .gs-login-checkout,
+html .glc-rtl.glc-login-and-paypal #gcheckout-login-link,
+html .glc-rtl.glc-login-and-paypal .gs-login-checkout{
+  float: none;
+  display: inline-block;
+  vertical-align: middle;
+  }
+  html .glc-login-and-paypal .gs-login-checkout *{
+    vertical-align: middle;
+    }
+.glc-login-and-paypal .gs-login-ee.gs-login-checkout{
+  padding: 0;
+  text-align: left;
+  }
+ 
+/* Login Page
+-------------------------------------------------- */
+.gs-login-login,
+.gs-login-checkout{
+  text-align: right;
+  padding: 5px 0;
+  }
+  .gs-login-login li{
+    padding: 0 2px;
+    }
+  .gs-login li{
+    display: inline-block;
+    vertical-align: middle;
+    }
+  .gs-login img{
+    vertical-align: middle;
+  }
+  
+/* EE
+-------------------------------------------------- */
+.gs-login-ee.gs-login-login{
+  text-align: left;
+  clear: both;
+  }
+.gs-login-ee.gs-login-checkout{
+  padding: 5px 20px;
+  text-align: left;
+  }

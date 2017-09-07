@@ -1,0 +1,545 @@
+.skin#id-lumia-1520 .box-table.image-product td00* { box-sizing: border-box }
+body { padding: 0; margin: 0; }
+.product-cc { /*width: 300px;*/ margin: 0 auto; position: relative; text-align: center }
+.product-cc img.mask-image-product { position: absolute; width: 100% }
+.product-cc img.image-product { padding: 0 5px }
+.box-table td { background-size: 100% 100%; background-position: center center }
+.box-table { position: absolute }
+.box-table.mask-image-product { z-index: 998 }
+.box-table img { visibility: hidden; width: 100% }
+.box-table.image-product td { background-size: 90% 100% }
+.pro-feature .hidden-img-cc { width: 100% }
+.col-sm-3.item { margin-bottom: 45px }
+.pro-feature h4 { min-height: 100px }
+.case#id-galaxy-s-duos-2-s7582-trend-plus-s7580 .box-table.image-product td { background-size: 105% 100% }
+.case#id-xiaom-mi2 .box-table.image-product td { background-size: 100% 100% }
+.case#id-ipod-touch-5 .box-table.image-product td { background-size: 95% 100% }
+.case#id-ipod-touch-4 .box-table.image-product td { background-size: 95% 100% }
+.case#id-e6 .box-table.image-product td { background-size: 90% 100% }
+.case#id-lg-g3 .box-table.image-product td { background-size: 100% 100% }
+.case#id-galaxy-s-advanced .box-table.image-product td { background-size: 94% 93% }
+.case#id-samsung-trend-2-duos .box-table.image-product td { background-size: 90% 100% }
+.case#id-galaxy-xcover-2 .box-table.image-product td { background-size: 103% 100% }
+.case#id-moto-x2 .box-table.image-product td { background-size: 80% 100% }
+.case#id-iphone-6-plus .box-table.image-product td { background-size: 80% 100% }
+.case#id-iphone-5c .box-table.image-product td { background-size: 96% 100% }
+.case#id-iphone-5-5s .box-table.image-product td { background-size: 95% 100% }
+.case#id-lg-google-nexus-4 .box-table.image-product td { background-size: 104% 100% }
+.case#id-lg-google-nexus-5 .box-table.image-product td { background-size: 100% 100% }
+.case#id-sony-xperia-z3 .box-table.image-product td { background-size: 83% 100% }
+.case#id-htc-one-s .box-table.image-product td { background-size: 83% 100% }
+.case#id-galaxy-core .box-table.image-product td { background-size: 97% 100% }
+.case#id-lg-l70 .box-table.image-product td { background-size: 100% 100% }
+.case#id-lumia-520 .box-table.image-product td { background-size: 108% 101% }/**/
+.case#id-galaxy-s4 .box-table.image-product td { background-size: 102% 100% }
+.case#id-galaxy-ace-4 .box-table.image-product td { background-size: 100% 100% }
+.case#id-galaxy-nexus-i9250 .box-table.image-product td { background-size: 100% 100% }
+.case#id-moto-g .box-table.image-product td { background-size: 93% 93% }
+.case#id-moto-g2 .box-table.image-product td { background-size: 99% 100% }
+.case#id-moto-google-nexus-6 .box-table.image-product td { background-size: 103% 100% }
+.case#id-sony-xperia-z1 .box-table.image-product td { background-size: 103% 100% }
+.case#id-sony-xperia-z2 .box-table.image-product td { background-size: 101% 100% }
+.case#id-htc-one-m8 .box-table.image-product td { background-size: 95% 99% } /*26-11*/
+.case#id-htc-one-m7 .box-table.image-product td { background-size: 94% 101% } /*26-11*/
+.case#id-htc-one-mini .box-table.image-product td { background-size: 82% 100% }
+.case#id-xiaomi-redmi-1s .box-table.image-product td { background-size: 94% 96% }
+.case#id-lg-g2 .box-table.image-product td { background-size: 100% 100% }
+.case#id-galaxy-s4-mini .box-table.image-product td { background-size: 99% 100% }
+.case#id-galaxy-grand-2-g7106 .box-table.image-product td { background-size: 102% 100% }
+.case#id-galaxy-note-4 .box-table.image-product td { background-size: 85% 100% }
+.case#id-galaxy-s5-mini .box-table.image-product td { background-size: 85% 100% }
+.case#id-galaxy-ace-3 .box-table.image-product td { background-size: 103% 100% }
+.case#id-moto-razr-d3 .box-table.image-product td { background-size: 85% 100% }
+.case#id-sony-xperia-z1-mini .box-table.image-product td { background-size: 100% 99% }
+.case#id-htc-desire-816 .box-table.image-product td { background-size: 85% 100% }
+.case#id-nexus-5 .box-table.image-product td { background-size: 100% 100% }
+.case#id-bb-z10 .box-table.image-product td { background-size: 100% 100% }
+.case#id-iphone-4-4s .box-table.image-product td { background-size: 85% 100% }
+.case#id-galaxy-s-duos .box-table.image-product td { background-size: 104% 100% }
+.case#id-iphone-6 .box-table.image-product td { background-size: 78% 100% }
+.case#id-galaxy-alpha .box-table.image-product td { background-size: 99% 100% }
+.case#id-bb-q10 .box-table.image-product td { background-size: 112% 99%; }
+.case#id-bb-9900 .box-table.image-product td { background-size: 117% 100%; }
+.case#id-nexus-4 .box-table.image-product td { background-size: 100% 100%; }
+.case#id-nexus-7 .box-table.image-product td { background-size: 115% 100%; }
+.case#id-lg-optimus-g-e975 .box-table.image-product td { background-size: 100% 100%; }
+.case#id-lg-optimus-g-e975 .box-table.image-product td { background-size: 100% 100%; }
+.case#id-lg-l90 .box-table.image-product td { background-size: 100% 100%; }
+.case#id-lumia-920 .box-table.image-product td { background-size: 110% 100%; }
+.case#id-lumia-620 .box-table.image-product td { background-size: 113% 100%; }
+.case#id-galaxy-s3 .box-table.image-product td { background-size: 106% 100%; }
+.case#id-galaxy-s4-mini .box-table.image-product td { background-size: 99% 100%; }
+.case#id-galaxy-s3-mini .box-table.image-product td { background-size: 102% 100%; }
+.case#id-galaxy-s5 .box-table.image-product td { background-size: 101% 100%; }
+.case#id-galaxy-grand-2-g7106 .box-table.image-product td { background-size: 102% 100%; }
+.case#id-galaxy-grand-i9080-i9082 .box-table.image-product td { background-size: 105% 100%; }
+.case#id-galaxy-note-2-n7100 .box-table.image-product td { background-size: 106% 100%; }
+.case#id-galaxy-note-3 .box-table.image-product td { background-size: 105% 100%; }
+.case#id-galaxy-note-4 .box-table.image-product td { background-size: 105% 100%; }
+.case#id-galaxy-s5-mini .box-table.image-product td { background-size: 100% 100%; }
+.case#id-galaxy-ace-plus .box-table.image-product td { background-size: 110% 100%; }
+.case#id-galaxy-grand-duos .box-table.image-product td { background-size: 107% 100%; }
+.case#id-galaxy-ace-2 .box-table.image-product td { background-size: 106% 100%; }
+.case#id-galaxy-ace-3 .box-table.image-product td { background-size: 103% 100%; }
+.case#id-galaxy-ace .box-table.image-product td { background-size: 106% 100%; }
+.case#id-galaxy-win .box-table.image-product td { background-size: 107% 100%; }
+.case#id-galaxy-mega-6-3-i9200 .box-table.image-product td { background-size: 106% 100%; }
+.case#id-galaxy-mega-5-8 .box-table.image-product td { background-size: 100% 100%; }
+.case#id-galaxy-y .box-table.image-product td { background-size: 111% 100%; }
+.case#id-galaxy-tab3-7-0 .box-table.image-product td { background-size: 118% 100%; }/**/
+.case#id-galaxy-tab3-8-0 .box-table.image-product td { background-size: 118% 100%; }/**/
+.case#id-galaxy-tab3-10-1 .box-table.image-product td { background-size: 125% 100%; }/**/
+.case#id-galaxy-note-10-1 .box-table.image-product td { background-size: 127% 100%; }
+.case#id-galaxy-tab-2 .box-table.image-product td { background-size: 125% 100%; }/**/
+.case#id-galaxy-alpha .box-table.image-product td { background-size: 99% 100%; }/**/
+.case#id-galaxy-nexus .box-table.image-product td { background-size: 97% 100%; }/**/
+.case#id-galaxy-xcover-2 .box-table.image-product td { background-size: 103% 100%; }
+.case#id-moto-x .box-table.image-product td { background-size: 101% 100%; }
+.case#id-moto-g2 .box-table.image-product td { background-size: 100% 100%; }
+.case#id-moto-razr-d3 .box-table.image-product td { background-size: 98% 99%; }
+.case#id-moto-razr-d1 .box-table.image-product td { background-size: 95% 88%; }
+.case#id-moto-x2 .box-table.image-product td { background-size: 101% 96%; }/**/
+.case#id-sony-xperia-z3 .box-table.image-product td { background-size: 100% 100%; }
+.case#id-sony-xperia-z2 .box-table.image-product td { background-size: 101% 100%; }
+.case#id-sony-xperia-z1-mini .box-table.image-product td { background-size: 100% 99%; }
+.case#id-sony-xperia-m2 .box-table.image-product td { background-size: 97% 92%; }
+.case#id-sony-xperia-sp .box-table.image-product td { background-size: 118% 101%; }/**/
+.case#id-htc-one-s .box-table.image-product td { background-size: 100% 100%; }
+.case#id-htc-sensation-xl-g21 .box-table.image-product td { background-size: 113% 103%; }/*26-11*/
+.case#id-htc-one-mini .box-table.image-product td { background-size: 95% 100%; }
+.case#id-htc-one-x .box-table.image-product td { background-size: 100% 100%; }
+.case#id-htc-desire-816 .box-table.image-product td { background-size: 100% 100%; }
+.case#id-iphone-4-4s .box-table.image-product td { background-size: 102% 100%; }
+.case#id-iphone-6 .box-table.image-product td { background-size: 96% 100%; }
+.case#id-iphone-6-plus .box-table.image-product td { background-size: 95% 100%; }
+.case#id-xiaomi-redmi-1s .box-table.image-product td { background-size: 94% 96%; }
+.case#id-bb-q10 .box-table.image-product td { background-size: 112% 99%; }
+.case#id-google-nexus-7 .box-table.image-product td { background-size: 115% 100%; }
+.case#id-asus-google-nexus-7 .box-table.image-product td { background-size: 96% 101%; }
+.case#id-sony-xperia-z .box-table.image-product td { background-size: 104% 100%; }
+.case#id-moto-e .box-table.image-product td { background-size: 105% 100%; }/*26-11*/
+.case#id-galaxy-note-8-0 .box-table.image-product td { background-size: 92% 98%; }
+.case#id-galaxy-note-10-1 .box-table.image-product td { background-size: 127% 100%; }
+.case#id-optimus-l70 .box-table.image-product td { background-size: 94% 92%; }
+.case#id-optimus-g2 .box-table.image-product td { background-size: 94% 93%; }
+.case#id-optimus-g3	.box-table.image-product td { background-size: 108% 100%; }
+.case#id-ipad-mini-retina .box-table.image-product td { background-size: 124% 100%; }
+.case#id-ipad-air .box-table.image-product td { background-size: 124% 100%; }
+.case#id-ipad-air-2 .box-table.image-product td { background-size: 124% 100%; }
+.case#id-ipad-mini-2 .box-table.image-product td { background-size: 124% 100%; }
+.case#id-galaxy-s2 .box-table.image-product td { background-size: 115% 101%; }/**/
+.case#id-ipad-2 .box-table.image-product td { background-size: 124% 100%; }/**/
+.case#id-ipad-3 .box-table.image-product td { background-size: 124% 100%; }/**/
+.case#id-ipad-4 .box-table.image-product td { background-size: 124% 100%; }/**/
+.case#id-optimus-l90 .box-table.image-product td { background-size: 95% 92%; }/**/
+.case#id-xiaomi-mi2 .box-table.image-product td { background-size: 94% 91%; }/**/
+.case#id-xiaomi-redmi-1s .box-table.image-product td {background-size: 94% 96%;}
+
+
+/*********  20/05/2016     *************/
+
+.case#id-iphone-6s-plus .box-table.image-product td {background-size: 95% 100%;} /* 20/5/2016*/
+.case#id-iphone-6s .box-table.image-product td {background-size: 95% 100%;} /* 20/5/2016*/
+.case#id-bb-9900 .box-table.image-product td {background-size: 117% 100%;} /* 20/5/2016*/
+.case#id-google-nexus-7 .box-table.image-product td {background-size: 94% 82%;} /* 20/5/2016*/
+.case#id-htc-one-m8 .box-table.image-product td {background-size: 95% 99%;} /* 20/5/2016*/
+.case#id-optimus-g3 .box-table.image-product td {background-size: 102% 102%;} /* 20/5/2016*/
+.case#id-lg-optimus-l5-ii-e460 .box-table.image-product td {background-size: 99% 100%;} /* 20/5/2016*/
+.case#id-moto-g3 .box-table.image-product td {background-size: 100% 100%;} /* 20/5/2016*/
+.case#id-redmi-note-3 .box-table.image-product td {background-size: 96% 95%;} /* 20/5/2016*/
+.case#id-htc-desire-828 .box-table.image-product td {background-size: 96% 98%;} /* 20/5/2016*/
+.case#id-sony-xperia-sp .box-table.image-product td {background-size: 117% 102%;} /* 20/5/2016*/
+.case#id-htc-one-x .box-table.image-product td {background-size: 103% 100%;} /* 20/5/2016*/
+.case#id-htc-sensation-xl-g21 .box-table.image-product td {background-size: 111% 102%;} /* 20/5/2016*/
+.case#id-lumia-520 .box-table.image-product td {background-size: 108% 101%;} /* 20/5/2016*/
+.case#id-galaxy-core .box-table.image-product td {background-size: 97% 100%;} /* 20/5/2016*/
+.case#id-galaxy-note-8-0 .box-table.image-product td {background-size: 92% 98%;} /* 20/5/2016*/
+.case#id-galaxy-tab-2 .box-table.image-product td {background-size: 125% 100%;} /* 20/5/2016*/
+.case#id-ipad-mini-retina .box-table.image-product td {background-size: 124% 100%;} /* 20/5/2016*/
+.case#id-s6-edge .box-table.image-product td {background-size: 102% 100%;} /* 23/5/2016*/
+
+.case#id-asus-zenfone-max .box-table.image-product td {background-size: 90% 100%;}   /*11/06/2016 */
+.case#id-asus-zenfone-5 .box-table.image-product td {background-size: 97% 99%;}   /*11/06/2016 */
+.case#id-moto-g-turbo .box-table.image-product td {background-size: 100% 100%;}   /*11/06/2016 */
+.case#id-moto-x-force .box-table.image-product td {background-size: 100% 100%;}   /*11/06/2016 */
+.case#id-xiaomi-mi4 .box-table.image-product td {background-size: 97% 99%;}   /*11/06/2016 */
+.case#id-galaxy-j5 .box-table.image-product td {background-size: 100% 100%;}   /*11/06/2016 */
+.case#id-galaxy-note-5 .box-table.image-product td {background-size: 97% 99%;}   /*11/06/2016 */
+.case#id-galaxy-s7 .box-table.image-product td {background-size: 97% 99%;}   /*11/06/2016 */
+.case#id-htc-one-m9 .box-table.image-product td {background-size: 94% 99%;}   /*11/06/2016 */
+.case#id-htc-one-m9-plus .box-table.image-product td {background-size: 94% 99%;}   /*11/06/2016 */
+
+
+
+/*********  21/06/2016     *************/
+
+.case#id-htc-one-a9 .box-table.image-product td {background-size: 94% 99%;}   /*21/06/2016 */
+.case#id-htc-one-m8-mini .box-table.image-product td {background-size: 96% 100%;} /*21/06/2016 */
+.case#id-lg-g4-dual .box-table.image-product td {background-size: 101% 99%;} /*21/06/2016 */
+.case#id-moto-x3 .box-table.image-product td {background-size: 101% 99%;} /*21/06/2016 */
+.case#id-letv-1s .box-table.image-product td {background-size: 95% 100%;} /*21/06/2016 */
+.case#id-oneplus-two .box-table.image-product td {background-size: 98% 100%;} /*21/06/2016 */
+.case#id-oneplus-one .box-table.image-product td {background-size: 99% 99%;} /*21/06/2016 */
+.case#id-oneplus-x .box-table.image-product td {background-size: 95% 100%;} /*21/06/2016 */
+.case#id-asus-zenfone-max .box-table.image-product td {background-size: 96% 98%;} /*21/06/2016 */
+.case#id-asus-zenfone-5 .box-table.image-product td {background-size: 98% 98%;} /*21/06/2016 */
+.case#id-xiaomi-mi5 .box-table.image-product td {background-size: 94% 99%;} /*21/06/2016 */
+
+
+/*********  22/06/2016     *************/
+.case#id-galaxy-s7-edge .box-table.image-product td {background-size: 96% 99%;} /*22/06/2016 */
+.case#id-galaxy-s6-edge .box-table.image-product td {background-size: 95% 99%;} /*22/06/2016 */
+.case#id-galaxy-s6 .box-table.image-product td {background-size: 99% 99%;} /*22/06/2016 */
+.case#id-galaxy-note-5-edge .box-table.image-product td {background-size: 95% 99%;} /*22/06/2016 */
+.case#id-galaxy-a7 .box-table.image-product td {background-size: 99% 100%;} /*22/06/2016 */
+.case#id-galaxy-a5 .box-table.image-product td {background-size: 99% 100%;} /*22/06/2016 */
+.case#id-galaxy-e7 .box-table.image-product td {background-size: 95% 94%;} /*22/06/2016 */
+.case#id-galaxy-a8 .box-table.image-product td {background-size: 92% 97%;} /*22/06/2016 */
+.case#id-galaxy-j7 .box-table.image-product td {background-size: 96% 95%;} /*22/06/2016 */
+
+
+/*********  16/09/2016     *************/
+
+.case#id-htc-one-m10 .box-table.image-product td { background-size: 99% 100%; }/* 16/09/2016*/
+.case#id-htc-desire-826 .box-table.image-product td { background-size: 99% 100%; }/* 16/09/2016*/
+
+.case#id-moto-x-style .box-table.image-product td { background-size: 99% 100%; }/* 16/09/2016*/
+.case#id-moto-z-force .box-table.image-product td { background-size: 100% 100%; }/* 16/09/2016*/
+.case#id-moto-g4-plus .box-table.image-product td { background-size: 97% 100%; }/* 16/09/2016*/
+.case#id-xiaomi-mi2 .box-table.image-product td { background-size: 94% 91%; }/* 16/09/2016*/
+.case#id-galaxy-s2 .box-table.image-product td { background-size: 115% 101%; }/* 16/09/2016*/
+
+.case#id-asus-zenfone-2-laser-ze601kl .box-table.image-product td { background-size: 99% 99%; }/* 16/09/2016*/
+.case#id-asus-zenfone-2-ze551ml .box-table.image-product td { background-size: 100% 100%; }/* 16/09/2016*/
+.case#id-asus-zenfone-3-deluxe-zs570kl .box-table.image-product td { background-size: 100% 100%; }/* 16/09/2016*/
+.case#id-asus-zenfone-3-ultra-zu680kl .box-table.image-product td { background-size: 100% 100%; }/*16/09/2016*/
+.case#id-asus-zenfone-3-ze552kl .box-table.image-product td { background-size: 100% 100%; }/*16/09/2016*/
+.case#id-asus-zenfone-selfie-zd551kl .box-table.image-product td { background-size: 100% 100%; }/*16/09/2016*/
+
+.case#id-xiaomi-mi-max .box-table.image-product td { background-size: 100% 100%; }/*16/09/2016*/
+.case#id-xiaomi-redmi-3s .box-table.image-product td { background-size: 100% 100%; }/*16/09/2016*/
+.case#id-xiaomi-redmi-note-2 .box-table.image-product td { background-size: 100% 100%; }/*16/09/2016*/
+
+.case#id-oneplus-3 .box-table.image-product td { background-size: 99% 100%; }/*16/09/2016*/
+
+.case#id-galaxy-note-7 .box-table.image-product td { background-size: 100% 100%; }/*16/09/2016*/
+.case#id-galaxy-j2 .box-table.image-product td { background-size: 100% 100%; }/*16/09/2016*/
+.case#id-galaxy-j3-pro .box-table.image-product td { background-size: 100% 100%; }/*16/09/2016*/
+
+.case#id-leeco-le-max-2 .box-table.image-product td { background-size: 100% 100%; }/*16/09/2016*/
+
+.case#id-vivo-x5pro .box-table.image-product td { background-size: 100% 100%; }/*16/09/2016*/
+.case#id-vivo-v1-max .box-table.image-product td { background-size: 99% 100%; }/*16/09/2016*/
+.case#id-vivo-v3-max .box-table.image-product td { background-size: 100% 100%; }/*16/09/2016*/
+.case#id-vivo-x7 .box-table.image-product td { background-size: 100% 100%; }/*16/09/2016*/
+
+.case#id-gionee-s6 .box-table.image-product td { background-size: 100% 100%; }/*16/09/2016*/
+.case#id-gionee-marathon-m5 .box-table.image-product td { background-size: 100% 100%; }/*16/09/2016*/
+.case#id-gionee-marathon-m5-lite .box-table.image-product td { background-size: 100% 100%; }/*16/09/2016*/
+.case#id-gionee-marathon-m5-plus .box-table.image-product td { background-size: 100% 100%; }/*16/09/2016*/
+.case#id-gionee-elife-e8 .box-table.image-product td { background-size: 100% 100%; }/*16/09/2016*/
+
+.case#id-huawei-honor-8 .box-table.image-product td { background-size: 100% 100%; }/*16/09/2016*/
+.case#id-huawei-honor-v8 .box-table.image-product td { background-size: 100% 100%; }/*16/09/2016*/
+
+.case#id-microsoft-lumia-950-xl .box-table.image-product td { background-size: 100% 100%; }/*16/09/2016*/
+
+
+/*********  21/09/2016     *************/
+
+.case#id-moto-x-play .box-table.image-product td { background-size: 100% 100%; }/**/
+
+.case#id-yu-yunicorn .box-table.image-product td { background-size: 100% 100%; }/**/
+.case#id-yu-yuphoria .box-table.image-product td { background-size: 100% 100%; }/**/
+.case#id-yu-yureka .box-table.image-product td { background-size: 100% 100%; }/**/
+.case#id-yu-yureka-plus .box-table.image-product td { background-size: 100% 100%; }/**/
+
+.case#id-vivo-v1 .box-table.image-product td { background-size: 100% 100%; }/**/
+.case#id-vivo-v3 .box-table.image-product td { background-size: 100% 100%; }/**/
+.case#id-vivo-y15s .box-table.image-product td { background-size: 100% 100%; }/**/
+
+.case#id-micromax-canvas-5-e481 .box-table.image-product td { background-size: 100% 100%; }/**/
+.case#id-micromax-canvas-juice-3-q394 .box-table.image-product td { background-size: 100% 100%; }/**/
+
+.case#id-microsoft-lumia-550 .box-table.image-product td { background-size: 100% 100%; }/**/
+.case#id-microsoft-lumia-650 .box-table.image-product td { background-size: 100% 100%; }/**/
+
+.case#id-leeco-le-2 .box-table.image-product td { background-size: 100% 100%; }/**/
+
+.case#id-htc-desire-626 .box-table.image-product td { background-size: 100% 100%; }/**/
+.case#id-htc-desire-728-dual-sim .box-table.image-product td { background-size: 100% 100%; }/**/
+.case#id-htc-desire-820 .box-table.image-product td { background-size: 100% 100%; }/**/
+
+
+
+
+
+
+
+/***************************************************************************************************/
+
+/*********  24/06/2016     *************/
+
+.skin#id-one-plus-one .box-table.image-product td { background-size: 100% 100%; }
+.skin#id-moto-xt319 .box-table.image-product td { background-size: 108% 99%; }
+.skin#id-lg-optimus-l9 .box-table.image-product td { background-size: 102% 99%; }
+.skin#id-ipad-mini-mini-2 .box-table.image-product td { background-size: 134% 100%; }
+.skin#id-ipad-air-air-2 .box-table.image-product td { background-size: 136% 100%; }
+.skin#id-ipad-2-3-4 .box-table.image-product td { background-size: 127% 100%; }
+.skin#id-iphone-4-4s .box-table.image-product td { background-size: 104% 102%; }
+.skin#id-z30 .box-table.image-product td { background-size: 100% 100%; }
+.skin#id-e3 .box-table.image-product td { background-size: 103% 99%; }
+.skin#id-e7 .box-table.image-product td { background-size: 100% 99%; }
+.skin#id-htc-desire-310 .box-table.image-product td { background-size: 101% 98%; }
+.skin#id-htc-desire-316 .box-table.image-product td { background-size: 101% 98%; }
+.skin#id-htc-desire-500 .box-table.image-product td { background-size: 99% 98%; }
+.skin#id-htc-desire-600 .box-table.image-product td { background-size: 98% 98%; }
+.skin#id-htc-desire-616 .box-table.image-product td { background-size: 100% 98%; }
+.skin#id-htc-desire-816 .box-table.image-product td { background-size: 100% 98%; }
+.skin#id-htc-desire-hd-2 .box-table.image-product td { background-size: 97% 98%; }
+.skin#id-htc-desire-s .box-table.image-product td { background-size: 103% 98%; }
+.skin#id-htc-evo-3d .box-table.image-product td { background-size: 102% 99%; }
+.skin#id-htc-butterfly-s .box-table.image-product td { background-size: 103% 98%; }
+.skin#id-htc-one-dual-sim .box-table.image-product td { background-size: 100% 100%; }
+.skin#id-htc-one-max .box-table.image-product td { background-size: 100% 99%; }
+.skin#id-htc-one-x .box-table.image-product td { background-size: 103% 98%; }
+.skin#id-htc-one-s .box-table.image-product td { background-size: 98% 98%; }
+.skin#id-a680 .box-table.image-product td { background-size: 101% 98%; }
+.skin#id-a706 .box-table.image-product td { background-size: 100% 98%; }
+.skin#id-a850 .box-table.image-product td { background-size: 102% 98%; }
+.skin#id-k900 .box-table.image-product td { background-size: 100% 98%; }
+.skin#id-p780 .box-table.image-product td { background-size: 100% 98%; }
+.skin#id-s650 .box-table.image-product td { background-size: 99% 98%; }
+.skin#id-s660 .box-table.image-product td { background-size: 100% 98%; }
+.skin#id-s820 .box-table.image-product td { background-size: 100% 98%; }
+.skin#id-s850 .box-table.image-product td { background-size: 101% 98%; }
+.skin#id-s890 .box-table.image-product td { background-size: 102% 98%; }
+.skin#id-lg-optimus-4x-hd-p880 .box-table.image-product td { background-size: 102% 98%; }
+.skin#id-lg-g-flex-d958 .box-table.image-product td { background-size: 101% 98%; }
+.skin#id-lg-l70 .box-table.image-product td { background-size: 100% 100%; }
+.skin#id-lg-l9 .box-table.image-product td { background-size: 100% 100%; }
+.skin#id-lg-l90 .box-table.image-product td { background-size: 100% 100%; }
+.skin#id-lg-google-nexus-4 .box-table.image-product td { background-size: 102% 98%; }
+.skin#id-lg-google-nexus-5 .box-table.image-product td { background-size: 99% 98%; }
+.skin#id-lg-optimus-g2 .box-table.image-product td { background-size: 100% 98%; }
+.skin#id-lg-g3 .box-table.image-product td { background-size: 100% 100%; }
+.skin#id-moto-g2 .box-table.image-product td { background-size: 103% 100%; }
+.skin#id-moto-defy-xt535 .box-table.image-product td { background-size: 102% 98%; }
+.skin#id-moto-e .box-table.image-product td { background-size: 102% 98%; }
+.skin#id-moto-g .box-table.image-product td { background-size: 100% 98%; }
+.skin#id-moto-x .box-table.image-product td { background-size: 101% 98%; }
+.skin#id-moto-razr-vxt-885-889 .box-table.image-product td { background-size: 102% 98%; }
+.skin#id-lumia-1520 .box-table.image-product td { background-size: 105% 99%; }
+.skin#id-lumia-530 .box-table.image-product td { background-size: 100% 100%; }
+.skin#id-lumia-603 .box-table.image-product td { background-size: 101% 98%; }
+.skin#id-lumia-610 .box-table.image-product td { background-size: 102% 98%; }
+.skin#id-lumia-620 .box-table.image-product td { background-size: 105% 100%; }
+.skin#id-lumia-630 .box-table.image-product td { background-size: 98% 98%; }
+.skin#id-lumia-800 .box-table.image-product td { background-size: 104% 99%; }
+.skin#id-galaxy-ace-3 .box-table.image-product td { background-size: 101% 98%; }
+.skin#id-xiaomi-mi3 .box-table.image-product td { background-size: 105% 99%; }
+.skin#id-sony-xperia-z3 .box-table.image-product td { background-size: 103% 100%; }
+.skin#id-sony-xperia-z-ultra .box-table.image-product td { background-size: 100% 100%; }
+.skin#id-sony-xperia-z .box-table.image-product td { background-size: 103% 99%; }
+.skin#id-sony-xperia-t2-ultra .box-table.image-product td { background-size: 98% 100%; }
+.skin#id-sony-xperia-t .box-table.image-product td { background-size: 100% 100%; }
+.skin#id-sony-xperia-sp .box-table.image-product td { background-size: 99% 100%; }
+.skin#id-sony-xperia-neo-l .box-table.image-product td { background-size: 99% 100%; }
+.skin#id-galaxy-trend-3 .box-table.image-product td { background-size: 102% 99%; }
+.skin#id-galaxy-trend-2 .box-table.image-product td { background-size: 102% 97%; }
+.skin#id-galaxy-trend .box-table.image-product td { background-size: 102% 98%; }
+.skin#id-galaxy-s5-mini .box-table.image-product td { background-size: 100% 100%; }
+.skin#id-galaxy-s3-mini .box-table.image-product td { background-size: 101% 98%; }
+.skin#id-galaxy-s3 .box-table.image-product td { background-size: 101% 98%; }
+.skin#id-sony-xperia-j .box-table.image-product td { background-size: 99% 100%; }
+.skin#id-galaxy-grand-2-g7106 .box-table.image-product td { background-size: 102% 98%; }
+.skin#id-galaxy-s-advanced .box-table.image-product td { background-size: 100% 100%; }
+.skin#id-galaxy-s-advance .box-table.image-product td { background-size: 102% 98%; }
+.skin#id-galaxy-note-4 .box-table.image-product td { background-size: 101% 98%; }
+.skin#id-galaxy-note-n7000 .box-table.image-product td { background-size: 105% 98%; }
+.skin#id-galaxy-s5 .box-table.image-product td { background-size: 103% 98%; }
+.skin#id-galaxy-mega-5-8 .box-table.image-product td { background-size: 102% 98%; }
+.skin#id-galaxy-nexus .box-table.image-product td { background-size: 99% 99%; }
+.skin#id-galaxy-s-duos .box-table.image-product td { background-size: 101% 98%; }
+.skin#id-moto-razr-d3 .box-table.image-product td { background-size: 100% 100%; }
+.skin#id-galaxy-s4 .box-table.image-product td { background-size: 101% 99%; }
+.skin#id-sony-xperia-m2 .box-table.image-product td { background-size: 99% 100%; }
+.skin#id-sony-xperia-s .box-table.image-product td { background-size: 97% 100%; }
+.skin#id-sony-xperia-sola .box-table.image-product td { background-size: 97% 99%; }
+.skin#id-sony-xperia-t3 .box-table.image-product td { background-size: 100% 100%; }
+.skin#id-sony-xperia-z1-mini .box-table.image-product td { background-size: 100% 100%; }
+.skin#id-vibe-x .box-table.image-product td { background-size: 103% 100%; }
+.skin#id-sony-xperia-z2 .box-table.image-product td { background-size: 100% 99%; }
+.skin#id-moto-x2 .box-table.image-product td { background-size: 100% 100%; }
+.skin#id-iphone-6 .box-table.image-product td { background-size: 100% 102%; }
+.skin#id-iphone-6-plus .box-table.image-product td { background-size: 100% 102%; }
+.skin#id-bb-z10 .box-table.image-product td { background-size: 94% 99%; }
+.skin#id-e6 .box-table.image-product td { background-size: 96% 99%; }
+.skin#id-elife-e7-mini .box-table.image-product td { background-size: 98% 98%; }
+.skin#id-elife-s5-5 .box-table.image-product td { background-size: 100% 98%; }
+.skin#id-htc-one-e8 .box-table.image-product td { background-size: 95% 98%; }
+.skin#id-htc-one-m8-mini .box-table.image-product td { background-size: 95% 100%; }
+.skin#id-htc-desire-700 .box-table.image-product td { background-size: 98% 98%; }
+.skin#id-htc-butterfly .box-table.image-product td { background-size: 98% 98%; }
+.skin#id-htc-one-m8 .box-table.image-product td { background-size: 88% 92%; }
+.skin#id-htc-one-mini .box-table.image-product td { background-size: 95% 100%; }
+.skin#id-htc-one-m7 .box-table.image-product td { background-size: 84% 88%; }
+.skin#id-htc-one-v .box-table.image-product td { background-size: 97% 99%; }
+.skin#id-a516 .box-table.image-product td { background-size: 97% 98%; }
+.skin#id-s920 .box-table.image-product td { background-size: 100% 98%; }
+.skin#id-vibe-x2 .box-table.image-product td { background-size: 98% 99%; }
+.skin#id-sony-xperia-u .box-table.image-product td { background-size: 95% 100%; }
+.skin#id-find-7 .box-table.image-product td { background-size: 100% 98%; }
+.skin#id-n1 .box-table.image-product td { background-size: 100% 99%; }
+.skin#id-n1-mini .box-table.image-product td { background-size: 97% 98%; }
+.skin#id-r1-r829t .box-table.image-product td { background-size: 102% 98%; }
+.skin#id-find-5-x909 .box-table.image-product td { background-size: 99% 98%; }
+.skin#id-galaxy-alpha .box-table.image-product td { background-size: 98% 99%; }
+.skin#id-xiaomi-redmi-note .box-table.image-product td { background-size: 95% 100%; }
+.skin#id-xiaomi-redmi-1s .box-table.image-product td { background-size: 95% 100%; }
+.skin#id-xiaomi-mi2 .box-table.image-product td { background-size: 97% 99%; }
+.skin#id-sony-xperia-p .box-table.image-product td { background-size: 95% 100%; }
+.skin#id-galaxy-s4-zoom .box-table.image-product td { background-size: 99% 99%; }
+.skin#id-galaxy-s4-mini .box-table.image-product td { background-size: 94% 98%; }
+.skin#id-htc-sensation-xl-g21 .box-table.image-product td { background-size: 110% 98%; }
+.skin#id-lg-optimus-g-e975 .box-table.image-product td { background-size: 105% 100%; }
+.skin#id-lg-optimus-l5-2-e460 .box-table.image-product td { background-size: 105% 100%; }
+.skin#id-lg-g-pro-2 .box-table.image-product td { background-size: 103% 98%; }
+.skin#id-moto-atrix .box-table.image-product td { background-size: 107% 98%; }
+.skin#id-moto-atrix-2 .box-table.image-product td { background-size: 105% 100%; }
+.skin#id-moto-defy-me525-mb525 .box-table.image-product td { background-size: 109% 98%; }
+.skin#id-moto-defy-mini-xt30 .box-table.image-product td { background-size: 105% 100%; }
+.skin#id-moto-droid-razr-maxx-xt910-912 .box-table.image-product td { background-size: 103% 99%; }
+.skin#id-moto-razr-xt319 .box-table.image-product td { background-size: 105% 100%; }
+.skin#id-lumia-1020 .box-table.image-product td { background-size: 109% 99%; }
+.skin#id-lumia-1320 .box-table.image-product td { background-size: 108% 99%; }
+.skin#id-lumia-510 .box-table.image-product td { background-size: 106% 99%; }
+.skin#id-lumia-520 .box-table.image-product td { background-size: 108% 99%; }
+.skin#id-lumia-625 .box-table.image-product td { background-size: 107% 99%; }
+.skin#id-lumia-710 .box-table.image-product td { background-size: 109% 99%; }
+.skin#id-lumia-720 .box-table.image-product td { background-size: 106% 99%; }
+.skin#id-lumia-820 .box-table.image-product td { background-size: 110% 99%; }
+.skin#id-lumia-900 .box-table.image-product td { background-size: 107% 99%; }
+.skin#id-lumia-920 .box-table.image-product td { background-size: 109% 99%; }
+.skin#id-lumia-925 .box-table.image-product td { background-size: 109% 99%; }
+.skin#id-galaxy-ace .box-table.image-product td { background-size: 102% 98%; }
+.skin#id-galaxy-ace-2 .box-table.image-product td { background-size: 102% 99%; }
+.skin#id-galaxy-ace-plus .box-table.image-product td { background-size: 110% 98%; }
+.skin#id-galaxy-win .box-table.image-product td { background-size: 105% 99%; }
+.skin#id-galaxy-note-3-n9000 .box-table.image-product td { background-size: 105% 98%; }
+.skin#id-galaxy-grand-neo .box-table.image-product td { background-size: 108% 99%; }
+.skin#id-galaxy-s-duos-2 .box-table.image-product td { background-size: 101% 98%; }
+.skin#id-moto-razr-d1 .box-table.image-product td { background-size: 105% 100%; }
+.skin#id-galaxy-grand-i9080-i9082 .box-table.image-product td { background-size: 107% 98%; }
+.skin#id-galaxy-mega-6-3-i9200 .box-table.image-product td { background-size: 104% 98%; }
+.skin#id-galaxy-s2 .box-table.image-product td { background-size: 103% 98%; }
+.skin#id-galaxy-note-2-n7100 .box-table.image-product td { background-size: 107% 99%; }
+.skin#id-htc-desire-hd .box-table.image-product td { background-size: 109% 98%; }
+.skin#id-google-nexus-7 .box-table.image-product td { background-size: 120% 100%; }
+.skin#id-lg-optimus-l7-2-dual .box-table.image-product td { background-size: 108% 98%; }
+.skin#id-lg-optimus-l7-p700-705 .box-table.image-product td { background-size: 110% 99%; }
+.skin#id-samsung-corby .box-table.image-product td { background-size: 112% 97%; }
+.skin#id-galaxy-y .box-table.image-product td { background-size: 109% 98%; }
+.skin#id-samsung-corby-2 .box-table.image-product td { background-size: 109% 98%; }
+.skin#id-sony-xperia-c .box-table.image-product td { background-size: 109 100%; }
+.skin#id-lg-optimus-l3-dual .box-table.image-product td { background-size: 118% 98%; }
+.skin#id-galaxy-note-10-1 .box-table.image-product td { background-size: 135% 98%; }
+.skin#id-galaxy-note-8-0 .box-table.image-product td { background-size: 127% 98%; }
+.skin#id-bb-z10 .box-table.image-product td { background-size: 94% 99%; }
+.skin#id-bb-q10 .box-table.image-product td { background-size: 105% 98%; }
+.skin#id-galaxy-s-duos .box-table.image-product td { background-size: 101% 98%; }
+.skin#id-sony-xperia-zl .box-table.image-product td { background-size: 103% 99%; }
+.skin#id-galaxy-tab-2-p3100 .box-table.image-product td { background-size: 123% 100%; }
+.skin#id-galaxy-tab-3-7-0-p3200 .box-table.image-product td { background-size: 116% 100%; }
+.skin#id-galaxy-tab-3-8-0-t3110 .box-table.image-product td { background-size: 115% 100%; }
+.skin#id-galaxy-tab-7-0-plus-p6200 .box-table.image-product td { background-size: 123% 100%; }
+.skin#id-ipad .box-table.image-product td { background-size: 150% 100%; }
+.skin#id-galaxy-tab-2 .box-table.image-product td { background-size: 121% 100%; }
+.skin#id-galaxy-tab3-7-0 .box-table.image-product td { background-size: 116% 100%; }
+.skin#id-galaxy-tab3-8-0 .box-table.image-product td { background-size: 115% 100%; }
+.skin#id-galaxy-tab3-10-1 .box-table.image-product td { background-size: 137% 100%; }
+.skin#id-galaxy-tab-7-0-plus .box-table.image-product td { background-size: 125% 100%; }
+.skin#id-galaxy-tab-7-7 .box-table.image-product td { background-size: 135% 100%; }
+.skin#id-ipad-2 .box-table.image-product td { background-size: 126% 100%; }
+.skin#id-ipad-3 .box-table.image-product td { background-size: 126% 100%; }
+.skin#id-ipad-4 .box-table.image-product td { background-size: 126% 100%; }
+.skin#id-ipad-mini-retina .box-table.image-product td { background-size: 126% 100%; }
+.skin#id-ipad-mini-2 .box-table.image-product td { background-size: 126% 100%; }
+.skin#id-ipad-air .box-table.image-product td { background-size: 127% 100%; }
+.skin#id-ipad-air-2 .box-table.image-product td { background-size: 126% 100%; }
+.skin#id-lg-optimus-l70 .box-table.image-product td { background-size: 100% 100%; }/**/
+.skin#id-lg-optimus-l90 .box-table.image-product td { background-size: 100% 99%; }/**/
+.skin#id-nexus-4 .box-table.image-product td { background-size: 103% 99%; }/**/
+.skin#id-nexus-5 .box-table.image-product td { background-size: 99% 99%; }/**/
+.skin#id-ipad-mini2 .box-table.image-product td { background-size: 126% 100%; }/**/
+.skin#id-ipad2 .box-table.image-product td { background-size: 125% 100%; }/**/
+
+
+
+
+/*********  24/06/2016     *************/
+
+.skin#id-iphone-6s-plus .box-table.image-product td { background-size: 97% 102%; }/*24/06/2016*/
+.skin#id-iphone-6s .box-table.image-product td { background-size: 96% 102%; }/*24/06/2016*/
+.skin#id-iphone-5c .box-table.image-product td { background-size: 95% 102%; }/*24/06/2016*/
+.skin#id-iphone-5-5s .box-table.image-product td { background-size: 95% 102%; }/*24/06/2016*/
+.skin#id-nexus-6 .box-table.image-product td { background-size: 104% 99%; }/**/
+.skin#id-xperia-p .box-table.image-product td { background-size: 97% 100%; }/**/
+.skin#id-xperia-l .box-table.image-product td { background-size: 89% 100%; }/**/
+.skin#id-moto-nexus-6 .box-table.image-product td { background-size: 104% 99%; }/**/
+
+
+/*********  16/09/2016     *************/
+
+.skin#id-oneplus-x .box-table.image-product td { background-size: 97% 102%; }/*16/09/2016 */
+.skin#id-oneplus-two .box-table.image-product td { background-size: 100% 100%; }/*16/09/2016 */
+
+.skin#id-xiaomi-mi4 .box-table.image-product td { background-size: 99% 102%; }/*16/09/2016 */
+.skin#id-xiaomi-mi5 .box-table.image-product td { background-size: 98% 102%; }/*16/09/2016 */
+.skin#id-redmi-note-3 .box-table.image-product td { background-size: 98% 101%; }/*16/09/2016 */
+
+.skin#id-galaxy-s7-edge .box-table.image-product td { background-size: 99% 101%; }/*16/09/2016 */
+.skin#id-galaxy-s7 .box-table.image-product td { background-size: 97% 101%; }/*16/09/2016 */
+.skin#id-galaxy-s6 .box-table.image-product td { background-size: 99% 102%; }/*16/09/2016 */
+.skin#id-galaxy-a5 .box-table.image-product td { background-size: 97% 101%; }/*16/09/2016 */
+.skin#id-galaxy-a8 .box-table.image-product td { background-size: 100% 103%; }/*16/09/2016 */
+.skin#id-galaxy-j5 .box-table.image-product td { background-size: 99% 101%; }/*16/09/2016 */
+.skin#id-galaxy-e7 .box-table.image-product td { background-size: 96% 101%; }/*16/09/2016 */
+.skin#id-galaxy-j7 .box-table.image-product td { background-size: 99% 101%; }/*16/09/2016 */
+.skin#id-galaxy-note-5 .box-table.image-product td { background-size: 99% 101%; }/*16/09/2016 */
+.skin#id-galaxy-note-5-edge .box-table.image-product td { background-size: 99% 101%; }/*16/09/2016 */
+.skin#id-galaxy-a7 .box-table.image-product td { background-size: 98% 100%; }/*16/09/2016 */
+.skin#id-galaxy-s6-edge .box-table.image-product td {background-size: 100% 100%;} /*22/06/2016 */
+
+
+.skin#id-asus-zenfone-5 .box-table.image-product td { background-size: 99% 101%; }/*16/09/2016 */
+
+
+.skin#id-htc-one-a9 .box-table.image-product td { background-size: 99% 100%; }/*16/09/2016 */
+.skin#id-htc-one-m9 .box-table.image-product td { background-size: 99% 101%; }/*16/09/2016 */
+.skin#id-htc-one-m9-plus .box-table.image-product td { background-size: 99% 100%; }/*16/09/2016 */
+
+.skin#id-letv-1s .box-table.image-product td { background-size: 98% 100%; }/*16/09/2016 */
+
+.skin#id-moto-x-force .box-table.image-product td { background-size: 99% 101%; }/*16/09/2016 */
+.skin#id-lg-g4-dual .box-table.image-product td { background-size: 99% 100%; }/*16/09/2016 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

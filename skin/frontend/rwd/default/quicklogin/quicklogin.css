@@ -1,0 +1,121 @@
+#quicklogin { height: 100%; left: 0; overflow: auto; position: absolute; text-align: left; top: 10px; width: 100%; height: auto; z-index: 1005; }
+#quicklogin .quickbg { background-color: #f7f7f7; border: 1px solid #f2f2f2; border-radius: 4px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.4); margin: 0 auto; min-height: 125px; padding: 24px; position: relative; }
+#tinybox { background: url("../images/preload.gif") no-repeat scroll 50% 50% transparent; display: none; position: absolute; z-index: 2000; }
+/*
+#tinymask {
+    background: none repeat scroll 0 0 #fff;
+    display: none;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 1500;
+	
+}
+*/
+#tinycontent { background: transparent; }
+.quickbg .page-title { border: 0 none; font-family: inherit; font-size: 100%; font-style: inherit; font-weight: inherit; margin: 0; padding: 0; vertical-align: baseline; }
+.quickbg .page-title h2 { letter-spacing: 0; text-align: left; text-transform: none; color: #999999; font-family: 'proxima_novasemibold'; font-size: 21px; font-weight: normal; margin: 0 0 5px; padding-top: 10px; }
+#quicklogin .frm-regis, #quicklogin .frm-login { background: none; /*margin: 0 0 15px;*/ padding: 0; /*min-height: 250px;*/ display: block; }
+#quicklogin .col2-set .col-1 { float: left; /*margin-left: 40px;*/ width: 100%; }
+#quicklogin .col2-set .col-2 { width: 100%; }
+.lb-login .v3 form .action-btn { margin: 0; width: 316px; }
+.action-btn { background: #ef131e; border: 1px solid #ef131e; border-radius: 3px; color: #fff; cursor: pointer; display: table-cell; font-family: "proxima_novasemibold"; height: 36px; outline: medium none; padding: 0 25px; text-align: center; text-transform: none; transition: all 0.15s ease-in-out 0s; vertical-align: middle; }
+.action-btn.pdp-action-btn:focus { background-color: #fff; background-image: -moz-linear-gradient(center top, #AAC05E, #619D30); }
+.action-btn:focus, .action-btn:hover { background-color: #fff; border: 1px solid #ef131e; color: #ef131e; }
+#quicklogin .buttons-set { border-top: none; clear: both; margin: 0; padding: 0; text-align: left; }
+.tclose { background: url("images/close.png") no-repeat scroll 0 0 transparent; cursor: pointer; height: 30px; position: absolute; right: 4px; top: 16px; width: 30px; z-index: 1005; }
+#quicklogin .for-pass { background: none; margin: 0 0 0px; padding: 0; display: block; }
+#quicklogin .buttons-set { /*float: left;
+  width: 258px;*/ }
+#quicklogin .required { color: #EB340A; font-size: 11px; text-align: right; width: 100%; }
+#login-form .buttons-set .fpasscheck { float: left; text-align: left; width: 100%; }
+.tinybox { display: none; padding: 14px 17px; position: absolute; z-index: 3000; }
+.tinymask { background: none repeat scroll 0 0 #000000; display: none; height: 100%; left: 0; position: absolute; top: 0; width: 100%; z-index: 2002; opacity: 0.8 !important; }
+.tinner { background: url("images/preload.gif") no-repeat scroll 50% 50% #FFFFFF; height: auto !important;/*padding: 15px;*/ }
+.log-but { float: left; }
+.for_pass { text-align: left; margin: 8px 0 0 0px; color: #000; }
+.new_user_text { margin: 15px 0; text-align: left }
+.new_user_text a { color: rgba(192,0,3,1.00); cursor: pointer }
+.new_user_text a:hover { text-decoration: underline }
+.form-list .control label { padding-left: 8px; padding-top: 0; /*width: 50% !important; float: left;*/ }
+#quicklogin p.required { text-align: right }
+#login-form h3, #new_register h3 { font-family: "proxima_novalight"; text-transform: none; color: #ef131e; font-size: 22px; }
+#login-form p, #login-form label { color: #4d4d4d; }
+#quicklogin .col2-set .col-1, #quicklogin .col2-set .col-2 { }
+#quicklogin input[type="email"], #quicklogin input[type="password"], #quicklogin input[type="text"] { background-color: white; border: 1px solid #e6e6e5; border-radius: 4px; color: rgba(0, 0, 0, 0.75); display: block; font-family: inherit; transition: box-shadow 0.45s ease 0s, border-color 0.45s ease-in-out 0s; -webkit-transition: box-shadow 0.45s ease 0s, border-color 0.45s ease-in-out 0s; -moz-transition: box-shadow 0.45s ease 0s, border-color 0.45s ease-in-out 0s; height: 36px; width: 100%; }
+.form-list select { width: 100%; height: 32px; }
+#quicklogin #fpass { position: relative !important; bottom: 0 !important; }
+#fpass .form-list { margin: 10px 0 15px; }
+#quicklogin .required { color: #ef131e; }
+
+@media (max-width: 768px) {
+#quicklogin .quickbg { padding: 10px 24px }
+#quicklogin .social_login .fa-facebook { line-height: 60px; height: 60px; width: 60px; }
+.log-but { float: none; text-align: center }
+#quicklogin .buttons-set { text-align: center }
+#quicklogin .frm-regis, #quicklogin .frm-login { height: auto }
+.for_pass, .new_user_text { text-align: center }
+.for_pass { padding-bottom: 15px; vertical-align: top }
+#quicklogin .social_login { background: none; vertical-align: top; padding-top: 15px; border-top: 1px solid #ccc; text-align: center }
+#quicklogin .social_login .fa-facebook { float: none; margin: 0 10px 0 -30px }
+#quicklogin .quickbg .gs-login a { float: none; outline: none }
+#quicklogin .gs-login li { display: block }
+#quicklogin .social_login span { line-height: 60px }
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+#quicklogin .quickbg { padding: 15px }
+#quicklogin .social_login .fa-facebook { display: block; position: relative; margin: 0px auto 10px; float: none }
+#quicklogin .social_login span { line-height: 30px }
+#quicklogin .gs-login li { display: block; text-align: center }
+#quicklogin .social_login .fa-facebook { line-height: 40px; height: 40px; width: 40px; font-size: 24px }
+}
+.gomage-designer-index-index .dialog { left: 50% !important; margin-left: -350px; width: 750px !important; top: 10%!important; margin-top: -0px }
+.gomage-designer-index-index .dialog #quicklogin { top: auto }
+.gomage-designer-index-index .magento_content, .gomage-designer-index-index .dialog #quicklogin .magento_content { height: auto !important; padding: 20px; width: auto !important; }
+.gomage-designer-index-index .checkbox { float: left; margin: 6px 10px 0 0!important; }
+.gomage-designer-index-index form .legend{ text-transform:capitalize}
+
+form#regis-form{}
+
+form#regis-form label{}
+
+form#regis-form label {
+    margin-left: 0;
+    font-size: 14px;
+    font-weight: 100;
+    text-shadow: none;
+    color: #000;
+}
+
+form#regis-form .form-list>li {
+    margin-bottom: 5px;
+}
+
+#quicklogin input[type="email"], #quicklogin input[type="password"], #quicklogin input[type="text"]{height:30px!important;}
+#quicklogin .quickbg {
+    background-color: #f7f7f7;
+    border: 1px solid #f2f2f2;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    margin: 0 auto;
+    min-height: 125px;
+    padding: 10px 20px!important;
+    position: relative;
+}
+
+
+.tinybox {
+    display: none;
+    top: 19px!important;
+    padding: 8px 17px;
+    position: absolute;
+    z-index: 3000;
+}
+.action-btn :hover {
+    background-color: #fff;
+    color: #ef131e;
+}

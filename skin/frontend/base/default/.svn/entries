@@ -1,0 +1,105 @@
+10
+
+dir
+0
+http://svn.itcslive.in/itcslivesvn/skin/frontend/base/default
+http://svn.itcslive.in/itcslivesvn
+add
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+8d3bc16e-17e6-4223-b3d0-a20b9b9510e9
+
+responsiveslider
+dir
+
+
+
+add
+
+ikantam
+dir
+
+
+
+add
+
+images
+dir
+
+
+
+add
+
+quicklogin
+dir
+
+
+
+add
+
+lib
+dir
+
+
+
+add
+
+Thumbs.db
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+css
+dir
+
+
+
+add
+
+js
+dir
+
+
+
+add
+
+favicon.ico
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+

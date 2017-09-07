@@ -1,0 +1,288 @@
+.displayNone{
+display:none;
+}
+.fontStyleNormal{
+font-weight: normal;
+}
+#optionStrsss{
+    font-size: 11px;
+    font-weight: normal;
+    text-transform: capitalize;
+}
+
+.displayInlinImportant{
+display:inline !important;
+}
+.fontWeightBold{
+font-weight:bold;
+}
+
+.displayBlock{
+display:block;
+}
+.graBGRedColor{
+background:#ff0000;
+}
+.graPosAbsoulte{
+position:absolute;
+}
+.graTextRedColor{
+color:#ff0000;
+}
+.styleWidthtwenty{
+width:20% !important;
+}
+
+.fontStyleItalic{
+font-style: italic;
+}
+
+.marTOP20pxCss{
+margin-top:20px;
+}
+.marLeft10pxCss{
+margin-left:10px;
+}
+.padRight5pxCss{
+padding-right:10px;
+}
+.marBOT10pxCss{
+margin-bottom:10px !important;
+}
+#show_div{
+max-height:500px !important;
+}
+
+.marginTop2px{
+margin-top:2px;
+}
+
+.marginTop8px{
+margin-top:8px;
+}
+
+.zindexClass{
+z-index:1000;
+}
+.fontSize10px{
+font-size:10px !important;
+}
+.fontSize11px{
+font-size:11px;
+}
+.fontSize11pxImp{
+font-size:11px !important;
+}
+.cursorPointer{
+cursor:pointer;
+}
+.pointerEventsNone{
+pointer-events: none;
+}
+
+.floatRightCss{
+float:right !important;
+}
+
+.floatLeftCss{
+float:left;
+}
+
+
+#price-more-info-switcher{
+display:none;
+}
+
+.jcrop-holder{
+transition: none !important;
+}
+
+.jcrop-holder div{
+transition: none !important;
+}
+#cropbox{
+transition: none !important;
+}
+.jcrop-holder img{
+transition: none !important;
+}
+
+.topAbs20Px{
+/*top:20px !important;*/
+}
+
+.progress { position:relative; width:100%; border: 1px solid #ddd; padding: 1px; border-radius: 3px; }
+.bar { background-color: #ff0000; width:0%; border-radius: 3px; display:block; height:100%; }
+.percent { position:absolute; display:none; top:3px; left:48%; }
+#trBlurLayer{
+position:absolute;
+z-index:1300;
+pointer-events:none;
+top:38px;
+left: 0px;
+}
+
+
+
+	.select-wrapper-template-customizer{
+		/*float: left !important;*/
+		display: inline-block !important;
+		border: 1px solid #d8d8d8 !important;       
+		background: url("../images/dropdown.png") no-repeat right center !important;
+		cursor: pointer !important;
+	}
+	.select-wrapper-template-customizer, .select-wrapper-template-customizer select{
+		width: 200px !important;
+		height: 26px !important;
+		line-height: 26px !important;
+		margin-bottom:5px;
+	}
+	.select-wrapper-template-customizer:hover{
+		background: url("../images/dropdown-hover.png") no-repeat right center !important;
+		border-color: #239fdb !important;
+	}
+	.select-wrapper-template-customizer .holder{
+		display: block !important;
+		margin: 0 35px 0 5px !important;
+		white-space: nowrap !important;       
+		overflow: hidden !important;
+		cursor: pointer !important;
+		position: relative !important;
+		z-index: -1 !important;
+	}
+	.select-wrapper-template-customizer select{
+		margin: 0 !important;
+		position: absolute !important;
+		z-index: 2 !important;         
+		cursor: pointer !important;
+		outline: none !important;
+		opacity: 0 !important;
+		/* CSS hacks for older browsers */
+		_noFocusLine: expression(this.hideFocus=true) !important;
+		-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)" !important;
+		filter: alpha(opacity=0) !important;
+		-khtml-opacity: 0 !important;
+		-moz-opacity: 0 !important;
+	}
+    /* Let's Beautify Our Form */
+	.image-ppc-font{
+    border: 1px solid #ccc;
+    float: left;
+    font-size: 24px;
+    width: 200px;
+    padding: 20px;
+	margin-left:10px;	
+	margin-top:10px;
+	display:block;
+	text-align:center;
+	height:100px;
+	overflow:hidden;
+	}
+	.textAlignCenter{
+	text-align:center;
+	}
+	.textAlignRight{
+	text-align:right !important;
+	}
+#srightHTML .sleft li a {
+    border-radius: 2px;
+    cursor: pointer;
+    display: block;
+    font-size: 13px;
+    padding: 5px 10px;
+    text-transform: uppercase;
+}
+
+#srightHTML .sleft li a:hover {
+    background: none repeat scroll 0 0 #8a959c;
+    color: #fff;
+}
+#srightHTML .sleft li a.active
+{
+    background: none repeat scroll 0 0 #8a959c;
+    color: #fff;
+}
+
+#btnPopUpUploadPhotosFB{
+font-size:15px !important;
+}
+
+#btnPopUpUploadPhotosInsta{
+font-size:15px !important;
+}
+
+.pop-up-Int h4{
+color:#000 !important;
+font-weight:bold;
+}
+
+.pop-up-Int .checkbox label{
+color:#000 !important;
+
+}
+
+.size-chart-div-create {
+   left: -95px;
+    position: absolute;
+    top: -5px;
+}
+
+.productOptionsDivCloseCreateSize { background: #000; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; color: #fff; float: right; font-weight: bold; height: 25px; line-height: 25px; /*margin-right: -15px; margin-top: -28px;*/ text-align: center; width: 25px; position: absolute;
+    right: -15px;top: -15px;}
+
+.txtAlignRight{
+text-align:right;
+}
+.glyphicon{
+cursor:pointer;
+}
+.prdCartDescr{
+  display: block;
+	float:left;
+    font-size: 10px;
+    font-weight: normal;
+    margin-top: -60px;
+}
+.prdCartOptDescr{
+  display: block;
+	float:left;
+    font-size: 10px;
+    font-weight: normal;
+  
+}
+#shopping-cart-table tr td dl{
+margin-bottom:0px;
+}
+
+#payment-progress-opcheckout .price{
+font-size: 14px;
+}
+
+#payment_form_phoenix_cashondelivery .price{
+font-size: 14px;
+}
+.txtDecorLinethrough{
+text-decoration: line-through;
+}
+.redBhishoom{
+color:#ca3333 !important;
+}
+
+span.redBhishoom span.price{
+color:#ca3333 !important;
+text-decoration: line-through !important;
+}
+
+#originalGtVal span.price{
+color:#ca3333 !important;
+text-decoration: line-through !important;
+}
+
+#originalGtVal_1 span.price{
+color:#ca3333 !important;
+text-decoration: line-through !important;
+}
+
+.bhishoomGrey{
+color: #a0a0a0;
+}

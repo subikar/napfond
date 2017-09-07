@@ -1,0 +1,119 @@
+@charset "utf-8";
+/* CSS Document */
+.jcarousel-skin-tango .jcarousel-container {
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    background: black;
+    border-bottom: 1px solid blue;
+}
+
+.jcarousel-skin-tango .jcarousel-container-horizontal {
+    padding: 7px 47px;
+}
+
+.jcarousel-skin-tango .jcarousel-clip-horizontal {
+    height: 69px;
+}
+
+.jcarousel-skin-tango .jcarousel-item {
+    width: 65px;
+    height: 69px;
+}
+
+.jcarousel-skin-tango .jcarousel-item-horizontal {
+    margin-right: 15px;
+}
+
+.jcarousel-skin-tango .jcarousel-item-placeholder {
+    background: #fff;
+    color: #000;
+}
+
+/**
+ *  Horizontal Buttons
+ */
+.jcarousel-skin-tango .jcarousel-next-horizontal {
+    position: absolute;
+    top: 25px;
+    right: 5px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    background: transparent url(/images/next-horizontal.jpg) no-repeat 0 0;
+}
+.jcarousel-skin-tango .jcarousel-prev-horizontal {
+    position: absolute;
+    top: 25px;
+    left: 5px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    background: transparent url(/images/prev-horizontal.jpg) no-repeat 0 0;
+}
+/**
+ * This <div> element is wrapped by jCarousel around the list
+ * and has the classname "jcarousel-container".
+ */
+.jcarousel-container {
+    position: relative;
+}
+
+.jcarousel-clip {
+    z-index: 2;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.jcarousel-list {
+    z-index: 1;
+    overflow: hidden;
+    position: relative;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.jcarousel-list li,
+.jcarousel-item {
+    float: left;
+    list-style: none;
+    /* We set the width/height explicitly. No width/height causes infinite loops. */
+    width: 65px;
+    height: 65px;
+}
+
+/**
+ * The buttons are added dynamically by jCarousel before
+ * the <ul> list (inside the <div> described above) and
+ * have the classnames "jcarousel-next" and "jcarousel-prev".
+ */
+.jcarousel-next {
+    z-index: 3;
+    display: none;
+}
+
+.jcarousel-prev {
+    z-index: 3;
+    display: none;
+}
+img{border:none;}
+#overallContainer{width:98%;background-color:black;text-align:center;}
+#currentTitle{width:98%;background-color:black;height:25px;vertical-align:bottom;text-align:center;color:white;font-size:17px;}
+#stage {width:100%;height:auto;}
+#stage #imgContainer{border:0px solid black;text-align:left;}
+#waiting {vertical-align:middle;}
+#description{text-align:left;}
+
+input#go{
+  padding:2px;
+  padding-left:2px;
+  padding-right:2px;
+  color: #330000;
+  width:100px;
+  border: 1px solid #9AD9F8;
+}
+
+

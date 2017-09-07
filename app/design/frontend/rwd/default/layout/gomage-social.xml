@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * GoMage Social Connector Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use
+ * @version      Release: 1.0
+ * @since        Class available since Release 1.0
+ */ 
+ -->
+<layout version="0.1.0">
+	<customer_logged_out>        
+        <reference name="after_body_start">
+			 <block type="core/template" name="gomage.social.config" template="gomage/social/config.phtml" />
+		</reference>
+		<block type="gomage_social/login" name="gomage.social.fast.links">
+			 <action method="setPlace"><place>fast_links</place></action> 
+			 <action method="setPosition"><position>1000</position></action>
+			 <action method="setUsedList"><used_list>1</used_list></action>
+		</block>
+		<reference name="top.links">
+			 <action ifconfig="gomage_social/general/enable" method="addLinkBlock"><blockName>gomage.social.fast.links</blockName></action>  
+		</reference>
+		<reference name="head">    	    		    		    		    		    		      		 
+    		 <action method="addItem"><type>skin_css</type><name>css/gomage/social.css</name></action>    		    		    		 
+    	</reference>	 
+	</customer_logged_out>	        		
+	<checkout_onepage_index>
+		<reference name="checkout.onepage.login.before">			
+			<block type="gomage_social/login" name="gomage.social.login.checkout">
+				<action method="setPlace"><place>checkout</place></action>					
+			</block>			
+		</reference> 		
+	</checkout_onepage_index>
+	<gomage_checkout_onepage_index>
+		<reference name="checkout.onepage.login.before">
+			<block type="gomage_social/login" name="gomage.social.login.checkout">
+				<action method="setPlace"><place>checkout</place></action>				
+			</block>
+		</reference>
+	</gomage_checkout_onepage_index>
+	<customer_account_login>		 
+		 <reference name="content">
+		 	<block after="customer_form_login" type="gomage_social/login" name="gomage.social.login.login">
+				<action method="setPlace"><place>login</place></action>				
+			</block> 
+		 </reference>
+	</customer_account_login>
+</layout>

@@ -1,0 +1,15 @@
+
+<?php if (Mage::getStoreConfig('trackorder/trackorder_general/enabled') && Mage::getStoreConfig('trackorder/trackorder_general/topmenu')) { ?>
+    <div id="trackorder_container" style="display: none">
+           <li class="level0 nav-3 last level-top">
+                <a href="<?php echo $this->getUrl('trackorder') ?>">
+                    <span><?php echo $this->__('TrackOrder') ?></span></a>
+            </li>    
+    </div>
+<script type="text/javascript">
+            var menu = $('nav');
+            if (menu) {
+                menu.insert($('trackorder_container').innerHTML);
+            }
+        </script>
+<?php } ?>

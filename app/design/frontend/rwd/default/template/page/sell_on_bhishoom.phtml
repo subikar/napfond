@@ -1,0 +1,123 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Template for Mage_Page_Block_Html
+ */
+?>
+
+<!DOCTYPE html>
+
+<!--[if lt IE 7 ]> <html lang="en" id="top" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" id="top" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" id="top" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" id="top" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html lang="en" id="top" class="no-js">
+<!--<![endif]-->
+
+<head>
+<?php echo $this->getChildHtml('head') ?>
+</head>
+<body<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?>>
+<?php echo $this->getChildHtml('after_body_start') ?>
+<div class="wrapper"> <?php echo $this->getChildHtml('global_notices') ?>
+  <div class="page"> <?php echo $this->getChildHtml('header') ?>
+    <div class="container">
+      <div class="main-container col1-layout">
+        <?php
+$sellobBhisoomThanksMsg = Mage::getSingleton('core/session')->getSellonbhisoomMsg();
+if(trim($sellobBhisoomThanksMsg) != ''){
+?>
+    
+        <div class="sitePopupHero sellerFrmRegisterThxMsg" style="z-index: 10000;">
+          <div class="modal-dialog" id="dialog-Modal" role="document">
+            <div class="sitePopup_black"></div>
+            <div class="modal-content">
+              <button type="button" class="close" onclick="jQuery('.sellerFrmRegisterThxMsg').hide();jQuery('.sellerFrmRegister').show();"><span>&times;</span></button>
+              <div class="modal-body">
+                <div class="popup-heading text-center">
+                  <div class="divider30 dffd"></div>
+                  <h3 class="heading"><?php echo Mage::getSingleton('core/session')->getSellonbhisoomMsg();?> 
+                    <!-- <span class="subtitle"><?php //echo Mage::getSingleton('core/session')->getSellonbhisoomMsghead2();?></span> --> 
+                  </h3>
+                  <div class="divider30"></div>
+                </div>
+                <!-- <div class="row">
+                <div class="col-sm-12">
+                  <div class="description text-center"> <?php //echo Mage::getSingleton('core/session')->getSellonbhisoomMsg();?> </div>
+                </div>
+              </div>
+              <hr> --> 
+                <!--<div class="row">
+                <div class="col-sm-12">
+                  <div class="membership-description text-center"> Never miss an offer or giveaway. Get club bhishoom membership! </div>
+                </div>
+              </div>--> 
+              </div>
+            </div>
+          </div>
+        </div>
+<script type="text/javascript">
+jQuery(document).ready(function()
+{
+	
+	
+			
+	jQuery("#dialog-Modal").modal('show').css({
+    'margin-top': function () { //vertical centering
+        return -(jQuery(this).height() / 2);
+    },
+    'margin-left': function () { //Horizontal centering
+        return -(jQuery(this).width() / 2);
+    }
+	
+
+});
+jQuery(".modal-backdrop.in").hide();
+});
+     
+</script>
+
+        <?php  Mage::getSingleton('core/session')->unsSellonbhisoomMsg();
+Mage::getSingleton('core/session')->unsSellonbhisoomMsghead1();
+Mage::getSingleton('core/session')->unsSellonbhisoomMsghead2();
+
+}?>
+        <div class="main sellerFrmRegister" <?php if(trim($sellobBhisoomThanksMsg) != ''){?>style="display:none;"<?php }?>> <?php echo $this->getChildHtml('breadcrumbs') ?>
+          <?php //echo $this->getChildHtml('global_messages') ?>
+          <div class="col-main"> <?php echo $this->getChildHtml('content');?> </div>
+        </div>
+      </div>
+    </div>
+    <?php echo $this->getChildHtml('footer_before') ?> <?php echo $this->getChildHtml('footer')?> <?php echo $this->getChildHtml('global_cookie_notice') ?>
+    <?php //echo $this->getChildHtml('before_body_end')  ?>
+  </div>
+</div>
+<?php echo $this->getAbsoluteFooter(); ?>
+</body>
+</html>

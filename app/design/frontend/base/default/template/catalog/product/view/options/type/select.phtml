@@ -1,0 +1,223 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+
+<?php /* @var $this Mage_Catalog_Block_Product_View_Options_Type_Select */ ?>
+<?php $_option = $this->getOption() ?>
+<dt><label<?php if ($_option->getIsRequire()) echo ' class="required"' ?>><?php if ($_option->getIsRequire()) echo '<em>*</em>' ?>Choose <?php echo  $this->escapeHtml($_option->getTitle()) ?></label></dt>
+<dd<?php if ($_option->decoratedIsLast){?> class="last"<?php }?>>
+    <div class="input-box">
+        <?php echo $this->getValuesHtml() ?>
+        <?php if ($_option->getIsRequire()): ?>
+            <?php if ($_option->getType() == Mage_Catalog_Model_Product_Option::OPTION_TYPE_RADIO || $_option->getType() == Mage_Catalog_Model_Product_Option::OPTION_TYPE_CHECKBOX): ?>
+                <span id="options-<?php echo $_option->getId() ?>-container"></span>
+            <?php endif; ?>
+        <?php endif;?>
+    </div>
+</dd>
+<?php
+$sel_id = $_option->getId();
+$tid1 = $sel_id-1;
+$tid2 = $sel_id-2;
+?>
+<script type="text/javascript">
+/*
+function laptabCustomSizesetValues(){
+
+
+
+if(jQuery(".printChooseSizeClass option:selected").text() == '7 inch / 8 inch ( printed size : 8" by 5.5" )'){
+ jQuery(".txtGraCustomSizeDtlsHeight").val('7');
+ jQuery(".txtGraCustomSizeDtlsWidth").val('8');
+}
+else if(jQuery(".printChooseSizeClass option:selected").text() == '9 inch /10 inch ( printed size : 10" by 7" )'){
+ jQuery(".txtGraCustomSizeDtlsHeight").val('9');
+ jQuery(".txtGraCustomSizeDtlsWidth").val('10');
+}
+else if(jQuery(".printChooseSizeClass option:selected").text() == '11 inch / 12 inch  ( printed size : 12.5 " by 9 " )'){
+ jQuery(".txtGraCustomSizeDtlsHeight").val('11');
+ jQuery(".txtGraCustomSizeDtlsWidth").val('12');
+}
+else if(jQuery(".printChooseSizeClass option:selected").text() == '13 inch / 14 inch  ( printed size : 14 " by 9.5 " )'){
+ jQuery(".txtGraCustomSizeDtlsHeight").val('13');
+ jQuery(".txtGraCustomSizeDtlsWidth").val('14');
+}
+else if(jQuery(".printChooseSizeClass option:selected").text() == '15 inch / 16 inch ( printed size : 15 " by 10.5 " )'){
+ jQuery(".txtGraCustomSizeDtlsHeight").val('15');
+ jQuery(".txtGraCustomSizeDtlsWidth").val('16');
+}
+else if(jQuery(".printChooseSizeClass option:selected").text() == '17 inch / 18 inch ( printed size : 15.5 " by 11 " )'){
+ jQuery(".txtGraCustomSizeDtlsHeight").val('17');
+ jQuery(".txtGraCustomSizeDtlsWidth").val('18');
+}
+else{
+ jQuery(".txtGraCustomSizeDtlsHeight").show();
+ jQuery(".txtGraCustomSizeDtlsWidth").show();
+ jQuery(".txtGraCustomSizeDtlsHeightSpan").show();
+ jQuery(".txtGraCustomSizeDtlsWidthSpan").show();
+  
+ jQuery(".txtGraCustomSizeDtlsHeight").css('display', 'inline-block')
+ jQuery(".txtGraCustomSizeDtlsWidth").css('display', 'inline-block')
+ jQuery(".txtGraCustomSizeDtlsHeightSpan").css('display', 'inline-block')
+ jQuery(".txtGraCustomSizeDtlsWidthSpan").css('display', 'inline-block')
+ 
+ jQuery(".txtGraCustomSizeDtlsDiv").show();
+}
+}
+*/
+
+function chk_custom(option)
+{
+
+
+
+	var value = option;	
+	if(option == 'custom size')
+	{
+		//document.getElementById("cross").style.display = 'inline-block';
+		//document.getElementById("label_<?php echo $tid1?>").style.display = 'block';
+		//document.getElementById("labelvalue_<?php echo $tid1?>").style.display = 'block';
+		//document.getElementById("label_<?php echo $tid2?>").style.display = 'block';
+		//document.getElementById("labelvalue_<?php echo $tid2?>").style.display = 'block';
+		//document.getElementById("options_<?php echo $tid1?>_text").value = '';
+		//document.getElementById("options_<?php echo $tid2?>_text").value = '';
+		
+		jQuery(".label_laptabh").show();
+		jQuery(".label_laptabw").show();
+		jQuery(".labelvalue_laptabh").show();
+		jQuery(".labelvalue_laptabw").show();
+		jQuery(".laptabw").show();
+		jQuery(".laptabh").show();
+		
+		
+		jQuery(".laptabw").val('');
+		jQuery(".laptabh").val('');
+		
+		
+	}
+	else
+	{
+		//document.getElementById("cross").style.display = 'none';
+		//document.getElementById("label_<?php echo $tid1?>").style.display = 'none';
+		//document.getElementById("labelvalue_<?php echo $tid1?>").style.display = 'none';
+		//document.getElementById("label_<?php echo $tid2?>").style.display = 'none';
+		//document.getElementById("labelvalue_<?php echo $tid2?>").style.display = 'none';
+		/*var splitval = value.split('*');
+		for(var i=0;i<splitval.length;i++)
+		{
+			//document.getElementById("options_<?php echo $tid1?>_text").value = splitval[0];
+			//document.getElementById("options_<?php echo $tid2?>_text").value = splitval[1];
+		}
+		
+						if(value == '7 inch / 8 inch ( printed size : 8" by 5.5" )'){
+						 //jQuery(".txtGraCustomSizeDtlsHeight").val('7');
+						 //jQuery(".txtGraCustomSizeDtlsWidth").val('8');
+						 
+			//document.getElementById("options_<?php echo $tid1?>_text").value = '7';
+			//document.getElementById("options_<?php echo $tid2?>_text").value = '8';
+						 
+		jQuery(".laptabw").val('8');
+		jQuery(".laptabh").val('5.5');
+						 
+						}
+						else if(value == '9 inch /10 inch ( printed size : 10" by 7" )'){
+						 //jQuery(".txtGraCustomSizeDtlsHeight").val('9');
+						 //jQuery(".txtGraCustomSizeDtlsWidth").val('10');
+						 
+			//document.getElementById("options_<?php echo $tid1?>_text").value = '9';
+			//document.getElementById("options_<?php echo $tid2?>_text").value = '10';
+						 
+		jQuery(".laptabw").val('10');
+		jQuery(".laptabh").val('7');
+						 
+						}
+						else if(value == '11 inch / 12 inch ( printed size : 12.5 " by 9 " )'){
+						 //jQuery(".txtGraCustomSizeDtlsHeight").val('11');
+						 //jQuery(".txtGraCustomSizeDtlsWidth").val('12');
+						 
+			//document.getElementById("options_<?php echo $tid1?>_text").value = '11';
+			//document.getElementById("options_<?php echo $tid2?>_text").value = '12';
+						 
+		jQuery(".laptabw").val('12.5');
+		jQuery(".laptabh").val('9');
+						 
+						}
+						else if(value == '13 inch / 14 inch ( printed size : 14 " by 9.5 " )'){
+						 //jQuery(".txtGraCustomSizeDtlsHeight").val('13');
+						 //jQuery(".txtGraCustomSizeDtlsWidth").val('14');
+						 
+			//document.getElementById("options_<?php echo $tid1?>_text").value = '13';
+			//document.getElementById("options_<?php echo $tid2?>_text").value = '14';
+						 
+		jQuery(".laptabw").val('14');
+		jQuery(".laptabh").val('9.5');
+						 
+						}
+						else if(value == '15 inch / 16 inch ( printed size : 15 " by 10.5 " )'){
+						// jQuery(".txtGraCustomSizeDtlsHeight").val('15');
+						 //jQuery(".txtGraCustomSizeDtlsWidth").val('16');
+						 
+			//document.getElementById("options_<?php echo $tid1?>_text").value = '15';
+			//document.getElementById("options_<?php echo $tid2?>_text").value = '16';
+						 
+		jQuery(".laptabw").val('15');
+		jQuery(".laptabh").val('10.5');
+						 
+						}
+						else if(value == '17 inch / 18 inch ( printed size : 15.5 " by 11 " )'){
+						 //jQuery(".txtGraCustomSizeDtlsHeight").val('17');
+						 //jQuery(".txtGraCustomSizeDtlsWidth").val('18');
+						 
+			//document.getElementById("options_<?php echo $tid1?>_text").value = '17';
+			//document.getElementById("options_<?php echo $tid2?>_text").value = '18';
+		jQuery(".laptabw").val('15.5');
+		jQuery(".laptabh").val('11');
+						 
+						 
+						}	*/
+		
+		
+		
+		
+		
+		
+		jQuery(".laptabw").val('not_show');
+		jQuery(".laptabh").val('not_show');
+
+		
+		jQuery(".label_laptabh").hide();
+		jQuery(".label_laptabw").hide();
+		jQuery(".labelvalue_laptabh").hide();
+		jQuery(".labelvalue_laptabw").hide();
+		jQuery(".laptabw").hide();
+		jQuery(".laptabh").hide();
+		
+		
+		
+		
+	}
+}
+</script>

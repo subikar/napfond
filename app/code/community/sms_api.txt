@@ -1,0 +1,13 @@
+URL: manage.sarv.com
+User ID: 60343515
+Password: hLI3EZzf42
+---------------------------------------------
+
+Kindly follow Below process to generate API.
+Developer's API > HTTP Api > Select A PI Type, Sender Id, Mobile Number and copy approved Message and click on Api URL.
+
+API: http://manage.sarvsms.com/api/send_transactional_sms.php?username=u7892&msg_token=1ST5G8&sender_id=BISHOM&message=DEAR+CUSTOMER+%2C+THANK+YOU+FOR+SHOPPING+WITH+US+.+WE+HAVE+RECEIVED+YOUR+ORDER+AND+WE+WILL+SHIP+IT+SHORTLY%0D%0ARegards%3A+Dreambox&mobile=9983877700
+
+
+
+

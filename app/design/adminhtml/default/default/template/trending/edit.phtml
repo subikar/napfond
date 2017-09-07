@@ -1,0 +1,195 @@
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery-1.9.0.min.js');?>"></script>
+<div class="content-header">
+ <table cellspacing="0" class="grid-header">
+  <tr>
+   <td width="25%" height="35"><h3><?php echo $this->__('Edit Trending Product')?></h3></td>
+   <td class="a-right">
+    <button onclick="redirect()" class="scalable back" id="back" type="button" style="float:right;"><span>Back</span></button>
+   </td>
+  </tr>
+ </table>
+</div>
+<?php 
+$read = Mage::getSingleton('core/resource')->getConnection('core_read');
+$params = $this->getRequest()->getparams();
+if(isset($params['bid']) && $params['bid'] != '')
+{
+	$bid = $params['bid'];
+	$select = $read->query("SELECT * FROM `trandingblock` WHERE `bid` = '".$bid."'");
+	$select_res = $select->fetch();
+	$block_style = $select_res['case_style'];
+	?>
+    <script type="text/javascript">
+		jQuery(document).ready(function(e) {
+			var block_style = '<?php echo $block_style;?>';
+			jQuery("#block_style [value='"+block_style+"']").prop('selected', true);
+		});
+	</script>
+    <div class="grid" id="add-item">
+     <form id="editblock_form" name="editblock_form" method="post" action="<?php echo $this->getUrl('*/*/blockEdit')?>" enctype="multipart/form-data" onsubmit="return bvalidate()">
+      <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+      <input type="hidden" name="bid" value="<?php echo $bid;?>" />
+       <div class="entry-edit">
+        <div class="entry-edit-head">
+         <h4 class="icon-head head-edit-form fieldset-legend">Edit Block</h4>
+        </div> 
+        <div id="responsivebannerslider_form" class="fieldset ">
+         <table cellspacing="0" class="form-list">
+          <tbody>
+           <tr>
+            <td class="label">Select Style</td>
+            <td class="value">
+            <?php 
+            $style_qry = $read->query("SELECT `option_id` FROM `eav_attribute_option` WHERE `attribute_id` = 137");
+            $style_res = $style_qry->fetchAll();		
+            ?>
+             <select name="block_style" id="block_style">
+              <option value="0">Please Select Style</option>
+              <?php
+              for($i=0;$i<count($style_res);$i++)
+              {
+                 $option_id = $style_res[$i]['option_id'];
+                 $option_val_qry = $read->query("SELECT `value` FROM `eav_attribute_option_value` WHERE `option_id` = '".$option_id."'");
+                 $option_val_res = $option_val_qry->fetch();
+                 $option_val = $option_val_res['value'];
+                 echo '<option value="'.$option_val.'">'.$option_val.'</option>';
+              }
+              ?> 
+              <option value="T-shirt">T-shirt</option>         
+             </select> 
+            </td>     
+           </tr> 
+           <tr>
+            <td class="label"></td>
+            <td class="value"><input type="submit" value="Submit" class="pure-button pure-button-primary"></td>     
+           </tr> 
+          </tbody> 
+         </table> 
+        </div>
+       </div> 
+     </form>
+    </div>
+    <?php
+}
+if(isset($params['tid']) && $params['tid'] != '')
+{
+	$tid = $params['tid'];
+	$pname = '';$plink = '';$pimg = '';
+	$select = $read->query("SELECT * FROM `trendingproduct` WHERE `tid` = '".$tid."'");
+	$res = $select->fetch();
+	$style_val = $res['style_val'];
+	$pname = $res['prod_name'];
+	$plink = $res['prod_link'];
+	$pimg = $res['prod_img'];
+	$media = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'home_banner_img/';
+	?>
+    <script type="text/javascript">
+		jQuery(document).ready(function(e) {
+			var styleName = '<?php echo $style_val;?>';
+			jQuery("#style_val [value='"+styleName+"']").prop('selected', true);
+		});
+	</script>
+    <div class="grid" id="add-item">
+     <form id="edit_form" name="edit_form" method="post" action="<?php echo $this->getUrl('*/*/edit')?>" enctype="multipart/form-data" onsubmit="return validate()">
+      <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+      <input type="hidden" name="tid" value="<?php echo $tid;?>" />
+       <div class="entry-edit">
+        <div class="entry-edit-head">
+         <h4 class="icon-head head-edit-form fieldset-legend">Edit Item</h4>
+        </div> 
+        <div id="responsivebannerslider_form" class="fieldset ">
+         <table cellspacing="0" class="form-list">
+          <tbody>
+           <tr>
+            <td class="label">Select Style</td>
+            <td class="value">
+            <?php 
+            $style_qry = $read->query("SELECT `option_id` FROM `eav_attribute_option` WHERE `attribute_id` = 137");
+            $style_res = $style_qry->fetchAll();		
+            ?>
+             <select name="style_val" id="style_val">
+              <option value="0">Please Select Style</option>
+              <?php
+              for($i=0;$i<count($style_res);$i++)
+              {
+                 $option_id = $style_res[$i]['option_id'];
+                 $option_val_qry = $read->query("SELECT `value` FROM `eav_attribute_option_value` WHERE `option_id` = '".$option_id."'");
+                 $option_val_res = $option_val_qry->fetch();
+                 $option_val = $option_val_res['value'];
+                 echo '<option value="'.$option_val.'">'.$option_val.'</option>';
+              }
+              ?>  
+              <option value="T-shirt">T-shirt</option>        
+             </select> 
+            </td>     
+           </tr> 
+           <tr>
+            <td class="label">Enter Product Name</td>
+            <td class="value">
+              <input type="text" name="pname" id="pname" value="<?php echo $pname;?>" class="input-text" />
+            </td>     
+           </tr> 
+           <tr>
+            <td class="label">Enter Product Link</td>
+            <td class="value">
+              <input type="text" name="plink" id="plink" value="<?php echo $plink;?>" class="input-text"  />
+            </td>     
+           </tr>
+           <tr>
+            <td class="label">Enter Product Image</td>
+            <td class="value">
+              <input type="file" name="pimage" id="pimage" value="" class="input-text" />
+              <input type="hidden" name="pimage1" id="pimage1" value="<?php echo $pimg;?>" class="input-text" />
+              <img src="<?php echo $media.$pimg;?>" width="14" />
+            </td>     
+           </tr>  
+           <tr>
+            <td class="label"></td>
+            <td class="value"><input type="submit" value="Submit" class="pure-button pure-button-primary"></td>     
+           </tr> 
+          </tbody> 
+         </table> 
+        </div>
+       </div> 
+     </form>
+    </div>
+<?php } ?>
+<script type="text/javascript">
+function bvalidate()
+{
+	if(document.getElementById("block_style").value == 0)
+	{
+		alert("Please Select Style");
+		return false;
+	}
+}
+
+function validate()
+{
+	if(document.getElementById("style_val").value == 0)
+	{
+		alert("Please Select Style");
+		return false;
+	}
+	if(document.getElementById("pname").value == '')
+	{
+		alert("Please Enter Product Name");
+		return false;
+	}
+	if(document.getElementById("plink").value == '')
+	{
+		alert("Please Enter Product Link");
+		return false;
+	}
+	if(document.getElementById("pimage1").value == '')
+	{
+		alert("Please Upload Image");
+		return false;
+	}
+	return true;
+}
+function redirect()
+{
+	window.location = "<?php echo $this->getUrl('*/adminhtml_trendingform/')?>";
+}
+</script>

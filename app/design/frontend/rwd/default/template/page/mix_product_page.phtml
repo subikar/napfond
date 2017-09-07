@@ -1,0 +1,107 @@
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery-ias.min.js') ?>"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('css/jquery.ias.css');?>" media="all" />
+<script  type="text/javascript">
+	jQuery(document).ready(function(){
+		jQuery.ias({
+			container : ".products-grid",
+			item : ".col-sm-3",
+			next : "a.next",
+			pagination : '.pages',
+			loader : "<img src='<?php echo $this->getSkinUrl('images/728.GIF');?>' style='clear:both;' />",
+			triggerPageThreshold : 9999
+		});
+	});
+</script>
+<?php
+$style = $_GET['style'];//category id
+/*$collection = Mage::getModel('catalog/product')
+              ->getCollection()
+              ->joinField('category_id', 'catalog/category_product', 'category_id', 'product_id = entity_id', null, 'left')
+              ->addAttributeToSelect('*')
+              ->addAttributeToFilter('category_id', array('in' => $categoryIds));*/
+			  
+			  
+$products = Mage::getModel('catalog/category')->load(24);
+$productslist = $products->getProductCollection()->addAttributeToSelect('*')->addAttributeToSelect('case_style', $style)->setCurPage(1)->setPageSize(24);    
+$productslist->getSelect()->order(new Zend_Db_Expr('RAND()')); 
+?>
+<!DOCTYPE html>
+<!--[if lt IE 7 ]> <html lang="en" id="top" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" id="top" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" id="top" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" id="top" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" id="top" class="no-js"> <!--<![endif]-->
+<head>
+<?php echo $this->getChildHtml('head') ?>
+</head>
+<body<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?>>
+ <?php echo $this->getChildHtml('after_body_start') ?>
+ <div class="wrapper">
+  <?php echo $this->getChildHtml('global_notices') ?>
+  <div class="page">
+   <?php echo $this->getChildHtml('header') ?>
+   <?php echo $this->getChildHtml('global_messages') ?>
+   <div class="container">
+    <div class="main-container col1-layout">
+     <div class="main">
+      <?php echo $this->getChildHtml('breadcrumbs') ?>
+      <?php echo $this->getChildHtml('left');
+	      /*$toolbar = Mage::getBlockSingleton('catalog/product_list')->getToolbarBlock();
+		  $toolbar->setCollection($_productCollection);
+		  $pager = $layout->createBlock('page/html_pager');
+    	  $toolbar->setChild('product_list_toolbar_pager', $pager);
+          echo $toolbar->toHtml();*/  ?>
+      <div class="col-main">                          
+       <?php //echo $this->getChildHtml('content') ?>
+       <div class="row products-grid">
+    	<?php $i=0; foreach ($productslist as $_product): ?>           
+	     <div class="col-sm-3 item">
+          <div class="pro-feature">
+           <div id="slider" class="product-block"> 
+         	<a  href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image pro-imglx">
+          <img id="product-collection-image-<?php echo $_product->getId(); ?>" src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(180, 210); ?>" width="180" height="210" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>"   
+         />
+        	</a>
+            <div id="pro-dis-ss">
+             <div id="discription-pro">            
+              <div class="product-info">             
+               <h2 class="product-name">
+                <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo strip_tags($_product->getName(), null, true) ?>"><?php echo $_product->getName()?></a>
+               </h2>
+              <?php echo $_product->getPrice(); ?>
+             </div>
+             
+              <div class="btn-add2cart">
+               <?php if($_product->isSaleable() && !$_product->canConfigure()): ?>
+                <button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="btn btn-danger" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><span><span><?php echo $this->__('Add to Cart') ?></span></span>
+                </button>
+               <?php elseif($_product->isSaleable()): ?>
+                <a title="<?php echo $this->__('View Details') ?>" class="btn btn-danger" href="<?php echo $_product->getProductUrl() ?>"><?php echo $this->__('View Details') ?></a>
+               <?php else: ?>
+                <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+               <?php endif; ?>
+              </div>
+             
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+       <?php endforeach ?>
+  	  </div>
+     </div>
+     <?php /*?><div class="col-left sidebar"><?php echo $this->getChildHtml('left') ?></div><?php */?>
+     <?php //echo $this->getChildHtml('catalog.leftnav');?>
+    </div>
+   </div>
+  </div>
+  <?php echo $this->getChildHtml('footer_before') ?>
+  <?php echo $this->getChildHtml('footer') ?>
+  <?php echo $this->getChildHtml('global_cookie_notice') ?>
+  <?php echo $this->getChildHtml('before_body_end') ?>
+ </div>
+</div>
+<?php echo $this->getAbsoluteFooter() ?>
+</body>
+</html>
+

@@ -1,0 +1,116 @@
+<?php 
+$read = Mage::getSingleton('core/resource')->getConnection('core_read');
+$params = $this->getRequest()->getparams();
+$fid = $params['fid'];
+$pname = '';$plink = '';$pimg = '';
+$select = $read->query("SELECT * FROM `featuredproduct` WHERE `fid` = '".$fid."'");
+$res = $select->fetch();
+$cat_id = $res['cat_id'];
+$pname = $res['prod_name'];
+$plink = $res['prod_link'];
+$pimg = $res['prod_img'];
+$category = Mage::getModel('catalog/category')->load($res['cat_id']);
+$cat_name = $category->getName();
+$media = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'home_banner_img/';
+?>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery-1.9.0.min.js');?>"></script>
+<script type="text/javascript">
+jQuery(document).ready(function(e) {
+    var catId = <?php echo $cat_id;?>;
+	jQuery('#type_id [value='+catId+']').prop('selected', true);
+});
+</script>
+<div class="content-header">
+ <table cellspacing="0" class="grid-header">
+  <tr>
+   <td width="25%" height="35"><h3><?php echo $this->__('Edit Featured Product')?></h3></td>
+   <td class="a-right">
+    <button onclick="redirect()" class="scalable back" id="back" type="button" style="float:right;"><span>Back</span></button>
+   </td>
+  </tr>
+ </table>
+</div>
+<div class="grid" id="add-item">
+ <form id="edit_form" name="edit_form" method="post" action="<?php echo $this->getUrl('*/*/edit')?>" enctype="multipart/form-data" onsubmit="return validate()">
+  <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+  <input type="hidden" name="fid" value="<?php echo $fid;?>" />
+   <div class="entry-edit">
+    <div class="entry-edit-head">
+	 <h4 class="icon-head head-edit-form fieldset-legend">Edit Item</h4>
+    </div> 
+	<div id="responsivebannerslider_form" class="fieldset ">
+     <table cellspacing="0" class="form-list">
+      <tbody>
+       <tr>
+        <td class="label">Select Type</td>
+        <td class="value">
+         <select name="type_id" id="type_id">
+          <option value="0">Please Select Type</option>
+          <option value="3">Mobile Case</option>
+          <option value="34">Mobile Skin</option>
+          <option value="8">Laptop Skin</option>
+          <option value="4">T-Shirt</option>
+         </select> 
+        </td>     
+       </tr> 
+       <tr>
+        <td class="label">Enter Product Name</td>
+        <td class="value">
+          <input type="text" name="pname" id="pname" value="<?php echo $pname;?>" class="input-text" />
+        </td>     
+       </tr> 
+       <tr>
+        <td class="label">Enter Product Link</td>
+        <td class="value">
+          <input type="text" name="plink" id="plink" value="<?php echo $plink;?>" class="input-text"  />
+        </td>     
+       </tr>
+       <tr>
+        <td class="label">Enter Product Image</td>
+        <td class="value">
+          <input type="file" name="pimage" id="pimage" value="" class="input-text" />
+          <input type="hidden" name="pimage1" id="pimage1" value="<?php echo $pimg;?>" class="input-text" />
+          <img src="<?php echo $media.$pimg;?>" width="14" />
+        </td>     
+       </tr>  
+       <tr>
+        <td class="label"></td>
+        <td class="value"><input type="submit" value="Submit" class="pure-button pure-button-primary"></td>     
+       </tr> 
+      </tbody> 
+     </table> 
+	</div>
+   </div> 
+ </form>
+</div>
+
+<script type="text/javascript">
+function validate()
+{
+	if(document.getElementById("type_id").value == 0)
+	{
+		alert("Please Select Type");
+		return false;
+	}
+	if(document.getElementById("pname").value == '')
+	{
+		alert("Please Enter Product Name");
+		return false;
+	}
+	if(document.getElementById("plink").value == '')
+	{
+		alert("Please Enter Product Link");
+		return false;
+	}
+	if(document.getElementById("pimage1").value == '')
+	{
+		alert("Please Upload Image");
+		return false;
+	}
+	return true;
+}
+function redirect()
+{
+	window.location = "<?php echo $this->getUrl('*/adminhtml_fproductform/')?>";
+}
+</script>

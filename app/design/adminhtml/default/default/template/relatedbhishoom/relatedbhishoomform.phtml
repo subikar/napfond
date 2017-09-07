@@ -1,0 +1,192 @@
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery-1.9.0.min.js');?>"></script>
+<div class="content-header">
+ <table cellspacing="0" class="grid-header">
+  <tr>
+   <td width="25%" height="35"><h3><?php echo $this->__('Upload Related & Other Products')?></h3></td>
+   <td>
+    <div id="loadingmask" style="display: none;">
+	 <div class="loader" id="loading-mask-loader">
+      <img src="<?php echo $this->getSkinUrl('images/ajax-loader-tr.gif');?>" alt="<?php echo $this->__('Loading...') ?>"/></div>
+	 <div id="loading-mask"></div>
+	</div>
+   </td>
+  </tr>
+ </table>
+</div>
+
+
+
+<?php
+$connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+$select = $connection->select()
+    ->from('stock_cat', array('*'));         
+$rowsArray = $connection->fetchAll($select);
+?>
+<div class="grid" id="display-cat">
+ <form method="post" action="<?php echo $this->getUrl('*/*/post')?>" enctype="multipart/form-data">
+  <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+
+  <table cellspacing="0" class="form-list">   
+   <tbody>
+   
+   
+    <tr>
+     <td>
+       <div  style="margin-top:20px;"><label>Upload Similar Product : </label></div>
+       <?php //$children = Mage::getModel('catalog/category')->getCategories(24);?>
+        <div ><input type="file" name="related_product" /></div><a href="<?php echo Mage::getBaseUrl('media')?>related_products.csv">Example CSV</a>
+     </td>
+    </tr>
+
+    <tr>
+     <td>
+       <div  style="margin-top:20px;"><label>Upload Others Product : </label></div>
+       <?php //$children = Mage::getModel('catalog/category')->getCategories(24);?>
+        <div ><input type="file" name="other_product" /></div><a href="<?php echo Mage::getBaseUrl('media')?>other_products.csv">Example CSV</a>
+     </td>
+    </tr>
+
+    <tr> 
+     <td style="margin-top:20px;">&nbsp;</td>
+    </tr> 	
+	
+	
+    <tr> 
+     <td style="margin-top:20px;"><input type="submit" name="submit_img_rel_othr" value="Submit" /></td>
+    </tr> 	
+	
+   </tbody> 
+  </table> 
+ </form>
+</div>
+
+
+
+
+
+
+<?php
+$select = $connection->select()
+    ->from('stock_cat', array('*'));         
+$rowsArray = $connection->fetchAll($select);
+?>
+<div class="grid" id="display-cat" style="display:none">
+ <form id="stock_form" name="stock_form" method="post" action="<?php echo $this->getUrl('*/*/post')?>" onsubmit="return cat_validate()" enctype="multipart/form-data">
+  <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+  <?php
+  $eavAttribute = new Mage_Eav_Model_Mysql4_Entity_Attribute();
+  $col_id = $eavAttribute->getIdByCode('catalog_product', 'color');
+  $model_id = $eavAttribute->getIdByCode('catalog_product', 'model');
+  $case_id = $eavAttribute->getIdByCode('catalog_product', 'case_style');
+  $design_id = $eavAttribute->getIdByCode('catalog_product', 'case_designer');
+  ?>
+  <input name="color_id" type="hidden" value="<?php echo $col_id; ?>" />
+  <input name="model_id" type="hidden" value="<?php echo $model_id; ?>" />
+  <input name="case_style_id" type="hidden" value="<?php echo $case_id; ?>" />
+  <input name="case_designer_id" type="hidden" value="<?php echo $design_id; ?>" />
+  <table cellspacing="0" class="form-list">   
+   <tbody>
+    <tr>
+     <td>
+       <div class="cat_lbl"><label>Select Category : </label></div>
+       <?php $children = Mage::getModel('catalog/category')->getCategories(24);?>
+        <div class="cat_names">
+         <select name="cat1" id="cat1" onchange="get_subcat(this.value)">
+         <option value="0">-- Please Select Category--</option>
+         <?php
+          foreach ($children as $category) { ?>
+            <option value="<?php echo $category->getId();?>"><?php echo $category->getName();?></option>
+    <?php	}
+         ?>
+        </select></div>
+     </td>
+    </tr>
+    <tr> 
+     <td id="sub_cat1" style="display:none;"></td>
+    </tr> 
+    <tr> 
+     <td id="sub_cat2" style="display:none;"></td>
+    </tr>
+    <tr> 
+     <td id="attr" style="display:none;"></td>
+    </tr>
+    <tr> 
+     <td id="btn" style="display:none;"><input type="submit" name="submit_img" value="Submit" /></td>
+    </tr> 
+   </tbody> 
+  </table> 
+ </form>
+</div>
+
+<script type="text/javascript">
+var editForm = new varienForm('edit_form');
+
+function get_subcat(val)
+{	
+   var dataString = "get_subcat="+val;
+   var reloadurl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'admin_cat.php'?>';
+	Element.show('loadingmask');
+	new Ajax.Request(reloadurl, {
+	method: 'post',
+	parameters: dataString,
+	onComplete: function(transport) {
+	Element.hide('loadingmask');
+	document.getElementById("sub_cat1").style.display = 'block';
+	document.getElementById("sub_cat1").innerHTML = transport.responseText;
+	}
+	});
+}
+
+function get_subcat1(val)
+{	
+   var dataString = "get_subcat1="+val;
+   var reloadurl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'admin_cat.php'?>';
+	Element.show('loadingmask');
+	new Ajax.Request(reloadurl, {
+	method: 'post',
+	parameters: dataString,
+	onComplete: function(transport) {
+	Element.hide('loadingmask');
+	document.getElementById("sub_cat2").style.display = 'block';
+	document.getElementById("sub_cat2").innerHTML = transport.responseText;
+	}
+	});
+}
+
+function get_attr(val)
+{	
+   var dataString = "get_attr="+val;
+   var reloadurl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'admin_cat.php'?>';
+	Element.show('loadingmask');
+	new Ajax.Request(reloadurl, {
+	method: 'post',
+	parameters: dataString,
+	onComplete: function(transport) {
+	Element.hide('loadingmask');
+	document.getElementById("attr").style.display = 'block';
+	document.getElementById("attr").innerHTML = transport.responseText;
+	document.getElementById("btn").style.display = 'block';
+	}
+	});
+}
+
+function cat_validate()
+{
+	if(document.getElementById("cat1").value < 1)
+	{
+		alert("Please Select Category");
+		return false;
+	}
+	if(document.getElementById("cat2").value < 1)
+	{
+		alert("Please Select Sub Category1");
+		return false;
+	}
+	if(document.getElementById("cat3").value < 1)
+	{
+		alert("Please Select Sub Category2");
+		return false;
+	}
+	return true;
+}
+</script>

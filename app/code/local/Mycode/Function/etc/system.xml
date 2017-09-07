@@ -1,0 +1,82 @@
+<?xml version="1.0" ?>
+<config>
+    <tabs>
+        <mycustom_tab module="function" translate="label">
+            <label>Tax / Shipping Charges Settings</label>
+            <sort_order>100</sort_order>
+        </mycustom_tab>
+    </tabs>
+    <sections>
+        <mycustom_section module="function" translate="label">
+            <label>Tax / Shipping Charges</label>
+            <sort_order>200</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <tab>mycustom_tab</tab>
+            <groups>
+                <mycustom_group translate="label">
+                    <label>Tax / Shipping Charges</label>
+                    <comment>Set main and threshold shipping charges.Tax for tshirt and other product.</comment>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <mycustom_field translate="label tooltip comment">
+                            <label>Main Shipping Charge</label>
+                            <comment>Shipping charge for first product</comment>
+                            <tooltip>Shipping charge for first product</tooltip>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<sort_order>1</sort_order>
+                            <frontend_type>text</frontend_type>
+                        </mycustom_field>
+                        <mycustom_field2 translate="label tooltip comment">
+                            <label>Threshold Shipping Charge</label>
+                            <comment>Shipping charge for further product</comment>
+                            <tooltip>Shipping charge for further product</tooltip>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<sort_order>2</sort_order>
+                            <frontend_type>text</frontend_type>
+                        </mycustom_field2>
+                        <mycustom_field3 translate="label tooltip comment">
+                            <label>Free Shipping Charge</label>
+                            <comment>Minimum order amount for free shipping</comment>
+                            <tooltip>Minimum order amount for free shipping</tooltip>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<sort_order>3</sort_order>
+                            <frontend_type>text</frontend_type>
+                        </mycustom_field3>
+                        <mycustom_field4 translate="label tooltip comment">
+                            <label>Tshirt Tax Charge (%)</label>
+                            <comment>Tshirt Tax Charge (%)</comment>
+                            <tooltip>Tshirt Tax Charge (%)</tooltip>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<sort_order>4</sort_order>
+                            <frontend_type>text</frontend_type>
+                        </mycustom_field4>
+                        <mycustom_field5 translate="label tooltip comment">
+                            <label>Other Product Tax Charge (%)</label>
+                            <comment>Other Product Tax Charge (%)</comment>
+                            <tooltip>Other Product Tax Charge (%)</tooltip>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<sort_order>5</sort_order>
+                            <frontend_type>text</frontend_type>
+                        </mycustom_field5>
+                    </fields>
+                </mycustom_group>
+            </groups>
+        </mycustom_section>
+
+    </sections>
+</config>

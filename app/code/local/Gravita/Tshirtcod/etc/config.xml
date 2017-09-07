@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<modules>
+		<Gravita_Tshirtcod>
+			<version>0.1.0</version>
+		</Gravita_Tshirtcod>
+	</modules>	
+	<global>
+		<blocks>
+			<tshirtcod>
+				<class>Gravita_Tshirtcod_Block</class>
+			</tshirtcod>	
+		</blocks>
+		<helpers>
+			<tshirtcod>
+				<class>Gravita_Tshirtcod_Helper</class>
+			</tshirtcod>
+		</helpers>
+		<models>
+            <tshirtcod>
+                <class>Gravita_Tshirtcod_Model</class>
+                <!-- <resourceModel>orderemail_mysql4</resourceModel> -->
+            </tshirtcod>
+            <!-- <orderemail_mysql4>
+                <class>Gravita_Orderemail_Model_Mysql4</class>
+				<entities>
+                    <orderemail>
+                        <table>orderemail</table>
+                    </orderemail>
+                </entities>
+            </orderemail_mysql4> -->
+        </models>
+		<resources>
+			<tshirtcod_setup>
+                <setup>
+                    <module>Gravita_Tshirtcod</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </tshirtcod_setup>
+			<tshirtcod_write>
+				<connection>
+					<use>core_write</use>					
+				</connection>
+			</tshirtcod_write>
+			<tshirtcod_read>
+				<connection>
+					<use>core_read</use>
+				</connection>	
+			</tshirtcod_read>	
+		</resources>
+		<!-- <template>
+            <email>
+               <order_email_template translate="label" module="order">
+                   <label>Order Delivered</label>
+                   <file>orderdelivery.html</file>
+                   <type>html</type>
+               </order_email_template>               
+            </email>
+        </template>	 -->		
+	</global>	
+	
+	<admin>
+		<routers>
+			<tshirtcod>
+				<use>admin</use>
+				<args>
+					<module>Gravita_Tshirtcod</module>
+					<frontName>tshirtcod</frontName>
+				</args>
+			</tshirtcod>
+		</routers>
+	</admin>
+	
+	<adminhtml>
+		<menu>
+            <sales>
+                <children>
+                    <tshirtcod_adminform translate="title" module="tshirtcod">
+                        <title>Create Tshirt COD Order</title>
+                        <action>tshirtcod/adminhtml_tshirtcodform</action>
+                    </tshirtcod_adminform>
+                </children>
+            </sales>
+            <search>
+                <children>
+                    <tshirtcod_adminform translate="title" module="tshirtcod">
+                        <title>Update T-Shirt Stock</title>
+                        <action>tshirtcod/adminhtml_tshirtstock</action>
+                    </tshirtcod_adminform>
+                </children>
+            </search>
+        </menu>		
+		<acl>
+            <resources>
+                <admin>
+                    <children>
+                        <catalog>
+                            <children>
+                                <tshirtcod_adminform>
+                                    <title>My Form</title>
+                                </tshirtcod_adminform>
+                            </children>
+                        </catalog>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        
+        <layout>
+            <updates>
+                <tshirtcod>
+                    <file>tshirtcod.xml</file>
+                </tshirtcod>
+            </updates>
+        </layout>
+	</adminhtml>	
+</config>			

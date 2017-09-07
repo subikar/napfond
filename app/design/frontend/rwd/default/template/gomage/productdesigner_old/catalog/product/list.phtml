@@ -1,0 +1,46 @@
+<?php
+/**
+ * GoMage Product Designer Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use/
+ * @version      Release: 1.0.0
+ * @since        Available since Release 1.0.0
+ */
+?>
+<script type="text/html" class="no-display" id="product-design-btn-template">
+    <div class="gpd-button">
+        <button type="button" title="<?php echo Mage::helper('gomage_designer')->__('Design It') ?>" class="button btn-cart" onclick="setLocation('#{design_url}')">
+            <span><span><?php echo $this->__('Design It') ?></span></span>
+        </button>
+    </div>
+</script>
+
+<script type="text/javascript">
+    var productBtns = <?php echo $this->getProductButtonsJson(); ?>;
+    var designBtnTemplate = new Template($('product-design-btn-template').innerHTML);
+    document.observe("dom:loaded", function(e){
+        if (productBtns.length == 0) {
+            return;
+        }
+        var items = $$('.category-products .item');
+        var index = 0;
+        items.each(function(item){
+            if (productBtns[index].hasOwnProperty('add_to_cart_enabled') && productBtns[index]['add_to_cart_enabled'] == false) {
+                var addToCartBtn = item.select('.btn-cart')[0];
+                if (addToCartBtn) {
+                    addToCartBtn.hide();
+                }
+            }
+            if (productBtns[index].hasOwnProperty('add_to_design_enabled') && productBtns[index]['add_to_design_enabled'] == true) {
+                var designBtn = designBtnTemplate.evaluate(productBtns[index]);
+                var actions = item.select('.actions')[0];
+                actions.innerHTML = designBtn + actions.innerHTML;
+            }
+            index++;
+        })
+    });
+</script>

@@ -1,0 +1,169 @@
+<?php
+//print_r($_COOKIE);
+
+$login = Mage::getSingleton('customer/session')->isLoggedIn();
+if(($_COOKIE['news_letter_popup_cookie']=='' || $_COOKIE['news_letter_popup_cookie']!='') && !$login){
+setcookie('news_letter_popup_cookie', 'yes', time() + (86400 * 1), "/"); // 86400 = 1 day
+?>
+<div style="z-index:10000;display:none" class="sitePopupHero" id="sitePopUp">
+<div class="sitePopup_black"></div>
+         <form name="sitePOPupNlFrm" class="sitePopup_main" id="sitePOPupNlFrm" method="post" action="<?php echo $this->getUrl('sform/index/promodetail');?>"  enctype="multipart/form-data" onsubmit="return generateCouponThroghPopUp();">
+            <input type="hidden" name="cur_url" value="<?php echo $currentUrl = Mage::helper('core/url')->getCurrentUrl();?>" />
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <button type="button" class="close" onclick="jQuery('#sitePopUp').hide();"><span>&times;</span></button>
+            <div class="modal-body">
+              <div class="popup-heading text-center">
+                <h4 class="heading"><?php echo Mage::getStoreConfig('newsletter/general/firsttitle');?> <span class="subtitle"><?php echo Mage::getStoreConfig('newsletter/general/secondtitle');?></span></h4>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="description text-center"> <?php echo Mage::getStoreConfig('newsletter/general/message');?> </div>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="membership-description text-center"> Never miss an offer or giveaway. Get club bhishoom membership! </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+				<div id="popNlUpMsgValidation" class="validation-advice"></div>
+                  <div class="input-group-2x clear">
+                   <div class="form_control_outer"><input type="text" placeholder="Your Name" class="form-control popupNLFname" name="fname" id="fname" size="10" value="" autocomplete="off" />
+                   <input type="text" placeholder="Your Email" class="form-control popupNLEmail required-entry validate-email" name="email" id="email" size="10" value="" autocomplete="off" />
+                   
+                   <span class="input-group-btn-1x" >
+                    <input type="submit" name="submit" value="Get Code" class="btn btn-primary get-code" data-original-title="" title="" data-style="zoom-in" />                  
+                    </span>
+                   </div> 
+                    
+                     </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="coupon-head text-center">Your coupon code will appear here</div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4 col-sm-offset-4">
+                  <div class="coupon-code">
+                    <div class="ccode text-center" id="sitePopUpCoupanCode"> <!--<span></span>--> </div>
+                  </div>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="connect"><span>Connect</span> with us</div>
+                </div>
+                <div class="col-sm-8">
+                  <div class="links social-media1">
+                    <ul class="marBOT10pxCss">
+                      <li class="floatLeftCss">
+					  
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.4";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<div class="fb-like" data-href="//www.facebook.com/Bhishoom/" data-layout="box_count" data-action="like" data-show-faces="true" data-share="true"></div>					  
+					  </li>
+<!--                      <li class="floatLeftCss marLeft10pxCss">
+					  
+
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+
+
+<div class="g-plusone" data-size="tall"></div>					  
+					  
+					  </li>-->
+				  
+					  
+                      <li class="floatLeftCss marLeft10pxCss"><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.bhishoom.com" data-via="GoBhishoom">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+<br/>
+<a href="https://twitter.com/GoBhishoom" class="twitter-follow-button" data-show-count="true" data-show-screen-name="false">Follow @GoBhishoom</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script></li>
+
+
+                      <li class="floatLeftCss marLeft10pxCss">
+						<style>.ig-b- { display: inline-block; }
+.ig-b- img { visibility: hidden; }
+.ig-b-:hover { background-position: 0 -60px; } .ig-b-:active { background-position: 0 -120px; }
+.ig-b-48 { width: 48px; height: 48px; background: url(//badges.instagram.com/static/images/ig-badge-sprite-48.png) no-repeat 0 0; }
+@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
+.ig-b-48 { background-image: url(//badges.instagram.com/static/images/ig-badge-sprite-48@2x.png); background-size: 60px 178px; } }</style>
+<a href="http://instagram.com/gobhishoom?ref=badge" class="ig-b- ig-b-48"><img src="//badges.instagram.com/static/images/ig-badge-48.png" alt="Instagram" /></a>
+					  </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+	  </form>
+</div>
+<script type="text/javascript">
+ var sitepopupnlvalidate = new VarienForm('sitePOPupNlFrm');
+setTimeout(function(){ jQuery("#sitePopUp").show() }, 3000);//120000
+
+
+function generateCouponThroghPopUp(){
+
+var name = jQuery.trim(jQuery(".popupNLFname").val());
+var email = jQuery.trim(jQuery(".popupNLEmail").val()); 
+
+var emailReg = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+	var valid = emailReg.test(email);
+
+if(name=='' || !valid)	
+	return;
+
+
+jQuery("#popNlUpMsgValidation").html('');
+jQuery("#sitePopUpCoupanCode").html('Getting Code...')
+var dataString = 'firstname='+ name + '&email=' + email ;
+  
+  jQuery.ajax({
+    type: "POST",
+    url: "<?php echo Mage::getStoreConfig(Mage_Core_Model_Url::XML_PATH_SECURE_URL);?>newsletter/subscriber/newajax/",
+    data: dataString,
+    success: function(resp) {
+     
+            if (resp.errorMsg) {
+                
+				
+				//jQuery("#sitePopUpCoupanCode").Loadingdotdotdot('stop');
+				jQuery("#popNlUpMsgValidation").html('');
+                jQuery("#popNlUpMsgValidation").html(resp.errorMsg);				
+				
+            } else {                
+                
+				if(resp.successMsg.indexOf("Coupon Code:") > -1){
+				jQuery("#sitePopUpCoupanCode").html('');
+                jQuery("#sitePopUpCoupanCode").html(resp.successMsg.replace("Coupon Code:", "")); 
+				jQuery("#popNlUpMsgValidation").html('');
+				jQuery(".popupNLFname").val('')	
+				jQuery(".popupNLEmail").val(''); 
+				}else{
+					jQuery("#popNlUpMsgValidation").html('');
+					jQuery("#popNlUpMsgValidation").html(resp.successMsg); 
+				}	
+            }
+	 
+    }
+  });
+  return false;
+}
+
+</script>
+<?php } ?>

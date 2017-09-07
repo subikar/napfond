@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Mks_Storelocator>
+      <version>8.1.1</version>
+    </Mks_Storelocator>
+  </modules>
+  <frontend>
+    <routers>
+      <storelocator>
+        <use>standard</use>
+          <args>
+            <module>Mks_Storelocator</module>
+            <frontName>storelocator</frontName>
+          </args>
+      </storelocator>
+    </routers>
+		<layout>
+		  <updates>
+			<storelocator>
+			  <file>storelocator.xml</file>
+			</storelocator>
+		  </updates>
+		</layout>
+  </frontend>
+  <global>
+    <helpers>
+      <storelocator>
+        <class>Mks_Storelocator_Helper</class>
+      </storelocator>
+    </helpers>
+	<blocks>
+	  <storelocator>
+		<class>Mks_Storelocator_Block</class>
+	  </storelocator>
+	</blocks>
+	<models>
+	  <storelocator>
+		<class>Mks_Storelocator_Model</class>
+		<resourceModel>storelocator_mysql4</resourceModel>
+	  </storelocator>
+	  <storelocator_mysql4>
+		<class>Mks_Storelocator_Model_Mysql4</class>
+		<entities>		  
+			  <storelocator>
+				<table>mksstorelocator</table>
+			  </storelocator>
+        </entities>
+	  </storelocator_mysql4>
+	</models>
+	<resources>
+	  <storelocator_setup>
+		<setup>
+		  <module>Mks_Storelocator</module>
+		</setup>
+		<connection>
+		  <use>core_setup</use>
+		</connection>
+	  </storelocator_setup>
+	  <storelocator_write>
+		<connection>
+		  <use>core_write</use>
+		</connection>
+	  </storelocator_write>
+	  <storelocator_read>
+		<connection>
+		  <use>core_read</use>
+		</connection>
+	  </storelocator_read>
+	</resources>
+  </global>
+  <admin>
+	<routers>
+	  <storelocator>
+	    <use>admin</use>
+		<args>
+		  <module>Mks_Storelocator</module>
+		  <frontName>storelocator</frontName>
+		</args>
+	  </storelocator>
+	</routers>
+  </admin>
+  <adminhtml>
+	<menu>
+	  <storelocator module="storelocator">
+		<title>Storelocator</title>
+		<sort_order>100</sort_order>
+		<children>
+		  <storelocatorbackend module="storelocator">
+			<title> CSV Import / Export </title>
+			<sort_order>0</sort_order>
+			<action>storelocator/adminhtml_storelocatorbackend</action>
+		  </storelocatorbackend>
+		  <storelocator module="storelocator">
+		    <title>Manage Storelocator</title>
+			<sort_order>0</sort_order>
+			<action>storelocator/adminhtml_storelocator</action>
+		  </storelocator>
+		</children>
+	  </storelocator>
+	</menu>
+	<acl>
+	  <resources>
+		<all>
+		  <title>Allow Everything</title>
+		</all>
+		<admin>
+		  <children>
+			<storelocator translate="title" module="storelocator">
+			  <title>Storelocator</title>
+			  <sort_order>1000</sort_order>
+			  <children>
+		  <storelocatorbackend translate="title">
+			<title>About Us</title>
+		  </storelocatorbackend>
+		  <storelocator translate="title">
+			<title>Manage Storelocator</title>
+			<sort_order>0</sort_order>
+		  </storelocator>
+			  </children>
+			</storelocator>
+		  </children>
+		</admin>
+	  </resources>
+	</acl>
+	<layout>
+	  <updates>
+		<storelocator>
+		  <file>storelocator.xml</file>
+		</storelocator>
+	  </updates>
+	</layout>
+  </adminhtml>
+</config> 

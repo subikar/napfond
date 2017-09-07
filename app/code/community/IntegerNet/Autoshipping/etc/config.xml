@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * integer_net Autoshipping Module
+ *
+ * @category   IntegerNet
+ * @package    IntegerNet_Autoshipping
+ * @copyright  Copyright (c) 2013 integer_net GmbH (http://www.integer-net.de/)
+ * @license    http://opensource.org/licenses/gpl-3.0 GNU General Public License, version 3 (GPLv3)
+ * @author     Andreas von Studnitz <avs@integer-net.de>
+ * @author     PRWD (http://www.prwd.co.uk)
+ */
+ -->
+<config>
+    <modules>
+        <IntegerNet_Autoshipping>
+            <version>0.3.0</version>
+        </IntegerNet_Autoshipping>
+    </modules>
+    <global>
+        <helpers>
+            <autoshipping>
+                <class>IntegerNet_Autoshipping_Helper</class>
+            </autoshipping>
+        </helpers>
+
+        <models>
+            <autoshipping>
+                <class>IntegerNet_Autoshipping_Model</class>
+            </autoshipping>
+        </models>
+
+        <blocks>
+            <autoshipping>
+                <class>IntegerNet_Autoshipping_Block</class>
+            </autoshipping>
+        </blocks>
+    </global>
+    <frontend>
+        <events>
+            <controller_action_predispatch_checkout_cart_index>
+                <observers>
+                    <autoshipping>
+                        <type>singleton</type>
+                        <class>autoshipping/observer</class>
+                        <method>addShipping</method>
+                    </autoshipping>
+                </observers>
+            </controller_action_predispatch_checkout_cart_index>
+            <core_block_abstract_to_html_before>
+                <observers>
+                    <autoshipping>
+                        <type>singleton</type>
+                        <class>autoshipping/observer</class>
+                        <method>beforeBlockToHtml</method>
+                    </autoshipping>
+                </observers>
+            </core_block_abstract_to_html_before>
+        </events>
+    </frontend>
+
+    <adminhtml>
+        <translate>
+            <modules>
+                <IntegerNet_Autoshipping>
+                    <files>
+                        <default>IntegerNet_Autoshipping.csv</default>
+                    </files>
+                </IntegerNet_Autoshipping>
+            </modules>
+        </translate>
+
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <autoshipping>
+                                            <title>Auto Shipping</title>
+                                        </autoshipping>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
+
+    <frontend>
+        <translate>
+            <modules>
+                <IntegerNet_Autoshipping>
+                    <files>
+                        <default>IntegerNet_Autoshipping.csv</default>
+                    </files>
+                </IntegerNet_Autoshipping>
+            </modules>
+        </translate>
+
+        <routers>
+            <autoshipping>
+                <use>standard</use>
+                <args>
+                    <module>IntegerNet_Autoshipping</module>
+                    <frontName>autoshipping</frontName>
+                </args>
+            </autoshipping>
+        </routers>
+    </frontend>
+
+    <default>
+        <autoshipping>
+            <settings>
+                <show_country_selection_in_cart>1</show_country_selection_in_cart>
+            </settings>
+        </autoshipping>
+    </default>
+</config>

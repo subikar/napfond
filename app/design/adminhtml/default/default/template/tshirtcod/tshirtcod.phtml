@@ -1,0 +1,39 @@
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery-1.9.0.min.js');?>"></script>
+<div class="content-header">
+ <table cellspacing="0" class="grid-header">
+  <tr>
+   <td width="25%" height="35"><h3><?php echo $this->__('Tshirt Order Confirnmation')?></h3></td>
+  </tr>
+ </table>
+</div>
+<div class="grid" id="display-cat" >
+ <form id="drop" name="drop" method="post" action="">
+  <input type="text" name="orderid" value="" id="order_id" class="input-text input-order" placeholder="Please Enter Order Id" required="required">
+  <input type="button" value="Submit" onclick="return send_order();" class="pure-button pure-button-primary">
+ </form>
+ <div class="clearer"></div> 
+</div>
+<script type="text/javascript">
+function send_order()
+{
+  var order_id = document.getElementById("order_id").value;
+  if(order_id == '')
+  {
+    alert("Please Enter Order Id");
+  }
+  else
+  {
+    var datastring = "sendorder=1&orderid="+order_id;
+    var forum_url = '<?php echo Mage::getBaseUrl().'tshirtcod/adminhtml_tshirtcodform/bpost'?>';
+    new Ajax.Request(forum_url, {
+        method: 'post',
+        parameters: datastring,
+        onComplete: function(transport) 
+        {  
+          alert(transport.responseText);
+          window.location.reload();
+        }          
+    });
+  }  
+}
+</script>

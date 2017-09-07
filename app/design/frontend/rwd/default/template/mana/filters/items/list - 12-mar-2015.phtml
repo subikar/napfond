@@ -1,0 +1,270 @@
+<?php 
+/**
+ * @category    Mana
+ * @package     Mana_Filters
+ * @copyright   Copyright (c) http://www.manadev.com
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+/** 
+ * Template for showing options for filter as a HTML list 
+ * @author Mana Team
+ * Injected instead of standard catalog/layer/filter.phtml in Mana_Filters_Block_Filter_Attribute constructor.
+ * This template is overridden by copying (template body was pasted from catalog/layer/filter.phtml 
+ * and modified as needed). All changes are marked with comments.
+ */
+/* @var $this Mana_Filters_Block_Filter_Attribute */
+?>
+<link rel="stylesheet" href="<?php echo $this->getSkinUrl('css/acc/demo2.css');?>" type="text/css" />
+<?php
+//$collection = Mage::getModel('catalog/product')->getCollection();
+ $layer = Mage::getSingleton('catalog/layer');
+ $_category = $layer->getCurrentCategory();
+ $currentCategoryId = $_category->getId();
+ $parent_catid = $_category->getParentId();
+ $upper_category = Mage::getModel('catalog/category')->load($parent_catid);
+ $upper_catname = $upper_category->getName();
+?>
+<div class="panel panel-default" <?php if(in_array($_category->getLevel(),array(1,2,3)) && $this->getName() == "Model"){?> style="display:none !important;"<?php }?>>
+  <div class="panel-heading">
+  <?php if($parent_catid == 4)
+  {?>
+  	 <h4 class="panel-title"><a href="#<?php echo $this->getName();?>" data-toggle="collapse" data-parent="#accordion"><?php echo $this->getName();?>
+     <i class="fa fa-caret-down"></i></a></h4>
+  <?php 
+  }else if($this->getName() == 'Color')
+  { //continue;
+  }else{?>
+   <h4 class="panel-title"><a href="#<?php echo $this->getName();?>" data-toggle="collapse" data-parent="#accordion"><?php echo $this->getName();?>
+   <i class="fa fa-caret-down"></i></a></h4>
+   <?php }?>
+   
+  </div>
+  <div id="<?php echo $this->getName();?>" class="panel-collapse collapse">
+   <?php //echo Mage::helper('mana_core')->getNamedHtml('mana_filters/markup', 'before_items', array('block' => $this)) ?>
+   <?php
+   if($this->getName() == 'Model')
+   { 
+   	 $i=1;
+	 $first_top_cat_id = $_category->getParentCategory()->getParentCategory()->getId();
+	 $children = Mage::getModel('catalog/category')->getCategories($first_top_cat_id);
+	 foreach ($children as $category) 
+	 { ?>
+      <div id="section<?php echo $i;?>" class="accordion">
+	   <?php echo $category->getName();?><span></span>
+      </div>
+      <div class="container">
+       <div class="content">
+		 <?php
+		 $base_url = Mage::getBaseUrl();
+         if($category->hasChildren()) 
+         {
+            $children2 = Mage::getModel('catalog/category')->getCategories($category->getId());
+            echo '<ul>';
+            foreach ($children2 as $sub_cat) 
+            { 
+				//print_r($sub_cat);die;
+              echo '<li><a href="'.$base_url.$sub_cat['request_path'].'">'.$sub_cat->getName().'</a></li>';
+            }				
+            echo '</ul>';
+          } ?>
+       </div> 				
+      </div><?php $i++;
+	  }		
+	}
+	else
+	{
+	?>
+	<?php /*?><ol class="m-filter-item-list <?php echo $this->getFilterOptions()->getIsReverse() ? 'm-reverse' : '' ?>" style="float:left;margin-left:20px;"><?php */?>
+	<ul>
+	 <div class="panel-body">
+	  <?php foreach ($this->getItems() as $_item):  
+		$str_lbl = str_replace(" ", "", $_item->getLabel());
+	  ?>
+      <li class="<?php if ($_item->getMShowSelected()): ?>m-selected-ln-item <?php endif; ?>filter_lbl" id="<?php echo $str_lbl;?>">
+       <?php if ($_item->getMSelected()): ?>
+        <?php /*?><span class="m-selected-filter-item"><?php echo $this->escapeHtml($_item->getLabel()) ?><?php */?>
+		 <a href="<?php echo $this->urlEscape($_item->getUrl()) ?>" title="<?php echo $this->escapeHtml($_item->getLabel()) ?>" onclick="var checkbox = jQuery(this).find('input');checkbox.attr('checked', !checkbox.attr('checked'));jQuery('#filter_loading_image').show();">
+		 <input type="checkbox" checked="checked">&nbsp;<?php echo $this->escapeHtml($_item->getLabel()) ?>
+		  <?php /*?>
+		 <label onclick="location.href='<?php echo $this->urlEscape($_item->getUrl()) ?>'"><input type="checkbox" checked="checked">&nbsp;<?php echo $this->escapeHtml($_item->getLabel()) ?><?php */?>
+        <?php else : ?>
+	        <?php if (!$this->getFilterOptions()->getDisableNoResultOptions() || $_item->getCount() > 0 || $_item->getMSelected()): ?>
+	        <a href="<?php echo $this->urlEscape($_item->getUrl()) ?>" title="<?php echo $this->escapeHtml($_item->getLabel()) ?>" onclick="var checkbox = jQuery(this).find('input');checkbox.attr('checked', !checkbox.attr('checked'));jQuery('#filter_loading_image').show();">
+			<input type="checkbox">&nbsp;<?php echo $this->escapeHtml($_item->getLabel()) ?>
+			
+			 <?php /*?>
+			<label onclick="location.href='<?php echo $this->urlEscape($_item->getUrl()) ?>'">
+			<input type="checkbox">&nbsp;<?php echo $this->escapeHtml($_item->getLabel()) ?>
+			<?php */?>
+	        <?php else:  ?>
+	            <span><?php echo $this->escapeHtml($_item->getLabel()) ?>
+	        <?php endif; ?>
+        <?php endif; ?>
+        <?php // MANA END ?>
+        <?php if (Mage::getStoreConfigFlag('mana_filters/display/count')) : ?>
+            <span class="count">(<?php echo $_item->getCount() ?>)</span>
+        <?php endif; ?>
+        <?php if ($_item->getMSelected()): ?>
+        	</a>
+        <?php else : ?>
+	        <?php if (!$this->getFilterOptions()->getDisableNoResultOptions() || $_item->getCount() > 0 || $_item->getMSelected()): ?>
+                </a>
+	        <?php else: ?>
+            	<?php /*?></span><?php */?>
+				</span>
+	        <?php endif; ?>
+        <?php endif; ?>
+	  </li>   
+	 <?php endforeach ?>
+	 <?php /*?></ol><?php */?>
+	</div>
+   </ul>	
+   <?php
+	$attr = strtolower($this->getName());
+	$attr_img = 'attr_img';
+	$connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+    $select = $connection->select()
+    ->from('stock_img', array('attr_img', 'attr_val'))
+    ->where("cat_id3 =".$currentCategoryId." and attr_name = '".$attr."'"); 
+    $rowsArray = $connection->fetchAll($select);	
+	for($i=0;$i<count($rowsArray);$i++)
+	{
+		$media = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);
+		$arr = str_replace(" ", "", $rowsArray[$i]['attr_val']);
+	?> 
+    <div class="filter_div" id="<?php echo $arr.'content';?>"><img src="<?php echo $media.'filter_img/'.$rowsArray[$i]['attr_img'];?>"></div>
+    <?php } ?>
+<?php }?>
+
+<?php //echo Mage::helper('mana_core')->getNamedHtml('mana_filters/markup', 'after_items', array('block' => $this)) ?> 
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>  
+ </div>
+<?php /*
+$_filters = Mage::getSingleton('Mage_Catalog_Block_Layer_State')->getActiveFilters();
+
+?>
+<div class="panel panel-default">
+  <div class="panel-heading">
+   <h4 class="panel-title"><a href="#SORTBY" data-toggle="collapse" data-parent="#accordion">Sort By
+   <i class="fa fa-caret-down"></i></a></h4>
+  </div>
+  <div id="SORTBY" class="panel-collapse collapse">
+   <div class="panel-body">				
+	
+
+	
+ <ul>
+    <li><a class="sort_active" onclick="setLocation(this.value)" href="http://dev.gravitainfotech.com:8282/projects/Active/jazzy1/shop.html?cat=229&amp;dir=asc&amp;order=position">Position</a></li>
+    <li><a onclick="setLocation(this.value)" href="http://dev.gravitainfotech.com:8282/projects/Active/jazzy1/shop.html?cat=229&amp;dir=asc&amp;order=name">Name</a></li>
+    <li><a onclick="setLocation(this.value)" href="http://dev.gravitainfotech.com:8282/projects/Active/jazzy1/shop.html?cat=229&amp;dir=asc&amp;order=price">Price</a></li>
+    <li><a onclick="setLocation(this.value)" href="http://dev.gravitainfotech.com:8282/projects/Active/jazzy1/shop.html?cat=229&amp;dir=asc&amp;order=case_designer">Designer</a></li>
+    <li><a onclick="setLocation(this.value)" href="http://dev.gravitainfotech.com:8282/projects/Active/jazzy1/shop.html?cat=229&amp;dir=asc&amp;order=type">Type</a></li>
+</ul>                 
+                
+                                             <a title="Set Descending Direction" class="sort-by-switcher sort-by-switcher--asc" href="http://dev.gravitainfotech.com:8282/projects/Active/jazzy1/shop.html?cat=229&amp;dir=desc&amp;order=position">Set Descending Direction</a>
+                             			
+				
+</div>
+				  </div>  
+				</div>
+				
+<?php */
+
+
+//$toolbar = $this->getChild('product_list')->getToolbarBlock();
+//$toolbar->setCollection($this->getChild('product_list')->getLoadedProductCollection());
+//echo $toolbar->toHtml();
+
+
+?>				
+
+
+<?php /*?>
+<div class="panel panel-default">
+  <div class="panel-heading">
+   <h4 class="panel-title"><a data-parent="#accordion" data-toggle="collapse" href="#LaptopSize" class="">Choose Laptop Size<i class="fa fa-caret-down"></i></a></h4>
+  </div>
+  <div class="panel-collapse in" id="LaptopSize" style="height: auto;">
+      		<ul>
+	 <div class="panel-body">
+	        <li id="11 inch" class="filter_lbl">
+       	        	        <a onclick="var checkbox = jQuery(this).find('input');checkbox.attr('checked', !checkbox.attr('checked'));jQuery('#filter_loading_image').show();" title="11 inch" href="http://dev.gravitainfotech.com:8282/projects/Active/jazzy1/shop/mobile-skin/nokia/lumia-720.html?case_style=41">
+			<input type="checkbox">&nbsp;11 inch			
+			 	                                            <span class="count">(60)</span>
+                	                        </a>
+	                	  </li>   
+	       <li id="13 Inch" class="filter_lbl">
+       	        	        <a onclick="var checkbox = jQuery(this).find('input');checkbox.attr('checked', !checkbox.attr('checked'));jQuery('#filter_loading_image').show();" title="13 Inch" href="http://dev.gravitainfotech.com:8282/projects/Active/jazzy1/shop/mobile-skin/nokia/lumia-720.html?case_style=125">
+			<input type="checkbox">&nbsp;13 Inch	
+			 	                                            <span class="count">(12)</span>
+                	                        </a>
+	                	  </li>   
+	       <li id="15 Inch" class="filter_lbl">
+       	        	        <a onclick="var checkbox = jQuery(this).find('input');checkbox.attr('checked', !checkbox.attr('checked'));jQuery('#filter_loading_image').show();" title="15 Inch" href="http://dev.gravitainfotech.com:8282/projects/Active/jazzy1/shop/mobile-skin/nokia/lumia-720.html?case_style=48">
+			<input type="checkbox">&nbsp;15 Inch			
+			 	                                            <span class="count">(40)</span>
+                	                        </a>
+	                	  </li>   
+	       <li id="17 Inch" class="filter_lbl">
+       	        	        <a onclick="var checkbox = jQuery(this).find('input');checkbox.attr('checked', !checkbox.attr('checked'));jQuery('#filter_loading_image').show();" title="17 Inch" href="http://dev.gravitainfotech.com:8282/projects/Active/jazzy1/shop/mobile-skin/nokia/lumia-720.html?case_style=58">
+			<input type="checkbox">&nbsp;17 Inch			
+			 	                                            <span class="count">(7)</span>
+                	                        </a>
+	                	  </li>   
+	       
+	 	 	</div>
+   </ul>	
+    
+  </div>  
+ </div>	
+<?php */?> 
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/highlight.pack.js');?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery.cookie.js');?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery.accordion.js');?>"></script>
+<script type="text/javascript">
+jQuery(document).ready(function() {
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  jQuery.fn.slideFadeToggle = function(speed, easing, callback) {
+    return this.animate({opacity: 'toggle', height: 'toggle'}, speed, easing, callback);
+  };
+        //accordion
+  jQuery('.accordion').accordion({
+   defaultOpen: 'section1',
+   cookieName: 'accordion_nav',
+   speed: 'slow',
+   animateOpen: function (elem, opts) { //replace the standard slideUp with custom function
+    elem.next().stop(true, true).slideFadeToggle(opts.speed);
+   },
+   animateClose: function (elem, opts) { //replace the standard slideDown with custom function
+    elem.next().stop(true, true).slideFadeToggle(opts.speed);
+   }
+  });
+});
+
+<!--
+function magejump(targ,selObj,restore){
+ eval(targ+".location='"+selObj.options[selObj.selectedIndex].value+"'");
+ if (restore) selObj.selectedIndex=0;
+}
+
+jQuery('.filter_div').hide();
+//jquery('div').hide();
+jQuery('.filter_lbl').bind('mouseover', function() {
+	jQuery('.filter_div').hide();
+	jQuery('#'+jQuery(this).attr('id')+'content').show();
+});  
+//-->
+</script>				

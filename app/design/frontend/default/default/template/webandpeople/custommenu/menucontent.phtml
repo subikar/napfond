@@ -1,0 +1,17 @@
+<?php $menuContent = Mage::helper('custommenu')->getMenuContent(); ?>
+<script type="text/javascript">
+//<![CDATA[
+if ($('custommenu')) $('custommenu').update(Base64.decode('<?php echo base64_encode($menuContent['topMenu']); ?>'));
+wpPopupMenuContent = Base64.decode('<?php echo base64_encode($menuContent['popupMenu']); ?>');
+//]]>
+</script>
+<?php $mobileMenuContent = Mage::helper('custommenu')->getMobileMenuContent(); ?>
+<script type="text/javascript">
+//<![CDATA[
+wpMobileMenuContent = Base64.decode('<?php echo base64_encode($mobileMenuContent); ?>');
+wpCustomMenuMobileToggle();
+Event.observe(window, 'resize', function() {
+    wpCustomMenuMobileToggle();
+});
+//]]>
+</script>

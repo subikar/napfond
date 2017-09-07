@@ -1,0 +1,37 @@
+<?php
+
+class Strapp_Alterproductposition_Adminhtml_IndexController extends Mage_Adminhtml_Controller_Action
+{
+//   protected function _initAction() 
+//     {
+// 	$this->loadLayout()
+// 			->_setActiveMenu('alterproductposition/import')
+// 			->_addBreadcrumb(Mage::helper('adminhtml')->__('Upload & Import CSV'), Mage::helper('adminhtml')->__('Upload & Import CSV'));
+// 		
+// 	return $this;
+//     } 
+
+  public function preDispatch() {
+        parent::preDispatch();
+    }
+    
+    
+  public function indexAction() 
+    {	
+	$this->loadLayout();
+	$this->_setActiveMenu('alterproductposition/import');
+	//$this->displayTitle('Upload & Import CSV');
+// 	$this->_addBreadcrumb(Mage::helper('adminhtml')->__('Item Manager'), Mage::helper('adminhtml')->__('Item Manager'));
+// 	$this->_addBreadcrumb(Mage::helper('adminhtml')->__('Item News'), Mage::helper('adminhtml')->__('Item News'));
+
+	$this->getLayout()->getBlock('head')->setCanLoadExtJs(true);
+	$this->_addContent($this->getLayout()->createBlock('alterproductposition/adminhtml_alterproductposition_import'))/*->_addLeft($this->getLayout()->createBlock('alterproductposition/adminhtml_alterproductposition_import_tabs'))*/;
+	$this->getLayout()->getBlock('head')->setCanLoadTinyMce(true);
+
+        $this->renderLayout();
+ 	
+    }
+    public function saveAction() 
+    {
+    }
+}

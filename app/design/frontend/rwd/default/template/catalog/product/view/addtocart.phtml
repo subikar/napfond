@@ -1,0 +1,90 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php $_product = $this->getProduct(); ?>
+<?php $buttonTitle = $this->__('Buy'); ?>
+<?php if($_product->isSaleable()): ?>
+<?php /*?><div class="add-to-cart">
+        <?php if(!$_product->isGrouped()): ?>
+        <div class="qty-wrapper">
+            <label for="qty"><?php echo $this->__('Qty:') ?></label>
+            <input type="text" pattern="\d*" name="qty" id="qty" maxlength="12" value="<?php echo max($this->getProductDefaultQty() * 1, 1) ?>" title="<?php echo $this->__('Qty') ?>" class="input-text qty" />            
+        </div>
+        <?php endif; ?>
+        <div class="add-to-cart-buttons">
+            <button type="button" title="<?php echo $buttonTitle ?>" class="button btn-cart" onclick="productAddToCartForm.submit(this)"><span><span><?php echo $buttonTitle ?></span></span></button>
+            <?php echo $this->getChildHtml('', true, true) ?>
+        </div>
+    </div><?php */?>
+
+<div class="add-to-cart dsf">
+  <?php if (!$this->addToCartDisabled()): ?>
+  <div class="price-info"> <?php echo $this->getPriceHtml($_product); ?> <?php echo $this->getChildHtml('bundle_prices') ?> <?php echo $this->getTierPriceHtml() ?> </div>
+  <div class="clear"></div>
+  <div class="add_con">
+    <div class="row row-xs">
+      <div class="col-md-3 col-sm-12">
+        <div class="increseItmeClass">
+          <label>Qty: </label>
+          <div id="increseItme">
+            <div class="dec add" onclick="decrease()">-</div>
+            <input type="text" name="qty" id="qty" maxlength="12" value="1" title="<?php echo $this->__('Qty') ?>" class="input-text qty" style="width:30px;" />
+            <div class="add more" onclick="increase()">+</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 col-md-push-5 hidden-sm hidden-xs">
+        <div class="clearfix"></div>
+        <div class="clearfix hidden-sm hidden-md hidden-lg"></div>
+      </div>
+      <div class="col-md-5 col-md-pull-4 col-xs-12 col-xs-pull-0 ">
+        <button type="button" title="<?php echo $buttonTitle ?>" class="button btn-cart btn-block pinkC marLeft10pxCss" onclick="productAddToCartForm.submit(this)"><span><span><?php echo $buttonTitle ?></span></span></button>
+      </div>
+      
+      <?php endif;?>
+      <?php echo $this->getChildHtml('', true, true) ?>
+      <?php /*?><a href="<?php echo $_wishlistSubmitUrl ?>" onclick="productAddToCartForm.submitLight(this, this.href); return false;" class="link-wishlist" title="<?php echo $this->__('Add to Wishlist') ?>"><?php echo $this->__('Add to Wishlist') ?><i class="fa fa-heart"></i></a><?php */?>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+function decrease()
+{
+	var val = document.getElementById("qty").value;
+	if(val > 1)
+	{
+		var new_val = --val;
+		document.getElementById("qty").value = new_val;
+	}
+}
+function increase()
+{
+	var val = document.getElementById("qty").value;
+	var new_val = ++val;
+	document.getElementById("qty").value = new_val;
+}
+</script>
+<?php endif; ?>

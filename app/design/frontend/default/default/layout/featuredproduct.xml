@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+		<reference name="head">
+			<action method="addCss"><stylesheet>css/magestore/featuredproduct.css</stylesheet></action>
+		</reference>
+    </default>
+    <featuredproduct_index_index>
+        <reference name="content">
+            <block type="featuredproduct/featuredproduct" name="featuredproduct" template="featuredproduct/featuredproduct.phtml" />
+        </reference>
+    </featuredproduct_index_index>
+</layout> 

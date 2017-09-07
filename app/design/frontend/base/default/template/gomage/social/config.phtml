@@ -1,0 +1,120 @@
+<?php 
+/**
+ * GoMage Social Connector Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use
+ * @version      Release: 1.0
+ * @since        Class available since Release 1.0
+ */ 
+?>
+<?php if (Mage::helper('gomage_social')->isActive()): ?>
+	<script type="text/javascript">
+	//<![CDATA[
+		function gomageSocialPrepareFastLinks(){
+			try{							
+				if ($$('.gs-login-fast_links').length > 0){
+					var fast_links = $$('.gs-login-fast_links')[0];
+					if (fast_links.up('ul.links') != 'undefined'){
+						if (fast_links.up('ul.links').getHeight() > 30){
+						    fast_links.up('li').previous().addClassName('last');
+						}
+					}
+				}
+			}catch(e){}
+		}
+		document.observe("dom:loaded", function() {			
+			setTimeout(gomageSocialPrepareFastLinks, 3000);										
+		});
+	//]]>
+	</script>
+<?php endif; ?> 
+<?php if (Mage::helper('gomage_social')->isFBActive() && Mage::getStoreConfig('gomage_social/general/enable')): ?>
+	<div id="fb-root"></div>
+	<script type="text/javascript">
+	//<![CDATA[
+	 
+		  function gomageSocialFBLogin(){
+	        FB.login(function(response) {
+	      	  gomageSocialFBLoginResponse(response);
+	    	  }, {scope:'email'});
+		  }
+		
+ 	      function gomageSocialFBCheckLogin(){
+	    	FB.getLoginStatus(function(response) {
+	    		gomageSocialFBLoginResponse(response);	
+	    	});  	
+		  }    	
+		
+		  function gomageSocialFBLoginResponse(response){
+		  	if (response.status == 'connected') {		          
+		      setLocation('<?php echo $this->getUrl('gomage_social/facebook/login', array('_secure' => true, 'gs_url' => Mage::helper('core')->urlEncode(Mage::helper('core/url')->getCurrentUrl())));  ?>'); 
+		    }else {	   	        	       	
+		      window.location.reload();
+		    }
+		  }
+			  	
+	      window.fbAsyncInit = function() {
+	        FB.init({
+	          appId: '<?php echo Mage::getStoreConfig('gomage_social/facebook/id') ?>',
+	          status: false,  
+	          cookie: true,
+	          xfbml: true,
+	          oauth: true
+	        });
+
+	        FB.Event.subscribe('auth.login', function(response) {
+	        	gomageSocialFBCheckLogin();
+	        });
+	        		   		                
+	      };	
+
+	      (function (d) {
+	    	    var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+	    	    if (d.getElementById(id)) { return; }
+	    	    js = d.createElement('script'); js.id = id; js.async = true;
+	    	    js.src = "//connect.facebook.net/<?php echo Mage::app()->getLocale()->getLocaleCode() ?>/all.js";
+	    	    ref.parentNode.insertBefore(js, ref);	    	    	    	    
+	      }(document));
+
+	//]]>
+	</script>
+<?php endif; ?>
+<?php if (Mage::helper('gomage_social')->isGActive() && Mage::getStoreConfig('gomage_social/general/enable')): ?>
+ 	<script type="text/javascript">
+	//<![CDATA[
+
+	 	function gomageSocialGSigninCallback(authResult){    	  
+		      if (authResult['code']) {
+			      var params = {code: authResult['code'], google_plus: 1};		      
+		    	  var request = new Ajax.Request('<?php echo $this->getUrl('gomage_social/google/callback', array('_secure' => true, 'gs_url' => Mage::helper('core')->urlEncode(Mage::helper('core/url')->getCurrentUrl())));  ?>',
+		    	  {
+				    method: 'post',
+				    parameters: params,
+				    onSuccess: function(transport){
+				    	var response = eval('('+(transport.responseText || false)+')');
+	    			    if (response.redirect){
+	    			    	setLocation(response.redirect);
+	        			}else{
+				    		window.location.reload();
+	        			}
+				    }
+		    	  });   			    	              
+		      }
+	  } 
+	  
+      (function() {
+	       var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+	       po.src = 'https://apis.google.com/js/client:plusone.js';
+	       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+	       window.___gcfg = {
+	   		    lang: '<?php echo Mage::app()->getLocale()->getLocaleCode() ?>',
+	   		    parsetags: 'onload'
+	   	   }	       
+      })();
+    //]]>
+	</script>
+<?php endif; ?>   

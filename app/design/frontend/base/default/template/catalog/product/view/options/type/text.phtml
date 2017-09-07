@@ -1,0 +1,184 @@
+<?php
+//session_start();
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+$_option = $this->getOption(); 
+$model = Mage::getSingleton('core/session')->getModel();
+$brand = Mage::getSingleton('core/session')->getBrand();
+$type = Mage::getSingleton('core/session')->getType();
+$category_id = Mage::getSingleton('core/session')->getCid();
+
+$currentProductId =  Mage::registry('current_product')->getId();
+
+$currentStyle =  Mage::registry('current_product')->getCaseStyle();
+
+
+$arrSession[$category_id][$currentProductId]['model'] = $model;
+$arrSession[$category_id][$currentProductId]['brand'] = $brand;
+$arrSession[$category_id][$currentProductId]['type'] = $type;
+$arrSession[$category_id][$currentProductId]['category_id'] = $category_id;
+//echo '<pre>';
+//print_r($arrSession);
+
+
+//Mage::getSingleton('core/session')->unsPrdetails();
+
+$session_arr = Mage::getSingleton('core/session')->getPrdetails();
+
+if(!is_array($session_arr))
+   	$session_arr = array();
+	
+if(!in_array($arrSession,$session_arr))	
+	array_push($session_arr,$arrSession);
+
+
+
+
+Mage::getSingleton('core/session')->setPrdetails($session_arr); 
+
+
+
+if($model)
+$modelSep = '/';
+else
+$modelSep = '';
+
+if($brand)
+$brandSep = '/';
+else
+$brandSep = '';
+
+if($type)
+$typeSep = '/';
+else
+$typeSep = '';
+
+if($category_id)
+$category_idSep = '/';
+else
+$category_idSep = '';
+
+	
+$value = $type.$typeSep.$brand.$brandSep.$model.$modelSep.$category_id;
+
+$style = '';
+$input = '';
+if(($this->escapeHtml($_option->getTitle()) == 'H') || ($this->escapeHtml($_option->getTitle()) == 'W'))
+{
+	$input = 'text-option';
+}
+
+
+
+?>
+<div class="text-option-div <?php if(trim(strtolower($_option->getTitle())) == 'product detail') echo 'displayNone';?>" id="text-option-div">
+  <dt id="label_<?php echo $_option->getId() ?>" class="<?php echo $input;?>  <?php if($this->escapeHtml($_option->getTitle()) == 'H') echo 'label_laptabh'; if($this->escapeHtml($_option->getTitle()) == 'W') echo 'label_laptabw';?>" style="display:none;"><label<?php if ($_option->getIsRequire()) echo ' class="required"' ?>><?php if ($_option->getIsRequire()) echo '<em>*</em>' ?><?php echo  $this->escapeHtml($_option->getTitle()) ?></label>
+      <?php //echo $this->getFormatedPrice() ?>
+  </dt>
+  <dd<?php if ($_option->decoratedIsLast){?> class="last <?php echo $input;?> <?php if($this->escapeHtml($_option->getTitle()) == 'H') echo 'labelvalue_laptabh'; if($this->escapeHtml($_option->getTitle()) == 'W') echo 'labelvalue_laptabw';?>"<?php }else{?> class="<?php echo $input;}?>  <?php if($this->escapeHtml($_option->getTitle()) == 'H') echo 'labelvalue_laptabh'; if($this->escapeHtml($_option->getTitle()) == 'W') echo 'labelvalue_laptabw';?>" id="labelvalue_<?php echo $_option->getId() ?>" style="display:none;">
+   <div class="input-box">
+    <?php if ($_option->getType() == Mage_Catalog_Model_Product_Option::OPTION_TYPE_FIELD): ?>
+	
+<?php if(($this->escapeHtml($_option->getTitle()) == 'H') || ($this->escapeHtml($_option->getTitle()) == 'W')){
+
+$tabletArray = array('478','479','991','214','213','212','211','992','176','993','518','787','788','786','789','790','791','477','532','533','472','250','249','248','247','637','178','638','534','654','655','659','656','657','1103','535');
+$laptopArray = array('8','21','42','44','972','84','85','86','87','88');
+
+ $maxPrintSizeW = 15.5;
+ $maxPrintSizeW = 18;
+ $maxPrintSizeH = 14;
+
+
+if(in_array($reqCateVar,$tabletArray)){
+ $maxPrintSizeW = 15.5;
+ $maxPrintSizeW = 18;
+ $maxPrintSizeH = 14;
+} 
+ 
+if(in_array($reqCateVar,$laptopArray)){
+ $maxPrintSizeW = 15.5;
+ $maxPrintSizeW = 18;
+ $maxPrintSizeH = 14;
+} 
+
+if($currentStyle == 348){
+ $maxPrintSizeW = 15.5;
+ $maxPrintSizeW = 15;
+ $maxPrintSizeH = 11;
+} 
+
+
+?>	
+     <input type="text" onchange="opConfig.reloadPrice()" id="options_<?php echo $_option->getId() ?>_text" class="input-text<?php echo $_option->getIsRequire() ? ' required-entry' : '' ?> validate-number-range number-range-1-<?php if($this->escapeHtml($_option->getTitle()) == 'H') echo $maxPrintSizeH; if($this->escapeHtml($_option->getTitle()) == 'W') echo $maxPrintSizeW;?> product-custom-option <?php if($this->escapeHtml($_option->getTitle()) == 'H') echo 'laptabh'; if($this->escapeHtml($_option->getTitle()) == 'W') echo 'laptabw';?>" name="options[<?php echo $_option->getId() ?>]" value="<?php echo $this->escapeHtml($this->getDefaultValue()) ?>" onkeypress="javascript:return isNumber (event)" max="<?php if($this->escapeHtml($_option->getTitle()) == 'H') echo $maxPrintSizeH; if($this->escapeHtml($_option->getTitle()) == 'W') echo $maxPrintSizeW;?>" min="1" step="0.5" /><span class="red">Max:&nbsp;<?php if($this->escapeHtml($_option->getTitle()) == 'H') echo $maxPrintSizeH; if($this->escapeHtml($_option->getTitle()) == 'W') echo $maxPrintSizeW;?></span>
+
+<?php }else{?>	
+     <input type="text" onchange="opConfig.reloadPrice()" id="options_<?php echo $_option->getId() ?>_text" class="input-text<?php echo $_option->getIsRequire() ? ' required-entry' : '' ?> <?php echo $_option->getMaxCharacters() ? ' validate-length maximum-length-'.$_option->getMaxCharacters() : '' ?> product-custom-option" name="options[<?php echo $_option->getId() ?>]" value="<?php echo $this->escapeHtml($this->getDefaultValue()) ?>" onkeypress="javascript:return isNumber (event)" />
+<?php }?>     
+    <?php elseif ($_option->getType() == Mage_Catalog_Model_Product_Option::OPTION_TYPE_AREA): ?>
+     <textarea id="options_<?php echo $_option->getId() ?>_text" onchange="opConfig.reloadPrice()" class="<?php echo $_option->getIsRequire() ? ' required-entry' : '' ?> <?php echo $_option->getMaxCharacters() ? ' validate-length maximum-length-'.$_option->getMaxCharacters() : '' ?> product-custom-option" name="options[<?php echo $_option->getId() ?>]" rows="5" cols="25"><?php echo $this->escapeHtml($this->getDefaultValue()) ?></textarea>
+      <?php endif; ?>
+      <?php if ($_option->getMaxCharacters()): ?>
+          <p class="note"><?php echo Mage::helper('catalog')->__('Maximum number of characters:')?> <strong><?php echo $_option->getMaxCharacters() ?></strong></p>
+      <?php endif; ?>
+      </div>
+  </dd>
+</div>
+<?php if(!$_option->decoratedIsLast){?><div class="cross" id="cross" style="display:none;"><i class="fa fa-times displayNone"></i></div><?php } ?>
+<?php
+if($this->escapeHtml($_option->getTitle()) == 'Product Detail')
+{?>
+<script type="text/javascript">
+var option = document.getElementById("options_<?php echo $_option->getId() ?>_text");
+option.value = "<?php echo $value;?>";
+//document.getElementById("product-options-wrapper").style.display = 'none';
+</script>
+<?php } ?>
+<?php
+$_category = $_category = Mage::registry('current_category');
+$path = $_category->getPath();
+$path_id = explode("/", $path);
+if((in_array(3, $path_id) || in_array(479, $path_id) || in_array(518, $path_id)))
+{?>
+<script type="text/javascript">
+document.getElementById("product-options-wrapper").style.display = 'none';
+</script><?php	
+}
+else if(in_array(34, $path_id))
+{?>
+	<script type="text/javascript">
+	document.getElementById("text-option-div").style.display = 'none';
+	</script><?php
+}
+?>
+<script type="text/javascript">
+function isNumber(evt) 
+{
+   var iKeyCode = (evt.which) ? evt.which : evt.keyCode
+   if (iKeyCode != 46 && iKeyCode > 31 && (iKeyCode < 48 || iKeyCode > 57))
+        return false;
+       return true;
+} 
+</script>

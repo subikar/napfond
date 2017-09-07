@@ -1,0 +1,171 @@
+<script type="text/javascript" src="<?php echo Mage::getStoreConfig(Mage_Core_Model_Url::XML_PATH_SECURE_URL);?>js/lib/jquery/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="<?php echo Mage::getStoreConfig(Mage_Core_Model_Url::XML_PATH_SECURE_URL);?>js/lib/jquery/noconflict.js"></script>
+<div class="content-header">
+ <table cellspacing="0" class="grid-header">
+  <tr>
+   <td width="25%" height="35"><h3><?php echo $this->__('Update Mask Image')?></h3></td>
+  </tr>
+ </table>
+</div>
+<div class="grid" id="display-cat">
+<?php
+
+function getCategoriesTreeView() {
+    // Get category collection
+    $categories = Mage::getModel('catalog/category')
+        ->getCollection()
+        ->addAttributeToSelect('name')
+        ->addAttributeToSort('path', 'asc')
+        ->addFieldToFilter('is_active', array('eq'=>'1'))
+		->addAttributeToFilter('path', array('like' => '%/24/%'))	
+        ->load()
+        ->toArray();
+
+    // Arrange categories in required array
+    $categoryList = array();
+    foreach ($categories as $catId => $category) {		
+        if (isset($category['name'])) {
+			
+		            $categoryList[] = array(
+                'label' => $category['name'],
+                'level'  =>$category['level'],
+                'children_count'  =>$category['children_count'],
+				'path'  =>$category['path'],
+                'value' => $catId
+            );
+        }
+    }
+    return $categoryList;
+}
+
+$arr_Mask_Image = array("mobile-case"=>array('id'=>'3','images'=>array("mask.png")),"mobile-skin"=>array('id'=>'34','images'=>array("mask-front.png","mask-back.png")),"tablet-skin"=>array('id'=>'478','images'=>array("mask.png","mask-front.png","mask-back.png")),"laptop-skin"=>array('id'=>'8','images'=>array("mask.png")),"t-shirt"=>array('id'=>'4','images'=>array("mask.png")));
+
+?>
+
+<script type="text/javascript">
+
+function validateFormMaskImage(frm){
+	
+	if(document.getElementById("categorylist").value=="")
+	{
+		alert("Please choose category.")
+		return false;
+	}
+	else if(jQuery("#categorylist option:selected").attr("imageattr") == "")
+	{
+		alert("You can not assign mask image to generic categories.")
+		return false;
+	}
+	else if(jQuery("#categorylist option:selected").attr("imageattr") == "single")
+	{		
+        fuData = document.getElementById('mask_image1');
+        FileUploadPath = fuData.value;
+		if (FileUploadPath == ''){
+		alert("Please upload mask image.")
+		return false;
+		}
+	}
+	else if(jQuery("#categorylist option:selected").attr("imageattr") == "double")
+	{		
+        fuData = document.getElementById('mask_image1_1');
+        FileUploadPath = fuData.value;
+		if (FileUploadPath == ''){
+		alert("Please upload front mask image.")
+		return false;
+		}
+		
+		
+        fuData = document.getElementById('mask_image1_2');
+        FileUploadPath = fuData.value;
+		if (FileUploadPath == ''){
+		alert("Please upload back mask image.")
+		return false;
+		}
+	}
+		
+}
+
+function showHideMaskImage(){	
+	if(jQuery("#categorylist option:selected").attr("imageattr") == "single"){
+		jQuery('#mask_image1_1').val('');
+		jQuery('#mask_image1_2').val('');
+		
+		document.getElementById('mask_image1_1').value=''
+		document.getElementById('mask_image1_2').value=''
+		
+		document.getElementById("single").style.display = '';
+		document.getElementById("double").style.display = 'none';		
+	}
+	if(jQuery("#categorylist option:selected").attr("imageattr") == 'double'){
+		jQuery('#mask_image1').val('');
+		document.getElementById('mask_image1').value=''
+		document.getElementById("single").style.display = 'none';
+		document.getElementById("double").style.display = '';		
+	}	
+}
+
+</script>
+
+
+
+<form name="maskImageFrm" id="maskImageFrm" action="<?=$this->getUrl('*/*/post')?>" method="post" onsubmit="return validateFormMaskImage(this)" enctype="multipart/form-data">
+<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+<select id="categorylist" name="categorylist" onchange="javascript:showHideMaskImage()">
+<option value="">Select Category</option>
+<?php
+    $categoriesTreeView = getCategoriesTreeView();
+
+    foreach($categoriesTreeView as $value)
+    {
+        $catName = $value['label'];
+        $catId = $value['value'];
+        $catLevel = $value['level'];
+        $children_count = $value['children_count'];
+        $path = $value['path'];
+
+		$pathArray = explode('/',$path);
+			
+        $space = '&nbsp;';
+        for($i=1; $i<$catLevel; $i++){
+            $space = $space."&nbsp;";
+        }
+		if($children_count == 0)
+		$catName = $space.$catName;
+		else
+        $catName = $space.'--'.strtoupper($catName).'--';
+		
+		$imageAttr = '';
+		if($children_count==0)
+		{
+		  if(in_array(3,$pathArray))
+			  $imageAttr = 'single';
+		  if(in_array(34,$pathArray))
+			  $imageAttr = 'double';
+		  if(in_array(478,$pathArray))
+			  $imageAttr = 'single';
+		  if(in_array(8,$pathArray))
+			  $imageAttr = 'single';
+		  if(in_array(4,$pathArray))
+			  $imageAttr = 'single';		  
+		}
+?>
+     <option imageattr="<?php echo $imageAttr;?>" value="<?php if($children_count==0) echo $catId; else echo "noChild"; ?>"  <?php if($children_count > 0){ ?>style="font-weight:bold;text-decoration:underline;"<?php }?>><?php echo $catName ?></option>
+ <?php
+    }
+?>
+</select>
+
+<br/><br/><br/>
+<div id="single" style="display:none">
+Upload Mask Image:&nbsp;&nbsp;<input type="file" name="mask_image1" id="mask_image1"/>&nbsp;&nbsp;(PNG format) / 1000px X 1000px
+</div>
+<br/><br/><br/>
+<div id="double" style="display:none">
+Upload Front Mask Image:&nbsp;&nbsp;<input type="file" name="mask_image1_1" id="mask_image1_1"/>&nbsp;&nbsp;(PNG format) / 1000px X 1000px<br/><br/>
+Upload Front Mask Image:&nbsp;&nbsp;<input type="file" name="mask_image1_2" id="mask_image1_2"/>&nbsp;&nbsp;(PNG format) / 1000px X 1000px
+</div>
+<br/><br/><br/>
+
+<input type="submit" value="Submit"/>
+</form>
+</div>

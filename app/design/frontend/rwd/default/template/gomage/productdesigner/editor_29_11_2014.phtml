@@ -1,0 +1,433 @@
+<?php
+/**
+ * GoMage Product Designer Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use/
+ * @version      Release: 1.0.0
+ * @since        Available since Release 1.0.0
+ */
+?>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery.fancybox.js');?>"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('css/jquery.fancybox.css');?>" media="all" />
+<?php
+$_product = $this->getProduct();
+//Is Product Navigation (Choose Product) Tab Enabled
+$navigationEnabled = $this->isNavigationEnabled();
+
+//Is Design (Add Design) Tab Enabled
+$designEnabled = $this->isDesignEnabled() && $_product->getId();
+
+//Is Text (Add Text) Tab Enabled
+$textEnabled = $this->isTextEnabled() && $_product->getId();
+
+//Is Image (Upload Image) Tab Enabled
+$imageEnabled = $this->isUploadImageEnabled() && $_product->getId();
+
+$productImageMinSize = $this->getProductOriginalImageMinSizes();
+?>
+<script type="text/javascript">
+var hellotest = '';
+var optionsPrice = new Product.OptionsPrice(<?php echo $this->helper('gomage_designer')->getProductPriceConfigJson(); ?>);
+function initProductDesigner() {
+	var settings = {};
+	settings.navigation = {
+		chooseProduct : $("pd_choose_product"),
+		addDesign : $("pd_add_design"),
+		addText : $("pd_add_text"),
+		addImage : $("pd_add_image"),
+		designGallery : $("pd_design_gallery"),
+		saveDesign: $("pd_save_design"),
+		continue : $('pd_gt_product'),
+		zoom: $('pd_zoom')
+	};
+
+	settings.controls = {
+		undo: 'pd_undo',
+		redo: 'pd_redo',
+		flip_x: 'pd_flip_horizontal',
+		flip_y: 'pd_flip_vertical',
+		allign_by_center: 'pd_allign_by_center',
+		remove: 'pd_delete'
+	};
+
+	settings.imageMinSize = <?php echo $this->getProductOriginalImageMinSizesJson(); ?>;
+
+	settings.prices = <?php echo $this->getDesignPriceConfigJson(); ?>;
+	settings.isCustomerLoggedIn = '<?php echo $this->isCustomerLoggedIn(); ?>';
+	settings.isProductSelected = <?php echo $this->isProductSelected() ? 1 : 0; ?>;
+	settings.isNavigationEnabled = <?php echo $this->isNavigationEnabled(); ?>;
+	settings.isDesignedEnabled = <?php echo $this->isDesignEnabled(); ?>;
+	settings.isTextEnabled = <?php echo $this->isTextEnabled(); ?>;
+	settings.isUploadImageEnabled = <?php echo $this->isUploadImageEnabled(); ?>;
+	settings.product = <?php echo $this->getEditorConfigJson(); ?>;
+	settings.container = $("pd_container");
+
+	window.w = new GoMage.ProductDesigner(settings,
+		'<?php echo Mage::getUrl('*/index/continue')?>',
+		'<?php echo Mage::getUrl('*/customer/loginPost')?>',
+		'<?php echo Mage::getUrl('*/customer/createPost')?>',
+		'<?php echo Mage::getUrl('*/index/saveDesign')?>'
+	);
+}
+document.observe("dom:loaded", function(e){
+	initProductDesigner();
+}.bind(this));
+
+
+jQuery(document).ready(function() {
+	jQuery("#divform").fancybox({
+			'titlePosition'		: 'inside',
+			'transitionIn'		: 'none',
+			'transitionOut'		: 'none'
+		});
+});
+
+function load_img(id, name)
+{
+  var dataString='cat_id='+id+'&cat_name='+name;
+  jQuery.ajax({
+	  type: "POST",
+	  url: '<?php echo $this->getUrl('stock_images.php');?>',
+	  data: dataString,
+	  success: function(data){
+		  if(data)
+		  {
+			  document.getElementById("uploadedImages1").innerHTML = data;			  
+		  }
+	  }
+  });
+}
+jQuery(document).ready(function () {	
+  jQuery('#pd_sides').click(function () {
+	  var text = jQuery(this).children('.pd_sides_list');
+	  if (text.is(':hidden')) {
+		  text.slideDown('1000');
+		  jQuery(this).children('.arror_img').html('<?php echo $img2; ?>');		
+	  } else {
+		  text.slideUp('1000');
+		  jQuery(this).children('.arror_img').html('<?php echo $img1; ?>');		
+	  }		
+  });
+});
+
+</script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery.maskImage.js');?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery-ui1.11.1.js');?>"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('css/jquery-ui1.8.css');?>" media="all" />    
+<script type="text/javascript">
+//jQuery(function() {
+//				// first, do a quick demo using black-to-red.png
+//	/*jQuery('#img1').maskImage({'src':'http://dev.gravitainfotech.com:8282/projects/Active/jazzy1/media/catalog/product/cache/1/base_image/400x520/17f82f742ffe127f42dca9de82fb58b1/m/a/mask-2_1.png'});*/
+//	
+//	// now, let's set up the select to change things on the fly
+//	jQuery('.clipart-image').click(function(){
+//		alert("hello");
+//		var val=jQuery(this).val();
+//		jQuery('.pd-canvas-pane')
+//			.attr('src', 'http://dev.gravitainfotech.com:8282/projects/Active/jazzy1/media/gomage/productdesigner/uploadedImage/cache/64_64/2m5j4n71f8pimjpngqg52gro65/89a19191b0d94ad44e05ani-005.jpg')
+//			.maskImage({'src':'http://dev.gravitainfotech.com:8282/projects/Active/jazzy1/media/catalog/product/cache/1/base_image/400x520/17f82f742ffe127f42dca9de82fb58b1/m/a/mask-2_1.png'});
+//	});
+//});
+
+/*var c = document.getElementById("pd-canvas-id");
+			var child = c.children[0];
+			alert(child);*/
+			
+jQuery(document).ready(function() 
+{
+	
+	var ctx = jQuery('#pd-canvas-id').get(0);
+ 
+	 //caches the query when dom is ready
+	
+	//var images = jQuery('#myfirsttestt');
+	
+	
+	var CELL_WIDTH = 150;
+	var CELL_HEIGHT = 160;
+	var ASPECT = 1.5;        
+	jQuery( "#slider" ).slider({
+		step: 3,
+		min: 30,
+		max: 200,
+		value: 100,
+		slide: function(event, ui) {
+			
+			alert(hellotest)
+				var images = hellotest;
+			var size = (CELL_WIDTH * ui.value / 100) + "px";
+			var size1 = (CELL_HEIGHT * ui.value / 50) + "px";
+			images.stop(true).animate({width: size, height: size1}, 250);
+		}
+	});
+	
+	  jQuery('#slider1').slider({
+		  step: 3,
+		  min: 0,
+		  max: 180,
+		  value: 100,
+		  slide: function(event, ui) {
+				  jQuery('.pd-canvas-pane').css('transform','rotate('+ui.value+'deg)');  			  
+		  }
+	 });		
+});
+</script>
+<style type="text/css">
+#slider {width: 150px;margin: 20px 0;}
+#slider1 {width: 150px;margin: 20px 0;}
+</style>
+<?php 
+$img1 = '<img src="'.$this->getSkinUrl('images/image-section-arrow-bottom1.png').'" alt="Arrow" width="11" height="8" align="right" style="cursor:pointer; margin-top:5px;"/>';
+$img2 = '<img src="'.$this->getSkinUrl('images/image-section-arrow-right.png').'" alt="Arrow" width="8" height="11" align="right" style="cursor:pointer; margin-top:5px;"/>';
+?>
+
+<div id="product-designer" class="product-designer">
+  <div class="product-designer-header"></div>
+  <div class="jumbotron">
+    <div class="product-designer-content">      
+        <div id="pd_nav_container" class="pd_nav_container">
+          <ul class="nav nav-pills nav-stacked mainProduct">
+           <li> <span class="glyphicon glyphicon-camera"></span>
+            <button class="button pd-btn" style="<?php echo !$imageEnabled || !$this->isProductSelected()? 'display:none' : ''; ?>" id="pd_add_image"><span><?php echo Mage::helper('gomage_designer')->__('Upload Images') ?></span></button>
+           </li>
+           <li> <span class="glyphicon glyphicon-font"></span>
+            <button class="button pd-btn" style="<?php echo !$textEnabled || !$this->isProductSelected()? 'display:none' : ''; ?>" id="pd_add_text"><span><?php echo Mage::helper('gomage_designer')->__('Add Text') ?></span></button>
+           </li>
+           <li> <span class="glyphicon glyphicon-star"></span>
+            <button class="button pd-btn" style="<?php echo !$designEnabled || !$this->isProductSelected() ? 'display:none' : '';?>" id="pd_add_design"><span><?php echo Mage::helper('gomage_designer')->__('Add Cliparts') ?></span></button>
+           </li>
+            <?php /*?><li> <span class="glyphicon glyphicon-screenshot"></span>
+              <button class="button pd-btn" style="<?php echo !$navigationEnabled ? 'display:none' : ''; ?>" id="pd_choose_product"><span><?php echo Mage::helper('gomage_designer')->__('Choose Product') ?></span></button>
+            </li><?php */?>
+            
+            <div class="btn-group btn-group-justified">
+            <div class="btn-group">
+              <button class="button pd-btn" id="pd_zoom"><span><span><?php echo Mage::helper('gomage_designer')->__('Preview') ?></span></span></button>
+            </div>
+            <div class="btn-group">
+              <button class="button pd-btn disabled" id="pd_save_design"><span><span><?php echo Mage::helper('gomage_designer')->__('Save  Design') ?></span></span></button>
+            </div>
+            <div class="btn-group">
+              <button class="button pd-btn disabled" id="pd_gt_product"><span><span><?php echo Mage::helper('gomage_designer')->__('Continue') ?></span></span></button>
+            </div>
+          </div>
+          
+          </ul>       
+        </div>
+      
+      <div class="col-sm-3">
+        <div id="pd_nav_container" class="pd_nav_container leftPdNav"> 
+          <?php /*?><!--<ul class="nav nav-pills nav-stacked">
+    <li> <span class="glyphicon glyphicon-screenshot"></span>
+      <button class="button pd-btn" style="<?php echo !$navigationEnabled ? 'display:none' : ''; ?>" id="pd_choose_product"><span><span><?php echo Mage::helper('gomage_designer')->__('Choose Product') ?></span></span></button>
+    </li>
+    <li> <span class="glyphicon glyphicon-star"></span>
+      <button class="button pd-btn" style="<?php echo !$designEnabled || !$this->isProductSelected() ? 'display:none' : '';?>" id="pd_add_design"><span><span><?php echo Mage::helper('gomage_designer')->__('Add Cliparts') ?></span></span></button>
+    </li>
+    <li> <span class="glyphicon glyphicon-font"></span>
+      <button class="button pd-btn" style="<?php echo !$textEnabled || !$this->isProductSelected()? 'display:none' : ''; ?>" id="pd_add_text"><span><span><?php echo Mage::helper('gomage_designer')->__('Add Text') ?></span></span></button>
+    </li>
+    <li> <span class="glyphicon glyphicon-camera"></span>
+      <button class="button pd-btn" style="<?php echo !$imageEnabled || !$this->isProductSelected()? 'display:none' : ''; ?>" id="pd_add_image"><span><span><?php echo Mage::helper('gomage_designer')->__('Upload Images') ?></span></span></button>
+    </li>
+   </ul>--><?php */?>
+          <div id="pd_bottom_panel" class="pd_bottom_panel" style="width: <?php // echo $this->getProductImageWidth();?>auto; display: <?php echo !$this->isProductSelected() ? 'none' : 'block'?>">
+            <ul class="nav nav-pills nav-stacked productLeft">
+              <li> <span class="glyphicon glyphicon-resize-vertical"></span>
+                <button class="button pd-btn disabled btn-info" id="pd_flip_horizontal"><span><?php echo Mage::helper('gomage_designer')->__('Horizontal Flip') ?></span></button>
+              </li>
+              <li> <span class="glyphicon glyphicon-resize-horizontal"></span>
+                <button class="button pd-btn disabled btn-info" id="pd_flip_vertical"><span><?php echo Mage::helper('gomage_designer')->__('Vertical Flip') ?></span></button>
+              </li>
+              <li> <span class="glyphicon glyphicon-trash"></span>
+                <button class="button pd-btn disabled btn-info" id="pd_delete"><span><?php echo Mage::helper('gomage_designer')->__('Remove') ?></span></button>
+              </li>
+              <li> <span class="glyphicon glyphicon-align-center"></span>
+                <button class="button pd-btn disabled btn-info" id="pd_allign_by_center"><span><?php echo Mage::helper('gomage_designer')->__('Align by center') ?></span></button>
+              </li>
+              <li> <span class="glyphicon glyphicon-chevron-left"></span>
+                <button class="button pd-btn disabled btn-info" id="pd_undo"><span><?php echo Mage::helper('gomage_designer')->__('Undo') ?></span></button>
+              </li>
+              <li> <span class="glyphicon glyphicon-chevron-right"></span>
+                <button class="button pd-btn disabled btn-info" id="pd_redo"><span><?php echo Mage::helper('gomage_designer')->__('Redo') ?></span></button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-5 whiteBg">
+        <div class="product-designer-main-col">
+          <div id="pd_container"></div>
+        </div>
+      </div>
+      <div class="col-sm-4 ">
+        <?php /*?><div id="pd_save_container" class="pd_save_container rightSave" style="display: <?php echo $this->isProductSelected() ? 'block': 'none'?>">
+          <div class="btn-group btn-group-justified">
+            <div class="btn-group">
+              <button class="button pd-btn" id="pd_zoom"><span><span><?php echo Mage::helper('gomage_designer')->__('Preview') ?></span></span></button>
+            </div>
+            <div class="btn-group">
+              <button class="button pd-btn disabled" id="pd_save_design"><span><span><?php echo Mage::helper('gomage_designer')->__('Save  Design') ?></span></span></button>
+            </div>
+            <div class="btn-group">
+              <button class="button pd-btn disabled" id="pd_gt_product"><span><span><?php echo Mage::helper('gomage_designer')->__('Continue') ?></span></span></button>
+            </div>
+          </div>         
+        </div><?php */?>
+        <div class="product-designer-sidebar">
+          <div id="pd_panels" class="pd_panels pd-box"> 
+            <!-- Product Designer Tabs -->
+            <div id="pd_tabs" class="pd_tabs">
+              <?php if ($this->isNavigationEnabled()): ?>
+              <div class="pd-tab-content" id="pd_choose_product-content" <?php if ($this->isActiveTab('navigation')): ?>style="display: block;"<?php endif;?>>
+                <h4 class="pd-header"><?php echo $this->__('Choose Product'); ?></h4>
+                <?php if ($this->isHelpEnabled('navigation')):?>
+                <span class="tab-help-icon">?</span> 
+                <div class="tab-help-content" style="display: none; width: <?php echo $this->getHelpPopupWidth('navigation')?>px; height: <?php echo $this->getHelpPopupHeight('navigation')?>px"> <?php echo $this->getHelpText('navigation');?> </div>
+                <?php endif;?>
+                <div class="pd-content"> <?php echo $this->getChildHtml('productNavigator'); ?> </div>
+              </div>
+              <?php endif;?>
+              <?php if ($this->isDesignEnabled()): ?>
+              <div class="pd-tab-content" id="pd_add_design-content" <?php if ($this->isActiveTab('design')): ?>style="display: block;"<?php endif;?>>
+                <h4 class="pd-header"><?php echo $this->__('Choose Cliparts'); ?></h4>
+                <?php if ($this->isHelpEnabled('design')):?>
+                <span class="tab-help-icon">?</span>
+                <div class="tab-help-content" style="display: none; width: <?php echo $this->getHelpPopupWidth('design')?>px; height: <?php echo $this->getHelpPopupHeight('design')?>px"> <?php echo $this->getHelpText('design');?> </div>
+                <?php endif;?>
+                <div class="pd-content"> <?php echo $this->getChildHtml('addDesign'); ?> </div>
+              </div>
+              <?php endif;?>
+              <?php if ($this->isTextEnabled()): ?>
+              <div class="pd-tab-content" id="pd_add_text-content" <?php if ($this->isActiveTab('text')): ?>style="display: block;"<?php endif;?>>
+                <h4 class="pd-header"><?php echo $this->__('Add Text'); ?></h4>
+                <?php if ($this->isHelpEnabled('text')):?>
+                <span class="tab-help-icon">?</span>
+                <div class="tab-help-content" style="display: none; width: <?php echo $this->getHelpPopupWidth('text')?>px; height: <?php echo $this->getHelpPopupHeight('text')?>px"> <?php echo $this->getHelpText('text');?> </div>
+                <?php endif;?>
+                <div class="pd-content"> <?php echo $this->getChildHtml('addText'); ?> </div>
+              </div>
+              <?php endif;?>
+              <?php if ($this->isUploadImageEnabled()): ?>
+              <div class="pd-tab-content" id="pd_add_image-content" <?php if ($this->isActiveTab('upload_image')): ?>style="display: block;"<?php endif;?>>
+                <div class="scale-toggle">
+                    <h4 class="pd-header" style="margin-top:5px;"><?php echo $this->__('Scale'); ?></h4>
+                    <!--<input id="scale-control" type="range" step="0.1" max="3" min="0.1" value="1">-->
+                    <div id="slider"></div>
+                </div> 
+                <div class="rotate-toggle">
+                    <h4 class="pd-header" style="margin-top:5px;"><?php echo $this->__('Rotate'); ?></h4>
+                    <div id="slider1"></div>
+                </div>
+                <!--<div id="buttonWrapper">
+                  <input type="button" id="plus" value="+" style="padding:5px; width:30px;" onclick="jQuery('.pd-canvas-pane')">
+                  <input type="button" id="minus" value="-" style="padding:5px; width:30px;">
+                </div>-->
+                
+                <h4 class="pd-header"><?php echo $this->__('Upload Images'); ?></h4>
+                <?php if ($this->isHelpEnabled('upload_image')):?>
+                <span class="tab-help-icon">?</span>
+                <div class="tab-help-content" style="display: none; width: <?php echo $this->getHelpPopupWidth('upload_image')?>px; height: <?php echo $this->getHelpPopupHeight('upload_image')?>px"> <?php echo $this->getHelpText('upload_image');?> </div>
+                <?php endif;?>
+                <div class="pd-content"> <?php echo $this->getChildHtml('uploadImage'); ?> </div>
+                <a href="#show_div" id="divform">
+                <h4 class="pd-header" style="margin-top:5px;"><?php echo $this->__('Choose From Stock'); ?></h4>
+                </a>
+                <?php /*?><div style="display: none;">
+                  <div id="show_div" class="choose-stroke" style="width:700px;height:500px;overflow:auto;">
+                    <h2>Gallery</h2>
+                    <div class="sleft">
+                      <ul>
+                        <?php
+						$connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+						$select = $connection->select()
+						->from('stock_cat', array('cat_id', 'cat_name'))
+						->where('active=?',1); 
+						$rowsArray = $connection->fetchAll($select); 
+						for($i=0;$i<count($rowsArray);$i++)
+						{ ?>
+                        <li>
+                          <div onclick="load_img('<?php echo $rowsArray[$i]['cat_id'];?>', '<?php echo $rowsArray[$i]['cat_name'];?>')"> <?php echo $rowsArray[$i]['cat_name'];?> </div>
+                        </li>
+                        <?php	
+						}
+                     ?>
+                      </ul>
+                    </div>
+                    <div class="sright">
+                      <div id="uploadedImages1">
+                        <?php
+						 $connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+						 $media = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);
+						 $select = $connection->select()
+						 ->from('stock_img', array('img_id', 'img_name'))
+						 ->where('cat_id=?',1);
+						 $rowsArray = $connection->fetchAll($select);
+						 if(count($rowsArray) > 0)
+						 {
+							for($i=0;$i<count($rowsArray);$i++)
+							{ 		
+							   echo '<div class="image-ppc"><img class="clipart-image" src="'.$media.'stock/animals/'.$rowsArray[$i]['img_name'].'" data-origin-url="'.$media.'stock/animals/'.$rowsArray[$i]['img_name'].'" onclick="parent.jQuery.fancybox.close();"></div>';	
+							}						
+						 }
+					?>
+                      </div>
+                    </div>
+                  </div>
+                </div><?php */?>
+              </div>
+              <?php endif;?>
+            </div>
+            <!-- End Of Product Designer Tabs --> 
+            
+          </div>
+          <div id="additional_panels" style="display: <?php echo !$this->isProductSelected() ? 'none' : 'block'?>">
+            <?php $config = $this->getEditorConfig(); ?>
+            <div id="pd_sides" class="pd_sides pd-box">
+              <h4 class="pd-header"><?php echo $this->__('Choose Side') ?> <span class="arror_img"> <img src="<?php echo $this->getSkinUrl('images/image-section-arrow-right.png');?>" alt="Arrow" width="8" height="11" align="right" style="cursor:pointer; margin-top:5px;"/> </span> </h4>
+              <ul class="pd_sides_list" style="display:none;">
+                <?php $images = $this->getProductImages();?>
+                <?php foreach ($images as $k => $v): ?>
+                <li> <img width="48" height="48" class="product-image" src="<?php echo $v['u'] ?>" data-id="<?php echo $k; ?>" data-image-id="<?php echo $v['id'] ?>" alt=""> </li>
+                <?php endforeach ?>
+              </ul>
+              <script type="text/html" class="no-display" id="product-image-template">
+               <li>
+                <img width="48" height="48" class="product-image" src="#{url}" data-id="#{image-id}" data-image-id="#{data-image-id}">
+               </li>
+              </script> 
+            </div>
+            <?php $colors = $this->getProductColors();?>
+            <div id="product-colors" class="product-colors pd-box" style="<?php if (!$colors || empty($colors)) echo "display: none";?>">
+              <h4 class="pd-header"><?php echo $this->__('Choose Color') ?></h4>
+              <?php if ($colors): ?>
+              <?php foreach($colors as $color): ?>
+              <span class="color-btn <?php if ($color['option_id'] == $config['default_color']) echo 'selected'?>" data-color_id="<?php echo $color['option_id']?>" <?php if ($color['image']):?>style="background-image: url(<?php echo $color['image']; ?>); background-position: 50% 50%; background-repeat: no-repeat no-repeat"<?php endif;?>>
+              <?php if (!$color['image']): echo $color['value']; endif;?>
+              </span>
+              <?php endforeach;?>
+              <?php endif;?>
+            </div>
+            <?php if ($this->additionalInstructionsEnabled()): ?>
+            <div id="additional_instructions" class="additional_instructions pd-box"> <?php echo $this->getChildHtml('additionalInstructions');?> </div>
+            <?php endif; ?>
+          </div>
+          <?php /*?><div id="design_price_container" class="product-designer-price" style="<?php if (!$this->isProductSelected()) echo "display: none"?>"> <?php echo $this->getChildHtml('design_price'); ?> </div><?php */?>
+        </div>
+      </div>
+    </div>
+    
+    <div id="design_price_container" class="product-designer-price" style="<?php if(!$this->isProductSelected()) echo "display: none"?>">   
+	<?php echo $this->getChildHtml('design_price'); ?> </div>
+  </div>
+</div>
+<?php if (!$this->getCustomerId()): ?>
+<?php echo $this->getChildHtml('customer.login');?> <?php echo $this->getChildHtml('customer.register');?>
+<?php endif;?>
+<div id="product-zoom-container" style="width: <?php echo $productImageMinSize['width'] + 5 ?>px; height: <?php echo $productImageMinSize['height']+5 ?>px;">
+  <canvas id="product-zoom-canvas"></canvas>
+</div>

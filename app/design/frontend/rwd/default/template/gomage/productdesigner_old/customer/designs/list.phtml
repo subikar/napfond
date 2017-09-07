@@ -1,0 +1,57 @@
+<?php
+/**
+ * GoMage Product Designer Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use/
+ * @version      Release: 1.0.0
+ * @since        Available since Release 1.0.0
+ */
+?>
+<?php
+    $_designCollection=$this->getDesignCollection();
+    $_helper = $this->helper('catalog/output');
+    $_collectionSize = $_designCollection->getSize();
+?>
+<?php if(!$_collectionSize): ?>
+    <p class="note-msg"><?php echo $this->__('You have no designed products') ?></p>
+<?php else: ?>
+        <?php $_columnCount = $this->getColumnCount(); ?>
+        <?php $i=0; foreach ($_designCollection as $_design): ?>
+            <?php $_product = $_design->getProduct(); ?>
+            <?php if ($i++%$_columnCount==0): ?>
+            <ul class="products-grid">
+            <?php endif ?>
+            <li class="item<?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif; ?>">
+                <a href="<?php echo $_product->getDesignedProductUrl($_design->getDesignId()) ?>" class="product-image">
+                    <img src="<?php echo $this->getImage($_design); ?>" width="135" height="135" alt="" />
+                </a>
+                <h2 class="product-name">
+                    <a href="<?php echo $_product->getDesignedProductUrl($_design->getDesignId()); ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>"><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></a>
+                </h2>
+                <div class="actions">
+                    <?php if($_product->isSaleable()): ?>
+                        <button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product, array('design' => $_design->getId())) ?>')"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button>
+                    <?php else: ?>
+                        <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+                    <?php endif; ?>
+                    <button type="button" title="<?php echo $this->__('Delete') ?>" class="button btn-cart" onclick="confirmDelete('<?php echo $this->getDeleteUrl($_design->getId()) ?>');"><span><span><?php echo $this->__('Delete') ?></span></span></button>
+                </div>
+            </li>
+            <?php if ($i%$_columnCount==0 || $i==$_collectionSize): ?>
+            </ul>
+            <?php endif ?>
+        <?php endforeach ?>
+        <script type="text/javascript">decorateGeneric($$('ul.products-grid'), ['odd','even','first','last'])</script>
+    <?php echo $this->getPagerHtml(); ?>
+<?php endif; ?>
+<script type="text/javascript">
+    function confirmDelete(url) {
+        if (confirm('<?php echo $this->__('Are you sure want to remove this design?')?>')) {
+            setLocation(url);
+        }
+    }
+</script>

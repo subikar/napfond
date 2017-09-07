@@ -1,0 +1,145 @@
+<?php
+/**
+ * Media Rocks GbR
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA that is bundled with 
+ * this package in the file MEDIAROCKS-LICENSE-COMMUNITY.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://solutions.mediarocks.de/MEDIAROCKS-LICENSE-COMMUNITY.txt
+ *
+ * =================================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * =================================================================
+ * This package is designed for Magento COMMUNITY edition. 
+ * Media Rocks does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Media Rocks does not provide extension support in case of
+ * incorrect edition usage.
+ * =================================================================
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade the extension
+ * to newer versions in the future. If you wish to customize the extension
+ * for your needs please send an email to support@mediarocks.de
+ *
+ */
+
+/**
+ * Frontend newsletter subscription template
+ *
+ * @category   design
+ * @package    Mediarocks_ExtendedNewsletterSubscription
+ * @author     Media Rocks Developer
+ */ 
+?>
+
+<div class="block block-subscribe">
+  <?php /*?> <div class="block-title">
+  <strong><span><?php echo $this->__('Newsletter') ?></span></strong>
+ </div>
+<?php */?>
+  <form action="<?php echo $this->getFormActionUrl() ?>" method="post" id="newsletter-validate-detail">
+    <div class="block-content">
+      <?php /* ?><div class="form-subscribe-header">
+                <label for="newsletter"><?php echo $this->__('Sign Up for Our Newsletter:') ?></label>
+            </div><?php */ ?>
+       <div class="row"><div class="col-xs-10 col-xs-offset-1">
+        <div class="row row-xs">
+          <div class="col-sm-4">
+            <input type="text" autocapitalize="off" autocorrect="off" spellcheck="false" name="firstname" id="firstname" placeholder="<?php echo $this->__('Enter Your Name') ?>" title="<?php echo $this->__('Enter Your Name') ?>" class="form-control input-text" />
+          </div>
+          <div class="col-sm-4">
+            <input type="email" autocapitalize="off" autocorrect="off" spellcheck="false" name="email" id="email" placeholder="<?php echo $this->__('Enter Your Email') ?>" title="<?php echo $this->__('Enter Your Email') ?>" class="form-control required-entry validate-email" />
+          </div>
+          <?php /*?><p><?php echo $this->__('Sign Up for Our Newsletter:') ?></p><?php */?>
+          <?php /*?><ul class="form-list" style="list-style:none;">
+	  <?php if (Mage::getStoreConfig('newsletterextended/fields/show_gender')): ?>
+      <li>
+          <label for="gender"><?php echo $this->__('Salutation') ?>:</label><br>
+          <div class="input-box" style="width:auto;">
+              <select name="gender" id="gender" style="width:100%">
+                  <option value=""><?php echo $this->__('choose') ?></option>
+                  <option value="1"><?php echo $this->__('Mr') ?></option>
+                  <option value="2"><?php echo $this->__('Ms/Mrs') ?></option>
+              </select>
+          </div>
+      </li>
+      <?php endif; ?>
+      <?php if (Mage::getStoreConfig('newsletterextended/fields/show_prefix')): ?>
+      <li>
+          <label for="prefix"><?php echo $this->__('Prefix') ?>:</label><br>
+          <div class="input-box">
+              <input type="text" name="prefix" id="prefix" class="input-text" />
+          </div>
+      </li>
+      <?php endif; ?>
+      <?php if (Mage::getStoreConfig('newsletterextended/fields/show_firstname')): ?>
+      <li>
+          <label for="firstname"><?php echo $this->__('First Name') ?>:</label><br>
+          <div class="input-box">
+              <input type="text" name="firstname" id="firstname" class="input-text" />
+          </div>
+      </li>
+      <?php endif; ?>
+      <?php if (Mage::getStoreConfig('newsletterextended/fields/show_lastname')): ?>
+      <li>
+          <label for="lastname"><?php echo $this->__('Last Name') ?>:</label><br>
+           <div class="input-box">
+              <input type="text" name="lastname" id="lastname" class="input-text" />
+          </div>
+      </li>
+      <?php endif; ?>
+      <?php if (Mage::getStoreConfig('newsletterextended/fields/show_suffix')): ?>
+      <li>
+          <label for="suffix"><?php echo $this->__('Suffix') ?>:</label><br>
+          <div class="input-box">
+              <input type="text" name="suffix" id="suffix" class="input-text" />
+          </div>
+      </li>
+      <?php endif; ?>
+      <?php if (Mage::getStoreConfig('newsletterextended/fields/show_dob')): ?>
+      <li>
+          <label for="dob"><?php echo $this->__('Date of Birth') ?>:</label><br>
+          <div class="input-box">
+              <?php echo $this->getChildHtml('html_calendar') ?>
+              <input type="text" name="dob" id="mr_nl_dob" class="input-text" style="width:110px !important; display:inline;" />
+              <img title="<?php echo $this->__('Select date') ?>" id="mr_nl_dob_trig" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN) . 'adminhtml/default/default/images/grid-cal.gif'; ?>"  class="v-middle"/>
+          </div>
+          <script type="text/javascript">
+              // <![CDATA[
+              Calendar.setup({
+                  inputField : 'mr_nl_dob',
+                  //ifFormat : '%m/%e/%y',
+                  button : 'mr_nl_dob_trig',
+                  align : 'Br',
+                  singleClick : true
+              });
+              // ]]>
+          </script>
+      </li>
+      <?php endif; ?>
+      <li>
+          <label for="email" class="required"><em>*</em><?php echo $this->__('Email') ?>:</label><br>
+           <div class="input-box">
+              <input type="text" name="email" id="email" class="input-text required-entry validate-email" />
+          </div>
+      </li>
+  </ul>
+  <p class="required">* <?php echo $this->__('required fields') ?></p><?php */?>
+          <div class="col-sm-4">
+            <button type="submit" title="<?php echo $this->__('Subscribe') ?>" class="btn btn-lg btn-primary btn-block btn-block"><span><span><?php echo $this->__('Subscribe') ?></span></span> </button>
+          </div>
+        </div>
+        </div></div>
+      </div> 
+    </div>
+  </form>
+  <script type="text/javascript">
+  //<![CDATA[
+      var newsletterSubscriberFormDetail = new VarienForm('newsletter-validate-detail');
+  //]]>
+  </script> 
+</div>

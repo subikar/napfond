@@ -1,0 +1,73 @@
+<?php
+/**
+* Strapp Changeproductposition Module
+*
+* @category    design
+* @package     default_default
+**/
+?>
+
+<script type="text/javascript">
+function exportCsv()
+{
+    var url = '<?php echo $this->getUrl('*/*/export') ?>';
+    var categrory = getSelectedCategory();
+    if (categrory == '') 
+    {
+        alert('Please select category');
+        $('category_list').show();
+          return false;
+    }
+    url += 'categrory/' + categrory + '/';
+    window.open(url);    
+}
+
+function getSelectedCategory()
+{
+    return $('categories').options[$('categories').options.selectedIndex].value;
+}
+</script>
+
+<ul class="messages">
+    <li class="notice-msg">
+	<ul>
+	    <li><?php echo $this->__('Please select category which you want get sample csv file') ?></li>
+	</ul>
+    </li>
+</ul>
+<div id="category_list">
+    <select id="categories" name="categories" style="width:150px;">
+	<option value="">--Select a Category--</option>
+	<?php
+	    $categories = $this->getCategoriesDropdown();
+	    foreach($categories as $value)
+	    {
+		foreach($value as $key => $val)
+		{
+		    if($key=='label')
+		    {
+			$catNameIs = $val;
+		    }
+		    if($key=='value')
+		    {
+			$catIdIs = $val;
+		    }
+		    if($key=='level')
+		    {
+			$catLevelIs = $val;
+			$b ='';
+			for($i=1;$i<$catLevelIs;$i++)
+			{
+			    $b = $b."--";
+			}
+		    }
+		  }
+	  ?>
+		  <option value="<?php echo $catIdIs; ?>"><?php echo $b.$catNameIs ?></option>
+	      <?php
+	      }
+	      ?>
+    </select>
+<br />&nbsp;
+</div>
+<?php echo $this->getRunButtonHtml() ?><br/>  

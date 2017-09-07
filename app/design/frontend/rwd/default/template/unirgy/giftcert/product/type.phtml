@@ -1,0 +1,215 @@
+<?php
+$_product = $this->getProduct();
+$_amountConfig = $this->getAmountConfig('ugiftcert_amount_config');
+$_currency = Mage::app()->getStore()->getCurrentCurrency();
+?>
+<h3 class="hidden-lg hidden-md">Buy a gift certificate and give your special one freedom to choose their gift from Bhishoom.</h3>
+<div class="gift-card-info">
+  <?php if ($this->getAllowEmail() || $this->getAllowAddress()): ?>
+  <?php /*?><?php echo $this->__('Send this gift certificate(s)')?>:<br/><?php */?>
+  <label for="recipient_type_myself">
+    <input type="radio" name="recipient_type" id="recipient_type_myself" onclick="toggleGiftcertRecipient('myself')" value="0" style="display:none;" />
+    <?php //echo $this->__('To myself')?>
+  </label>
+  &nbsp;&nbsp;&nbsp;
+  <label for="recipient_type_someone">
+    <input type="radio" name="recipient_type" id="recipient_type_someone" onclick="toggleGiftcertRecipient('someone')" checked="checked" style="display:none;" value="1"/>
+    <?php //echo $this->__('Directly to someone else')?>
+  </label>
+  <?php /*?><?php if ($this->getAllowAddress()): ?>
+    <div id="recipient_myself" style="margin-top:10px">
+        <label for="toself_printed"><input type="checkbox" name="toself_printed" id="toself_printed" value="<?php echo $this->__('Yes') ?>" onchange="toggleCustomMessage(this.checked)"/> <?php echo $this->__('I want to order printed gift certificate(s)')?></label>
+    </div>
+    <?php endif; ?><?php */?>
+  <div id="recipient_info">
+    <p>
+      <label for="recipient_name"><?php echo $this->__("Recipient's Name:")?></label>
+      <br/>
+      <input type="text" id="recipient_name" name="recipient_name" class="input-text required-entry" style="width:100%"/>
+    </p>
+    <?php if ($this->getAllowEmail()): ?>
+    <p class="clear">
+      <label for="recipient_email"><?php echo $this->__("Recipient's Email Address:")?></label>
+      <br/>
+      <input type="text" id="recipient_email" name="recipient_email" class="input-text required-entry validate-email validate-recipient-address" style="width:100%"/>
+    </p>
+    <?php endif; ?>
+	
+	
+	
+    <p class="clear">
+      <label for="recipient_phone"><?php echo $this->__("Recipient's Mobile Number:")?></label>
+      <br/>
+      <input type="text" id="recipient_phone" name="recipient_phone" class="input-text required-entry" style="width:100%"/>
+    </p>
+	
+	
+	
+	
+    <?php /*?><?php if ($this->getAllowAddress()): ?>
+        <p><label for="recipient_address"><?php echo $this->__("Recipient's Postal Address (optional):")?></label><br/>
+        <textarea id="recipient_address" name="recipient_address" class="textarea validate-recipient-address" style="width:100%"></textarea></p>
+    <?php endif; ?><?php */?>
+  </div>
+  <?php endif; ?>
+  <?php if ($this->getAllowMessage()): ?>
+  <div class="clear" id="recipient_message_container">
+    <div style="margin-top:10px">
+      <label for="recipient_message"><?php echo $this->__("Add Unique Message (optional):")?></label>
+      <br/>
+      <textarea id="recipient_message" name="recipient_message" onkeyup="processMessage(this)" class="textarea form-control" style="width:100%"></textarea>
+  
+      <?php if ($this->getMessageMaxLength()): ?>
+      <small class="accent-gray pull-right"><?php echo $this->__('Characters Remaining:')?> <span id="gift-card-message-length"><?php echo $this->getMessageMaxLength() ?></span></small>
+      <?php endif; ?>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+  <?php endif; ?>
+  <?php if ($_amountConfig['type']=='range'): ?>
+  <p>
+    <label for="amount"><?php echo $this->__('Enter Amount')?>:</label>
+    <br/>
+    <?php
+    $_from = $_amountConfig['from'];
+    $_to = $_amountConfig['to'];
+    $_class = 'validate-number-range from-'.$_currency->convert($_from).'-to-'.$_currency->convert($_to);
+    ?>
+    <?php echo str_replace('%s', '', $_currency->getOutputFormat()) ?>
+    <input type="text" id="amount" name="amount" class="input-text required-entry validate-number <?php echo $_class?>"/>
+    (<?php echo $_currency->format($_from) ?> - <?php echo $_currency->format($_to) ?>) </p>
+  <?php elseif ($_amountConfig['type']=='any'): ?>
+  <p>
+    <label for="amount"><?php echo $this->__('Enter Amount')?>:</label>
+    <br/>
+    <?php echo str_replace('%s', '', $_currency->getOutputFormat()) ?>
+    <input type="text" id="amount" name="amount" class="input-text required-entry validate-number"/>
+  </p>
+  <?php elseif ($_amountConfig['type']=='dropdown'): ?>
+  <p>
+    <label for="amount"><?php echo $this->__('Select Amount')?>:</label>
+    <br/>
+    <?php 
+	 $checked = 'checked';
+	
+	foreach ($_amountConfig['options'] as $_v): ?>
+    <?php /*?><option value="<?php echo $_v ?>"><?php echo !$_v ? $this->__('Please select') : $_currency->format($_v) ?></option><?php */?>
+  <div class="gift-block hislk">
+    <input type="radio" value="<?php echo $_v ?>" id="amount" name="amount" class="select"
+		onclick="jQuery('.gift-cert-prd-opt > .add-to-cart > .price-info > .price-box > .regular-price > .price').html('<?php echo strip_tags(!$_v ? $this->__('Please select') : $_currency->format($_v)) ?>')" <?php echo $checked;?> />
+    <?php echo !$_v ? $this->__('Please select') : $_currency->format($_v) ?></div>
+  <?php $checked = ''; endforeach; ?>
+  <?php /*?><select id="amount" name="amount" class="select required-entry">
+    <?php foreach ($_amountConfig['options'] as $_v): ?>
+        <option value="<?php echo $_v ?>"><?php echo !$_v ? $this->__('Please select') : $_currency->format($_v) ?></option>
+    <?php endforeach; ?>
+    </select><?php */?>
+  </p>
+  <?php elseif ($_amountConfig['type']=='fixed'): ?>
+  <p>
+    <label><?php echo $this->__('Amount')?>: <?php echo $_currency->format($_amountConfig['amount']) ?></label>
+  </p>
+  <input type="hidden" name="amount" value="<?php echo $_amountConfig['amount'] ?>"/>
+  <?php endif; ?>
+</div>
+<div class="clear"></div>
+<script type="text/javascript">
+toggleGiftcertRecipient('someone');
+function toggleGiftcertRecipient(type)
+{
+    var myself = $('recipient_myself'), someone = $('recipient_info'), print = $('toself_printed');
+    var name = $('recipient_name'), email = $('recipient_email'), address = $('recipient_address');
+    var msgBox = $('recipient_message_container'), msg = $('recipient_message');
+
+    if (type=='myself') {
+        $$('#recipient_info input, #recipient_info textarea').each(function(el){ el.value = '' });
+        processMessage();
+
+        myself && myself.show();
+        someone && someone.hide();
+
+        name.removeClassName('required-entry');
+        email && email.removeClassName('required-entry');
+        address && address.removeClassName('required-entry');
+
+        if (print) {
+            print.checked = msg.value ? true : false;
+            if (print.checked) {
+                msgBox && msgBox.show();
+            } else {
+                msgBox && msgBox.hide();
+            }
+        } else {
+            msgBox && msgBox.hide();
+        }
+    } else {
+        if (print) {
+            print.checked = false;
+        }
+
+        myself && myself.hide();
+        someone && someone.show();
+        msgBox && msgBox.show();
+
+        name.addClassName('required-entry');
+        if (!(email && address)) {
+            email && email.addClassName('required-entry');
+            address && address.addClassName('required-entry');
+        }
+    }
+}
+
+function toggleCustomMessage(show)
+{
+    var msg = $('recipient_message_container');
+    if (show) {
+        msg && msg.show();
+    } else {
+        msg && msg.hide();
+        var msg = $('recipient_message');
+        msg && (msg.value = '');
+        processMessage();
+    }
+}
+
+var lastValidMessage = '';
+
+function processMessage()
+{
+    var message = $('recipient_message');
+
+    <?php if ($this->getMessageMaxLength()): ?>
+    var maxLength = <?php echo $this->getMessageMaxLength() ?>;
+    var remaining = maxLength-message.value.length;
+    if (remaining<0) {
+        message.value = lastValidMessage;
+        remaining = maxLength-message.value.length;
+    } else {
+        lastValidMessage = message.value;
+    }
+    $('gift-card-message-length').innerHTML = remaining;
+<?php endif; ?>
+
+    var preview = $('gift-card-message-preview');
+    preview && (preview.innerHTML = message.value.replace(/\n/g, '<br/>'));
+}
+
+/*Validation.addAllThese([
+    ['validate-number-range', '<?php echo addslashes($this->__('Amount is not within the specified range.'))?>', function (v, el) {
+        var m = el.className.match(/\Wfrom-([0-9.]+)-to-([0-9.]+)\W/);
+        if (!m) return true;
+        v = parseNumber(v);
+        return v>=m[1] && v<=m[2];
+    }],
+
+    ['validate-recipient-address', '<?php echo addslashes($this->__("Please enter recipient\'s email or postal address"))?>', function (v, el) {
+        var email = $('recipient_email');
+        var addr = $('recipient_address');
+        if (!$('recipient_type_someone').checked || !(email && addr)) {
+            return true;
+        }
+        return email.value || addr.value;
+    }]
+]);*/
+
+</script> 

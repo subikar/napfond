@@ -1,0 +1,140 @@
+<!--@subject  {{var store.getFrontendName()}}: Invoice # {{var invoice.increment_id}} for Order # {{var order.increment_id}} @-->
+<!--@vars
+{"store url=\"\"":"Store Url",
+"var logo_url":"Email Logo Image Url",
+"var logo_alt":"Email Logo Image Alt",
+"htmlescape var=$order.getCustomerName()":"Customer Name",
+"var store.getFrontendName()":"Store Name",
+"store url=\"customer/account/\"":"Customer Account Url",
+"var invoice.increment_id":"Invoice Id",
+"var order.increment_id":"Order Id",
+"var order.billing_address.format('html')":"Billing Address",
+"var payment_html":"Payment Details",
+"var order.shipping_address.format('html')":"Shipping Address",
+"var order.shipping_description":"Shipping Description",
+"layout area=\"frontend\" handle=\"sales_email_order_invoice_items\" invoice=$invoice order=$order":"Invoice Items Grid",
+"var comment":"Invoice Comment"}
+@-->
+<!--@styles
+body,td { color:#2f2f2f; font:11px/1.35em Verdana, Arial, Helvetica, sans-serif; }
+@-->
+<style type="text/css">
+body,td { background: #fff; font-family: Arial, Gotham, Helvetica, sans-serif; font: 16px/1.2em;}
+table { border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0 }
+table td { border-collapse: collapse; font-size: 0; line-height: 1.2 }
+@media only screen and (max-width: 599px) {
+s .social-icon { top: 100px!important }
+}
+</style>
+<body style="padding:0; margin:0" >
+    <div style="background:#fff" class="main-box">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td align="center">
+                    <!-- [ header starts here] -->
+                    <div style="width:100%; max-width:840px">
+                        <div style=" height:1px; margin:5px 0 15px; width:100%"></div>
+                          <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tbody>
+                              <tr>
+                                <td width="150">
+                                    <a href="{{store url=""}}" target="_blank">
+                                        <img src="{{var logo_url}}" style="display:block; max-width:160px; width:100%; max-height:245px" alt="{{var logo_alt}}"/>
+                                    </a>
+                                </td>
+                                <td>
+                                    <div style=" font-size:40px; font-weight:bold; text-align:center; position:relative; color:#000">DELIVERY CONFIRMATION</div>
+                                    <div style=" font-size:20px; font-weight:bold; text-align:center; position:relative; color:#999">
+                                        Your Product (S) is Delivered
+                                    </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        <div style=" height:1px; margin:5px 0 15px; width:100%"></div>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <div style=" font-size:16px; padding:5px; font-weight:bold; text-align:center; position:relative; color:#000">
+                                    <a href="{{store url=""}}shop/mobile-case.html/" target="_blank" style="color: #000; text-decoration: none;">MOBILE CASE</a>
+                                </div>
+                              </td>
+                              <td>
+                                <div style=" font-size:16px; color:#000">|</div>
+                              </td>
+                              <td>
+                                <div style=" font-size:16px; padding:5px; font-weight:bold; text-align:center; position:relative; color:#000">
+                                    <a href="{{store url=""}}shop/mobile-skin.html/" target="_blank" style="color: #000; text-decoration: none;">MOBILE SKIN</a>
+                                </div>
+                              </td>
+                              <td>
+                                <div style=" font-size:16px; color:#000">|</div>
+                              </td>
+                              <td>
+                                <div style=" font-size:16px; padding:5px; font-weight:bold; text-align:center; position:relative; color:#000">
+                                    <a href="{{store url=""}}shop/t-shirt.html/" target="_blank" style="color: #000; text-decoration: none;">T-SHIRT</a>
+                                </div>
+                              </td>
+                              <td>
+                                <div style=" font-size:16px; color:#000">|</div>
+                              </td>
+                              <td>
+                                <div style=" font-size:16px; padding:5px; font-weight:bold; text-align:center; position:relative; color:#000">
+                                    <a href="{{store url=""}}shop/laptop-skin.html/" target="_blank" style="color: #000; text-decoration: none;">LAPTOP SKIN</a>
+                                </div>
+                              </td>
+                              <td>
+                                <div style=" font-size:16px; color:#000">|</div>
+                              </td>                           
+                              <td>
+                                <div style=" font-size:16px; padding:5px; font-weight:bold; text-align:center; position:relative; color:#000">
+                                    <a href="{{store url=""}}shop/tablet-skin.html/" target="_blank" style="color: #000; text-decoration: none;">TABLET SKIN</a>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <div style=" height:1px; background:#999; margin:5px 0 15px; width:100%"></div>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div style=" font-size:16px; color:#000">Hey <strong>XYZ</strong>, <br>
+                                            We have delivered all of the items for order #{{var order.increment_id}}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table> 
+                        <div style=" height:1px; margin:5px 0 15px; width:100%"></div>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tbody>
+                                <tr>
+                                    <td bgcolor="#DD0003" align="center">
+                                        <div style=" font-weight:bold; padding:5px; font-size:16px; color:#fff">DELIVERY ADDRESS</div>
+                                    </td>
+                                    <td></td>
+                                    <td width="50%"></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style=" font-size:16px; padding:8px; color:#000">{{var order.billing_address.format('html')}}</div>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div style="height:1px; margin:0px 0 15px; width:100%"></div>
+                        {{layout area="frontend" handle="sales_email_order_invoice_items" invoice=$invoice order=$order}}
+                    </div> 
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>   
+
+
+
+                    

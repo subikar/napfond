@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * @category    Strapp
+ * @package     Strapp_Deleteproductimages
+ */
+class Strapp_Deleteproductimages_Model_Observer
+{
+  public function deleteProductImages($observer)
+  { 
+    if(Mage::getStoreConfig('deleteproductimages/image/enable'))
+    {
+      $my_file = 'file.txt';
+      $handle = fopen($my_file, 'a') or die('Cannot open file:  '.$my_file);
+      $product = $observer->getEvent()->getProduct();
+      if ($product) 
+      {
+	$gallery = $product->getData('media_gallery');
+	$images  = $gallery['images'];
+	foreach ($images as $image) 
+	{
+	  $skucontent = $product->getSku().'==>';
+	  fwrite($handle, $skucontent);
+	  fwrite($handle, $image['file']);
+	  //echo $image['file'];
+	  //echo Mage::getBaseDir('media') . '/catalog/product' . $image['file'];
+	  unlink(Mage::getBaseDir('media') . '/catalog/product' . $image['file']);
+	}
+	// echo $product->getName();
+	  //$output = "<script>console.log(".$product->getName(). " );</script>";
+	// echo $output;
+	//$my_file = 'file.txt';
+	//$handle = fopen($my_file, 'a') or die('Cannot open file:  '.$my_file);
+	//fwrite($handle, $product->getName());
+      }
+    }
+  }
+}

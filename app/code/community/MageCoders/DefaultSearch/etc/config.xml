@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * @author   MageCoders
+ * @package    MageCoders_DefaultSearch
+ */
+ -->
+<config>
+    <modules>
+        <MageCoders_DefaultSearch>
+            <version>1.0.0</version>
+        </MageCoders_DefaultSearch>
+    </modules>
+    <global>
+        <models>
+            <defaultsearch>
+                <class>MageCoders_DefaultSearch_Model</class>
+            </defaultsearch>
+			<catalogsearch_mysql4>
+				<rewrite>
+					<fulltext>MageCoders_DefaultSearch_Model_Mysql4_Fulltext</fulltext>
+				</rewrite>
+			</catalogsearch_mysql4>
+        </models>
+		<helpers>
+			<defaultsearch>
+				<class>MageCoders_DefaultSearch_Helper</class>
+			</defaultsearch>
+		</helpers>
+    </global>
+</config>

@@ -1,0 +1,171 @@
+<?php 
+/**
+ * GoMage Social Connector Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use
+ * @version      Release: 1.0
+ * @since        Class available since Release 1.0
+ */ 
+?>
+<div id="img_display" class="please_wait_new" style="display:none;">
+    <img src="<?php echo $this->getSkinUrl('images/opc-ajax-loader.gif') ?>" alt="<?php echo $this->__('Please Wait...') ?>" title="<?php echo $this->__('Please Wait...') ?>" class="v-middle" height="20" width="20" /> <?php echo $this->__('Please Wait...') ?>
+   </div>
+<?php if (Mage::helper('gomage_social')->isActive()): ?>
+	<script type="text/javascript">
+	//<![CDATA[
+		function gomageSocialPrepareFastLinks(){
+			try{							
+				if ($$('.gs-login-fast_links').length > 0){
+					var fast_links = $$('.gs-login-fast_links')[0];
+					if (fast_links.up('ul.links') != 'undefined'){
+						if (fast_links.up('ul.links').getHeight() > 30){
+						    fast_links.up('li').previous().addClassName('last');
+						}
+					}
+				}
+			}catch(e){}
+		}
+		document.observe("dom:loaded", function() {			
+			setTimeout(gomageSocialPrepareFastLinks, 3000);										
+		});
+	//]]>
+	</script>
+<?php endif; ?> 
+<?php if (Mage::helper('gomage_social')->isFBActive() && Mage::getStoreConfig('gomage_social/general/enable')): ?>
+	<div id="fb-root"></div>
+	<script type="text/javascript">
+	//<![CDATA[
+	 
+		  function gomageSocialFBLogin(){
+			   
+	        FB.login(function(response) {
+	      	  gomageSocialFBLoginResponse(response);
+	    	  }, {scope:'email'});
+		  }
+		
+ 	      function gomageSocialFBCheckLogin(){
+	    	FB.getLoginStatus(function(response) {
+	    		gomageSocialFBLoginResponse(response);	
+	    	});  	
+		  }    	
+		
+		  function gomageSocialFBLoginResponse(response){
+			  if (typeof loginByFbDesingerTab != 'undefined'){
+				  
+			  if(loginByFbDesingerTab == 'no'){ 		
+			
+			  if (response.status == 'connected') {	
+				 loginByFbDesingerTab = 'yes'
+				Windows.closeAll();
+				jQuery("#designerLoader").show();
+				jQuery.ajax({
+				  method: "POST",
+				  url: '<?php echo $this->getUrl('gomage_social/facebook/login', array('_secure' => true, 'gs_url' => Mage::helper('core')->urlEncode(Mage::helper('core/url')->getCurrentUrl())));  ?>',
+				  data: { }
+				})
+				  .done(function( msg ) {
+					jQuery("#designerLoader").hide();
+				  objCallDirectForObserveSaveDesign.isCustomerLogin = true
+				 objCallDirectForObserveSaveDesign.saveDesign(objCallDirectForObserveSaveDesign.urls.saveDesign, objCallDirectForObserveSaveDesign.saveDesignCallback);
+					
+				    return;
+
+					});			  
+			  
+			   return;
+			  }
+			  
+			  }
+			  return;
+			  }	 
+				 
+			document.getElementById("img_display").style.display = 'block';
+		  	if (response.status == 'connected') {
+				
+				
+				jQuery.ajax({
+				  method: "POST",
+				  url: '<?php echo $this->getUrl('gomage_social/facebook/login', array('_secure' => true, 'gs_url' => Mage::helper('core')->urlEncode(Mage::helper('core/url')->getCurrentUrl())));  ?>',
+				  data: { }
+				})
+				  .done(function( msg ) {
+
+							window.location.reload();
+
+					});					
+
+		    }
+			else if(typeof response.status == 'undefined'){
+			 document.getElementById("img_display").style.display = 'none'; 	
+			}
+			else {
+		      window.location.reload();
+		    }
+		  }
+			  	
+	      window.fbAsyncInit = function() {
+	        FB.init({
+	          appId: '<?php echo Mage::getStoreConfig('gomage_social/facebook/id') ?>',
+	          status: false,  
+	          cookie: true,
+	          xfbml: true,
+			  version:'v2.2',
+	          oauth: true
+	        });
+
+	        FB.Event.subscribe('auth.login', function(response) {
+	        	gomageSocialFBCheckLogin();
+	        });
+	        		   		                
+	      };	
+
+	      (function (d) {
+	    	    var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+	    	    if (d.getElementById(id)) { return; }
+	    	    js = d.createElement('script'); js.id = id; js.async = true;
+	    	    js.src = "https://connect.facebook.net/<?php echo Mage::app()->getLocale()->getLocaleCode() ?>/all.js";
+	    	    ref.parentNode.insertBefore(js, ref);	    	    	    	    
+	      }(document));
+
+	//]]>
+	</script>
+<?php endif; ?>
+<?php if (Mage::helper('gomage_social')->isGActive() && Mage::getStoreConfig('gomage_social/general/enable')): ?>
+ 	<script type="text/javascript">
+	//<![CDATA[
+
+	 	function gomageSocialGSigninCallback(authResult){    	  
+		      if (authResult['code']) {
+			      var params = {code: authResult['code'], google_plus: 1};		      
+		    	  var request = new Ajax.Request('<?php echo $this->getUrl('gomage_social/google/callback', array('_secure' => true, 'gs_url' => Mage::helper('core')->urlEncode(Mage::helper('core/url')->getCurrentUrl())));  ?>',
+		    	  {
+				    method: 'post',
+				    parameters: params,
+				    onSuccess: function(transport){
+				    	var response = eval('('+(transport.responseText || false)+')');
+	    			    if (response.redirect){
+	    			    	setLocation(response.redirect);
+	        			}else{
+				    		window.location.reload();
+	        			}
+				    }
+		    	  });   			    	              
+		      }
+	  } 
+	  
+      (function() {
+	       var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+	       po.src = 'https://apis.google.com/js/client:plusone.js';
+	       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+	       window.___gcfg = {
+	   		    lang: '<?php echo Mage::app()->getLocale()->getLocaleCode() ?>',
+	   		    parsetags: 'onload'
+	   	   }	       
+      })();
+    //]]>
+	</script>
+<?php endif; ?>   

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<layout version="0.1.0">		
+		<eform_index_index>
+			<reference name="root">
+				<action method="setTemplate"><template>page/1column.phtml</template></action>
+			</reference>
+			<reference name="content">
+				<block type="core/template" name="eform" template="seller/eform.phtml" />
+			</reference>
+		</eform_index_index>
+	</layout>

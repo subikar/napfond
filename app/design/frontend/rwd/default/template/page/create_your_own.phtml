@@ -1,0 +1,94 @@
+<?php
+$siteBaseUrl = Mage::helper('function/more')->getBhishoomSiteBaseUrl();
+$createURLKey = array();
+$createURLKey2 = array();
+$params = $this->getRequest()->getParams();
+$cat_id = $params['catid'];
+$cur_cat = Mage::getModel('catalog/layer')->getCurrentCategory()->getId();
+if($cat_id == '')
+{
+	$cat_id = $cur_cat;
+}
+$_category = Mage::getModel('catalog/category')->load($cat_id);  // category ID=10	
+$customize_thousnad_of_design_link = str_replace('create','shop',$_category->getUrl()); 
+$_collection = $_category->getProductCollection();
+$_product =  $_collection->getFirstItem(); // this will get first item in collection
+$blankPrdId = $_product->getId();	
+echo $blankPrdId;
+//exit();
+//echo $customize_thousnad_of_design_link;
+
+if(($cat_id == 92)||($cat_id == 96))
+{
+	
+	$url = $siteBaseUrl.'designer?id='.$blankPrdId.'&cat_id='.$cat_id;
+	Mage::app()->getResponse()->setRedirect($url);
+}
+
+//<?php echo $siteBaseUrl.'designer?id=194761&cat_id=96';		 
+?>
+<!DOCTYPE html>
+<html lang="en" id="top" class="no-js">
+<!--<![endif]-->
+<head>
+<?php echo $this->getChildHtml('head') ?>
+</head>
+<body<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?>>
+<?php echo $this->getChildHtml('after_body_start') ?>
+<div class="wrapper"> <?php echo $this->getChildHtml('global_notices') ?>
+ <div class="page"> <?php echo $this->getChildHtml('header') ?> <?php echo $this->getChildHtml('global_messages') ?>
+  <div class="container">
+   <div class="main-container col1-layout" <?php if($params['catid'] == ''){?> style="margin-top:0px; padding:0;"<?php } ?>>
+    <div class="main"> <?php echo $this->getChildHtml('breadcrumbs') ?>
+     <div class="col-main">
+      <div class="row" id="create-design">
+       <div id="after-cr-design" class="col-sm-12">
+        <h1>Create Your Own</h1>
+       </div>
+       <div class="col-md-offset-2 col-sm-4">
+        <div class="item-box-c"> 
+         <a href="<?php echo $siteBaseUrl; ?>designer?id=<?php echo $blankPrdId;?>&cat_id=<?php echo $cat_id?>">
+          <div class="thumbnail"><img src="<?php echo $this->getSkinUrl('images/create-your-own.png');?>"> </div>
+          <h3>Create your own design on blank product</h3>
+         </a> 
+        </div>
+        <div class="featured-box">
+         <ul>
+          <li><i class="fa fa-heart"></i>Start from scratch on a blank product </li>
+          <li><i class="fa fa-heart"></i>Add background color</li>
+          <li><i class="fa fa-heart"></i>Add your Images/Designs (your  library , Facebook ,Instagram etc. ) or choose from 1000’s of our  designs </li>
+          <li><i class="fa fa-heart"></i>Add text to personalize it </li>
+          <li><i class="fa fa-heart"></i>Vectors to show your creativity</li>
+         </ul>
+        </div>
+        <a href="<?php echo $siteBaseUrl; ?>designer?id=<?php echo $blankPrdId;?>&cat_id=<?php echo $cat_id?>" class="btn btn-danger btn-lg">Start Now</a> 
+       </div>
+       <div class="col-sm-4">
+        <div class="item-box-c"> 
+         <a href="<?php echo $customize_thousnad_of_design_link?>">
+          <div class="thumbnail"><img src="<?php echo $this->getSkinUrl('images/our-design.png');?>"> </div>
+          <h3>Customize  on thousands of our  designs </h3>
+         </a> 
+        </div>
+        <div class="featured-box">
+         <ul>
+          <li><i class="fa fa-heart"></i>Select from our already created awesome designs in various categories.</li>
+          <li><i class="fa fa-heart"></i>Add your own images /designs on it </li>
+          <li><i class="fa fa-heart"></i>Add text to personalize  it</li>
+          <li><i class="fa fa-heart"></i>Add vectors to decorate it</li>
+         </ul>
+        </div>
+        <a href="<?php echo $customize_thousnad_of_design_link;?>" class="btn btn-danger btn-lg">Start Now</a> 
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <?php echo $this->getChildHtml('footer_before') ?> <?php echo $this->getChildHtml('footer') ?> 
+  <?php echo $this->getChildHtml('global_cookie_notice') ?> <?php echo $this->getChildHtml('before_body_end') ?> 
+ </div>
+</div>
+<?php echo $this->getAbsoluteFooter() ?>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<modules>
+		<Gravita_Search>
+			<version>0.1.0</version>
+		</Gravita_Search>
+	</modules>	
+	<global>
+		<blocks>
+			<search>
+				<class>Gravita_Search_Block</class>
+			</search>	
+		</blocks>
+		<helpers>
+			<search>
+				<class>Gravita_Search_Helper</class>
+			</search>
+		</helpers>
+		<models>
+            <search>
+                <class>Gravita_Search_Model</class>
+            <!--<resourceModel>orderemail_mysql4</resourceModel>-->
+            </search>
+            <!--<orderemail_mysql4>
+                <class>Gravita_Orderemail_Model_Mysql4</class>
+				<entities>
+                    <orderemail>
+                        <table>orderemail</table>
+                    </orderemail>
+                </entities>
+				</orderemail_mysql4>-->
+        </models>
+		<resources>
+			<search_setup>
+                <setup>
+                    <module>Gravita_Search</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </search_setup>
+			<search_write>
+				<connection>
+					<use>core_write</use>					
+				</connection>
+			</search_write>
+			<search_read>
+				<connection>
+					<use>core_read</use>
+				</connection>	
+			</search_read>	
+		</resources>
+		<!-- <template>
+            <email>
+               <order_email_template translate="label" module="order">
+                   <label>Order Delivered</label>
+                   <file>orderdelivery.html</file>
+                   <type>html</type>
+               </order_email_template>               
+            </email>
+        </template>	 -->		
+	</global>	
+	
+	<admin>
+		<routers>
+			<search>
+				<use>admin</use>
+				<args>
+					<module>Gravita_Search</module>
+					<frontName>search</frontName>
+				</args>
+			</search>
+		</routers>
+	</admin>
+	
+	<adminhtml>
+		<menu>
+			<search translate="title" module="search">
+            <title>Update Data</title>
+            <sort_order>2500</sort_order>                
+			   <children>
+                    <search_adminform translate="title" module="search">
+                        <title>Update Search Terms</title>
+                        <action>search/adminhtml_searchform</action>
+                    </search_adminform>
+                </children>
+            </search>
+        </menu>		
+		
+		<acl>
+            <resources>
+                <admin>
+                    <children>
+                        <search>
+                            <title>Update Search Terms</title>
+                            <children>
+                                <example translate="title" module="search">
+                                    <title>Update Search Terms</title>
+                                </example>
+                            </children>
+						</search>
+					</children>	
+                </admin>
+            </resources>
+        </acl>
+        
+        <layout>
+            <updates>
+                <search>
+                    <file>searchterms.xml</file>
+                </search>
+            </updates>
+        </layout>
+	</adminhtml>
+</config>

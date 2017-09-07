@@ -1,0 +1,302 @@
+<?xml version="1.0"?>
+<config>
+ 
+    <modules>
+        <Mycode_Function>
+            <version>1.0.0</version>
+        </Mycode_Function>
+    </modules>
+	<frontend>
+		<routers>
+			<eform>
+				<use>standard</use>
+				<args>
+					<module>Mycode_Function</module>
+					<frontName>mycodefunction</frontName>					
+				</args>
+			</eform>
+		</routers>
+	</frontend> 
+    <global>
+        <helpers>
+            <function>
+                <class>Mycode_Function_Helper</class>
+            </function>
+        </helpers>
+		
+		
+<!--
+	<sales>
+            <quote>
+                <totals>
+                    <discount>
+                        <class>Mycode_Function_Model_Discount</class>
+                        <after>subtotal</after>
+                    </discount>
+                </totals>
+            </quote>
+			
+            <order_invoice>
+                <totals>
+                    <discount>
+                        <class>Mycode_Function_Model_Invoice</class>
+                        <after>subtotal</after>
+                    </discount>
+                </totals>
+            </order_invoice>
+			
+            <order_creditmemo>
+                <totals>
+                    <discount>
+                        <class>Mycode_Function_Model_Creditmemo</class>
+                        <after>subtotal</after>
+                    </discount>
+                </totals>
+            </order_creditmemo>
+        </sales>
+	 
+<blocks>
+            <function>
+                <class>Mycode_Function_Block</class>
+            </function>
+
+            <adminhtml>
+                <rewrite>
+                    <sales_order_totals>
+						Mycode_Function_Block_Adminhtml_Sales_Order
+					</sales_order_totals>   
+					<sales_order_invoice_totals>
+						Mycode_Function_Block_Adminhtml_Sales_Invoice</sales_order_invoice_totals>     
+	<sales_order_creditmemo_totals>Mycode_Function_Block_Adminhtml_Sales_Creditmemo</sales_order_creditmemo_totals>
+                </rewrite>
+            </adminhtml>
+                
+            <sales>
+                <rewrite>
+                    <order_totals>
+						Mycode_Function_Block_Order_Totals
+					</order_totals>
+                    
+					<order_invoice_totals>
+						Mycode_Function_Block_Invoice_Totals
+					</order_invoice_totals>
+					
+					<order_creditmemo_totals>
+						Mycode_Function_Block_Creditmemo_Totals
+					</order_creditmemo_totals>
+                </rewrite>
+            </sales>
+                
+</blocks>-->	
+		
+<blocks>
+<sales>
+<rewrite>
+<order_totals>Mycode_Function_Block_Order_Totals</order_totals>
+</rewrite>
+</sales>
+</blocks>	
+		
+ 
+	<events>
+      <gravita_catalog_category_save_after>
+        <observers>
+          <mycode_function_gracat_observer>
+            <type>singleton</type>
+            <class>Mycode_Function_Model_Gracat_Observer</class>
+            <method>update_website_gra_menu</method>
+          </mycode_function_gracat_observer>
+        </observers>
+      </gravita_catalog_category_save_after>  
+
+    <payment_method_is_active>
+        <observers>
+            <paymentfilter_payment_method_is_active>
+            <type>singleton</type>
+            <class>Mycode_Function_Model_Gracat_Observer</class>
+            <method>filterpaymentmethod</method>
+            </paymentfilter_payment_method_is_active>
+        </observers>
+    </payment_method_is_active>
+ 
+ 
+	<controller_action_postdispatch_checkout_onepage_savePayment>
+		<observers>
+			<customcheckout>
+				<class>Mycode_Function_Model_Gracat_Observer</class>
+				<method>saveOrderCustom</method>
+			</customcheckout>
+		</observers>
+	</controller_action_postdispatch_checkout_onepage_savePayment> 
+ 
+            <salesrule_validator_process>
+                <observers>
+                    <new_dicount_coupon>
+                        <type>singleton</type>
+                        <class>Mycode_Function_Model_Gracat_Observer</class>
+                        <method>newcoupondiscountcal</method>
+                    </new_dicount_coupon>
+                </observers>
+            </salesrule_validator_process>
+			
+	
+    
+
+	
+	<!--
+    <sales_quote_address_collect_totals_before>
+        <observers>
+            <update_shipping_price_manaually2>
+                <type>singleton</type>
+                <class>Mycode_Function_Model_Gracat_Observer</class>
+                <method>salesQuoteCollectTotalsBefore2</method>
+            </update_shipping_price_manaually2>
+        </observers>
+    </sales_quote_address_collect_totals_before>
+	-->
+    
+   
+    <controller_action_predispatch_checkout_cart_index>
+        <observers>
+            <default_shipping_price_manaually>
+                <type>singleton</type>
+                <class>Mycode_Function_Model_Gracat_Observer</class>
+                <method>defaultShpricemanaually</method>
+            </default_shipping_price_manaually>
+        </observers>
+    </controller_action_predispatch_checkout_cart_index>	 
+	
+	 
+    <sales_quote_address_collect_totals_after>
+        <observers>
+            <update_shipping_price_manaually>
+                <type>singleton</type>
+                <class>Mycode_Function_Model_Gracat_Observer</class>
+                <method>salesQuoteCollectTotalsBefore</method>
+            </update_shipping_price_manaually>
+        </observers>
+    </sales_quote_address_collect_totals_after>
+	
+ 
+ 
+ 
+ 
+            <checkout_cart_add_product_complete>
+                <observers>
+                    <update_prodcut_cart_name_manaually>
+						<type>singleton</type>
+                        <class>Mycode_Function_Model_Gracat_Observer</class>
+                        <method>updateProductName</method>
+                    </update_prodcut_cart_name_manaually>
+                </observers>
+            </checkout_cart_add_product_complete>
+	
+	
+    <checkout_cart_save_after>
+        <observers>
+            <update_prodcuts_cart_name_manaually>
+            <type>singleton</type>
+            <class>Mycode_Function_Model_Gracat_Observer</class>
+            <method>updateProductsName</method>
+            </update_prodcuts_cart_name_manaually>
+        </observers>
+    </checkout_cart_save_after>
+ 
+	
+        <sales_quote_collect_totals_after>
+                <observers>
+                    <set_custom_discount_suagrcode>
+                        <type>singleton</type>
+                        <class>Mycode_Function_Model_Gracat_Observer</class>
+                        <method>setSutotalWithDiscount</method>
+                    </set_custom_discount_suagrcode>
+                </observers>
+        </sales_quote_collect_totals_after>		
+		
+		
+		
+	
+        <checkout_submit_all_after>
+            <observers>
+                <update_order_item_info_observer>
+                    <type>singleton</type>
+                    <class>Mycode_Function_Model_Gracat_Observer</class>
+                    <method>updateOrderItemInfo</method>
+                </update_order_item_info_observer>
+            </observers>
+        </checkout_submit_all_after>
+		
+		
+       <sales_order_save_after>
+            <observers>
+                <update_order_item_info_observer2>
+                    <type>singleton</type>
+                    <class>Mycode_Function_Model_Gracat_Observer</class>
+                    <method>updateOrderItemInfo</method>
+                </update_order_item_info_observer2>
+            </observers>
+        </sales_order_save_after>
+		
+		<sales_order_item_cancel>
+			<observers>
+				<update_order_item_info_observer4>
+					<type>model</type>
+					<model>Mycode_Function_Model_Gracat_Observer</model>
+					<method>salesOrderItemCancel</method>
+				</update_order_item_info_observer4>
+			</observers>
+		</sales_order_item_cancel>
+		
+       <checkout_onepage_controller_success_action>
+            <observers>
+                <update_order_item_info_observer3>
+                    <type>singleton</type>
+                    <class>Mycode_Function_Model_Gracat_Observer</class>
+                    <method>updateOrderItemInfoForShipping</method>
+                </update_order_item_info_observer3>
+            </observers>
+        </checkout_onepage_controller_success_action>
+		
+		
+		<catalog_product_is_salable_after>
+			<observers>
+				<llapgoch_modify_saleable>
+					<model>Mycode_Function_Model_Gracat_Observer</model>
+					<method>modifySaleable</method>
+					<type>model</type>
+				</llapgoch_modify_saleable>
+			</observers>
+		</catalog_product_is_salable_after>
+		
+		
+		<!--
+       <customer_login>
+            <observers>
+                <redirect_customer_to_profile>
+                    <type>model</type>
+                    <class>Mycode_Function_Model_Gracat_Observer</class>
+                    <method>redirectCustomer</method>
+                </redirect_customer_to_profile>
+            </observers>
+        </customer_login>-->
+	
+	  
+    </events>
+ 
+    </global>
+
+    <crontab>
+        <jobs>
+            <order_underprocessing_orders>
+                <schedule><cron_expr>*/5 * * * *</cron_expr></schedule>
+                <run><model>function/observer::setUnderProcessing</model></run>
+            </order_underprocessing_orders>
+            <update_tracking_info>
+                <schedule><cron_expr>*/5 * * * *</cron_expr></schedule>
+                <run><model>function/observer::updateTrackingInfoFunction</model></run>
+            </update_tracking_info>
+		</jobs>	
+    </crontab>
+	
+	
+</config>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * iKantam
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade InstagramConnect to newer
+ * versions in the future.
+ *
+ * @category    Ikantam
+ * @package     Ikantam_InstagramConnect
+ * @copyright   Copyright (c) 2012 iKantam LLC (http://www.ikantam.com)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+-->
+<config>
+    <tabs>
+        <ikantam translate="label" module="instagramconnect">
+            <label>iKantam</label>
+            <sort_order>9999999</sort_order>
+        </ikantam>
+    </tabs>
+    
+    <sections>
+        <ikantam_instagramconnect translate="label" module="instagramconnect">
+            <label>Instagram Connect</label>
+            <tab>ikantam</tab>
+            <sort_order>10</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+ 
+            <groups>
+                <module_options translate="label" module="instagramconnect">
+                    <label>Module Options</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>20</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+ 
+                    <fields>
+                        <enabled translate="label">
+                            <label>Enabled: </label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </enabled>
+                        
+                        <homepage translate="label comment">
+                            <label>Show Images on Home Page: </label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </homepage>
+                        
+                        <homepage_limit translate="label comment">
+                            <label>Max Number of Images to show on Home Page: </label>
+                            <comment>Zero or empty for no limit</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </homepage_limit>
+                        
+                        <product translate="label comment">
+                            <label>Show Images on Product Pages: </label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </product>
+                        
+                        <product_limit translate="label comment">
+                            <label>Max Number of Images to show on Product Page: </label>
+                            <comment>Zero or empty for no limit</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </product_limit>
+                        
+                        <client_id translate="label comment">
+                            <label>Instagram Client ID: </label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </client_id>
+
+                        <client_secret translate="label comment">
+                            <label>Instagram Client Secret: </label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>62</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </client_secret>
+
+                        <user translate="label comment">
+                            <label>Auth user</label>
+                            <frontend_type>text</frontend_type>
+                            <frontend_model>instagramconnect/adminhtml_system_config_form_field_user</frontend_model>
+                            <sort_order>65</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Auth user on Instagram</comment>
+                        </user>
+
+                        <updatetype translate="label">
+                            <label>Update type: </label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>67</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>instagramconnect/source_updatetype</source_model>
+                        </updatetype>
+
+                        <tags translate="label comment">
+                            <label>Instagram Hashtags: </label>
+                            <comment>Comma-separated list of hashtags</comment>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </tags>
+
+                        <users translate="label comment">
+                            <label>Instagram Users: </label>
+                            <comment>Comma-separated list of users ids</comment>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </users>
+                        
+                    </fields>
+                </module_options>
+            </groups>
+        </ikantam_instagramconnect>
+    </sections>
+
+</config>

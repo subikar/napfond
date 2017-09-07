@@ -1,0 +1,86 @@
+<?php 
+/**
+ * Clearandfizzy
+*
+* NOTICE OF LICENSE
+*
+*
+* THE WORK (AS DEFINED BELOW) IS PROVIDED UNDER THE TERMS OF THIS CREATIVE
+* COMMONS PUBLIC LICENSE ("CCPL" OR "LICENSE"). THE WORK IS PROTECTED BY
+* COPYRIGHT AND/OR OTHER APPLICABLE LAW. ANY USE OF THE WORK OTHER THAN AS
+* AUTHORIZED UNDER THIS LICENSE OR COPYRIGHT LAW IS PROHIBITED.
+
+* BY EXERCISING ANY RIGHTS TO THE WORK PROVIDED HERE, YOU ACCEPT AND AGREE
+* TO BE BOUND BY THE TERMS OF THIS LICENSE. TO THE EXTENT THIS LICENSE MAY
+* BE CONSIDERED TO BE A CONTRACT, THE LICENSOR GRANTS YOU THE RIGHTS
+* CONTAINED HERE IN CONSIDERATION OF YOUR ACCEPTANCE OF SUCH TERMS AND
+* CONDITIONS.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade this extension to newer
+* versions in the future. If you wish to customize this extension for your
+* needs please refer to http://www.clearandfizzy.com for more information.
+*
+* @category    Community
+* @package     Clearandfizzy_Reducedcheckout
+* @copyright   Copyright (c) 2014 Clearandfizzy Ltd. (http://www.clearandfizzy.com)
+* @license     http://creativecommons.org/licenses/by-nd/3.0/ Creative Commons (CC BY-ND 3.0)
+* @author		Gareth Price <gareth@clearandfizzy.com>
+*
+*/
+?>
+
+<?php /* -- START SAGEPAY INTEGRATION -- */ ?>
+	<div class="multiple-checkout">
+		<span></span>
+	</div>
+
+	<input type="hidden" name="suite_ms_payment_method" id="suite_ms_payment_method" value="<?php echo Mage::helper('clearandfizzy_reducedcheckout')->getPaymentMethod(); ?>" />
+<?php /* -- END SAGEPAY INTEGRATION -- */ ?>
+
+
+<!-- REQUIRED -->
+<form action="" id="co-payment-form">
+    <fieldset>
+		<input name="payment[method]" type="hidden" value="<?php echo Mage::helper('clearandfizzy_reducedcheckout')->getPaymentMethod(); ?>" checked="checked" />
+		<span id="payment-buttons-container"></span>
+    </fieldset>
+</form>
+
+<!-- Clearandfizzy_Reducedcheckout V<?php echo Mage::getConfig()->getNode()->modules->Clearandfizzy_Reducedcheckout->version; ?> -->
+
+<script type="text/javascript">
+//<![CDATA[
+
+<?php 	// get an instance of the URL helper class 
+	$url_helper = $this->helper('clearandfizzy_reducedcheckout/url');
+?>           
+
+	
+	var checkout = new Checkout(accordion,{
+        progress: '<?php echo $url_helper->getProgressUrl(); ?>',
+        review: '<?php echo $url_helper->getReviewUrl(); ?>',
+        saveMethod: '<?php echo $url_helper->getSaveMethodUrl(); ?>',
+        failure: '<?php echo  $url_helper->getFailureUrl(); ?>'}
+    );
+
+    var billing = new Billing('co-billing-form', '<?php echo $url_helper->getAddressUrl(); ?>address/', '<?php echo $url_helper->getSaveBillingUrl(); ?>');
+    var shipping = new Shipping('co-shipping-form', '<?php echo $url_helper->getAddressUrl();  ?>address/', '<?php echo $url_helper->getSaveShippingUrl();  ?>','<?php echo $url_helper->getSaveShippingMethod(); ?>');
+    var shippingMethod = new ShippingMethod('co-shipping-method-form', "<?php echo $this->getUrl('reducedcheckout/onepage/saveShippingMethod', array("_secure"=>true)) ?>");
+    var payment = new Payment('co-payment-form', '<?php echo $url_helper->getSavePaymentUrl(); ?>');
+  
+<?php
+	// this is to enable forced guest checkout
+	if (Mage::getSingleton('customer/session')->isLoggedIn() == false && 
+		$this->helper('clearandfizzy_reducedcheckout/data')->isLoginStepGuestOnly() == true 
+		) {
+?>
+		Element.hide('register-customer-password');
+	    checkout.gotoSection('billing');
+<?php
+	} // end if
+?>
+    
+//]]>
+</script>

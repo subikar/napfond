@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+
+<!--[if lt IE 7 ]> <html lang="en" id="top" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" id="top" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" id="top" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" id="top" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" id="top" class="no-js"> <!--<![endif]-->
+
+<head>
+<?php echo $this->getChildHtml('head') ?>
+</head>
+<body<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?>>
+ <?php echo $this->getChildHtml('after_body_start') ?>
+ <div class="wrapper">
+  <?php echo $this->getChildHtml('global_notices') ?>
+  <div class="page">
+   <?php echo $this->getChildHtml('header') ?>
+   <?php echo $this->getChildHtml('global_messages') ?>
+   <div class="container">
+    <div class="main-container col1-layout">
+     <div class="main">
+      <?php echo $this->getChildHtml('breadcrumbs') ?>
+       <div class="col-main">                    
+        <?php //echo $this->getChildHtml('content') ?>					
+		<?php $_categories = Mage::getModel('catalog/category')->getCategories(27, 0, false, false,false);
+		$helper = Mage::helper('catalog/category');
+		 //$collection = Mage::getModel('catalog/category')->getCategories($_categories->entity_id, 0, false, false,false );
+  		?>
+ 		<?php 
+ 	 	 $mainCat = Mage::getModel('catalog/category')->load(27)->getName();
+ 		 if(trim($mainCat) == 'Gift')
+	 	 {
+		 	echo '<div id="after-cr-design"><h1 class="pick_device">Gift Corner</h1>';
+		 	echo '<h4>Shop at Bhishoom for a memorable gift for your special ones that\'s custom made to suit individual personality, age or occassion. Create a lasting impression on your special ones as it will be made by you just for them.</h4><div style="clear:both;">&nbsp;</div></div>';
+	 	 }
+	 	 else
+	 	 { 
+	 	 	echo '<h2 class="pick_device">Choose your Gifts</h2>';
+	 	 }?> 
+		 <?php  
+         $connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+         if(count($_categories)):
+        ?>
+          <div  id="gift_pg_cate" class="shop-section">
+           <div class="row">
+            <?php $i=1; foreach ($_categories as $_category):?>
+             <?php 	
+              //if($_category->getIsActive()):	 
+              $cur_category = Mage::getModel('catalog/category')->load($_category->getId());
+              $catName = $cur_category->getName();			 		 
+	    	  $_imageUrl = $cur_category->getImageUrl();	 
+		      if($_imageUrl == '')
+				$_imageUrl = $cur_category->getThumbnail();
+			  if($_imageUrl != ''){
+	 		 ?>       
+               <div class="col-md-6">
+                <div class="skin-toggle">
+                 <div class="img-skin" id="mobileSkin">  
+                  <?php if(trim($catName) == 'Gift Certificate')
+                  { ?>
+                    <a href="<?php echo Mage::getBaseUrl().'gift/gift-certificate/gift-certificate.html';?>" title="<?php echo $catName;?>">
+                     <img alt="<?php echo $catName;?>" src="<?php echo $_imageUrl;?>">
+                    </a>
+                    <div class="skin-tab">
+                     <a href="<?php echo Mage::getBaseUrl().'gift/gift-certificate/gift-certificate.html';?>" title="<?php echo $catName;?>">
+                      <div class="skin-title 1"><?php echo $catName;?></div>
+                     </a>
+                    </div><?php
+                   }
+				   else
+				   {?>
+                     <a href="<?php echo $cur_category->getUrl()?>" title="<?php echo $catName;?>"><img alt="<?php echo $catName;?>" src="<?php echo $_imageUrl;?>"></a> 
+                     <div class="skin-tab">
+                      <a href="<?php echo $cur_category->getUrl()?>" title="<?php echo $catName;?>"><div class="skin-title"><?php echo $catName;?></div></a><?php } ?>
+                     </div>
+                    <?php } ?>
+                 </div>                  
+                </div> 
+               </div>     		    
+  		  <?php  //endif;?>
+  		<?php $i++;endforeach ?>
+  	   </div>
+      </div>  
+	 <?php endif; ?>
+ 
+ 	<div class="shopbyintrest">        
+  	 <h2>Gift By Interest</h2>        
+  	 <div class="row">		  
+		<?php 
+        $mEdia_Base_Dir = Mage::getBaseDir('media');
+        $mEdia_Base_URL = Mage::getBaseUrl('media');        
+        $read = Mage::getSingleton( 'core/resource' )->getConnection( 'core_read' ); // To read from the database         
+        $attribute = Mage::getSingleton('eav/config')->getAttribute('catalog_product', 'case_style');
+        if ($attribute->usesSource()) {
+            $options = $attribute->getSource()->getAllOptions(false); 
+        }
+        foreach($options as $optionsValue)
+		{        
+            $result = $read->query( "select * from case_style_images where attr_id='137' and attr_val_id='".$optionsValue['value']."' and active = 1" );
+            $row = $result->fetch();
+        	if(is_file($mEdia_Base_Dir.'/case_style_home/'.$row['img_name'])){
+				$style_name = $optionsValue['label'];
+				$style_name1 = substr(strip_tags($style_name), 0, 20);
+				//$style_name1 = substr(strip_tags($style_name),0,20);
+				$marker = strrpos($style_name1, ' ');
+				if($marker != '')
+				{
+					$style_name2 = substr($style_name1, 0, $marker);
+					$style_name2 = str_replace('&', '', $style_name2);
+					$style_name2 = str_replace('and', '', $style_name2);
+				}
+				else
+				{
+					$style_name2 = $style_name1;
+				}
+        ?>		  
+            <div class="col-md-3">
+             <div class="shop-box">
+              <div class="shop-img"><img src="timthumb.php?src=<?php echo $mEdia_Base_URL?>case_style_home/<?php echo $row['img_name'];?>&h=175&w=211&zc=1"></div>
+               <a class="skin-name" href="<?php echo Mage::getBaseUrl()?>shop.html/?case_style=<?php echo $row['attr_val_id'];?>"><?php echo $style_name2;?></a>               
+              </div>
+             </div>
+        <?php }}?>	           
+            </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <?php echo $this->getChildHtml('footer_before') ?>
+  <?php echo $this->getChildHtml('footer') ?>
+  <?php echo $this->getChildHtml('global_cookie_notice') ?>
+  <?php echo $this->getChildHtml('before_body_end') ?>
+ </div>
+</div>
+<?php echo $this->getAbsoluteFooter() ?>
+</body>
+</html>

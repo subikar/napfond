@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<layout>
+    <dropdown_adminhtml_dropdownform_index>
+        <update handle="dropdown_dropdownform_index"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="dropdownform" template="dropdown/dropdownform.phtml"/>
+        </reference>
+    </dropdown_adminhtml_dropdownform_index>
+</layout>

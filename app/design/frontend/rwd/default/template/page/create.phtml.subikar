@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]> <html lang="en" id="top" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" id="top" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" id="top" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" id="top" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html lang="en" id="top" class="no-js">
+<!--<![endif]-->
+<head>
+<?php echo $this->getChildHtml('head') ?>
+</head>
+
+<?php 
+$shopByShop = Mage::app()->getRequest()->getParam('ref');
+$case_style = Mage::app()->getRequest()->getParam('case_style');
+$currentUrl = Mage::helper('core/url')->getCurrentUrl();
+$parse_url_query = parse_url($currentUrl);
+$siteBaseUrl = Mage::helper('function/more')->getBhishoomSiteBaseUrl(); 
+
+
+
+
+if($shopByShop == 'shopbyshop' || $shopByShop == 'shopbygift' || $shopByShop == 'shopbyinterest'){
+	
+$tshirtLinkHim = $siteBaseUrl.'shop/t-shirt/him.html?'.$parse_url_query["query"];
+$tshirtLinkHer = $siteBaseUrl.'shop/t-shirt/her.html?'.$parse_url_query["query"];
+$mobileCaseLink = $siteBaseUrl.'shop/mobile-case/apple/iphone-6.html?case_style='.$case_style;
+$mobileSkinLink = $siteBaseUrl.'shop/mobile-skin/apple/iphone-6.html?case_style='.$case_style;
+$laptopLink = $siteBaseUrl.'shop/laptop-skin/11inch-12inch.html?case_style='.$case_style;
+$tabletLink = $siteBaseUrl.'shop/tablet-skin/all-tabs.html?case_style='.$case_style;
+$heading = 'Choose Your Product';
+}
+else{	
+$tshirtLinkHim = $siteBaseUrl.'designer?id=194761&cat_id=92';
+$tshirtLinkHer = $siteBaseUrl.'designer?id=194762&cat_id=96';
+$mobileCaseLink = Mage::getModel("catalog/category")->load(66)->getUrl();
+$mobileSkinLink = Mage::getModel("catalog/category")->load(75)->getUrl();
+$laptopLink = $siteBaseUrl.'designer?id=113908&cat_id=84';
+$tabletLink = Mage::getModel("catalog/category")->load(532)->getUrl();
+$heading = 'Create Your Own';
+}
+?>
+
+<body<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?>>
+<?php echo $this->getChildHtml('after_body_start') ?>
+<div class="wrapper"> <?php echo $this->getChildHtml('global_notices') ?>
+  <div class="page"> <?php echo $this->getChildHtml('header') ?> <?php echo $this->getChildHtml('global_messages') ?>
+    <?php // echo $this->getChildHtml('responsivebannerslider_index');?>
+    <div class="container">
+      <div class="main-container col1-layout">
+        <div class="main"> <?php echo $this->getChildHtml('breadcrumbs') ?>
+          <div  id="after-cr-design">
+            <div class="pageHeadingGroup">
+              <h1><?php echo $heading?></h1>
+              <?php  $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";?>
+			  <?php if(!$shopByShop){?>
+              <h4>Choose from many premium quality products & customize it in infinite ways by adding your photos/design/artwork, text, colour, vectors etc. and create a memorable product for yourself & your special ones.</h4>
+			  <?php }?>
+            </div>
+            <div class="row">
+              <div class="col-xs-6 col-md-4">
+                <div class="item-box-af"> <a href="<?php echo $tshirtLinkHim;?>">
+                  <div class="thumbnail thumb-1"> <img src="<?php echo $this->getSkinUrl('images/create-t-shirt-man.png');?>"> </div>
+                  <h3>Guy's Tee </h3>
+                  </a> </div> </div>
+              <div class="col-xs-6 col-md-4">
+                <div class="item-box-af"> <a href="<?php echo $tshirtLinkHer;?>">
+                  <div class="thumbnail thumb-2"> <img src="<?php echo $this->getSkinUrl('images/create-t-shirt-women.png');?>"> </div>
+                  <h3>Girl's Tee </h3>
+                  </a> </div> </div>
+              <div class="col-xs-6 col-md-4">
+                <div class="item-box-af"> <a href="<?php echo $mobileCaseLink;?>">
+                  <div class="thumbnail thumb-1"> <img src="<?php echo $this->getSkinUrl('images/create-case.png');?>"> </div>
+                  <h3>Mobile Case</h3>
+                  </a> </div> </div>
+              <?php /*<div class="col-xs-6 col-md-4">
+              <div class="item-box-af"> <a href="<?php echo $siteBaseUrl.'designer?id=194763&cat_id=97';?>">
+                <div class="thumbnail thumb-3">                   
+                  <img src="<?php echo $this->getSkinUrl('images/create-t-shirt-kid.png');?>"> </div>
+                <h3>Kid's/Teen Tee </h3>
+                </a> </div> </div> */ ?>
+          
+          <?php if(strpos($actual_link,'t-shirt.html')==false){?>
+          
+            <div class="col-xs-6 col-md-4">
+              <div class="item-box-af "> <a href="<?php echo $mobileSkinLink;?>">
+                <div class="thumbnail thumb-1"> <img src="<?php echo $this->getSkinUrl('images/create-skin.png');?>"> </div>
+                <h3>Mobile Skin</h3>
+                </a> </div> </div>
+            <div class="col-xs-6 col-md-4">
+              <div class="item-box-af"> <a href="<?php echo $laptopLink;?><?php //echo Mage::helper('cms/page')->getPageUrl(12).'?catid=84'?>">
+                <div class="thumbnail thumb-6"> <img src="<?php echo $this->getSkinUrl('images/create-laptop-skin.png');?>"> </div>
+                <h3>Laptop Skin</h3>
+                </a> </div> </div>
+            <div class="col-xs-6 col-md-4">
+              <div class="item-box-af"> <a href="<?php //echo $siteBaseUrl.'designer?id=201475&cat_id=535';?><?php echo $tabletLink;?>">
+                <div class="thumbnail thumb-6"> <img src="<?php echo $this->getSkinUrl('images/create-tab.png');?>"> </div>
+                <h3>Tablet Skin</h3>
+                </a> </div> </div>
+            <?php /*?>
+			 <div class="col-sm-3">
+              <div class="item-box-af"> <a href="<?php echo Mage::getModel("catalog/category")->load(106)->getUrl();?>">
+                <div class="thumbnail thumb-7">               
+                  <img src="<?php echo $this->getSkinUrl('images/create-mug.png');?>"> </div>
+                <h3>Mug</h3>
+                </a> </div> </div>  
+             <div class="col-sm-3">
+              <div class="item-box-af"> <a href="<?php echo Mage::getModel("catalog/category")->load(92)->getUrl();?>">
+                <div class="thumbnail  thumb-8">                   
+                  <img src="<?php echo $this->getSkinUrl('images/create-keychain.png');?>"> </div>
+                <h3>Key Chain </h3>
+                </a> </div> 
+             </div>
+             <div class="col-sm-3">
+              <div class="item-box-af"> <a href="<?php echo Mage::getModel("catalog/category")->load(92)->getUrl();?>">
+                <div class="thumbnail thumb-9">                   
+                  <img src="<?php echo $this->getSkinUrl('images/create-poster.png');?>"> </div>
+                <h3>Poster </h3>
+                </a> </div> 
+             </div><?php */?>
+          </div>
+          <?php }?>
+        </div>
+      </div>
+    </div>
+  </div>
+  <?php echo $this->getChildHtml('footer_before') ?> <?php echo $this->getChildHtml('footer') ?> <?php echo $this->getChildHtml('global_cookie_notice') ?> <?php echo $this->getChildHtml('before_body_end') ?> </div>
+</div>
+<?php echo $this->getAbsoluteFooter() ?>
+</body>
+</html>

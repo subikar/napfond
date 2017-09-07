@@ -1,0 +1,102 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/**
+ * @var $this Mage_Tax_Block_Checkout_Shipping
+ * @see Mage_Tax_Block_Checkout_Shipping
+ */
+ 
+		$connection = Mage::helper('function/more')->getDbReadObject();
+		$write = Mage::helper('function/more')->getDbWriteObject();	
+		$read = Mage::helper('function/more')->getDbReadObject();	
+			
+		$sessionId = Mage::getSingleton("core/session")->getEncryptedSessionId();		 
+		$query = 'SELECT clr_purpose FROM a_fedex_clr_purpose WHERE mag_session_id = "'.$sessionId.'" LIMIT 1';
+		$clr_purpose = $read->fetchOne($query);	 
+		
+?>
+<?php if ($this->displayBoth()):?>
+<tr>
+    <td style="<?php echo $this->getStyle() ?>" class="text-left" colspan="<?php echo $this->getColspan(); ?>">
+        <?php echo $this->getExcludeTaxLabel() ?>
+    </td>
+    <td style="<?php echo $this->getStyle() ?>" class="a-right">
+        <?php echo $this->helper('checkout')->formatPrice($this->getShippingExcludeTax()) ?>
+    </td>
+</tr>
+<tr>
+    <td style="<?php echo $this->getStyle() ?>" class="text-left" colspan="<?php echo $this->getColspan(); ?>">
+        <?php echo $this->getIncludeTaxLabel() ?>
+    </td>
+    <td style="<?php echo $this->getStyle() ?>" class="a-right">
+        <?php echo $this->helper('checkout')->formatPrice($this->getShippingIncludeTax()) ?>
+    </td>
+</tr>
+<?php elseif($this->displayIncludeTax()) : ?>
+<tr>
+    <td style="<?php echo $this->getStyle() ?>" class="text-left" colspan="<?php echo $this->getColspan(); ?>">
+        <?php echo $this->getTotal()->getTitle() ?>
+    </td>
+    <td style="<?php echo $this->getStyle() ?>" class="a-right">
+        <?php echo $this->helper('checkout')->formatPrice($this->getShippingIncludeTax()) ?>
+    </td>
+</tr>
+<?php else:
+
+		if(!$clr_purpose)
+		{
+			$minimumOrderAmount = Mage::getStoreConfig('carriers/fedex/free_shipping_subtotal');
+			//$cartSubTotal = Mage::helper('checkout/cart')->getQuote()->getSubtotal();
+			
+		$totals = Mage::getSingleton('checkout/session')->getQuote()->getTotals();
+		$cartSubTotal = $totals["subtotal"]->getValue();			
+			
+				//print_r(Mage::getSingleton('checkout/session')->getQuote()->getTotals());
+			if($cartSubTotal > 5000)
+			 $shippingTitle = 'Shipping (Fedex - STANDARD OVERNIGHT)';
+			else
+			 $shippingTitle = 'Shipping (Fedex - PRIORITY OVERNIGHT)';
+			
+		}	
+		else{
+			 $shippingTitle = $this->escapeHtml($this->getTotal()->getTitle());
+		}
+			 $shippingTitle = 'Shipping Charges';
+?>
+<tr>
+    <td style="<?php echo $this->getStyle() ?>" class="text-left shippingDescChkout" colspan="<?php echo $this->getColspan(); ?>">
+        <?php //echo $this->escapeHtml($this->getTotal()->getTitle()); ?>
+        <?php echo $this->escapeHtml($shippingTitle); ?>
+    </td>
+    <td style="<?php echo $this->getStyle() ?>" class="a-right">
+        <?php
+		if($this->getShippingExcludeTax() > 0)
+		echo $this->helper('checkout')->formatPrice($this->getShippingExcludeTax());
+		else
+		echo "Free";
+		?>
+    </td>
+</tr>
+<?php endif;?>

@@ -1,0 +1,43 @@
+<?php
+/**
+ * GoMage Product Designer Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use/
+ * @version      Release: 1.0.0
+ * @since        Available since Release 1.0.0
+ */
+?>
+<?php $availableFilters = $this->getAvailableFilters();?>
+<?php $count = 0;?>
+<ul class="form-list">
+  <?php foreach ($availableFilters as $_filter => $_label):?>
+    <?php $options = $this->getAvailableFilterOptions($_filter);?>
+    <?php if ($this->filterIsVisible($_filter, $options)): ?>
+        <?php if ($count == 0 || $count == 1):?>
+        <li<?php echo $count === 1 ? " class='fields'" : ''?>>
+        <?php endif;?>
+        <?php if ($count == 1 || $count == 2): ?>
+        <div class="field">
+        <?php endif;?>
+          <div class="input-box">
+            <select name="<?php echo $_filter?>" id="<?php echo $_filter?>_selector" class="filter_selector">
+                <option value=""><?php echo $this->__('Select '. $_label)?></option>
+                <?php foreach ($options as $optionId => $label): ?>
+                    <option <?php echo $this->isFilterOptionSelected($_filter, $optionId) ? 'selected="selected"' : '';?>value="<?php echo $optionId;?>"><?php echo $label; ?></option>
+                <?php endforeach;?>
+            </select>
+          </div>
+        <?php if ($count == 1 || $count == 2): ?>
+        </div>
+        <?php endif;?>
+        <?php if ($count == 0 || $count == 2):?>
+        </li>
+        <?php endif;?>
+        <?php $count++;?>
+    <?php endif;?>
+  <?php endforeach;?>
+</ul>

@@ -1,0 +1,46 @@
+<?php
+/**
+ * GoMage Product Designer Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use/
+ * @version      Release: 1.0.0
+ * @since        Available since Release 1.0.0
+ */
+?>
+<?php if ($_item = $this->getItem()): ?>
+    <h5 class="title"><span id="order_item_<?php echo $_item->getId() ?>_title"><?php echo $this->htmlEscape($_item->getName()) ?></span></h5>
+    <div><strong><?php echo $this->helper('sales')->__('SKU') ?>:</strong> <?php echo implode('<br />', Mage::helper('catalog')->splitSku($this->htmlEscape($this->getSku()))); ?></div>
+    <?php $designOption = $this->getOrderDesignOption(); ?>
+    <?php if ($this->getOrderOptions() || $designOption): ?>
+        <dl class="item-options">
+        <?php if ($designOption): ?>
+            <dt><?php echo $this->__('Product Design')?> (<?php echo $this->helper('core')->currency($designOption->getPrice(), true, false); ?>)</dt>
+            <a href="<?php echo $designOption->getUrl()?>" target="_blank"><?php echo $this->__('View')?></a>
+        <?php endif;?>
+        <?php foreach ($this->getOrderOptions() as $_option): ?>
+            <dt><?php echo $_option['label'] ?></dt>
+            <dd>
+            <?php if (isset($_option['custom_view']) && $_option['custom_view']): ?>
+                <?php echo $this->getCustomizedOptionValue($_option); ?>
+            <?php else: ?>
+                <?php $_option = $this->getFormattedOption($_option['value']); ?>
+                <?php echo $_option['value']; ?><?php if (isset($_option['remainder']) && $_option['remainder']): ?><span id="<?php echo $_dots = 'dots' . uniqid()?>"> ...</span><span id="<?php echo $_id = 'id' . uniqid()?>"><?php echo $_option['remainder'] ?></span>
+                    <script type="text/javascript">
+                    $('<?php echo $_id ?>').hide();
+                    $('<?php echo $_id ?>').up().observe('mouseover', function(){$('<?php echo $_id ?>').show();});
+                    $('<?php echo $_id ?>').up().observe('mouseover', function(){$('<?php echo $_dots?>').hide();});
+                    $('<?php echo $_id ?>').up().observe('mouseout',  function(){$('<?php echo $_id ?>').hide();});
+                    $('<?php echo $_id ?>').up().observe('mouseout',  function(){$('<?php echo $_dots ?>').show();});
+                    </script>
+                <?php endif; ?>
+            <?php endif; ?>
+            </dd>
+        <?php endforeach; ?>
+        </dl>
+    <?php endif; ?>
+    <?php echo $this->htmlEscape($_item->getDescription()) ?>
+<?php endif; ?>

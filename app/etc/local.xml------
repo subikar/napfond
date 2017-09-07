@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category   Mage
+ * @package    Mage_Core
+ * @copyright  Copyright (c) 2008 Irubin Consulting Inc. DBA Varien (http://www.varien.com)
+ * @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+-->
+<config>
+    <global>
+        <install>
+            <date><![CDATA[Mon, 11 Aug 2014 08:09:29 +0000]]></date>
+        </install>
+        <crypt>
+            <key><![CDATA[gravita]]></key>
+        </crypt>
+        <disable_local_modules>false</disable_local_modules>
+        <resources>
+            <db>
+                <table_prefix><![CDATA[]]></table_prefix>
+            </db>
+            <default_setup>
+                <connection>
+                    <host><![CDATA[69.162.154.195:3306]]></host>
+                    <username><![CDATA[dreambox_b21515m]]></username>
+                    <password><![CDATA[D()867rew987^$@]]></password>
+                    <dbname><![CDATA[dreambox_b21515m]]></dbname>
+                    <initStatements><![CDATA[SET NAMES utf8]]></initStatements>
+                    <model><![CDATA[mysql4]]></model>
+                    <type><![CDATA[pdo_mysql]]></type>
+                    <pdoType><![CDATA[]]></pdoType>
+                    <active>1</active>
+                </connection>
+            </default_setup>
+        </resources>
+        <session_save><![CDATA[files]]></session_save>
+		
+			<cms>
+				<layouts>
+					<redirect>
+						<label>Create</label>
+						<template>page/create.phtml</template>
+				</redirect>
+				</layouts>
+			</cms>			
+					
+<page>
+      <layouts>
+        <!--<page_create_page translate="label">
+		  <label>Create</label>
+          <template>page/create.phtml</template>
+          <layout_handle>pppage_createpage</layout_handle>	
+        </page_create_page>-->
+        <!-- add more layouts here -->
+		
+         <page_create_your_ownpage translate="label">
+			<label>Create Your Own</label>
+          <template>page/create_your_own.phtml</template>
+          <layout_handle>pppage_create_your_ownpage</layout_handle>	
+		 </page_create_your_ownpage>
+        <!-- add more layouts here -->
+		
+		 <page_mix_product_page translate="label">
+			<label>Mix Product Page</label>
+          	<template>page/mix_product_page.phtml</template>
+            <layout_handle>pppage_mix_product_pagepage</layout_handle>		  
+         </page_mix_product_page>
+
+
+		<page_product_list_page translate="label">
+			<label>Product List Page</label>
+          	<template>page/product-list.phtml</template>
+            <layout_handle>pppage_product_list_pagepage</layout_handle>		  
+         </page_product_list_page>
+ 
+        <!-- add more layouts here -->
+		
+         <page_shop_page translate="label">
+		  <label>Shop</label>
+          <template>page/shop.phtml</template>
+          <layout_handle>pppage_shoppage</layout_handle>		  
+        </page_shop_page>
+        <!-- add more layouts here -->
+		
+ 
+        <!-- add more layouts here -->		
+         <page_gift_page translate="label">
+		  <label>Gift</label>
+          <template>page/gift.phtml</template>
+          <layout_handle>pppage_giftpage</layout_handle>	
+        </page_gift_page>
+        <!-- add more layouts here -->
+		
+		<!-- add more layouts here -->		
+         <page_promotional_gift_page translate="label">
+		  <label>Promotional Gift</label>
+          <template>page/promotional_gift.phtml</template>
+          <layout_handle>pppage_promotional_giftpage</layout_handle>	
+        </page_promotional_gift_page>
+        <!-- add more layouts here -->	 
+
+		<!-- add more layouts here -->		
+         <page_sell_on_bhishoom_page translate="label">
+		  <label>Sell on bhishoom</label>
+          <template>page/sell_on_bhishoom.phtml</template>
+          <layout_handle>ppage_sell_on_bhishoompage</layout_handle>	
+        </page_sell_on_bhishoom_page>
+        <!-- add more layouts here -->	 
+		
+		<!-- add more layouts here -->		
+         <page_404_not_found translate="label">
+		  <label>404 Not Found</label>
+          <template>page/not_found.phtml</template>
+          <layout_handle>ppage_404_not_found</layout_handle>	
+        </page_404_not_found>
+        <!-- add more layouts here -->	 
+
+		
+ 		<!-- add more layouts here -->		
+         <!--<page_create_your_own_gift_page translate="label">
+		  <label>Create Your Own Gift</label>
+          <template>page/create_your_own_gift.phtml</template>
+          <layout_handle>pppage_create_your_own_giftpage</layout_handle>	
+        </page_create_your_own_gift_page>-->
+        <!-- add more layouts here -->	
+		
+		
+      </layouts>
+    </page>		
+		
+		
+		
+    </global>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <frontName><![CDATA[admin]]></frontName>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+</config>

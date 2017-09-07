@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <NextBits_CheckDelivery>
+            <version>0.1.0</version>
+        </NextBits_CheckDelivery>
+    </modules>
+    <frontend>
+        <routers>
+            <checkdelivery>
+                <use>standard</use>
+                <args>
+                    <module>NextBits_CheckDelivery</module>
+                    <frontName>checkdelivery</frontName>
+                </args>
+            </checkdelivery>
+        </routers>
+        <layout>
+            <updates>
+                <checkdelivery>
+                    <file>checkdelivery.xml</file>
+                </checkdelivery>
+            </updates>
+        </layout>
+    </frontend>
+    <admin>
+        <routers>
+			<checkdelivery>
+				<use>admin</use>
+				<args>
+					<module>NextBits_CheckDelivery</module>
+					<frontName>checkdelivery</frontName>
+				</args>
+			</checkdelivery>
+        </routers>
+    </admin>
+    <adminhtml>
+		<acl>
+			<resources>
+				<all>
+					<title>Allow Everything</title>
+				</all>
+				<admin>
+					<children>
+						<NextBits_CheckDelivery>
+							<title>CheckDelivery Module</title>
+							<sort_order>10</sort_order>
+						</NextBits_CheckDelivery>
+						<system>
+							<children>
+								<config>
+									<children>
+										<checkdelivery translate="title" module="checkdelivery">
+											<title>NextBits CheckDelivery Section</title>
+										</checkdelivery>
+									</children>
+								</config>
+							</children>
+						</system>
+					</children>
+				</admin>
+			</resources>
+		</acl>
+		<layout>
+			<updates>
+				<checkdelivery>
+					<file>checkdelivery.xml</file>
+				</checkdelivery>
+			</updates>
+		</layout>
+    </adminhtml>   
+    <global>
+        <models>
+            <checkdelivery>
+                <class>NextBits_CheckDelivery_Model</class>
+                <resourceModel>checkdelivery_mysql4</resourceModel>
+            </checkdelivery>
+            <checkdelivery_mysql4>
+                <class>NextBits_CheckDelivery_Model_Mysql4</class>
+                <entities>
+                    <checkdelivery>
+                        <table>checkdelivery</table>
+                    </checkdelivery>
+                </entities>
+            </checkdelivery_mysql4>
+        </models>
+        <resources>
+            <checkdelivery_setup>
+                <setup>
+                    <module>NextBits_CheckDelivery</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </checkdelivery_setup>
+            <checkdelivery_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </checkdelivery_write>
+            <checkdelivery_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </checkdelivery_read>
+        </resources>
+        <blocks>
+            <checkdelivery>
+                <class>NextBits_CheckDelivery_Block</class>
+            </checkdelivery>
+        </blocks>
+        <helpers>
+            <checkdelivery>
+                <class>NextBits_CheckDelivery_Helper</class>
+            </checkdelivery>
+        </helpers>
+    </global>
+	<default>
+		<checkdelivery>
+			<general>
+				<active>1</active>
+				<block_title>Check Delivery Availability</block_title>
+				<success_messgae>Delivery possible in your area</success_messgae>
+				<failure_messgae>We do not deliver to this location.</failure_messgae>
+				<empty_messgae>Please enter Zip Code</empty_messgae>
+				<default_html><![CDATA[..........................................................<br/>
+Shipped In 1 Business Day <br/>
+..........................................................<br/>
+Free Home Delivery<br/>
+..........................................................]]></default_html>
+				<success_html><![CDATA[..........................................................<br/>
+Delivered Within 3-5 Days <br/>
+..........................................................<br/>
+Free Shipping<br/>
+..........................................................<br/>
+COD Available<br/>
+..........................................................]]></success_html>
+				<failure_html><![CDATA[..........................................................<br/>
+COD not Available<br/>
+..........................................................<br/>
+Picup at store Available<br/>
+..........................................................]]></failure_html>
+	
+			</general>
+		</checkdelivery>
+	</default>
+</config>

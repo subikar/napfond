@@ -1,0 +1,23 @@
+<?php
+/**
+ * GoMage Product Designer Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use/
+ * @version      Release: 1.0.0
+ * @since        Available since Release 1.0.0
+ */
+?>
+<?php
+$cliparts = $this->getCliparts();
+?>
+<?php foreach($cliparts as $_clipart): ?>
+    <img src="<?php echo $this->getClipartUrl($_clipart->getImage()); ?>"
+         data-origin-url="<?php echo $this->getOriginClipartUrl($_clipart->getImage()); ?>"
+         class="clipart-image"
+         alt="<?php echo $_clipart->getLabel()?>"
+         title="<?php echo $_clipart->getLabel()?>"/>
+<?php endforeach; ?>

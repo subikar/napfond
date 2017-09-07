@@ -1,0 +1,413 @@
+<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('css/jcarousel.basic.css');?>" media="all" />
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery.jcarousel.min.js') ?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jcarousel.basic.js') ?>"></script>
+<?php
+$siteBaseUrl = Mage::helper('function/more')->getBhishoomSiteBaseUrl();
+
+$_product = $this->getProduct();
+$_helper = $this->helper('catalog/output');
+$gal_count = count($this->getGalleryImages());
+
+$_category = Mage::registry('current_category');
+$checkShopCategory = $_category->getId();
+
+$path = $_category->getPath();
+
+$cat_url_key = $_category->getUrlKey();
+
+$ids=explode('/',$path);
+
+$blank_backImagePath_1 = '';
+
+$blank_backImagePath_2 = '';
+
+
+if(in_array(3,explode('/',$path)) || in_array(66,explode('/',$path))){
+
+	$blankImageParentFolderName='mobile-case';
+
+	$imageType='back';
+	$imageName='mask.png';
+
+	$mediaFolderurl = Mage::getBaseUrl('media').'blank_images/'.$blankImageParentFolderName.'/'.$cat_url_key.'/resized450/';
+	$blank_backImagePath_1 = $mediaFolderurl.'mask.png';
+
+	$mediaFolderurl = Mage::getBaseUrl('media').'blank_images/'.$blankImageParentFolderName.'/'.$cat_url_key.'/resized1000/';
+	$blank_backImagePath_2 = $mediaFolderurl.'mask.png';
+
+}
+else if(in_array(34,explode('/',$path)) || in_array(75,explode('/',$path))){
+
+	$blankImageParentFolderName='mobile-skin';
+	$imageType='front-back';
+	$imageName='mask-front.png';
+	$imageName2='mask-back.png';
+
+	$mediaFolderurl = Mage::getBaseUrl('media').'blank_images/'.$blankImageParentFolderName.'/'.$cat_url_key.'/resized450/';
+	$blank_backImagePath_1 = $mediaFolderurl.'mask-back.png';
+	$blank_frontImagePath_1 = $mediaFolderurl.'mask-front.png';
+
+	$mediaFolderurl = Mage::getBaseUrl('media').'blank_images/'.$blankImageParentFolderName.'/'.$cat_url_key.'/resized1000/';
+	$blank_backImagePath_2 = $mediaFolderurl.'mask-back.png';
+	$blank_frontImagePath_2 = $mediaFolderurl.'mask-front.png';
+
+}
+else if(in_array(4,explode('/',$path)) || in_array(91,explode('/',$path))){	
+	$blankImageParentFolderName='';
+}
+else if(in_array(477,explode('/',$path)) || in_array(1144,explode('/',$path))){
+	$blankImageParentFolderName='';
+}
+else if(in_array(8,explode('/',$path)) || in_array(21,explode('/',$path)) || in_array(42,explode('/',$path)) || in_array(44,explode('/',$path)) || in_array(972,explode('/',$path)) || in_array(1143,explode('/',$path))){
+	$blankImageParentFolderName='';
+}
+else if(in_array(8,explode('/',$path)) || in_array(84,explode('/',$path))){
+
+	$blankImageParentFolderName='laptop-skin';
+	$imageType='back';
+	$imageName='mask.png';
+
+	$mediaFolderurl = Mage::getBaseUrl('media').'blank_images/'.$blankImageParentFolderName.'/'.$cat_url_key.'/resized450/';
+	$blank_backImagePath_1 = $mediaFolderurl.'mask.png';
+
+	$mediaFolderurl = Mage::getBaseUrl('media').'blank_images/'.$blankImageParentFolderName.'/'.$cat_url_key.'/resized1000/';
+	$blank_backImagePath_2 = $mediaFolderurl.'mask.png';
+
+}
+else if(in_array(478,explode('/',$path)) || in_array(532,explode('/',$path))){
+
+	$blankImageParentFolderName='tablet-skin';
+	$imageType='front-back';
+	$imageName='mask-front.png';
+	$imageName2='mask-back.png';
+
+	$mediaFolderurl = Mage::getBaseUrl('media').'blank_images/'.$blankImageParentFolderName.'/'.$cat_url_key.'/resized450/';
+	$blank_backImagePath_1 = $mediaFolderurl.'mask-back.png';
+	$blank_frontImagePath_1 = $mediaFolderurl.'mask-front.png';
+
+	$mediaFolderurl = Mage::getBaseUrl('media').'blank_images/'.$blankImageParentFolderName.'/'.$cat_url_key.'/resized1000/';
+	$blank_backImagePath_2 = $mediaFolderurl.'mask-back.png';
+	$blank_frontImagePath_2 = $mediaFolderurl.'mask-front.png';
+
+}
+
+/***************************Code for fetching blank image**************************/
+/*
+if($_category)
+{
+	$path = $_category->getPath();
+	$ids  = explode('/', $path);
+	unset($ids[0]);
+	$sep='';
+	$id_cat_path='';	
+	$id_cat_path_counter=0;
+}
+foreach($ids as $idcat)
+{
+	$id_cat_path_counter++;
+	if($id_cat_path_counter <= 2)
+	continue;
+	if((in_array(34,$ids) || in_array(75,$ids) || in_array(3,$ids) || in_array(66,$ids) || ( in_array(478,$ids) && $checkShopCategory != 477 )) && $id_cat_path_counter == 4)
+	continue;
+	$idcat_obj = Mage::getModel('catalog/category')->load($idcat);
+	$id_cat_path .= $sep.$idcat_obj->getUrlKey();
+	$sep = '/';
+}
+if(in_array(3,$ids))
+{
+	$folderURL = Mage::helper('function')->graGetFolderUrl($id_cat_path);		 
+	$folderPath = Mage::helper('function')->graGetFolderPath($id_cat_path);
+	/////Code for fetching 450 size image	
+	if(!is_file($folderPath . DS . 'resized450' . DS . 'mask.png'))
+ 	 $blank_frontImagePath450 = Mage::helper('function')->resizeImg('mask.png', 450, 450,$folderURL,$folderPath,'resized450');	   
+	else 	
+	 $blank_frontImagePath450 = $siteBaseUrl.'media/blank_images/'.$id_cat_path.'/'.$graBlankImageFolderKey.'/resized450/mask.png';
+	/////End Code for fetching 450 size image	
+	/////Code for fetching 1200 size image	
+	if(!is_file($folderPath . DS . 'resized1000' . DS . 'mask.png'))
+ 	 $blank_backImagePath = Mage::helper('function')->resizeImg('mask.png', 1000, 1000,$folderURL,$folderPath,'resized1000');   
+	else 	
+	 $blank_backImagePath = $siteBaseUrl.'media/blank_images/'.$id_cat_path.'/'.$graBlankImageFolderKey.'/resized1000/mask.png';
+	/////End Code for fetching 1200 size image	
+}
+else if(in_array(34,$ids) || in_array(478,$ids))
+{ 
+ 
+
+    $folderURL = Mage::helper('function')->graGetFolderUrl($id_cat_path);		 
+    $folderPath = Mage::helper('function')->graGetFolderPath($id_cat_path);
+	///Code for fetching 450 size images////// 
+    if(!is_file($folderPath . DS . 'resized450' . DS . 'mask-front.png'))
+  	 $blank_frontImagePath450 = Mage::helper('function')->resizeImg('mask-front.png', 450, 450,$folderURL,$folderPath,'resized450');	   
+	else	  
+	 $blank_frontImagePath450 = $siteBaseUrl.'media/blank_images/'.$id_cat_path.'/resized450/mask-front.png';	
+	
+	if(!is_file($folderPath . DS . 'resized450' . DS . 'mask-back.png')) 
+ 	 $blank_backImagePath450 = Mage::helper('function')->resizeImg('mask-back.png', 450, 450,$folderURL,$folderPath,'resized450');	   
+	else 
+	 $blank_backImagePath450 = $siteBaseUrl.'media/blank_images/'.$id_cat_path.'/resized450/mask-back.png'; 
+	 ///End Code for fetching 450 size images////// 	   
+	 ///Code for fetching 1000 size images////// 
+	 
+	if(!is_file($folderPath . DS . 'resized1000' . DS . 'mask-back.png'))
+  	 $blank_backImagePath = Mage::helper('function')->resizeImg('mask-back.png', 1000, 1000,$folderURL,$folderPath,'resized1000');	   
+	else	  
+	 $blank_backImagePath = $siteBaseUrl.'media/blank_images/'.$id_cat_path.'/resized1000/mask-back.png';	
+	 
+	if(!is_file($folderPath . DS . 'resized1000' . DS . 'mask-front.png'))
+  	 $blank_frontImagePath = Mage::helper('function')->resizeImg('mask-front.png', 1000, 1000,$folderURL,$folderPath,'resized1000');	   
+	else	  
+	 $blank_frontImagePath = $siteBaseUrl.'media/blank_images/'.$id_cat_path.'/resized1000/mask-front.png';		
+	  ///End Code for fetching 1000 size images////// 	 
+}	
+*/
+
+ 
+/***********************************End Code for fetching blank image************************************************/
+?>
+<div class="product-image product-image-zoom">
+ <div class="product-image-gallery testtttt1111">
+  <?php
+  if($blank_backImagePath_2!='')
+  {
+	  ?>
+       <img id="image-main" class="gallery-image visible" src="<?php echo $siteBaseUrl.'/mask.php?image='.$this->helper('catalog/image')->init($_product, 'image').'&mask='.$blank_backImagePath_2; ?>" alt="<?php echo $this->escapeHtml($this->getImageLabel()) ?>" title="<?php echo $this->escapeHtml($this->getImageLabel()); ?>" height="450"  />
+       <img src="<?php echo $this->getSkinUrl('images/ajax-loader.gif')?>" id="main-load-image" class="main-load-image"/>
+       <?php
+       $mask_image = array($blank_frontImagePath_2, $blank_backImagePath_2);
+       $i=0;  
+       foreach ($this->getGalleryImages() as $_image):
+        $_imageUrl = $this->helper('catalog/image')->init($_product, 'image', $_image->getFile())->keepFrame(false)->constrainOnly(true)->resize(1000);
+       ?>
+       <img id="image-<?php echo $i; ?>" class="gallery-image" src="<?php echo $siteBaseUrl.'/mask.php?image='.$_imageUrl.'&mask='.$mask_image[$i]; ?>" data-zoom-image="<?php echo $siteBaseUrl.'/mask.php?image='.$_imageUrl.'&mask='.$mask_image[$i]; ?>" height="450" />
+       <?php
+        $i++;
+       endforeach;
+  }
+  else
+  {
+	  ?>
+	  <img id="image-main" class="gallery-image visible" src="<?php echo $this->helper('catalog/image')->init($_product, 'image')?>" alt="<?php echo $this->escapeHtml($this->getImageLabel()) ?>" title="<?php echo $this->escapeHtml($this->getImageLabel()); ?>" height="450"/>
+      <img src="<?php echo $this->getSkinUrl('images/ajax-loader.gif')?>" id="main-load-image" class="main-load-image" />
+      <?php
+       $i=0;  
+       foreach ($this->getGalleryImages() as $_image):
+        $_imageUrl = $this->helper('catalog/image')->init($_product, 'image', $_image->getFile())->keepFrame(false)->constrainOnly(true)->resize(1000);
+      ?>
+        <img id="image-<?php echo $i; ?>" class="gallery-image" src="<?php echo $_imageUrl; ?>" data-zoom-image="<?php echo $_imageUrl; ?>" height="450" <?php /*?>onload="onLoadProductDetailsPageImage()"<?php */?> />
+        <?php
+        $i++;
+       endforeach;
+  }
+  ?>
+ </div>
+</div>
+<div class="clear"></div>
+<?php if (count($this->getGalleryImages()) > 1): ?>
+ <div class="more-views">
+  <div class="jcarousel-wrapper">
+   <div class="block-content jcarousel <?php if (count($this->getGalleryImages()) < 3){?>sliderX<?php }?>">
+    <ul class="product-image-thumbs">
+     <?php $i=0; foreach ($this->getGalleryImages() as $_image): ?>
+      <?php
+       if (($filterClass = $this->getGalleryFilterHelper()) && ($filterMethod = $this->getGalleryFilterMethod()) && !Mage::helper($filterClass)->$filterMethod($_product, $_image)):
+     	continue;
+    	endif;
+      ?>
+     <li class="gallary">
+      <div class="related-block-div">
+       <?php
+        if(in_array(34,$ids))
+	    { ?>
+		 <a class="thumb-link" href="#" title="<?php echo $this->escapeHtml($_image->getLabel()) ?>" data-image-index="<?php echo $i; ?>"> 	
+         <?php
+		  if($this->escapeHtml($_image->getLabel()) == 'Front')
+		  {
+		 ?>
+		 	<img src="<?php echo $blank_frontImagePath_1;?>" width="100" height="100" class="graPosAbsoulte">
+            <img src="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'thumbnail', $_image->getFile())->resize(100); ?>" width="100" height="100" alt="<?php echo $this->escapeHtml($_image->getLabel()) ?>" />
+		 <?php }
+   		  else if($this->escapeHtml($_image->getLabel()) == 'Back')
+		  {?> 
+         	<img src="<?php echo $blank_backImagePath_1;?>" width="100" height="100" class="graPosAbsoulte">
+            <img src="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'thumbnail', $_image->getFile())->resize(100); ?>" width="100" height="100" alt="<?php echo $this->escapeHtml($_image->getLabel()) ?>" />
+         <?php
+		  }?>
+	     </a><?php
+	    }
+	    else
+	    {?>
+		 <a class="thumb-link" href="#" title="<?php echo $this->escapeHtml($_image->getLabel()) ?>" data-image-index="<?php echo $i; ?>"> 	          
+          <?php
+          if($this->escapeHtml($_image->getLabel()) != 'Cover Image')
+		  { 
+		  ?>
+           <img src="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'thumbnail', $_image->getFile())->resize(107); ?>" width="107" height="107" alt="<?php echo $this->escapeHtml($_image->getLabel()) ?>" class="clickOnThisClassForColorChange" />
+          <?php
+		  }		  
+		  ?>
+         </a>
+      <?php 
+	    } ?>      
+      </div>  
+     </li>  	  
+    <?php $i++; endforeach; ?>
+   </ul>
+  </div>
+  <?php if($gal_count > 4){?>
+    <a href="#" class="jcarousel-control-prev">&lsaquo;</a>
+    <a href="#" class="jcarousel-control-next">&rsaquo;</a>
+    <?php }?>
+  </div> 
+ </div>
+<?php endif; ?>  
+<?php echo $this->getChildHtml('after'); ?>
+
+<script type="text/javascript">
+
+jQuery( document ).ready(function() {
+
+jQuery('.carousel').carousel();
+
+jQuery(".switcher-color > .switcher-label").click(function(event){	
+	jQuery(window).scrollTop(0);
+	jQuery(this).stop();
+	event.preventDefault();
+	html = jQuery(this).find('span:nth-child(2)').html();
+
+	$j('.product-image-gallery').find('.gallery-image').removeClass('visible');
+	
+	jQuery(".product-image-gallery").css("opacity","0.4");
+	jQuery("#main-load-image").css("z-index","1111");
+	jQuery("a.thumb-link[title='"+html+"']").click();
+	jQuery(".product-image-gallery img").load(function(){	
+		jQuery(".product-image-gallery").css("opacity","1");
+		jQuery("#main-load-image").css("z-index","0");
+		//jQuery("#image-main").addClass('visible');
+	});
+	
+});
+
+jQuery(".clickOnThisClassForColorChange").click(function(event){	
+	jQuery(window).scrollTop(0);
+	jQuery(this).stop();
+	event.preventDefault();
+
+	text = $j(this).attr('alt');	
+	
+	parentTag = jQuery('label.switcher-label > span > span.tshirt_class_'+text.split(' ').join('_').toLowerCase()).parent().get( 0 );
+		
+	parentTag2 = jQuery(parentTag).parent().get( 0 )
+	
+
+	//alert('#'+jQuery(parentTag2).attr('value'))
+	//alert(jQuery(parentTag2).parent().prev().attr('id'))
+	
+	//jQuery("#"+jQuery(parentTag2).parent().prev().attr('id')).val(jQuery(parentTag2).attr('value'))
+	
+	//alert(jQuery(parentTag2).parent().prev().attr('id'))
+	
+	jQuery("#"+jQuery(parentTag2).parent().prev().attr('id')).val(jQuery(parentTag2).attr('value')).change();
+	//alert(Easylife)
+	//alert(Easylife.Switcher)
+	
+	$(jQuery(parentTag2).parent().prev().attr('id')).simulate('change');
+	
+	//Easylife.selectValue(jQuery(parentTag2),'',jQuery(parentTag2).parent().prev().attr('id'))
+	/*
+	jQuery("#"+jQuery(parentTag2).parent().prev().attr('id')).change(function(){
+		
+		jQuery(this).val(jQuery(parentTag2).attr('value'));
+		
+	});
+	*/
+	
+	//jQuery(parentTag2).prev().val(jQuery(parentTag2).attr('value'));
+	//alert('.switcher-label > .'+text.split(' ').join('_').toLowerCase())
+	jQuery('.switcher-label').removeClass('selected');	
+	jQuery('label.switcher-label > span > span.tshirt_class_'+text.split(' ').join('_').toLowerCase()).click();
+	jQuery(parentTag).click();
+	jQuery(parentTag2).click();
+	jQuery(parentTag2).addClass('selected');
+	
+	
+	var sizeSet = false
+	
+	jQuery('.switcher-size').children('label').each(function () {
+    
+			if(!jQuery(this).hasClass( "no-stock" ) && sizeSet == false){
+				
+				
+				
+				sizeSelectBoxId = jQuery(this).attr('id')
+				
+				sizeSelectBoxId = sizeSelectBoxId.split('_')
+
+				jQuery("#"+sizeSelectBoxId[0]).val(jQuery(this).attr('value'))	
+				
+				jQuery(this).click()
+				jQuery('.switcher-color > span').click()
+				
+				sizeSet = true
+			}
+			
+	
+	});
+	
+	
+	
+});
+
+	var sizeSet = false
+	
+	jQuery('.switcher-size').children('label').each(function () {
+    
+			if(!jQuery(this).hasClass( "no-stock" ) && sizeSet == false){
+				
+				
+				
+				sizeSelectBoxId = jQuery(this).attr('id')
+				
+				sizeSelectBoxId = sizeSelectBoxId.split('_')
+
+				jQuery("#"+sizeSelectBoxId[0]).val(jQuery(this).attr('value'))	
+				
+				jQuery(this).click()
+				jQuery('.switcher-color > span').click()
+				
+				sizeSet = true
+			}
+			
+	
+	});
+	
+
+
+
+//document.getElementById("image-main").style.backgroundImage = "url(<?php //echo $this->getSkinUrl('images/ajax-loader.gif')?>) no-repeat";
+/*
+jQuery(".more-views .thumb-link").click(function(){	
+
+	jQuery(".product-image-gallery").css("opacity","0.4");
+	jQuery("#main-load-image").css("z-index","1111");
+	
+	jQuery(".product-image-gallery img").load(function(){	
+		jQuery(".product-image-gallery").css("opacity","1");
+		jQuery("#main-load-image").css("z-index","0");
+	});
+	
+});
+
+
+*/
+});
+
+/*
+
+function onLoadProductDetailsPageImage()
+{
+		jQuery(".product-image-gallery").css("opacity","1");
+		jQuery("#main-load-image").css("z-index","0");
+
+}*/
+</script>

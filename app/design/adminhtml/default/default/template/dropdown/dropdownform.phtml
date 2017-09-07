@@ -1,0 +1,141 @@
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery-1.9.0.min.js');?>"></script>
+<div class="content-header">
+ <table cellspacing="0" class="grid-header">
+  <tr>
+   <td width="25%" height="35"><h3><?php echo $this->__('Filter Dropdown')?></h3></td>
+   <td class="a-right">
+    <button onclick="cat_hide_div()" class="scalable back" id="back" type="button" style="display:none; float:right;"><span>Back</span></button>
+    <button onclick="img_show_div()" class="scalable add" id="add_item" type="button" style="float:right;"><span>Add New Item</span></button>
+   </td>
+   <td>
+    <div id="loadingmask" style="display: none;">
+	 <div class="loader" id="loading-mask-loader">
+      <img src="<?php echo $this->getSkinUrl('images/ajax-loader-tr.gif');?>" alt="<?php echo $this->__('Loading...') ?>"/></div>
+	 <div id="loading-mask"></div>
+	</div>
+   </td>
+  </tr>
+ </table>
+</div>
+<div class="grid" id="display-cat">
+ <form id="drop" name="drop" method="post" action="<?php echo $this->getUrl('*/*/post')?>" onsubmit="return drop_validate()" enctype="multipart/form-data">
+  <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+  <table cellspacing="0" class="form-list">
+   <thead>
+    <tr class="headings">
+     <th width="10%">Type</th>
+     <th>Category</th>
+     <th>Category Value</th>
+     <!--<th>Action</th>-->
+    </tr>
+   </thead>
+   <tbody>
+   <?php     
+   $connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+   $qry = 'select dt.id, dd.device_name, dt.brand_name, dt.device FROM drop_device as dd, drop_data as dt where dd.id = dt.type_id and dt.active = 1';
+   $rowsArray = $connection->fetchAll($qry); 
+   foreach($rowsArray as $rowsArray1)
+   {?> 
+      <tr> 
+       <td><?php echo $rowsArray1['device_name'];?></td>      
+       <td><?php echo $rowsArray1['brand_name'];?></td>
+       <td><?php echo $rowsArray1['device'];?></td>        
+       <?php /*?><td>
+        <input type="hidden" value="<?php echo $rowsArray1['id'];?>" name="drop_id" id="drop_id" />
+        <input type="hidden" value="" name="del_cat" id="del_cat" />
+        <img src="<?php echo $this->getSkinUrl('images/edit.gif');?>" title="Edit Category" style="cursor:pointer;" onclick="show_cng_div(<?php echo $rowsArray1['id'];?>)" /> &nbsp;&nbsp;&nbsp; 
+        <img src="<?php echo $this->getSkinUrl('images/icon_btn_delete.gif');?>" title="Delete Category" style="cursor:pointer;" onclick="del_cat('<?php echo $rowsArray1['id'];?>')" />
+        </td><?php */?>
+       </tr>    
+    <?php } ?>
+   </tbody> 
+  </table> 
+ </form>
+</div>
+
+<div class="grid" id="add-item" style="display:none;">
+ <form id="add_form" name="add_form" method="post" action="<?php echo $this->getUrl('*/*/bpost')?>" enctype="multipart/form-data" onsubmit="return img_validate()">
+  <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+   <div class="entry-edit">
+    <div class="entry-edit-head">
+	 <h4 class="icon-head head-edit-form fieldset-legend">Add Item</h4>
+    </div> 
+	<div id="responsivebannerslider_form" class="fieldset ">
+     <table cellspacing="0" class="form-list">
+      <tbody>
+       <tr>
+        <td class="label">Select Type</td>
+        <td class="value">
+         <select name="type_id" id="type_id">
+	       	<option value="0">Please Select Type</option>
+            <?php  
+			$qry = 'select id, device_name FROM drop_device';
+   			$dname = $connection->fetchAll($qry);  
+			foreach($dname as $device_name)
+			{  ?>
+           		<option value="<?php echo $device_name['id'];?>"><?php echo $device_name['device_name'];?></option>
+           <?php } ?>
+         </select> 
+        </td>     
+       </tr> 
+       <tr>
+        <td class="label">Enter Category</td>
+        <td class="value">
+          <input type="text" name="bname" id="bname" value="" class="input-text" />
+        </td>     
+       </tr> 
+       <tr>
+        <td class="label">Enter Category Value</td>
+        <td class="value">
+          <input type="text" name="bvalue" id="bvalue" value="" class="input-text" />
+        </td>     
+       </tr> 
+       <tr>
+        <td class="label"></td>
+        <td class="value"><input type="submit" value="Submit" class="pure-button pure-button-primary"></td>     
+       </tr> 
+      </tbody> 
+     </table> 
+	</div>
+   </div> 
+ </form>
+</div>
+
+<script type="text/javascript">
+function img_show_div()
+{
+	if(document.getElementById("add-item").style.display == 'none')
+	{
+		document.getElementById("add-item").style.display = 'block';
+		document.getElementById("back").style.display = 'block';	
+		document.getElementById("display-cat").style.display = 'none';
+	}
+}
+function cat_hide_div()
+{
+	if(document.getElementById("display-cat").style.display == 'none')
+	{
+		document.getElementById("display-cat").style.display = 'block';
+		document.getElementById("add-item").style.display = 'none';	
+		document.getElementById("back").style.display = 'none';				
+	}
+}
+function show_cng_div(val)
+{
+	if(document.getElementById("cng_div_"+val).style.display == 'none')
+	{
+		document.getElementById("cng_div_"+val).style.display = 'block'
+	}
+	else
+	{
+		document.getElementById("cng_div_"+val).style.display = 'none'
+	}
+}
+function del_cat(id)
+{
+	alert(id);
+	//document.getElementById("drop_id").value = id;
+	document.getElementById("del_cat").value = '1';
+	document.getElementById("drop").submit();
+}
+</script>

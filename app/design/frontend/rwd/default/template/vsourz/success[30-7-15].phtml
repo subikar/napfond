@@ -1,0 +1,262 @@
+<?php
+	$displayOrderTable=Mage::getStoreConfig('tab1/order_information_system/display_order_table');
+	$displayProductImage=Mage::getStoreConfig('tab1/order_information_system/display_product_image');
+	$displayDiscount=Mage::getStoreConfig('tab1/order_information_system/display_discount');
+	$displayShippingRate=Mage::getStoreConfig('tab1/order_information_system/display_shipping_rates');
+	$displayTax=Mage::getStoreConfig('tab1/order_information_system/display_tax');
+	$displayCmsBlockAbove=Mage::getStoreConfig('tab1/cms_block_section/cms_block_above');
+	$cmsBlockIdAbove=Mage::getStoreConfig('tab1/cms_block_section/cms_block_id_above');
+	$displayCmsBlockBelow=Mage::getStoreConfig('tab1/cms_block_section/cms_block_below');
+	$cmsBlockIdBelow=Mage::getStoreConfig('tab1/cms_block_section/cms_block_id_below');
+	$newsLetter=Mage::getStoreConfig('tab1/newsletter_subscription_section/display_section');
+?>
+
+<?php
+	$_coreHelper = $this->helper('core');
+?>
+<div class="thanks-outer">
+
+<?php if($this->getTopBlock()!=false): ?>
+	<?php if($displayCmsBlockAbove==1): ?>
+		<div class="order-cms-block block1"><?php
+			echo $this->getLayout()->createBlock('cms/block')->setBlockId($this->getTopBlock())->toHTML();
+		?></div><?php
+		 endif;
+	endif;
+?><div class="thanks-inner">
+	<div class="page-title thank">
+		<h1><?php echo $this->__('Thank You') ?></h1>
+	</div><?php
+		echo $this->getMessagesBlock()->getGroupedHtml() 
+?><div class="thkbox">
+	<div class="thk-box1">
+		<div class="outer-box">
+			<h3><?php echo $this->__('Thank you for your order!') ?></h3>
+			<div class="inner-box">
+				<?php if($this->getOrderId()): ?>
+					<?php if($this->getCanViewOrder()): ?>
+						<?php  else: ?>
+					<?php endif; ?>
+					<p><?php echo $this->__('You will receive an order confirmation email with details of your order and a link to track its progress.') ?></p>
+					<?php if($this->getCanViewOrder() && $this->getCanPrintOrder()): ?>			 
+						<?php echo $this->getChildHtml() ?>			   
+					<?php endif; ?>
+				<?php endif; ?>
+				<a class="button btn-continue btn-inline" href="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) ?>" title="<?php echo $this->__('Continue Shopping') ?>" ><span><span><?php echo $this->__('Continue Shopping') ?></span></span></a>
+			</div>
+		</div>
+	</div>
+	<div class="thk-box2">
+		<div class="outer-box">
+		<h3><?php echo $this->__('Your order summary') ?></h3>
+			<div class="inner-box">
+			<?php if($this->getOrderId()): ?>
+				<?php echo $this->__('<a href="%s" onclick="this.target=\'_blank\'" class="button print-icon" title="Print Details">Print Details</a>', $this->getPrintUrl()) ?>
+				<?php echo $this->getChildHtml() ?>
+			<?php endif; ?>
+			<?php //******************************Order Summary *********************** ?>
+				<ul>
+				<?php
+				if($this->getOrderId()):
+					$orderObj = Mage::getModel('sales/order')->loadByIncrementId($this->getOrderId());
+					$lastOrder = Mage::getModel('sales/order')->load(Mage::getSingleton('checkout/session')->getLastOrderId());
+					$billingAddress = $lastOrder->getBillingAddress();
+					$shippingAddress = $lastOrder->getShippingAddress();
+					?>
+					<li class="first">
+						<label><?php echo $this->__('Date') ?></label>
+						<span class="sep">:</span>
+						<span><?php echo $orderObj->getCreatedAtStoreDate(); ?></span>
+					</li>
+					<li>
+						<label><?php echo $this->__('Order Number') ?></label>
+						<span class="sep">:</span>
+						<span>
+							<?php if($this->getCanViewOrder()): ?>
+								<?php echo $this->__(sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getViewOrderUrl()), $this->escapeHtml($this->getOrderId()))) ?>
+							<?php else: ?>
+								<?php echo $this->__($this->escapeHtml($this->getOrderId())) ?>
+							<?php endif; ?>
+							<?php echo $this->getChildHtml() ?>
+						</span>
+					</li>
+					<li>
+						<label><?php echo $this->__('Order Total') ?></label>
+						<span class="sep">:</span>
+						<span><?php echo $_coreHelper->formatPrice($orderObj->getGrandTotal(),true) ?></span>
+					</li>
+					<li>
+						<label><?php echo $this->__('Name') ?></label>
+						<span class="sep">:</span>
+						<span>
+							<?php 
+								$shippingAddress; 
+								echo $shippingAddress['firstname']; 
+							?>
+							<?php echo $shippingAddress['lastname']; ?>
+						</span>
+					</li>
+					<li>
+						<label><?php echo $this->__('Delivery Address') ?></label>
+						<span class="sep">:</span>
+						<span><?php echo $shippingAddress['street']; ?></span>
+					</li>
+					<li>
+						<label><?php echo $this->__('Delivery City') ?></label>
+						<span class="sep">:</span>
+						<span><?php echo $shippingAddress['city']; ?></span>
+					</li>
+					<li>
+						<label><?php echo $this->__('State') ?></label>
+						<span class="sep">:</span>
+						<span><?php echo $shippingAddress['region']; ?></span>
+					</li>
+					<li>
+						<label><?php echo $this->__('Postcode') ?></label>
+						<span class="sep">:</span>
+						<span><?php echo $shippingAddress['postcode']; ?></span>
+					</li>
+					<li class="last">
+						<label><?php echo $this->__('Country ID') ?></label>
+						<span class="sep">:</span>
+						<span><?php echo $shippingAddress['country_id']; ?></span>
+					</li>
+					<?php endif; ?>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="clear"></div>
+</div>
+
+<?php	
+//**********************************Order Details***************************
+if($displayOrderTable==1):
+	if($this->getOrderId()):
+		$orderItems = $orderObj->getAllVisibleItems();
+		?>
+		<div class="pro-cart-summery">
+			<table class="cart-summery-table data-table">			
+				<thead>
+					<th class="first a-left"><?php echo $this->__('Product Name') ?></th>
+					<th class="a-center"><?php echo $this->__('Quantity') ?></th>
+					<th class="a-center"><?php echo $this->__('SKU') ?></th>
+					<th class="a-center"><?php echo $this->__('Unit Price') ?></th>
+					<th class="a-right"><?php echo $this->__('Subtotal') ?></th>
+				</thead>
+			
+				<tbody><?php foreach($orderItems as $items)
+						{
+							$_product = Mage::getModel('catalog/product')->load($items->getProductId());
+							$product_small_image_path = Mage::helper('catalog/image')->init($_product,'small_image')->resize(75);
+					?><tr>				
+						<td class="first cart-name a-left">					
+							<?php if($displayProductImage==1): ?>
+							<div class="product-image-outer">
+								<span class="product-image-success">
+									<img src="<?php echo $product_small_image_path ?>" align="<?php echo $items->getName(); ?>"/>
+								</span><?php 
+								endif;
+							?><h3 class="product-name"><?php echo $items->getName(); ?></h3>
+							</div>
+						</td>					
+						<td class="pro-qty a-center"><?php echo number_format($items->getQtyOrdered(),0); ?></td>				
+						<td class="sku a-center"><?php echo $this->htmlEscape($_product->getSku()) ?></td>						
+						<td class="pro-price a-center"><?php echo $_coreHelper->formatPrice($items->getPrice(),true) ?></td>
+						<?php $totalprice = ($items->getQtyOrdered())*($items->getPrice()); ?>					
+						<td class="total-price a-right">
+							<span class="alt-bg"><?php echo $_coreHelper->formatPrice($totalprice,true) ?></span>
+						</td>					
+					</tr><?php
+						} 
+					?>
+				</tbody>		
+				<tfoot>			
+					<tr class="subtotal firt">
+						<td class="a-right" colspan="4">
+							<span class="subtotlal-label"><?php echo $this->__('Subtotal') ?></span>
+						</td>	 
+						<td class="a-right">
+							<span class="subtotlal-value">
+							<?php echo $_coreHelper->formatPrice($orderObj->getSubtotal(),true) ?>
+							</span>
+						</td>
+					</tr>
+					
+					<?php //echo '<pre>'; print_r($orderObj); echo '</pre>'; ?>
+					<?php if($displayDiscount==1): ?>
+						<?php if($orderObj->getDiscountAmount() != 0): ?>
+						<tr class="discount">
+							<td class="a-right" colspan="4">
+								<?php echo $this->__('Discount').'('.$orderObj->getDiscountDescription().')' ?>
+							</td>
+							<td class="last a-right">
+								<span class="subtotlal-value">
+									<?php echo $_coreHelper->formatPrice($orderObj->getDiscountAmount(),true) ?>
+								</span>
+							</td>
+						</tr><?php 
+							endif; 
+						endif; 
+					?>
+					
+					<?php if($displayShippingRate==1): ?>
+					<tr class="shipping">
+						<td class="a-right" colspan="4">
+							<?php echo $this->__('Shipping & Handling('.$orderObj->getShippingDescription().')'); ?>
+						</td>
+						<td class="last a-right">
+							<span class="subtotlal-value">
+								<?php echo $_coreHelper->formatPrice($orderObj->getShippingInclTax(),true) ?>
+							</span>
+						</td>
+					</tr><?php 
+						endif; 
+					?>
+					
+					<?php if($displayTax==1): ?>	
+						<?php if($orderObj->getTaxAmount() != 0): ?>
+						<tr class="tax">
+							<td class="a-right" colspan="4"><?php echo $this->__('Tax')?></td>
+							<td class="last a-right">
+								<span class="subtotlal-value">
+									<?php echo $_coreHelper->formatPrice($orderObj->getTaxAmount(),true) ?>
+								</span>
+							</td>
+						</tr><?php 
+							endif;
+						endif;
+					?>
+					
+					<tr class="grand_total last">
+						<td class="a-right" colspan="4"><strong><?php echo $this->__('Total') ?></strong></td>
+						<td class="last a-right">
+							<span class="subtotlal-value">
+								<strong><?php echo $_coreHelper->formatPrice($orderObj->getGrandTotal(),true); ?></strong>
+							</span>
+						</td>
+					</tr>								
+				</tfoot>
+			</table>
+        </div>
+		<?php endif; 
+endif;
+?></div>
+
+<?php if($this->getBottomBlock()!=false): ?>
+	<?php if($displayCmsBlockBelow==1): ?>
+		<div class="order-cms-block block_2">
+			<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId($this->getBottomBlock())->toHTML(); ?>
+		</div>
+	<?php
+	endif;
+endif;
+?>
+
+<?php if($newsLetter==1): ?>
+	<div class="order-newsletter">
+		<?php echo $this->getLayout()->createBlock('newsletter/subscribe')->setTemplate('newsletter/subscribe.phtml')->toHtml(); ?>
+	</div><?php 
+	endif;
+?>
+</div>

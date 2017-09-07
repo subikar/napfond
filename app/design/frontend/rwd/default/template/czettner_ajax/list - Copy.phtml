@@ -1,0 +1,438 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Product list template
+ *
+ * @see Mage_Catalog_Block_Product_List
+ */
+/* @var $this Mage_Catalog_Block_Product_List */
+
+
+
+
+$_category = Mage::registry('current_category');
+$parentCategoryName = $_category->getParentCategory()->getParentCategory()->getName();
+
+
+/***************************Code for fetching blank image**************************/
+	$path = $_category->getPath();
+	$ids  = explode('/', $path);
+			unset($ids[0]);
+	$sep='';
+	$id_cat_path='';	
+	$id_cat_path_counter=0;	
+	
+	//print_r($ids);
+	
+	
+	foreach($ids as $idcat)
+	 {
+		$id_cat_path_counter++;
+	    if($id_cat_path_counter <= 2)
+		continue;
+		
+		if((in_array(34,$ids) || in_array(75,$ids) || in_array(3,$ids) || in_array(66,$ids)) && $id_cat_path_counter == 4 /**For handling condition for mobile case and mobile skin**/)
+		  continue;
+		
+		$idcat_obj = Mage::getModel('catalog/category')->load($idcat);		 
+		$id_cat_path .= $sep.$idcat_obj->getUrlKey();
+		$sep = '/';
+	 }
+	 
+	 
+	 
+	if(in_array(478,$ids) || in_array(8,$ids) || in_array(3,$ids) /**For handling condition for mobile case**/){
+	
+	  $folderURL = Mage::helper('function')->graGetFolderUrl($id_cat_path);		 
+	  $folderPath = Mage::helper('function')->graGetFolderPath($id_cat_path);
+	
+	  if(!is_file($folderPath . DS . 'resized' . DS . 'mask.png'))
+ 	   $blank_backImagePath = Mage::helper('function')->resizeImg('mask.png', 400, 400,$folderURL,$folderPath,'resized');	   
+	  else 	
+	   $blank_backImagePath = Mage::getStoreConfig(Mage_Core_Model_Url::XML_PATH_SECURE_URL).'media/blank_images/'.$id_cat_path.'/'.$graBlankImageFolderKey.'/resized/mask.png';
+	   
+	 }
+	else if(in_array(34,$ids))
+	 { 
+	    $folderURL = Mage::helper('function')->graGetFolderUrl($id_cat_path);		 
+	    $folderPath = Mage::helper('function')->graGetFolderPath($id_cat_path);
+	   
+	  if(!is_file($folderPath . DS . 'resized' . DS . 'mask-front.png'))
+	   $blank_frontImagePath = Mage::helper('function')->resizeImg('mask-front.png', 400, 400,$folderURL,$folderPath,'resized');	   
+	  else	  
+	   $blank_frontImagePath = Mage::getStoreConfig(Mage_Core_Model_Url::XML_PATH_SECURE_URL).'media/blank_images/'.$id_cat_path.'/resized/mask-front.png';	
+	   
+	  if(!is_file($folderPath . DS . 'resized' . DS . 'mask-back.png')) 
+ 	   $blank_backImagePath = Mage::helper('function')->resizeImg('mask-back.png', 400, 400,$folderURL,$folderPath,'resized');	   
+	  else 
+	   $blank_backImagePath = Mage::getStoreConfig(Mage_Core_Model_Url::XML_PATH_SECURE_URL).'media/blank_images/'.$id_cat_path.'/resized/mask-back.png'; 
+	   
+	 }	 
+	 
+	 
+/***********************************End Code for fetching blank image************************************************/
+?> 
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery-ias.min.js') ?>"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('css/jquery.ias.css');?>" media="all" />
+<?php
+if($parentCategoryName == 'Mobile Case')
+{ ?>
+	<script  type="text/javascript">
+		jQuery(document).ready(function(){
+			jQuery.ias({
+				container : ".category-products",
+				item : ".col-sm-3",
+				next : "a.next",
+				pagination : '.pages',
+				loader : "<img src='<?php echo $this->getSkinUrl('images/728.GIF');?>' />",
+				triggerPageThreshold : 9999
+			});
+		});
+	</script>
+<?php }else {?>
+	<script  type="text/javascript">
+		jQuery(document).ready(function(){
+			jQuery.ias({
+				container : ".category-products",
+				item : ".col-sm-3",
+				next : "a.next",
+				pagination : '.pages',
+				loader : "<img src='<?php echo $this->getSkinUrl('images/728.GIF');?>' />",
+				triggerPageThreshold : 9999
+			});
+		});
+    </script>
+ <?php } ?>
+<?php
+$_productCollection=$this->getLoadedProductCollection();
+global $productCollectionSizeForDisplay;
+$productCollectionSizeForDisplay = $_productCollection->getSize();
+$_helper = $this->helper('catalog/output');
+?>
+<?php if(!$_productCollection->count()): ?>
+ <p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>
+<?php else: ?>
+ <?php echo $this->getToolbarHtml() ?>
+ <?php echo $this->getChildHtml('mana.catalog.leftnav') ?>
+ <div class="category-products"> 
+ <?php // List mode ?>
+ <?php if($this->getMode()!='grid'): ?>
+  <?php $_iterator = 0; ?>
+  <div class="products-list" id="products-list">
+   <?php foreach ($_productCollection as $_product): ?>
+   <div class=" col-sm-12 item<?php if( ++$_iterator == sizeof($_productCollection) ): ?> last<?php endif; ?>">
+   <?php // Product Image ?>
+   <div class="col-sm-4"> <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image">
+   <?php $_imgSize = 300; ?>
+   <img id="product-collection-image-<?php echo $_product->getId(); ?>"src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->keepFrame(false)->resize($_imgSize); ?>"
+    alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" /> </a></div>
+    <?php // Product description ?>
+  <div class="col-sm-8">  <div class="product-shop">
+      <div class="f-fix">
+        <div class="product-primary">
+          <?php $_productNameStripped = $this->stripTags($_product->getName(), null, true); ?>
+          <h2 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_productNameStripped; ?>"><?php echo $_helper->productAttribute($_product, $_product->getName() , 'name'); ?></a></h2>
+          <?php if($_product->getRatingSummary()): ?>
+          <?php echo $this->getReviewsSummaryHtml($_product) ?>
+          <?php endif; ?>
+          <?php
+                            $_nameAfterChildren = $this->getChild('name.after')->getSortedChildren();
+                            foreach($_nameAfterChildren as $_nameAfterChildName):
+                                $_nameAfterChild = $this->getChild('name.after')->getChild($_nameAfterChildName);
+                                $_nameAfterChild->setProduct($_product);
+                        ?>
+          <?php echo $_nameAfterChild->toHtml(); ?>
+          <?php endforeach; ?>
+        </div>
+        <div class="product-secondary"> <?php echo $this->getPriceHtml($_product, true) ?> </div>
+        <div class="product-secondary">
+          <?php if($_product->isSaleable() && !$_product->canConfigure()): ?>
+          <p class="action">
+            <button type="button" title="<?php echo $this->__('Buy It') ?>" class="button btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><span><span><?php echo $this->__('Buy It') ?></span></span></button>
+          </p>
+          <?php elseif($_product->isSaleable()): ?>
+          <p class="action"><a title="<?php echo $this->__('View Details') ?>" class="button" href="<?php echo $_product->getProductUrl() ?>"><?php echo $this->__('View Details') ?></a></p>
+          <?php else: ?>
+          <p class="action availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+          <?php endif; ?>
+          <ul class="add-to-links">
+            <?php if ($this->helper('wishlist')->isAllow()) : ?>
+            <li><a href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" class="link-wishlist"><?php echo $this->__('Add to Wishlist') ?></a></li>
+            <?php endif; ?>
+            <?php if($_compareUrl=$this->getAddToCompareUrl($_product)): ?>
+            <li><span class="separator">|</span> <a href="<?php echo $_compareUrl ?>" class="link-compare"><?php echo $this->__('Add to Compare') ?></a></li>
+            <?php endif; ?>
+          </ul>
+        </div>
+        <div class="desc std"> <?php echo $_helper->productAttribute($_product, $_product->getShortDescription(), 'short_description') ?> <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_productNameStripped ?>" class="link-learn"><?php echo $this->__('Learn More') ?></a> </div>
+      </div>
+    </div></div>
+    </div>
+    <?php endforeach; ?>
+  </div>
+  <script type="text/javascript">decorateList('products-list', 'none-recursive')</script>
+  <?php else: ?>
+  <?php // Grid Mode ?>
+  
+  <?php
+	$_category = Mage::registry('current_category');
+	$cat_name = $_category->getName();
+	$parentCategoryId = $_category->getParentId();
+  ?>   	  
+  <?php $_collectionSize = $_productCollection->count() ?>
+  <?php $_columnCount = $this->getColumnCount(); ?>
+  <div class="row products-grid products-grid--max-<?php echo $_columnCount; ?>-col">
+    <?php $i=0; foreach ($_productCollection as $_product): ?>
+    <?php /*if ($i++%$_columnCount==0): ?>
+            <?php endif*/ ?> 
+    <?php
+	
+ 
+	
+	if($parentCategoryName == 'Mobile Case' || $parentCategoryName == 'Mobile Skin')
+	{ ?>      
+    <div class="col-sm-3 item<?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif; ?>">
+      <div class="pro-feature">
+        <div id="slider" class="product-block"> 
+         <a  href="<?php echo $_product->getProductUrl();//echo Mage::helper('function')->getUrlPath($_product, $_category)  ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image pro-imglx">
+		 
+<?php
+ if(in_array(3,$ids) || in_array(34,$ids)){?>		 
+		 <img src="<?php echo $blank_backImagePath;?>" width="400" height="400" style="position:absolute">	
+
+         <img id="product-collection-image-<?php echo $_product->getId(); ?>" src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->constrainOnly(true)->keepAspectRatio(true)->keepFrame(false)->resize(400, null); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+
+		 
+<?php } ?>		  
+		  
+        </a>        
+          <div id="pro-dis-ss">
+           <div id="discription-pro">            
+            <div class="product-info">            
+            	<hr>
+                <div class="quickView">
+                	<i class="fa fa-search "></i>
+                    <a href="<?php echo $this->getUrl('ajax/product/quickview/id/' . $_product->getId()).'?catid='.$_category->getId() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>" id="quick_view" class="ajax">Quick View</a>
+                </div>
+            
+              <h2 class="product-name">
+               <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>">
+			    <?php echo $this->stripTags($_product->getName(), null, true) ?>
+               </a>
+              </h2>
+              <?php
+                  $_nameAfterChildren = $this->getChild('name.after')->getSortedChildren();
+                   foreach($_nameAfterChildren as $_nameAfterChildName):
+                    $_nameAfterChild = $this->getChild('name.after')->getChild($_nameAfterChildName);
+                    $_nameAfterChild->setProduct($_product);
+               ?>
+              <?php echo $_nameAfterChild->toHtml(); ?>
+              <?php endforeach; ?>
+              <?php $cat_id = Mage::getModel('catalog/layer')->getCurrentCategory()->getParentCategory()->getParentCategory()->getId();
+			  if($cat_id == '34'){?><style type="text/css">.regular-price{display:none;}</style><?php } ?>
+              <?php echo $this->getPriceHtml($_product, true) ?>
+              <?php if($_product->getRatingSummary()): ?>
+              <?php echo $this->getReviewsSummaryHtml($_product, 'short') ?>
+              <?php endif; ?>
+              
+            </div>
+            <div class="actions hover-btn">			
+			<?php
+            if (Mage::helper('gomage_designer')->isEnabled()) {
+                   $buttons[] = array(
+                   'add_to_cart_enabled' => (!$_product->getEnableProductDesigner() || !$_disabledAddToCart) ? true : false,
+                   'add_to_design_enabled' => $_product->getEnableProductDesigner() ? true : false,
+                   'design_url' => GoMage_ProductDesigner_Block_Catalog_Product_List::_getDesignUrl($_product)
+               );
+  
+            if($_product->getEnableProductDesigner()){
+            ?>			
+                <div class="gpd-button">
+                    <button type="button" title="<?php echo Mage::helper('gomage_designer')->__('Design It') ?>" class="btn btn-primary" onclick="setLocation('<?php echo GoMage_ProductDesigner_Block_Catalog_Product_List::_getDesignUrl($_product)?>')">
+                        <span><span><?php echo $this->__('Design It') ?></span></span>
+                    </button>
+                </div>	               
+            <?php } }?>	
+                <div class="btn-add2cart">
+                 <?php if($_product->isSaleable() && !$_product->canConfigure()): ?>
+                  <button type="button" title="<?php echo $this->__('Buy It') ?>" class="btn btn-danger" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><span><span><?php echo $this->__('Buy It') ?></span></span></button>
+                  <?php elseif($_product->isSaleable()): ?>
+                  <?php /*?><a title="<?php echo $this->__('View Details') ?>" class="btn btn-danger" href="<?php echo $_product->getProductUrl() ?>"><?php echo $this->__('View Details') ?></a><?php */?>				<button type="button" title="<?php echo $this->__('Buy It') ?>" class="btn btn-danger" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><span><span><?php echo $this->__('Buy It') ?></span></span></button>
+                  <?php else: ?>
+                  <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+                  <?php endif; ?>
+                </div>
+                <?php /*?><div id="discription-pro">
+                  <ul class="add-to-links" style="display:none">
+                    <?php if ($this->helper('wishlist')->isAllow()) : ?>
+                    <li><a href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" class="link-wishlist"><?php echo $this->__('Add to Wishlist') ?></a></li>
+                    <?php endif; ?>
+                    <?php if($_compareUrl=$this->getAddToCompareUrl($_product)): ?>
+                    <li><span class="separator">|</span> <a href="<?php echo $_compareUrl ?>" class="link-compare"><?php echo $this->__('Add to Compare') ?></a></li>
+                    <?php endif; ?>
+                  </ul>
+                </div><?php */?>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php } else { ?>
+    <div class="col-sm-3 item<?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif; ?>">
+      <div class="pro-feature">
+        <div id="slider" class="product-block"> 
+         <a  href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image pro-imglx">
+		 
+		 
+<?php
+ if(in_array(3,$ids) || in_array(8,$ids) || in_array(478,$ids)){?>		 
+		 <img src="<?php echo $blank_backImagePath;?>" width="400" height="400" style="position:absolute">	
+
+         <img id="product-collection-image-<?php echo $_product->getId(); ?>" src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->constrainOnly(true)->keepAspectRatio(true)->keepFrame(false)->resize(400, null); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+
+		 
+<?php } /*else if(in_array(34,$ids)){?>
+<table  id="table-showskin">
+<tr><td>
+<div id="front-mobile-skin">
+		  <img src="<?php echo $blank_frontImagePath;?>" width="400" height="400" style="position:absolute">	
+		 
+          <img id="product-collection-image-<?php echo $_product->getId(); ?>" src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->constrainOnly(true)->keepAspectRatio(true)->keepFrame(false)->resize(400, null); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+		  <div class="clearfix"></div
+></div></td>
+<td>
+		  <div id="back-mobile-skin">		 
+		  <img src="<?php echo $blank_backImagePath;?>" width="400" height="400" style="position:absolute">	
+		  
+          <img id="product-collection-image-<?php echo $_product->getId(); ?>" src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->constrainOnly(true)->keepAspectRatio(true)->keepFrame(false)->resize(400, null); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+		  <div class="clearfix"></div
+	></div>	  
+	</td></tr></table>
+<?php } */else{?>
+
+		 
+          <img id="product-collection-image-<?php echo $_product->getId(); ?>" src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->constrainOnly(true)->keepAspectRatio(true)->keepFrame(false)->resize(400, null); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+		  
+<?php }?>		 
+		 
+ 
+        </a>        
+          <div id="pro-dis-ss">
+           <div id="discription-pro">            
+            <div class="product-info">            
+            	<hr>
+                <div class="quickView">
+                	<i class="fa fa-search "></i>
+                    <a href="<?php echo $this->getUrl('ajax/product/quickview/id/' . $_product->getId()).'?catid='.$_category->getId() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>" id="quick_view" class="ajax">Quick View</a>
+                </div>
+            
+              <h2 class="product-name">
+               <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>">
+			    <?php echo $this->stripTags($_product->getName(), null, true) ?>
+               </a>
+              </h2>
+              <?php
+                  $_nameAfterChildren = $this->getChild('name.after')->getSortedChildren();
+                   foreach($_nameAfterChildren as $_nameAfterChildName):
+                    $_nameAfterChild = $this->getChild('name.after')->getChild($_nameAfterChildName);
+                    $_nameAfterChild->setProduct($_product);
+               ?>
+              <?php echo $_nameAfterChild->toHtml(); ?>
+              <?php endforeach; ?>
+              <?php $cat_id = Mage::getModel('catalog/layer')->getCurrentCategory()->getParentCategory()->getParentCategory()->getId();
+			  if($cat_id == '34'){?><style type="text/css">.regular-price{display:none;}</style><?php } ?>
+              <?php echo $this->getPriceHtml($_product, true) ?>
+              <?php if($_product->getRatingSummary()): ?>
+              <?php echo $this->getReviewsSummaryHtml($_product, 'short') ?>
+              <?php endif; ?>
+              
+            </div>
+            <div class="actions hover-btn">			
+			<?php
+            if (Mage::helper('gomage_designer')->isEnabled()) {
+                   $buttons[] = array(
+                   'add_to_cart_enabled' => (!$_product->getEnableProductDesigner() || !$_disabledAddToCart) ? true : false,
+                   'add_to_design_enabled' => $_product->getEnableProductDesigner() ? true : false,
+                   'design_url' => GoMage_ProductDesigner_Block_Catalog_Product_List::_getDesignUrl($_product)
+               ); 
+			   
+			   
+			   
+            if($_product->getEnableProductDesigner()){
+            ?>			
+                <div class="gpd-button">
+                    <button type="button" title="<?php echo Mage::helper('gomage_designer')->__('Design It') ?>" class="btn btn-primary" onclick="setLocation('<?php echo GoMage_ProductDesigner_Block_Catalog_Product_List::_getDesignUrl($_product)?>')">
+                        <span><span><?php echo $this->__('Design It') ?></span></span>
+                    </button>
+                </div>	               
+            <?php } }?>	
+                <div class="btn-add2cart">
+                 <?php if($_product->isSaleable() && !$_product->canConfigure()): ?>
+                  <button type="button" title="<?php echo $this->__('Buy It') ?>" class="btn btn-danger" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><span><span><?php echo $this->__('Buy It') ?></span></span></button>
+                  <?php elseif($_product->isSaleable()): ?>
+                  <?php /*?><a title="<?php echo $this->__('View Details') ?>" class="btn btn-danger" href="<?php echo $_product->getProductUrl() ?>"><?php echo $this->__('View Details') ?></a><?php */?>				<button type="button" title="<?php echo $this->__('Buy It') ?>" class="btn btn-danger" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><span><span><?php echo $this->__('Buy It') ?></span></span></button>
+                  <?php else: ?>
+                  <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+                  <?php endif; ?>
+                </div>
+                <?php /*?><div id="discription-pro">
+                  <ul class="add-to-links" style="display:none">
+                    <?php if ($this->helper('wishlist')->isAllow()) : ?>
+                    <li><a href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" class="link-wishlist"><?php echo $this->__('Add to Wishlist') ?></a></li>
+                    <?php endif; ?>
+                    <?php if($_compareUrl=$this->getAddToCompareUrl($_product)): ?>
+                    <li><span class="separator">|</span> <a href="<?php echo $_compareUrl ?>" class="link-compare"><?php echo $this->__('Add to Compare') ?></a></li>
+                    <?php endif; ?>
+                  </ul>
+                </div><?php */?>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php } ?>
+    <?php /*if ($i%$_columnCount==0 || $i==$_collectionSize): ?>
+            <?php endif*/ ?>
+    <?php endforeach ?>
+  </div>
+  <script type="text/javascript">decorateGeneric($$('ul.products-grid'), ['odd','even','first','last'])</script>
+  <?php endif; ?>
+  <div class="toolbar-bottom" style="display:none;"> <?php echo $this->getToolbarHtml() ?> </div>
+</div>
+<?php endif; ?>
+<?php
+    //set product collection on after blocks
+    $_afterChildren = $this->getChild('after')->getSortedChildren();
+    foreach($_afterChildren as $_afterChildName):
+        $_afterChild = $this->getChild('after')->getChild($_afterChildName);
+        $_afterChild->setProductCollection($_productCollection);
+    ?>
+<?php echo $_afterChild->toHtml(); ?>
+<?php endforeach; ?>

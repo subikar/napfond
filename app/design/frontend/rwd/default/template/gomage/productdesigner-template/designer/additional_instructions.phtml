@@ -1,0 +1,46 @@
+<?php
+/**
+ * GoMage Product Designer Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use/
+ * @version      Release: 1.0.0
+ * @since        Available since Release 1.0.0
+ */
+?>
+ 
+<!-- <ul class="form-list" id="toggle-view">
+ <li>
+  <div class="notes-panel-title"><?php echo $this->__('Additional instructions') ?>
+   <span>
+    <img src="<?php echo $this->getSkinUrl('images/image-section-arrow-right.png');?>" alt="Arrow" width="8" height="11" align="right" style="cursor:pointer; margin-top:5px;"/>
+   </span>
+  </div>   
+  <div class="input-box" style="display:none;">
+   <textarea class="notes-panel-textarea" id="design_comment" cols="5" rows="18"></textarea>
+  </div>
+ </li>
+</ul> -->
+
+<?php 
+$img1 = '<img src="'.$this->getSkinUrl('images/image-section-arrow-bottom1.png').'" alt="Arrow" width="11" height="8" align="right" style="cursor:pointer; margin-top:5px;"/>';
+$img2 = '<img src="'.$this->getSkinUrl('images/image-section-arrow-right.png').'" alt="Arrow" width="8" height="11" align="right" style="cursor:pointer; margin-top:5px;"/>';
+?>
+
+<script type="text/javascript">
+jQuery(document).ready(function () {	
+	jQuery('#toggle-view li').click(function () {
+		var text = jQuery(this).children('.input-box');
+		if (text.is(':hidden')) {
+			text.slideDown('1000');
+			jQuery(this).children('div').children('span').html('<?php echo $img2; ?>');		
+		} else {
+			text.slideUp('1000');
+			jQuery(this).children('div').children('span').html('<?php echo $img1; ?>');		
+		}		
+	});
+});
+</script>

@@ -1,0 +1,163 @@
+<div id="categories">
+ <?php $_category  = $this->getCurrentCategory()?>
+ <?php //print_r($_maincategorylisting); ?>
+ <?php 
+ $catName1 = $this->getCurrentCategory()->getName();	
+ $subcategories = Mage::getModel('catalog/category')->getCategories($_category->getId(), 0, false, false,false);
+ $series_array = array();$series_val_id = array();
+ $connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+ foreach ($subcategories as $subcategory){
+    $subcat_id = $subcategory->getEntityId();	
+    $select = $connection->select()
+    ->from('catalog_category_entity_varchar', array('value', 'value_id'))
+    ->where('entity_id='.$subcat_id.' and attribute_id = 139 and entity_type_id = 3') 
+    ->group('value');  
+    //$rowsArray = $connection->fetchAll($select); 
+    $rowArray = $connection->fetchRow($select);	
+	$series_array[$subcat_id] = $rowArray['value'];
+	$series_val_id[] = $rowArray['value_id'];
+ }
+?>
+
+<div class="bs-example">
+ <div id="after-cr-design">   
+  <h1>Which <?php echo $catName1;?> device you possess?</h1>
+ </div>
+  <div id="accordion1" class="panel-group">
+  <?php
+  $ar_uni = array_values(array_unique($series_array));
+  $s_id_num = count($series_val_id);
+  for($i=0;$i<count($ar_uni);$i++)
+  {
+    $se_val = $ar_uni[$i];
+    $cat_sid = array();
+    for($j=0;$j<$s_id_num;$j++)
+    {	  
+        $se_val_id = $series_val_id[$j];
+        $select1 = $connection->select()
+        ->from('catalog_category_entity_varchar', array('entity_id'))
+        ->where('value_id = '.$se_val_id.' and value = "'.$se_val.'"');
+        //echo $select1;die;
+        $rowArray = $connection->fetchRow($select1);	
+        if($rowArray != '')
+        {
+           $cat_sid[] = $rowArray['entity_id'];	  	 
+        }	  
+    }
+    ?>  
+      <div class="panel panel-default">
+       <div class="panel-heading">
+        <h4 class="panel-title">
+         <a href="#panel<?php echo $i;?>" data-toggle="collapse" data-parent="#accordion"><?php echo $se_val;?></a><span class="arrow"></span>
+        </h4>
+       </div>     
+       <div class="panel-collapse collapse" id="panel<?php echo $i;?>">
+        <div class="panel-body">
+         <ul class="large-block-grid-6 medium-block-grid-3 small-block-grid-1">
+           <?php
+           for($k=0;$k<count($cat_sid);$k++)
+           {		   
+			  $_category = Mage::getModel('catalog/category')->load($cat_id);
+			  // category name
+			  $categoryName = $_category->getName();			   
+              $cat_id = $cat_sid[$k];			
+              $s_cat = Mage::getModel('catalog/category')->load($cat_id);			  
+			  $top_cat_id = Mage::getModel('catalog/layer')->getCurrentCategory()->getParentCategory()->getParentCategory()->getId();	
+			  if($top_cat_id == 24)
+			  {		  
+			  ?>
+              	  <li class="0"> <a href="<?php echo $s_cat->getUrl();?>" title="<?php echo $s_cat->getName();?>"> 
+                   <img src="<?php echo $s_cat->getImageUrl();?>" alt="<?php echo $s_cat->getName();?>"> <span><?php echo $s_cat->getName();?></span> </a>
+                  </li>  
+        <?php } 
+			  else
+			  { ?>          
+                  <li class="0"> <a href="<?php echo Mage::helper('cms/page')->getPageUrl(12)?>?catid=<?php echo $cat_id?>" title="<?php echo $s_cat->getName();?>"> 
+                   <img src="<?php echo $s_cat->getImageUrl();?>" alt="<?php echo $s_cat->getName();?>"> <span><?php echo $s_cat->getName();?></span> </a>
+                  </li>                           
+     <?php    }
+		   } ?>
+          </ul>
+         </div> 
+        </div>       
+       </div>              
+      <?php
+  } ?>
+  </div>
+ </div> 
+ 
+  <div class="chooseBrand">
+   <h2 class="more_case">
+    <span>Oops!!Unable to find your Gadget! </span><br /> Search no more!!! We have got more options here!!!.
+   </h2>
+
+ <?php $first_top_cat = $this->getCurrentCategory()->getParentCategory()->getName();
+ 
+	 $qry = "select dd.select1, dd.select2 FROM drop_device as dd where dd.device_name = 'Mobile Case'";
+     $rowsArray = $connection->fetchAll($qry); 
+	 $rowArray = $connection->fetchRow($qry);
+	 $categories = Mage::getModel('catalog/category')->getCategories(34);
+  ?>	 
+  <div class="bselect">
+   <select name="bselect" id="bselect" onchange="get_device(this.value, '<?php echo $rowArray['select2'];?>')">
+    <option value="0"><?php echo $rowArray['select1'];?></option><?php
+	foreach($categories as $category)
+   	{ ?>
+     <option value="<?php echo $category->getId();?>"><?php echo $category->getName();?></option>
+     <?php
+	}?>
+   </select>
+  </div>     
+  <div class="bvalue">
+   <select name="bvalue" id="bvalue">
+    <option value="0"><?php echo $rowArray['select2'];?></option>
+   </select>
+  </div>
+  <div class="brandBtn">
+   <input class="button" type="button" name="view_cases" id="view_cases" value="Go" onclick="chk_validate();" />
+  </div>     
+ </div>
+</div>
+<script type="text/javascript">
+function get_device(val, select2)
+{
+   var dataString = "get_device="+val+"&select="+select2;
+   var reloadurl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'admin_cat.php'?>';
+	//Element.show('loadingmask');
+	new Ajax.Request(reloadurl, {
+	method: 'post',
+	parameters: dataString,
+	onComplete: function(transport) {
+	//Element.hide('loadingmask');
+	document.getElementById("bvalue").innerHTML = transport.responseText;
+	}
+	});
+}
+function chk_validate()
+{
+	var bselect = document.getElementById("bselect").value;
+	var bvalue = document.getElementById("bvalue").value;
+	
+	if(bselect == 0)
+	{
+		alert("Please Select First Value");
+		return false;
+	}
+	if(bvalue == 0)
+	{
+		alert("Please Select Second Value");
+		return false;
+	}
+	
+	var dataString = "get_bselect="+bselect+"&get_bvalue="+bvalue;
+    var reloadurl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'admin_cat.php'?>';
+	//Element.show('loadingmask');
+	new Ajax.Request(reloadurl, {
+	method: 'post',
+	parameters: dataString,
+	onComplete: function(transport) {
+	window.location.href = transport.responseText;
+	}
+	});
+}
+</script>

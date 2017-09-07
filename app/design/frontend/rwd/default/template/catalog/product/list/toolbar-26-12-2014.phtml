@@ -1,0 +1,156 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Product list toolbar
+ *
+ * @see Mage_Catalog_Block_Product_List_Toolbar
+ */
+?> 	
+<?php 
+if(Mage::getModel('catalog/product')->getCollection()->getSize()): 
+?>
+<div class="designerdesc">
+ <?php
+ 	$_category = Mage::registry('current_category');
+	if($_category != ''){
+	$cat_id = $_category->getId();
+	$cat_name = $_category->getName();
+	
+	global $productCollectionSizeForDisplay;
+	
+	$totnum = $productCollectionSizeForDisplay;
+	
+	$parentCategoryId = $_category->getParentId();
+	$_parent_category = Mage::getModel('catalog/category')->load($parentCategoryId);
+	$parent_catname = $_parent_category->getName();
+	
+	$parent_catid = $_parent_category->getParentId();
+	$upper_category = Mage::getModel('catalog/category')->load($parent_catid);
+	$upper_catname = $upper_category->getName();
+?>
+  <div class="designer-title"> 
+  <?php //echo $parent_catname;?>
+  <?php 
+  if($upper_catname == 'Mobile Skin')
+  {
+	 echo 'Bhishoom designer skins for '.$cat_name;
+  } 
+  else if ($upper_catname == 'Mobile Case')
+  {
+	 echo 'Bhishoom mobile case for '.$cat_name;
+  }
+  else if ($cat_name == 'T-Shirt')
+  {
+	 echo '<span>Bishoom tees </span><br> <span style="font-size:16px;">be different look different</span>'; 
+	 //echo 'Sturdy and Funky mobile case for '.$cat_name;
+  }
+  else
+  {
+	 echo $parent_catname.' for '.$cat_name;
+  }?>
+  </div>
+  <div class="num_size">
+   <div class="tot_case"><?php echo $totnum.' products found';?></div>
+   <div class="cat_desc">
+    <?php if($_description = $_category->getDescription()): echo $_description; endif;?>   
+   </div>
+  </div>
+  <?php } ?>
+  <div class="toolbar">
+    <?php if( $this->isExpanded() ): ?>
+        <div class="sorter">
+            <?php if( $this->isEnabledViewSwitcher() ): ?>
+                <?php /*?><p class="view-mode">
+                    <?php $_modes = $this->getModes(); ?>
+                    <?php if($_modes && count($_modes)>1): ?>
+                        <label><?php echo $this->__('View as') ?></label>
+                        <?php foreach ($this->getModes() as $_code=>$_label): ?>
+                            <?php if($this->isModeActive($_code)): ?>
+                                <strong title="<?php echo $_label ?>" class="<?php echo strtolower($_code); ?>"><?php echo $_label ?></strong>
+                            <?php else: ?>
+                                <a href="<?php echo $this->getModeUrl($_code) ?>" title="<?php echo $_label ?>" class="<?php echo strtolower($_code); ?>"><?php echo $_label ?></a>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </p><?php */?>
+            <?php endif; ?>
+
+            <div class="sort-by">
+                <label><?php echo $this->__('Sort By') ?></label>
+                <div class="sortby_txt">
+                 <?php foreach($this->getAvailableOrders() as $_key=>$_order): ?>
+                  <a href="<?php echo $this->getOrderUrl($_key, 'asc') ?>" onclick="setLocation(this.value)" <?php if($this->isOrderCurrent($_key)): ?> class="sort_active"<?php endif; ?>><?php echo $this->__($_order) ?></a>
+                 <?php endforeach; ?>
+                </div>
+                
+                <?php /*?><select onchange="setLocation(this.value)" title="<?php echo $this->__('Sort By') ?>">
+                    <?php foreach($this->getAvailableOrders() as $_key=>$_order): ?>
+                        <option value="<?php echo $this->getOrderUrl($_key, 'asc') ?>"<?php if($this->isOrderCurrent($_key)): ?> selected="selected"<?php endif; ?>>
+                            <?php echo $this->__($_order) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select><?php */?>
+                <?php if($this->getCurrentDirection() == 'desc'): ?>
+                    <a href="<?php echo $this->getOrderUrl(null, 'asc') ?>" class="sort-by-switcher sort-by-switcher--desc" title="<?php echo $this->__('Set Ascending Direction') ?>"><?php echo $this->__('Set Ascending Direction') ?></a>
+                <?php else: ?>
+                    <a href="<?php echo $this->getOrderUrl(null, 'desc') ?>" class="sort-by-switcher sort-by-switcher--asc" title="<?php echo $this->__('Set Descending Direction') ?>"><?php echo $this->__('Set Descending Direction') ?></a>
+                <?php endif; ?>
+            </div>
+        </div>
+    <?php endif; ?>
+    <div class="pager" style="display:none;">
+        <div class="count-container">
+            <?php if($this->getLastPageNum()>1): ?>
+                <p class="amount amount--has-pages">
+                    <?php echo $this->__('%s-%s of %s', $this->getFirstNum(), $this->getLastNum(), $this->getTotalNum()) ?>
+                </p>
+            <?php else: ?>
+                <p class="amount amount--no-pages">
+                    <strong><?php echo $this->__('%s Item(s)', $this->getTotalNum()) ?></strong>
+                </p>
+            <?php endif; ?>
+
+            <div class="limiter">
+                <label><?php echo $this->__('Show') ?></label>
+                <select onchange="setLocation(this.value)" title="<?php echo $this->__('Results per page'); ?>">
+                <?php foreach ($this->getAvailableLimit() as  $_key=>$_limit): ?>
+                    <option value="<?php echo $this->getLimitUrl($_key) ?>"<?php if($this->isLimitCurrent($_key)): ?> selected="selected"<?php endif ?>>
+                        <?php echo $_limit ?>
+                    </option>
+                <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+
+        <?php echo $this->getPagerHtml() ?>
+
+    </div>
+</div>
+</div>  
+
+<?php endif ?>

@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<widgets>
+  <trackorder_trackwidget type="trackorder/trackwidget">
+    <name>Track Order</name>
+    <description type="desc">Track Order Link</description>
+</trackorder_trackwidget>
+</widgets>

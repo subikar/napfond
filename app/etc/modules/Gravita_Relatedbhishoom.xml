@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Gravita_Relatedbhishoom>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Gravita_Relatedbhishoom>
+    </modules>
+</config>

@@ -1,0 +1,132 @@
+<?php 
+$connection = Mage::helper('function/more')->getDbReadObject();
+$sellobBhisoomThanksMsg = Mage::getSingleton('core/session')->getSellonbhisoomMsg();
+if(isset($sellobBhisoomThanksMsg) && $sellobBhisoomThanksMsg != '')
+{?>
+
+<div class="sitePopupHero sellerFrmRegisterThxMsg" style="z-index: 10000;">
+
+    <div id="dialog-Modalus" class="modal-dialog" role="document">
+      <div class="sitePopup_black"></div>
+      <div class="modal-content">
+        <button type="button" class="close" onclick="jQuery('.sellerFrmRegisterThxMsg').hide();jQuery('.sellerFrmRegister').show();"><span>&times;</span></button>
+        <div class="modal-body">
+          <div class="popup-heading text-center">
+            <div class="divider30"></div>
+            <h3 class="heading"><?php echo Mage::getSingleton('core/session')->getSellonbhisoomMsghead1();?>
+              <!--<span class="subtitle"><?php //echo Mage::getSingleton('core/session')->getSellonbhisoomMsghead2();?></span>-->
+            </h3>
+            <div class="divider30"></div>
+          </div>
+          <!-- <div class="row">
+            <div class="col-sm-12">
+              <div class="description text-center"><?php //echo Mage::getSingleton('core/session')->getSellonbhisoomMsg();?></div>
+            </div>
+          </div>
+          <hr>   --> 
+        </div>
+      </div>
+    </div>
+
+</div>
+<script type="text/javascript">
+/*jQuery(document).ready(function()
+{
+	jQuery("#dialog-Modal").modal('show').css({
+    'margin-top': function () { //vertical centering
+        return -(jQuery(this).height() / 2);
+    },
+    'margin-left': function () { //Horizontal centering
+        return -(jQuery(this).width() / 2);
+    }
+});
+jQuery(".modal-backdrop.in").hide();
+});
+*/     
+</script>
+<?php  
+  Mage::getSingleton('core/session')->unsSellonbhisoomMsg();
+  Mage::getSingleton('core/session')->unsSellonbhisoomMsghead1();
+  Mage::getSingleton('core/session')->unsSellonbhisoomMsghead2();
+}?>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery.fancybox.js');?>"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('css/jquery.fancybox.css');?>" media="all" />
+<div class="clearfix"></div>
+<div class="row">
+  <div id="after-cr-design">
+    <h1 class="pick_device">Corporate Gift</h1>
+  </div>
+  <div class="col-md-6 corporate"> <img src="<?php echo $this->getSkinUrl('images/corporate-gift-certificate.png');?>" /> </div>
+  <div class="col-md-6 corporate1">
+    <div id="seller_form">
+      <div class="seller-form">
+        <form name="eform" id="my-custom-form" method="post" action="<?php echo $this->getUrl('eform/index/enquirydetail');?>"  enctype="multipart/form-data" onsubmit="return check_validation();">
+          <input type="hidden" name="cur_url" value="<?php echo $currentUrl = Mage::helper('core/url')->getCurrentUrl();?>" />
+          <?php /*?><input type="hidden" name="cus_id" value="<?php echo $cus_id;?>" /><?php */?>
+          <div class="content">
+            <label class="contant-label">Corporate Gift Enquiry Form</label>
+            <ul class="form-list">
+              <li class="sel-li row">
+                <div class="col-sm-4">
+                  <label for="name" class="sel-li-label"><span class="required">*</span>Name:</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" class="input-text required-entry" name="name" id="name" value=""/>
+                </div>
+              </li>
+              <li class="sel-li row">
+                <div class="col-sm-4">
+                  <label for="company" class="sel-li-label"><span class="required">*</span>Company Name:</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" class="input-text required-entry" name="company" id="company" value="" />
+                </div>
+              </li>
+              <li class="sel-li row">
+                <div class="col-sm-4">
+                  <label for="email" class="sel-li-label"><span class="required">*</span>Email Id:</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="email" class="input-text required-entry validate-email" name="email" id="email" value=""/>
+                </div>
+              </li>
+              <li class="sel-li row">
+                <div class="col-sm-4">
+                  <label for="add" class="sel-li-label"><span class="required">*</span>Address:</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" class="input-text required-entry" name="address" id="address" value=""/>
+                </div>
+              </li>
+              <li class="sel-li row">
+                <div class="col-sm-4">
+                  <label for="contact" class="sel-li-label">Contact No.:</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="number" class="input-text validate-number" name="phone" id="phone" onkeypress="return isNumber(event);" value=""/>
+                </div>
+              </li>
+              <li class="sel-li row">
+                <div class="col-sm-4">
+                  <label for="comment" class="sel-li-label"><span class="required"><span class="required">*</span>Comments:</label>
+                </div>
+                <div class="col-sm-8">
+                  <textarea name="comment" class="required-entry"></textarea>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="eform-button row">
+            <div class="col-sm-8 col-sm-offset-4">
+              <input type="submit" name="submit" value="Submit" class="button" />
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="clearfix"></div>
+<script type="text/javascript">
+  var customForm = new VarienForm('my-custom-form');
+</script>

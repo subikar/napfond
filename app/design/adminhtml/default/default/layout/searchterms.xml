@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<layout>
+    <search_adminhtml_searchform_index>
+        <update handle="search_searchform_index"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="search" template="search/searchterms.phtml"/>
+        </reference>
+    </search_adminhtml_searchform_index>	
+    <search_adminhtml_searchform_index_updateMaskImages>
+        <update handle="search_searchform_index_updateMaskImages"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="search_updateMaskImages" template="search/updateMaskImages.phtml"/>
+        </reference>
+    </search_adminhtml_searchform_index_updateMaskImages>
+</layout>

@@ -1,0 +1,21 @@
+Required for All Web Services
+Developer Test Key:	 BscILBE7jSzR3cHy
+Required for FedEx Web Services for Intra Country Shipping in US and Global
+Test Account Number:	 510087267
+Test	 Meter Number:	 118686944
+Required for FedEx Web Services for Office and Print
+Test	 FedEx Office Integrator ID:	 123
+Test	 Client Product ID:	 TEST
+Test	 Client Product Version:	 9999
+
+
+
+=============================================
+
+Test Account information
+
+Test Password: ZYkYqvTU2WwHmivmCxgLuk5Oj
+
+Test Account Number:510087267 (for FedEx Web Services for Shipping only)
+
+Test Meter Number:118686944 (for FedEx Web Services for Shipping only)

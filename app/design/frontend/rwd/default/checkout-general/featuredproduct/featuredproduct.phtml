@@ -1,0 +1,216 @@
+<?php 
+function getFeaturedProductsCollection($pCatId,$styleId)
+{
+	 $products = Mage::getModel('catalog/category')->load($pCatId); //put your category id here
+	 $productslist = $products->getProductCollection()->addAttributeToSelect('*')->addAttributeToSelect('case_style', $styleId)->setCurPage(1)->setPageSize(5); 
+	 $productslist->getSelect()->order(new Zend_Db_Expr('RAND()'));
+	 return $productslist;
+}
+
+		$read = Mage::getSingleton('core/resource')->getConnection('core_read');
+		$write = Mage::getSingleton('core/resource')->getConnection('core_write');	
+		 
+
+
+?>
+  
+<div class="row" id="home-cat-1">
+  <div class="mid-line">
+	<h3>India’s Coolest Online Brand for Designer & Customized Merchandise</h3>
+    <h2 class="feature-tag">Featured Products</h2>
+  </div>
+ 
+  <?php
+ for($iiCounter=1;$iiCounter<5;$iiCounter++)
+ {	
+  if($iiCounter == 4)
+  { ?>
+  <div class="col-sm-12">
+    <div id="case-slider<?php echo $iiCounter;?>">
+      <div id="owl-example2" class="owl-carousel">
+        <?php
+	  	 $case_qry = $read->query("SELECT * FROM `featuredproduct` WHERE `cat_id` = 4 AND `active` = 1");
+		 $case_res = $case_qry->fetchAll();
+		 $tot = count($case_res)/3;
+		 $k=0;$j=0;
+		 for($t=0;$t<$tot;$t++)
+		 {	$k = $k+1;?>
+        <div class="item <?php if($t == 0){?>active<?php } ?>">
+          <?php	 
+			 for($c=$j;$c<$k;$c++)
+			 {?>
+          <div class="col-xs-4aa">
+            <?php //echo $case_res[$c]['prod_link'];?>
+            <a href="<?php echo Mage::getBaseUrl().'shop/t-shirt.html';?>" target="_blank"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'/home_banner_img/'.$case_res[$c]['prod_img'];?>" style="float:left;"> 
+			</a>
+            <h3>
+                <?php //echo $case_res[$c]['prod_link'];?>
+                <?php echo $case_res[$c]['prod_name'];?></h3>
+			</div>
+          <?php } $j = $k;?>
+        </div>
+        <?php 
+		 }
+		?>
+      </div>
+      <h2 class="skin-name"><a href="<?php echo Mage::getBaseUrl().'shop/t-shirt.html';?>" target="_blank">T-shirt</a></h2>
+      <?php /*?><div class="carousel-inner s5">
+         <div class="active item">
+          <img src="<?php echo $this->getSkinUrl('images/t-shirt1.png');?>" style="float:left;">               
+          <img src="<?php echo $this->getSkinUrl('images/t-shirt2.png');?>" style="float:left;">               
+          <img src="<?php echo $this->getSkinUrl('images/t-shirt3.png');?>" style="float:left;">               
+          <div class="carousel-caption">
+           <h3>First slide label</h3>                 
+          </div>
+         </div>
+         <div class="item">
+          <img src="<?php echo $this->getSkinUrl('images/t-shirt7.png');?>" style="float:left;">               
+          <img src="<?php echo $this->getSkinUrl('images/t-shirt8.png');?>" style="float:left;">               
+          <img src="<?php echo $this->getSkinUrl('images/t-shirt9.png');?>" style="float:left;">               
+          <div class="carousel-caption">
+           <h3>Second slide label</h3>                  
+          </div>
+         </div>
+         <div class="item">
+          <img src="<?php echo $this->getSkinUrl('images/t-shirt4.png');?>" style="float:left;">               
+          <img src="<?php echo $this->getSkinUrl('images/t-shirt5.png');?>" style="float:left;">               
+          <img src="<?php echo $this->getSkinUrl('images/t-shirt6.png');?>" style="float:left;">               
+          <div class="carousel-caption">
+           <h3>Third slide label</h3>                  
+          </div>
+         </div>
+         <div class="item">
+          <img src="<?php echo $this->getSkinUrl('images/t-shirt10.png');?>" style="float:left;">               
+          <img src="<?php echo $this->getSkinUrl('images/t-shirt11.png');?>" style="float:left;">               
+          <img src="<?php echo $this->getSkinUrl('images/t-shirt12.png');?>" style="float:left;">               
+          <div class="carousel-caption">
+           <h3>Third slide label</h3>                  
+          </div>
+         </div>
+        </div>
+        <h2 class="skin-name"><?php echo $_category->getName();?></h2><?php */?>
+      <a class="" href="#case-slider<?php echo $iiCounter;?>"></a> <a class="" href="#case-slider<?php echo $iiCounter;?>"></a> </div>
+  </div>
+  <?php  
+   }
+   else
+   {
+   ?>
+  <div class="col-sm-4">
+    <div id="case-slider<?php echo $iiCounter;?>" class="carousel slide case-slide1" data-interval="false" data-ride="carousel">
+      <?php 
+   	  if($iiCounter == 1)
+  	  {?>
+      <div class="carousel-inner s6">
+        <?php
+	  	 $case_qry = $read->query("SELECT * FROM `featuredproduct` WHERE `cat_id` = 3 AND `active` = 1");
+		 $case_res = $case_qry->fetchAll();
+		 for($c=0;$c<count($case_res);$c++)
+		 {?>
+        <div class="item <?php if($c == 0){ echo 'active';}?>">
+          <?php //echo $case_res[$c]['prod_link'];?>
+          <div class="carousel-caption">
+            <h3>
+              <?php //echo $case_res[$c]['prod_link'];?>
+              <?php echo $case_res[$c]['prod_name'];?></h3>
+          </div>
+          <a href="<?php echo Mage::getBaseUrl().'shop/mobile-case.html';?>" target="_blank"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'/home_banner_img/'.$case_res[$c]['prod_img'];?>"></a> </div>
+        <?php }?>
+      </div>
+      <h2 class="skin-name"><a href="<?php echo Mage::getBaseUrl().'shop/mobile-case.html';?>" target="_blank">Mobile Case</a></h2>
+      <?php
+	   }	 
+ 	   if($iiCounter == 2)
+  	   {?>
+      <div class="carousel-inner s1">
+        <?php
+	  	 $skin_qry = $read->query("SELECT * FROM `featuredproduct` WHERE `cat_id` = 34 AND `active` = 1");
+		 $skin_res = $skin_qry->fetchAll();
+		 for($s=0;$s<count($skin_res);$s++)
+		 {?>
+        <div class="item <?php if($s == 0){ echo 'active';}?>">
+          <?php //echo $skin_res[$s]['prod_link'];?>
+          <div class="carousel-caption">
+            <h3>
+              <?php //echo $skin_res[$s]['prod_link'];?>
+              <?php echo $skin_res[$s]['prod_name'];?></h3>
+          </div>
+          <a href="<?php echo Mage::getBaseUrl().'shop/mobile-skin.html';?>" target="_blank"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'/home_banner_img/'.$skin_res[$s]['prod_img'];?>"></a> </div>
+        <?php }?>
+      </div>
+      <h2 class="skin-name"><a href="<?php echo Mage::getBaseUrl().'shop/mobile-skin.html';?>" target="_blank">Mobile Skin</a></h2>
+      <?php  
+		}
+   		if($iiCounter == 3)
+  		{ ?>
+      <div class="carousel-inner s2">
+        <?php
+	  	 $lapi_qry = $read->query("SELECT * FROM `featuredproduct` WHERE `cat_id` = 8 AND `active` = 1");
+		 $lapi_res = $lapi_qry->fetchAll();
+		 for($l=0;$l<count($lapi_res);$l++)
+		 {?>
+        <div class="item <?php if($l == 0){ echo 'active';}?>">
+          <?php //echo $lapi_res[$l]['prod_link'];?>
+          <div class="carousel-caption">
+            <h3>
+              <?php //echo $lapi_res[$l]['prod_link'];?>
+              <?php echo $lapi_res[$l]['prod_name'];?></h3>
+          </div>
+          <a href="<?php echo Mage::getBaseUrl().'shop/laptop-skin.html';?>" target="_blank"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'/home_banner_img/'.$lapi_res[$l]['prod_img'];?>"></a> </div>
+        <?php }?>
+      </div>
+      <h2 class="skin-name"><a href="<?php echo Mage::getBaseUrl().'shop/laptop-skin.html';?>" target="_blank">Laptop Skin</a></h2>
+      <?php  
+		 }
+         /*if($iiCounter == 5)
+  		 {
+	      $_category = Mage::getModel('catalog/category')->load(6);
+    	  if($_category->getIsActive()) 
+      	  {?>
+       		<div class="carousel-inner s3">
+	         <div class="active item">
+              <img src="<?php echo $this->getSkinUrl('images/cool1.png');?>">               
+           	  <div class="carousel-caption">
+               <h3>First slide label</h3>                 
+           	  </div>
+          	</div>
+         	<div class="item">
+          	 <img src="<?php echo $this->getSkinUrl('images/cool2.png');?>">                
+           	 <div class="carousel-caption">
+           	  <h3>Second slide label</h3>                  
+          	 </div>
+         	</div>
+           </div>
+           <h2 class="skin-name"><?php echo $_category->getName();?></h2>
+         <?php  
+  		   }
+		  }*/?>
+      <a class="carousel-control left" href="#case-slider<?php echo $iiCounter;?>" data-slide="prev"> <i class="fa fa-angle-left fa-lg"></i> </a> <a class="carousel-control right" href="#case-slider<?php echo $iiCounter;?>" data-slide="next"> <i class="fa fa-angle-right fa-lg"></i> </a> </div>
+	  
+  </div>
+  <?php
+  }
+ }?>
+
+</div>
+<script type="text/javascript">
+  jQuery(document).ready(function() {
+    jQuery("#owl-example2").owlCarousel({
+    items : 4,
+    navigation : true
+  }); 
+ 
+});
+
+</script>
+<style>
+	  #owl-example .item{
+  margin: 0px;
+}
+#owl-example .item img{
+  display: block;
+  width: 100%;
+  height: auto;
+}
+	 </style>
+

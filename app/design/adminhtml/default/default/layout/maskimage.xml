@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<layout>
+    <maskimage_adminhtml_myform_index>
+        <update handle="maskimage_myform_index"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="maskimage" template="maskimage/maskimage.phtml"/>
+        </reference>
+    </maskimage_adminhtml_myform_index>
+</layout>

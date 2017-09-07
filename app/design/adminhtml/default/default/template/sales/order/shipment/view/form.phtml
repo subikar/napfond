@@ -1,0 +1,245 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     default_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+  <link rel="stylesheet" href="<?php echo Mage::getStoreConfig(Mage_Core_Model_Url::XML_PATH_SECURE_URL);?>js/jquery.datetimepicker.css">
+<script type="text/javascript" src="<?php echo Mage::getStoreConfig(Mage_Core_Model_Url::XML_PATH_SECURE_URL);?>js/lib/jquery/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="<?php echo Mage::getStoreConfig(Mage_Core_Model_Url::XML_PATH_SECURE_URL);?>js/lib/jquery/noconflict.js"></script>
+<?php /*?><script type="text/javascript" src="<?php echo Mage::getStoreConfig(Mage_Core_Model_Url::XML_PATH_SECURE_URL);?>js/jquery.maskedinput.min.js"></script><?php */?>
+<script type="text/javascript" src="<?php echo Mage::getStoreConfig(Mage_Core_Model_Url::XML_PATH_SECURE_URL);?>js/jquery.datetimepicker.full.js"></script>
+
+
+
+<?php  $_order = $this->getShipment()->getOrder();
+
+
+$pickUpDetails = $this->getShipment()->getData("bhishoom_pickup_info");
+if($pickUpDetails!='')
+$pickupDetailsArr = unserialize($pickUpDetails);
+
+ ?>
+
+
+
+<div class="box-left">
+    <!--Billing Address-->
+    <div class="entry-edit">
+        <div class="entry-edit-head">
+            <h4 class="icon-head head-payment-method"><?php echo $this->helper('sales')->__('Pickup Details:') ?></h4>
+        </div>
+        <fieldset>
+          <p>
+				<?php
+				if(count($pickupDetailsArr)>0){
+				  foreach($pickupDetailsArr as $pickupDetailsArrKey=>$pickupDetailsArrVal)
+				  {
+					  
+					  if($pickupDetailsArrKey == 'PickupReadyTimestamp')
+					    $pickupDetailsArrVal = date('Y-m-d h:i:s',$pickupDetailsArrVal);
+					  echo "<strong>".ucwords($pickupDetailsArrKey).":&nbsp;</strong>";					  
+					  echo "<strong>".$pickupDetailsArrVal."</strong>";
+					  
+					  echo ', ';
+				  }
+				}else{
+						
+										
+				?> 
+				Enter Pick date:&nbsp;&nbsp;<input type="text" name="fdx_time_stamp" id="fdx_time_stamp2" />
+				
+				
+				
+<script type="text/javascript">
+
+jQuery( document ).ready(function() {
+	
+jQuery('#fdx_time_stamp2').datetimepicker();
+   
+});
+
+function setLocationBhishoomTSh(url){
+	
+	valDate = jQuery('#fdx_time_stamp2').val();
+	
+	if(valDate=='')
+	{
+		alert("please enter pick up date and time")
+		return false;
+		
+	}
+	location.href=url+"?val_pickup_date="+valDate;
+	
+}
+</script>				
+				
+				
+				<?php }?>
+
+          </p>
+		
+        </fieldset>
+    </div>
+</div>
+
+
+
+<div class="box-right">
+    <!--Billing Address-->
+    <div class="entry-edit">
+        <div class="entry-edit-head">
+            <h4 class="icon-head head-payment-method"><?php echo $this->helper('sales')->__('Expected Date of Delivery') ?></h4>
+        </div>
+        <fieldset>
+          <p>
+              <label class="normal" ><?php echo Mage::helper('sales')->__('Expected Delivery Date:') ?></label>
+              <input id="expected_delivery_date2" readonly="readonly" name="expected_delivery_date" type="text" class="required-entry" size="40" />
+          </p>
+		
+        </fieldset>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+
+
+jQuery( document ).ready(function() {
+	
+jQuery('#expected_delivery_date2').datetimepicker({theme:'dark',timepicker:false,
+	format:'l, d F Y',
+	formatDate:'l, d F Y',
+});
+   
+});
+
+
+
+function deleteConfirmBhishoom(confirmMsg,actionUrl)
+{
+	if(document.getElementById("expected_delivery_date2").value == ''){
+		alert("Enter expected date of delivery.");
+		return false;
+	}
+	
+	if(confirm(confirmMsg)){
+		//alert(actionUrl+'?estimated_date='+document.getElementById("expected_delivery_date").value)
+		location.href=actionUrl+'?estimated_date='+document.getElementById("expected_delivery_date2").value;
+	}
+	
+}
+</script>
+
+
+<?php echo $this->getChildHtml('order_info') ?>
+
+<div class="box-left">
+    <!--Billing Address-->
+    <div class="entry-edit">
+        <div class="entry-edit-head">
+            <h4 class="icon-head head-payment-method"><?php echo $this->helper('sales')->__('Payment Information') ?></h4>
+        </div>
+        <fieldset>
+            <div><?php echo $this->getChildHtml('order_payment') ?></div>
+            <div><?php echo Mage::helper('sales')->__('Order was placed using %s', $_order->getOrderCurrencyCode()) ?></div>
+        </fieldset>
+    </div>
+</div>
+<div class="box-right">
+    <!--Shipping Address-->
+    <div class="entry-edit">
+        <div class="entry-edit-head">
+            <h4 class="icon-head head-shipping-method"><?php echo $this->helper('sales')->__('Shipping and Tracking Information') ?></h4>
+        </div>
+        <fieldset>
+            <div>
+                <?php if($this->getShipment()->getTracksCollection()->count()): ?>
+                <a href="#" id="linkId" onclick="popWin('<?php echo $this->helper('shipping')->getTrackingPopupUrlBySalesModel($this->getShipment()) ?>','trackshipment','width=800,height=600,resizable=yes,scrollbars=yes')" title="<?php echo $this->__('Track this shipment') ?>"><?php echo $this->__('Track this shipment') ?></a>
+                <br/>
+                <?php endif; ?>
+                <strong><?php echo $this->escapeHtml($_order->getShippingDescription()) ?></strong>
+                <?php echo $this->helper('sales')->__('Total Shipping Charges'); ?>:
+
+                <?php if ($this->helper('tax')->displayShippingPriceIncludingTax()): ?>
+                    <?php $_excl = $this->displayShippingPriceInclTax($_order); ?>
+                <?php else: ?>
+                    <?php $_excl = $this->displayPriceAttribute('shipping_amount', false, ' '); ?>
+                <?php endif; ?>
+                <?php $_incl = $this->displayShippingPriceInclTax($_order); ?>
+
+                <?php echo $_excl; ?>
+                <?php if ($this->helper('tax')->displayShippingBothPrices() && $_incl != $_excl): ?>
+                    (<?php echo $this->__('Incl. Tax'); ?> <?php echo $_incl; ?>)
+                <?php endif; ?>
+            </div>
+            <?php if ($this->canCreateShippingLabel()): ?>
+            <div style="text-align: center; margin: 10px 0;">
+                <?php echo $this->getCreateLabelButton()?>
+                <?php if ($this->getShipment()->getShippingLabel()): ?>
+                    <?php echo $this->getPrintLabelButton() ?>
+                <?php endif ?>
+                <?php if ($this->getShipment()->getPackages()): ?>
+                    <?php echo $this->getShowPackagesButton() ?>
+                <?php endif ?>
+            </div>
+            <?php endif ?>
+            <div><?php echo $this->getChildHtml('shipment_tracking') ?></div>
+        </fieldset>
+    <?php echo $this->getChildHtml('shipment_packaging') ?>
+    <script type="text/javascript">
+    //<![CDATA[
+        document.observe("dom:loaded", function() {
+            setTimeout(function(){
+                packaging.setConfirmPackagingCallback(function(){
+                    packaging.sendCreateLabelRequest();
+                });
+                packaging.setLabelCreatedCallback(function(response){
+                    setLocation("<?php echo $this->getUrl(
+                        '*/sales_order_shipment/view',
+                        array('shipment_id' => $this->getShipment()->getId())
+                    ); ?>");
+                });
+            }, 500);
+        });
+    //]]>
+    </script>
+    </div>
+</div>
+<div class="clear"></div>
+
+    <div class="entry-edit">
+        <div class="entry-edit-head">
+        <h4 class="icon-head head-products"><?php echo $this->helper('sales')->__('Items Shipped') ?></h4>
+        </div>
+</div>
+
+<?php echo $this->getChildHtml('shipment_items') ?>
+<?php echo $this->getChildHtml('shipment_packed') ?>
+
+<div class="box-left entry-edit">
+    <div class="entry-edit-head"><h4><?php echo $this->__('Shipment History') ?></h4></div>
+    <fieldset><?php echo $this->getChildHtml('order_comments') ?></fieldset>
+</div>
+<div class="clear"></div>

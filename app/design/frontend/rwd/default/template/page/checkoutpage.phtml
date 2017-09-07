@@ -1,0 +1,131 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Template for Mage_Page_Block_Html
+ */
+ 
+		////CODE TO UPDATE THE PRODUCT NAME IN CART//////////////////////
+			Mage::helper('function/more')->updateProductsNameInCart();
+		/////////END CODE//////////////////////////////////////////////// 
+		
+		$randomcheckout = (int)Mage::app()->getRequest()->getParam('randomcheckout');
+?>
+
+<!DOCTYPE html>
+
+<!--[if lt IE 7 ]> <html lang="en" id="top" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" id="top" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" id="top" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" id="top" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html lang="en" id="top" class="no-js">
+<!--<![endif]-->
+
+<head>
+<?php echo $this->getChildHtml('head') ?>
+ <script type="text/javascript" src='http://www.bhishoom.com/skin/frontend/rwd/default/js/responsive-tabs.js'></script>
+</head>
+<body<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?>> 
+<?php echo $this->getChildHtml('after_body_start') ?>
+<div class="wrapper"> <?php echo $this->getChildHtml('global_notices') ?>
+  <div class="page"> <?php echo $this->getChildHtml('header') ?> <?php echo $this->getChildHtml('global_messages') ?>
+    <div class="container">
+      <div class="main-container col2-right-layout" id="checkoutpage">
+        <div class="main"> <?php echo $this->getChildHtml('breadcrumbs') ?>
+          <div class="row">
+            <div id="after-cr-design">
+              <div class="page-title col-sm-12">
+                <div class="navbar_icon_bar">
+                  <ul>
+                    <li class="free_shiping">All Products Are<br>
+                      Dispatched in 3-5 Days.</li>
+                    <li class="best_in_class">Best-in-Class<br>
+                      Quality Guaranteed.</li>
+                  </ul>
+                </div>
+                <div class="clearfix"></div>
+                <div class="divider30"></div>
+                <h1>Checkout</h1>
+                <div class="need_help_ph">Need Help? call <?php echo Mage::getStoreConfig('general/store_information/phone');?></div>
+              </div>
+            </div>
+            <div class="col-main-1a col-sm-7"> 
+			
+			<div style="background: none repeat scroll 0 0 #fff;height: 91%;left: 0px;opacity: 0.90;position: absolute;width: 100%;z-index: 1401;display:none" id="designerLoader"> <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN);?>/frontend/rwd/default/images/ajax-loader.gif" style=" margin: 24% auto;" /></div>	
+			
+			<?php echo $this->getChildHtml('content') ?> 
+            
+             
+      
+           
+
+            </div>
+            <div class="col-right-1a sidebar col-sm-5"><?php echo $this->getChildHtml('right') ?></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php echo $this->getChildHtml('footer_before') ?> <?php echo $this->getChildHtml('footer') ?> <?php echo $this->getChildHtml('global_cookie_notice') ?> <?php echo $this->getChildHtml('before_body_end') ?> </div>
+</div>
+<?php echo $this->getAbsoluteFooter() ?>
+<script type="text/javascript">
+jQuery( document ).ready(function() {
+
+if (jQuery(".shippingDescChkout")[0]){
+    // Do something if class exists
+	
+	
+	
+} else {
+	//jQuery("#designerLoader").show();
+    //jQuery("#checkoutTotals tr:nth-last-child(1)").before('<tr id="prepandRow"><td colspan="2" class="text-left shippingDescChkout" style="">Shipping Charges</td><td class="a-right last" style=""><span class="price"><?php $shippingPrice = Mage::helper('function/more')->getShippingPrice();if($shippingPrice > 0) echo Mage::helper('core')->currency($shippingPrice); else echo 'Free';?></span></td></tr>');
+	
+	//jQuery("#defaultGrandTotalDiv").addClass('displayNone');
+	//jQuery("#renderGrandTotalDiv").removeClass('displayNone');
+}
+
+});
+</script>
+
+<?php
+
+
+
+if($randomcheckout > 0){
+?>
+<script type="text/javascript">
+jQuery("#designerLoader").show();
+location.href='<?php echo Mage::helper('checkout/url')->getCheckoutUrl(); ?>';
+</script>
+<?php	
+}
+?>
+
+
+</body>
+</html>

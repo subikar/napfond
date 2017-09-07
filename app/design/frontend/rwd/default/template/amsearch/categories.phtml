@@ -1,0 +1,15 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Search
+ */
+?>
+<li>
+    <label for="categories"><?php echo Mage::helper('amsearch')->__('Categories') ?></label>
+    <div class="category field-row">
+        <select name="categories[]" class="multiselect"  multiple="multiple" size="4">
+        <?php echo $this->getTree(); ?>
+        </select>
+    </div>
+</li>

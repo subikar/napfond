@@ -1,0 +1,62 @@
+<div class="products-grid products-grid--max-3-col">
+<?php
+$productModel = Mage::getModel('catalog/product');
+$attr = $productModel->getResource()->getAttribute("case_style");
+
+
+$read = Mage::getSingleton('core/resource')->getConnection('core_read');
+$write = Mage::getSingleton('core/resource')->getConnection('core_write');	
+$block_qry = $read->query("SELECT * FROM `trandingblock` WHERE `active` = 1");	
+$block_res = $block_qry->fetchAll();
+for($i=0;$i<count($block_res);$i++)
+{
+?>	  
+   <div class="col-md-4 new">
+    <div class="cat-pro-outer carousel slide pick-slider bgBack1" id="pick-slider<?php echo $block_res[$i]['block'];?>" data-interval="false" data-ride="carousel">   
+     <div class="carousel-inner">
+      <?php
+       $case_qry = $read->query("SELECT * FROM `trendingproduct` WHERE `style_val` = '".$block_res[$i]['case_style']."' AND `active` = 1");
+       $case_res = $case_qry->fetchAll();
+	   //print_r($case_res);
+       for($c=0;$c<count($case_res);$c++)
+       {?>
+          <div class="item <?php if($c == 0){ echo 'active';}?>">
+           <!--<a href="<?php //echo $case_res[$c]['prod_link'];?>">!-->
+            <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'/home_banner_img/'.$case_res[$c]['prod_img'];?>">
+           </a>
+           <div class="carousel-caption">
+            <h3><!--<a href="<?php //echo $case_res[$c]['prod_link'];?>">!--><?php echo $case_res[$c]['prod_name'];?></a></h3>                  
+           </div> 
+          </div>
+       <?php }?>
+     </div>
+     <a class="carousel-control left" href="#pick-slider<?php echo $block_res[$i]['block'];?>" data-slide="prev">
+      <i class="fa fa-angle-left fa-lg"></i>
+     </a>
+     <a class="carousel-control right" href="#pick-slider<?php echo $block_res[$i]['block'];?>" data-slide="next">
+      <i class="fa fa-angle-right fa-lg"></i>
+     </a><?php $case_style_id = $attr->getSource()->getOptionId($block_res[$i]['case_style']);?>
+     <?php  if($case_style_id == 58 || $case_style_id == 332){ ?>
+	  <h2 class="skin-name"><a href="shop/t-shirt/for-him.html?case_style=<?php echo $case_style_id?>"><?php echo $block_res[$i]['case_style'];?> - T-Shirts</a></h2>
+	  <?php
+	    }
+		else if($case_style_id==57||$case_style_id==115){
+			
+			if($case_style_id == 115)
+				$case_style_id = 348;
+	  ?>
+	  
+	 
+	 <h2 class="skin-name"><a href="shop/mobile-skin/apple/iphone-6.html?case_style=<?php echo $case_style_id?>"><?php echo $block_res[$i]['case_style'];?> - Skins</a></h2>
+	 <?php  
+	 }
+	 else{
+	 ?>
+	 <h2 class="skin-name"><a href="shop/mobile-case/apple/iphone-6.html?case_style=<?php echo $case_style_id?>"><?php echo $block_res[$i]['case_style'];?> - Cases</a></h2>
+	 <?php
+	 }
+	 ?>
+    </div>
+   </div>
+<?php } ?>
+</div>

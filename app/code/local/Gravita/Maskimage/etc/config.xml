@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Gravita_Maskimage>
+            <version>0.1.0</version>
+        </Gravita_Maskimage>
+    </modules>
+    
+    <global>
+        <models>
+            <maskimage>
+                <class>Gravita_Maskimage_Model</class>
+                <resourceModel>maskimage_mysql4</resourceModel>
+            </maskimage>
+            <maskimage_mysql4>
+                <class>Gravita_Maskimage_Model_Mysql4</class>
+            </maskimage_mysql4>
+        </models>
+        <blocks>
+            <maskimage>
+                <class>Gravita_Maskimage_Block</class>
+            </maskimage>
+        </blocks>
+        <helpers>
+            <maskimage>
+                <class>Gravita_Maskimage_Helper</class>
+            </maskimage>  
+        </helpers>
+    </global>
+    
+    <admin>
+        <routers>
+            <maskimage>
+                <use>admin</use>
+                <args>
+                    <module>Gravita_Maskimage</module>
+                    <frontName>maskimage</frontName>
+                </args>
+            </maskimage>
+        </routers>
+    </admin>
+    
+    <adminhtml>
+        <translate>
+            <modules>
+                <mage_adminhtml>
+                    <files>
+                        <maskimage>Gravita_Maskimage.csv</maskimage>
+                    </files>
+                </mage_adminhtml>
+            </modules>
+        </translate>
+        
+        <menu>
+            <catalog>
+                <children>
+                    <maskimage_adminform translate="title" module="maskimage">
+                        <title>Generate Mask Image</title>
+                        <action>maskimage/adminhtml_myform</action>
+                    </maskimage_adminform>
+                </children>
+            </catalog>
+        </menu>
+        
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <catalog>
+                            <children>
+                                <maskimage_adminform>
+                                    <title>My Form</title>
+                                </maskimage_adminform>
+                            </children>
+                        </catalog>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        
+        <layout>
+            <updates>
+                <maskimage>
+                    <file>maskimage.xml</file>
+                </maskimage>
+            </updates>
+        </layout>
+    </adminhtml>
+</config>

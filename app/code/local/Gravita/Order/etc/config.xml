@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<modules>
+		<Gravita_Order>
+			<version>0.1.0</version>
+		</Gravita_Order>
+	</modules>	
+	<global>
+		<blocks>
+			<order>
+				<class>Gravita_Order_Block</class>
+			</order>	
+		</blocks>
+		<helpers>
+			<order>
+				<class>Gravita_Order_Helper</class>
+			</order>
+		</helpers>
+		<models>
+            <order>
+                <class>Gravita_Order_Model</class>
+                <!-- <resourceModel>orderemail_mysql4</resourceModel> -->
+            </order>
+            <!-- <orderemail_mysql4>
+                <class>Gravita_Orderemail_Model_Mysql4</class>
+				<entities>
+                    <orderemail>
+                        <table>orderemail</table>
+                    </orderemail>
+                </entities>
+            </orderemail_mysql4> -->
+        </models>
+		<resources>
+			<order_setup>
+                <setup>
+                    <module>Gravita_Order</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </order_setup>
+			<order_write>
+				<connection>
+					<use>core_write</use>					
+				</connection>
+			</order_write>
+			<order_read>
+				<connection>
+					<use>core_read</use>
+				</connection>	
+			</order_read>	
+		</resources>
+		<template>
+            <email>
+               <order_email_template translate="label" module="order">
+                   <label>Order Delivered</label>
+                   <file>orderdelivery.html</file>
+                   <type>html</type>
+               </order_email_template>               
+            </email>
+        </template>			
+	</global>	
+	
+	<admin>
+		<routers>
+			<order>
+				<use>admin</use>
+				<args>
+					<module>Gravita_Order</module>
+					<frontName>order</frontName>
+				</args>
+			</order>
+		</routers>
+	</admin>
+	
+	<adminhtml>
+		<menu>
+            <sales>
+                <children>
+                    <order_adminform translate="title" module="order">
+                        <title>Send Delivery Email/SMS </title>
+                        <action>order/adminhtml_orderform</action>
+                    </order_adminform>
+                </children>
+            </sales>
+        </menu>		
+		<acl>
+            <resources>
+                <admin>
+                    <children>
+                        <catalog>
+                            <children>
+                                <order_adminform>
+                                    <title>My Form</title>
+                                </order_adminform>
+                            </children>
+                        </catalog>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        
+        <layout>
+            <updates>
+                <order>
+                    <file>order.xml</file>
+                </order>
+            </updates>
+        </layout>
+	</adminhtml>	
+</config>			

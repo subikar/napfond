@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Mks_Rotateproduct>
+      <version>8.1.1</version>
+    </Mks_Rotateproduct>
+  </modules>
+  <global>
+    <helpers>
+      <rotateproduct>
+        <class>Mks_Rotateproduct_Helper</class>
+      </rotateproduct>
+    </helpers>
+	<blocks>
+	  <rotateproduct>
+		<class>Mks_Rotateproduct_Block</class>
+	  </rotateproduct>
+	</blocks>
+	<models>
+	  <rotateproduct>
+		<class>Mks_Rotateproduct_Model</class>
+		<resourceModel>rotateproduct_mysql4</resourceModel>
+	  </rotateproduct>
+	  <rotateproduct_mysql4>
+		<class>Mks_Rotateproduct_Model_Mysql4</class>
+		<entities>		  
+			  <rotateproduct>
+				<table>mksrotatedegree</table>
+			  </rotateproduct>
+        </entities>
+	  </rotateproduct_mysql4>
+	</models>
+	<resources>
+	  <rotateproduct_setup>
+		<setup>
+		  <module>Mks_Rotateproduct</module>
+		</setup>
+		<connection>
+		  <use>core_setup</use>
+		</connection>
+	  </rotateproduct_setup>
+	  <rotateproduct_write>
+		<connection>
+		  <use>core_write</use>
+		</connection>
+	  </rotateproduct_write>
+	  <rotateproduct_read>
+		<connection>
+		  <use>core_read</use>
+		</connection>
+	  </rotateproduct_read>
+	</resources>
+  </global>
+  <admin>
+	<routers>
+	  <rotateproduct>
+	    <use>admin</use>
+		<args>
+		  <module>Mks_Rotateproduct</module>
+		  <frontName>rotateproduct</frontName>
+		</args>
+	  </rotateproduct>
+	</routers>
+  </admin>
+  <adminhtml>
+	<menu>
+	  <rotateproduct module="rotateproduct">
+		<title>Rotateproduct</title>
+		<sort_order>100</sort_order>
+		<children>
+		  <rotateproductbackend module="rotateproduct">
+			<title>About Us</title>
+			<sort_order>0</sort_order>
+			<action>rotateproduct/adminhtml_rotateproductbackend</action>
+		  </rotateproductbackend>
+		  <rotateproduct module="rotateproduct">
+		    <title>Manage Rotateproduct</title>
+			<sort_order>0</sort_order>
+			<action>rotateproduct/adminhtml_rotateproduct</action>
+		  </rotateproduct>
+		</children>
+	  </rotateproduct>
+	</menu>
+	<acl>
+	  <resources>
+		<all>
+		  <title>Allow Everything</title>
+		</all>
+		<admin>
+		  <children>
+			<rotateproduct translate="title" module="rotateproduct">
+			  <title>Rotateproduct</title>
+			  <sort_order>1000</sort_order>
+			  <children>
+		  <rotateproductbackend translate="title">
+			<title>About Us</title>
+		  </rotateproductbackend>
+		  <rotateproduct translate="title">
+			<title>Manage Rotateproduct</title>
+			<sort_order>0</sort_order>
+		  </rotateproduct>
+			  </children>
+			</rotateproduct>
+		  </children>
+		</admin>
+	  </resources>
+	</acl>
+	<layout>
+	  <updates>
+		<rotateproduct>
+		  <file>rotateproduct.xml</file>
+		</rotateproduct>
+	  </updates>
+	</layout>
+  </adminhtml>
+</config> 

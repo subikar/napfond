@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * @category   MageCoders
+ * @package    MageCoders_DefaultSearch
+ */
+ -->
+<config>
+    <modules>
+        <MageCoders_DefaultSearch>
+            <active>true</active>
+            <codePool>community</codePool>
+        </MageCoders_DefaultSearch>
+    </modules>
+</config> 

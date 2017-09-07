@@ -1,0 +1,130 @@
+<?php
+
+$siteBaseUrl = Mage::helper('function/more')->getBhishoomSiteBaseUrl();
+
+$_product = $this->getProduct();
+$_wishlistSubmitUrl = $this->helper('wishlist')->getAddUrl($_product); 
+
+
+
+ 
+				 
+
+
+if(Mage::app()->getRequest()->getParam('catid') > 0){
+$_category = Mage::getModel('catalog/category')->load(Mage::app()->getRequest()->getParam('catid'));
+
+ 
+/***************************Code for fetching blank image**************************/
+	$path = $_category->getPath();
+	$ids  = explode('/', $path);
+			unset($ids[0]);
+	$sep='';
+	$id_cat_path='';	
+	$id_cat_path_counter=0;	
+	
+	
+	if(in_array(3,$ids) || in_array(34,$ids)){
+	foreach($ids as $idcat)
+	 {
+		$id_cat_path_counter++;
+	    if($id_cat_path_counter <= 2)
+		continue;
+		
+		if((in_array(34,$ids) || in_array(75,$ids) || in_array(3,$ids) || in_array(66,$ids)) && $id_cat_path_counter == 4 /**For handling condition for mobile case and mobile skin**/)
+		  continue;
+		
+		$idcat_obj = Mage::getModel('catalog/category')->load($idcat);		 
+		$id_cat_path .= $sep.$idcat_obj->getUrlKey();
+		$sep = '/';
+	 }
+	 
+	 
+	 
+	if(in_array(478,$ids) || in_array(8,$ids) || in_array(3,$ids) /**For handling condition for mobile case**/){
+	
+	  $folderURL = Mage::helper('function')->graGetFolderUrl($id_cat_path);		 
+	  $folderPath = Mage::helper('function')->graGetFolderPath($id_cat_path);
+	
+	  if(!is_file($folderPath . DS . 'resized450' . DS . 'mask.png'))
+ 	   $blank_backImagePath = Mage::helper('function')->resizeImg('mask.png', 450, 450,$folderURL,$folderPath,'resized450');	   
+	  else 	
+	   $blank_backImagePath = $siteBaseUrl.'media/blank_images/'.$id_cat_path.'/'.$graBlankImageFolderKey.'/resized450/mask.png';
+	   
+	 }
+	else if(in_array(34,$ids))
+	 { 
+	    $folderURL = Mage::helper('function')->graGetFolderUrl($id_cat_path);		 
+	    $folderPath = Mage::helper('function')->graGetFolderPath($id_cat_path);
+	   
+	  if(!is_file($folderPath . DS . 'resized450' . DS . 'mask-front.png'))
+	   $blank_frontImagePath = Mage::helper('function')->resizeImg('mask-front.png', 450, 450,$folderURL,$folderPath,'resized450');	   
+	  else	  
+	   $blank_frontImagePath = $siteBaseUrl.'media/blank_images/'.$id_cat_path.'/resized450/mask-front.png';	
+	   
+	  if(!is_file($folderPath . DS . 'resized450' . DS . 'mask-back.png')) 
+ 	   $blank_backImagePath = Mage::helper('function')->resizeImg('mask-back.png', 450, 450,$folderURL,$folderPath,'resized450');	   
+	  else 
+	   $blank_backImagePath = $siteBaseUrl.'media/blank_images/'.$id_cat_path.'/resized450/mask-back.png'; 
+	   
+	 }	 
+	} 
+}	 
+$shop_pagevar = Mage::app()->getRequest()->getParam('shop_page');
+if($shop_pagevar > 0)
+{
+$passCatIdObjQui = Mage::getModel('catalog/category')->load($shop_pagevar);	
+$productUrl = Mage::helper('function')->getUrlPath($_product,$passCatIdObjQui);
+}
+else{
+//$productUrl = $_product->getProductUrl();
+$productUrl = Mage::helper('function')->getUrlPath($_product,$_category);
+}
+/***********************************End Code for fetching blank image************************************************/
+
+?> 
+<div class="product-essential">
+ <div class="product-img-box" style="height:230px !important;">
+  <a href="<?php echo $productUrl; ?>">
+ <?php
+ if((in_array(478,$ids) || in_array(8,$ids) || in_array(3,$ids) || in_array(34,$ids)) && $blank_backImagePath!=''){?>	
+  <img src="<?php echo $blank_backImagePath;?>" width="230" height="230" style="position:absolute"/>	 	 
+<?php }?>  
+  <img src="<?php echo Mage::helper('catalog/image')->init($_product, 'image')->resize(230, 230); ?>" width="230" height="230"/>
+ </a>
+</div>
+
+    <div class="product-shop">
+     <div class="first_div">
+      <div class="product-brand-name">BHISHOOM</div>
+      <div class="need_help1">Need Help? call +91 8010 667 667</div>
+     </div>
+     <div class="product-name"><?php echo $_product->getName(); ?></div>
+     <div class='short-description'><?php echo $_product->getShortDescription(); ?></div>
+     <div class='divider'></div>
+     <div class="col2-set">
+      <div class="">
+       <?php echo $this->getPriceHtml($_product); ?>
+      </div>
+      <?php /*?><div class="">
+       <?php if ($_product->isSaleable()): ?>
+      <button class="button" onclick="setLocation('<?php echo Mage::helper('checkout/cart')->getAddUrl($_product); ?>')"><span><span><?php echo $this->__('Buy It') ?></span></span></button>
+       <?php endif; ?>
+      </div><?php */?>
+      <?php if ($_product->isSaleable()): ?>
+
+      <div class="add_con">
+      
+      <input type="text" name="qty" id="qty" maxlength="12" value="1" title="<?php echo $this->__('Qty') ?>" class="input-text qty" style="width:30px;" /> 		  
+    
+      <button type="button" title="<?php echo $buttonTitle ?>" class="button btn-cart pinkC" onclick="setLocation('<?php echo Mage::helper('checkout/cart')->getAddUrl($_product); ?>')"><span><span><?php echo $this->__('Buy It') ?></span></span></button>             
+     <?php endif;?>
+       <?php echo $this->getChildHtml('', true, true) ?>
+       <a href="<?php echo $_wishlistSubmitUrl ?>" onclick="productAddToCartForm.submitLight(this, this.href); return false;" class="link-wishlist" title="<?php echo $this->__('Add to Wishlist') ?>"><?php echo $this->__('Add to Wishlist') ?><i class="fa fa-heart"></i></a>
+      </div>
+      
+     </div>
+    </div>
+    <div class="clear"></div>
+</div>
+<div class="clear"></div>

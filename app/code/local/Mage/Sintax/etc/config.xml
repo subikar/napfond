@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Mage_Sintax>
+            <version>0.1.0</version>
+        </Mage_Sintax>
+    </modules>
+    
+    <global>
+        <models>
+            <sintax>
+                <class>Mage_Sintax_Model</class>
+                <resourceModel>sintax_mysql4</resourceModel>
+            </sintax>
+            <sintax_mysql4>
+                <class>Mage_Sintax_Model_Mysql4</class>
+            </sintax_mysql4>
+        </models>
+        <blocks>
+            <sintax>
+                <class>Mage_Sintax_Block</class>
+            </sintax>
+        </blocks>
+        <helpers>
+            <sintax>
+                <class>Mage_Sintax_Helper</class>
+            </sintax>  
+        </helpers>
+    </global>
+    
+    <admin>
+        <routers>
+            <sintax>
+                <use>admin</use>
+                <args>
+                    <module>Mage_Sintax</module>
+                    <frontName>sintax</frontName>
+                </args>
+            </sintax>
+        </routers>
+    </admin>
+    
+    <adminhtml>
+        <translate>
+            <modules>
+                <mage_adminhtml>
+                    <files>
+                        <sintax>Mage_Sintax.csv</sintax>
+                    </files>
+                </mage_adminhtml>
+            </modules>
+        </translate>
+        
+        <menu>
+            <catalog>
+                <children>
+                    <sintax_adminform translate="title" module="sintax">
+                        <title>Shop By Interest</title>
+                        <action>sintax/adminhtml_myform</action>
+                    </sintax_adminform>
+                </children>
+            </catalog>
+        </menu>
+        
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <catalog>
+                            <children>
+                                <sintax_adminform>
+                                    <title>My Form</title>
+                                </sintax_adminform>
+                            </children>
+                        </catalog>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        
+        <layout>
+            <updates>
+                <sintax>
+                    <file>sintax.xml</file>
+                </sintax>
+            </updates>
+        </layout>
+    </adminhtml>
+</config>

@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<layout>
+    <tshirtcod_adminhtml_tshirtcodform_index>
+        <update handle="tshirtcod_tshirtcodform_index"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="tshirtcod" template="tshirtcod/tshirtcod.phtml"/>
+        </reference>
+    </tshirtcod_adminhtml_tshirtcodform_index>
+	
+	<tshirtcod_adminhtml_edit_index>
+        <update handle="tshirtcod_edit_index"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="edit" template="tshirtcod/edit.phtml"/>
+        </reference>
+    </tshirtcod_adminhtml_edit_index>
+	
+	
+    <tshirtcod_adminhtml_tshirtstock_index>
+        <update handle="tshirtcod_tshirtstock_index"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="tshirtstock" template="tshirtstock/tshirtstock.phtml"/>
+        </reference>
+    </tshirtcod_adminhtml_tshirtstock_index>
+	
+	
+</layout>

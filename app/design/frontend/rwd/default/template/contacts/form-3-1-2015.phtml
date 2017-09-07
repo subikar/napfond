@@ -1,0 +1,139 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
+<div id="after-cr-design" class="page-title">
+    <h1><?php echo Mage::helper('contacts')->__('Contact Us') ?></h1>
+    <p><a title="">Drop us a message or give us a ring.</a></p>
+    <p>We are available at <a title="Contact" href="">+91 8010 667 667</a>. Monday- Saturdayfrom 10am - 6pm.</p>
+</div>
+<div class="row">
+  <div class="col-md-6 b-right">
+    <div class="contact-ussuccess-msg" style="display: none;"></div>
+    <form id="contact-us contactForm" accept-charset="UTF-8" class="scaffold-form" action="<?php echo $this->getFormAction(); ?>" method="post">
+     <div id="shipping-info-form">
+        <h5>Drop us a message and we'll get back to you at the earliest.</h5>
+        <div class="col-md-12">
+         <div class="form-group">
+           	 <label for="name" class="required"><em>*</em><?php echo Mage::helper('contacts')->__('Full Name') ?></label>
+             <input name="name" id="name" title="<?php echo Mage::helper('contacts')->__('Name') ?>" value="<?php echo $this->escapeHtml($this->helper('contacts')->getUserName()) ?>" class="input-text required-entry" type="text" maxlength="80" required="required" />
+         </div>
+          
+        </div>
+        <div class="col-md-12">
+          <div class="form-group">
+          <label for="email" class="required"><em>*</em><?php echo Mage::helper('contacts')->__('Email') ?></label>
+          <input name="email" id="email" title="<?php echo Mage::helper('contacts')->__('Email') ?>" value="<?php echo $this->escapeHtml($this->helper('contacts')->getUserEmail()) ?>" class="input-text required-entry validate-email" type="email" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="100" required="required" />
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group">
+          <label for="telephone"><?php echo Mage::helper('contacts')->__('Contact No.') ?></label>
+          <input name="telephone" id="telephone" title="<?php echo Mage::helper('contacts')->__('Telephone') ?>" value="" class="input-text required-entry validate-mobileno validate-mobileno-length" type="tel" maxlength="12" required="required" />
+          </div>
+        </div>
+        <div class="col-md-12 prefer-contact">
+          <label>I'd prefer to be contacted through:</label>
+          <input type="checkbox" class="css-checkbox" id="email-prefer" value="email" name="LEADCF102">
+          <label for="email-prefer" class="css-label">Email</label>
+          
+          <input type="checkbox" id="phone-prefer" class="css-checkbox" value="phone" name="LEADCF109">
+          <label for="phone-prefer" class="css-label">Phone call</label>
+        </div>
+        <div class="col-md-6">
+           <div class="contact-select">
+          <select class="validate-select" onchange="query_type_func()" id="query_type" name="LEADCF11">
+            <option value="" selected="selected">Choose query type</option>
+            <option value="PRODUCT RELATED">Product Related</option>
+            <option value="PAYMENT RELATED">Payment Related</option>
+            <option value="ORDER RELATED">Order Related</option>
+            <option value="FEEDBACK">Feedback</option>
+            <option value="Any Other Query">Any Other Query</option>
+          </select>
+        </div>
+        </div>
+        <!--<div class="col-md-6">
+          <div id="selected_casereasons_outer" class="contact-select">
+            <div id="selected_casereasons">
+              <select onchange="issue_order_func()" id="order_issues" class="contact_issue_select" name="">
+                <option value="" selected="selected">Choose Issue</option>
+              </select>
+            </div>
+          </div>
+        </div>-->
+        
+        <div style="display:none;" id="contact_us_order_query" class="col-md-12">
+          <label>Order No
+            <input type="text" id="LEADCF13" name="LEADCF13" maxlength="11">
+          </label>
+        </div>
+        <div class="col-md-12">
+          <label for="comment" class="required"><em>*</em><?php echo Mage::helper('contacts')->__('Add a mesage') ?></label>
+            <textarea name="comment" id="comment" title="<?php echo Mage::helper('contacts')->__('Comment') ?>" class="required-entry input-text" cols="5" rows="3" maxlength="3200"></textarea>
+        </div>
+        <div class="col-md-12">
+          <input type="text" name="hideit" id="hideit" value="" style="display:none !important;" />        
+          <input type="submit" title="<?php echo Mage::helper('contacts')->__('Submit') ?>" value="<?php echo Mage::helper('contacts')->__('Submit') ?>" class="custom-button button" name="save">
+        </div>
+      </div>
+    </form>
+   </div>
+  <div class="col-md-6">
+    <div class="office">      
+      <div class="scroll-custon">
+        <h2>Support</h2>
+        <p><a title="" href="">support@bhishoom.com</a></p>
+      </div>
+      <div class="scroll-custon">
+        <h2>General  Enquiries</h2>
+        <p><a title="" href="">support@bhishoom.com</a></p>
+      </div>
+       <div class="scroll-custon">
+        <h2>Support</h2>
+        <p><a title="" href="">support@bhishoom.com</a></p>
+      </div>
+      <div class="scroll-custon">
+        <h2>General  Enquiries</h2>
+        <p><a title="" href="">support@bhishoom.com</a></p>
+      </div>
+    </div>
+
+  </div>
+  <div class="row">
+      <div class="col-md-12">
+        <address>
+        <p>Our Address:</p>
+        <p>Bhishoom<br>
+         22, Satya Vihar Colony, Pankaj Singhvi Marg,<br>Lal Kothi,Jaipur, Rajasthan 302015</p>  
+      </address>
+      </div>
+    </div>
+</div>
+<script type="text/javascript">
+//<![CDATA[
+    var contactForm = new VarienForm('contactForm', true);
+//]]>
+</script>

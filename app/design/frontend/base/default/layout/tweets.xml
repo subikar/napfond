@@ -1,0 +1,29 @@
+<?xml version="1.0"?>   
+<layout version="0.1.0">  
+	<default>
+		<reference name="left">
+			<block type="tweets/tweets" name="tweets_left" after="-">
+				<action method="setTemplate" ifconfig="tweets/general/position" condition="1">
+					<template>tweets/left.phtml</template>
+				</action>
+			</block>
+		</reference>	
+		<reference name="right">
+			<block type="tweets/tweets" name="tweets_right" after="-">
+				<action method="setTemplate" ifconfig="tweets/general/position" condition="2">
+					<template>tweets/right.phtml</template>
+				</action>
+			</block>
+		</reference>
+	</default>
+  <tweets_index_index>
+    <reference name="content">  
+		<block type="tweets/tweets" name="tweets_index" after="-">
+			<action method="setTemplate" ifconfig="tweets/general/position" condition="2">
+				<template>tweets/tweets.phtml</template>
+			</action>
+		</block>  
+    </reference>   
+  </tweets_index_index>   
+</layout>   
+	

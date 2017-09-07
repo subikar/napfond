@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Darsh_Stockqtny>
+            <version>0.1.0</version>
+        </Darsh_Stockqtny>
+    </modules>
+<adminhtml>
+        <!--<events>        
+            <controller_action_predispatch>
+                <observers>
+                    <controller_action_beforedarsh>
+						<type>singleton</type>
+                        <class>Darsh_Stockqtny_Model_Observer</class>
+                        <method>hookToControllerActionPreDispatchDarsh</method>
+                    </controller_action_beforedarsh>
+                </observers>
+            </controller_action_predispatch>
+    </events>-->
+</adminhtml>
+</config>

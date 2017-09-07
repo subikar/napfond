@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Gravita_Dropdown>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Gravita_Dropdown>
+    </modules>
+</config>

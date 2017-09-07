@@ -1,0 +1,1245 @@
+<?php
+$siteBaseUrl = Mage::helper('function/more')->getBhishoomSiteBaseUrl();
+$getRouteName = Mage::app()->getFrontController()->getRequest()->getRouteName();
+$checkMobileDeviceBhishoom = Mage::helper('function/more')->chkIfmobileBhishomm();
+$_category = Mage::registry('current_category');
+/*echo '<pre>';
+print_r($_category->getData());
+$id = $_category->getData();
+//echo $id[1];
+echo $_category->getId();
+//echo $_category->getCategoryNumStockItem();
+echo "</pre>";
+//exit;*/
+$createURLKey = array();
+$createURLKey2 = array();
+$params = $this->getRequest()->getParams();
+$cat_id = $params['catid'];
+//echo $cat_id;
+$cur_cat = Mage::getModel('catalog/layer')->getCurrentCategory()->getId();
+//echo $cur_cat;
+if($cat_id == '')
+{
+	$cat_id = $cur_cat;
+}
+//echo "Catagory Name = ".$_category->getName();
+$_category = Mage::getModel('catalog/category')->load($cat_id);  // category ID=10	
+
+$catArray = array();
+$catArray = array("157","158","321","201","204","207","323","324","325","326","635","1291","1292","1293","1294","1295","1296","1297","1350","1452");
+$ncollection = Mage::getResourceModel('catalog/category_collection')
+    ->addAttributeToFilter('is_active', 1) 
+    //->addAttributeToFilter('parent_id', 25) 
+    ->addAttributeToFilter('parent_id', array('in'=>$catArray))
+    ->addAttributeToFilter('name', $_category->getName())
+    ->getFirstItem();
+//print($collection->getName()); 
+//echo "<hr />";
+//echo "Catagory ID =".$ncollection->getId();
+$customize_thousnad_of_design_link = str_replace('create','shop',$_category->getUrl()); 
+$_collection = $ncollection->getProductCollection();
+$_product =  $_collection->getFirstItem(); // this will get first item in collection
+$blankPrdId = $_product->getId();	
+//echo "<hr />";
+//echo "Blank Product ID = ".$blankPrdId."<br>";
+//exit();
+/*function get_categories(){
+
+    $category = Mage::getModel('catalog/category'); 
+    $tree = $category->getTreeModel(); 
+    $tree->load();
+    $ids = $tree->getCollection()->getAllIds(); 
+    $arr = array();
+        if ($ids){ 
+            foreach ($ids as $id){ 
+                $cat = Mage::getModel('catalog/category'); 
+                $cat->load($id);
+                $arr[$id] = $cat->getName();
+        } 
+}
+
+return $arr;
+}
+ $arr =  get_categories();
+ $arr = array_flip($arr);
+echo "<pre>";
+ print_r($arr);
+echo "</pre>";
+exit();
+*/
+
+if($_category->getCategoryNumStockItem() != -1)
+	$num_stock = $_category->getCategoryNumStockItem();
+else
+	$num_stock = 'Not';
+
+$parent_catid = $_category->getParentId();
+
+$redirect_to_shopping_cart_page = 'yes';
+
+$texturedPrdStr = Mage::app()->getRequest()->getParam('texturedPrdStr');
+
+if(!is_object($_category))
+$_category = Mage::getModel('catalog/category')->load(24);
+$checkShopCategory = $_category->getId();
+$cat_url_key = $_category->getUrl_key();
+
+$temp_blankImagePath = '';
+
+$currentCategoryId = $_category->getId();
+
+if($currentCategoryId == 24)
+{
+	//$_category = Mage::getModel('catalog/category')->load(11);
+    $passCatIdObjSkin = Mage::getModel('catalog/category')->load(1141);	
+	$quickViewPassIdSkin = 1141;	
+	$passCatIdObjMCase = Mage::getModel('catalog/category')->load(11);	
+	$passCatIdObjMTabCase = Mage::getModel('catalog/category')->load(231);	
+	$quickViewPassIdCase = 11;			
+ 	$passCatIdObjLaptop = Mage::getModel('catalog/category')->load(21);				 
+	$passCatIdObjTablet = Mage::getModel('catalog/category')->load(214);				
+	$passCatIdObjTabletOther = Mage::getModel('catalog/category')->load(477);				
+	$passCatIdObjThsirtHim = Mage::getModel('catalog/category')->load(39);
+	$passCatIdObjThsirtHer = Mage::getModel('catalog/category')->load(292);
+	$passCatIdObjThsirtKid = Mage::getModel('catalog/category')->load(295);
+}
+
+$cat_name = $_category->getName();
+$cat_id = $_category->getId();
+
+$parentCategoryName = $_category->getParentCategory()->getParentCategory()->getName();
+/***************************Code for fetching blank image**************************/
+$params_cat_id = '';
+$params = $this->getRequest()->getParams();
+if(isset($params['cat']) && $params['cat'] != '')
+{
+	$params_cat_id = $params['cat'];
+}
+$path = $_category->getPath();
+
+
+if(in_array(3,explode('/',$path)) || in_array(66,explode('/',$path))){
+	$blankImageParentFolderName='mobile-case';
+	$imageType='back';
+	$imageName='mask.png';
+	$mediaFolderurl = Mage::getBaseUrl('media').'/blank_images/'.$blankImageParentFolderName.'/'.$cat_url_key.'/resized/';
+	$blank_backImagePath = $mediaFolderurl.'/mask.png';
+	$mobile = 'case';
+}
+else if(in_array(34,explode('/',$path)) || in_array(75,explode('/',$path))){
+	$blankImageParentFolderName='mobile-skin';
+	$imageType='front-back';
+	$imageName='mask-front.png';
+	$imageName2='mask-back.png';
+	$mediaFolderurl = Mage::getBaseUrl('media').'/blank_images/'.$blankImageParentFolderName.'/'.$cat_url_key.'/resized/';
+	$blank_backImagePath = $mediaFolderurl.'/mask-back.png';
+	$blank_frontImagePath = $mediaFolderurl.'/mask-front.png';
+	$mobile = 'skin';
+	$redirect_to_shopping_cart_page = 'no';
+}
+else if(in_array(4,explode('/',$path)) || in_array(91,explode('/',$path))){
+	$blankImageParentFolderName='';
+	$redirect_to_shopping_cart_page = 'no';
+}
+else if(in_array(477,explode('/',$path)) || in_array(1144,explode('/',$path))){
+	$blankImageParentFolderName='';
+	$redirect_to_shopping_cart_page = 'no';
+}
+else if(in_array(8,explode('/',$path)) || in_array(21,explode('/',$path)) || in_array(42,explode('/',$path)) || in_array(44,explode('/',$path)) || in_array(972,explode('/',$path)) || in_array(1143,explode('/',$path))){
+	$blankImageParentFolderName='';
+	$redirect_to_shopping_cart_page = 'no';
+}
+else if(in_array(8,explode('/',$path)) || in_array(84,explode('/',$path))){
+	$blankImageParentFolderName='laptop-skin';
+	$imageType='back';
+	$imageName='mask.png';
+	$mediaFolderurl = Mage::getBaseUrl('media').'/blank_images/'.$blankImageParentFolderName.'/'.$cat_url_key.'/resized/';
+	$blank_backImagePath = $mediaFolderurl.'/mask.png';
+	$redirect_to_shopping_cart_page = 'no';
+}
+else if(in_array(478,explode('/',$path)) || in_array(532,explode('/',$path))){
+	$blankImageParentFolderName='tablet-skin';
+	$imageType='front-back';
+	$imageName='mask-front.png';
+	$imageName='mask-back.png';
+	$mediaFolderurl = Mage::getBaseUrl('media').'/blank_images/'.$blankImageParentFolderName.'/'.$cat_url_key.'/resized/';
+	$blank_backImagePath = $mediaFolderurl.'/mask-back.png';
+	$blank_frontImagePath = $mediaFolderurl.'/mask-front.png';
+	$mobile = 'skin';
+	$redirect_to_shopping_cart_page = 'no';
+}
+//////////////////////////////////////////////////////////////////////////////////
+
+$flag = '';$full_path = array();
+
+
+$path_id = explode("/", $path);
+if($path != '')
+{
+  for($p=0;$p<count($path_id);$p++)
+  {
+	 $path_name = Mage::getModel('catalog/category')->load($path_id[$p])->getName();             
+	 $full_path[] = $path_name;
+  }		  
+}
+if($full_path[3] != '')
+{
+	Mage::getSingleton('core/session')->setType($full_path[3]);
+}
+if($full_path[4] != '')
+{
+	Mage::getSingleton('core/session')->setBrand($full_path[4]);
+}
+if($full_path[5] != '')
+{
+	Mage::getSingleton('core/session')->setModel($full_path[5]);
+}
+Mage::getSingleton('core/session')->setCid($currentCategoryId);
+
+//////////////////////////////////////////////////////////////////////////////////
+
+/*
+
+$ids  = explode('/', $path);
+
+if(in_array('4',$ids) || in_array('34',$ids) || in_array('8',$ids) || in_array('477',$ids) || in_array('1144',$ids))
+$redirect_to_shopping_cart_page = 'no';
+
+$pathINformatino = '';
+unset($ids[0]);
+
+$sep='';
+$id_cat_path='';	
+$id_cat_path_counter=0;	
+foreach($ids as $idcat)
+{
+   $id_cat_path_counter++;
+   if($id_cat_path_counter <= 2)
+	continue;
+	$idcat_obj = Mage::getModel('catalog/category')->load($idcat);	
+	if($pathINformatino == '')
+	{
+		$pathINformatino = $idcat_obj->getName();
+		$new_info = $pathINformatino;
+	}else{
+		$pathINformatino = $pathINformatino.'/'.$idcat_obj->getName();
+	}
+if((in_array(34,$ids) || in_array(1022,$ids) || in_array(75,$ids) || in_array(3,$ids) || in_array(66,$ids) || ( in_array(478,$ids) && $checkShopCategory != 477 )) && $id_cat_path_counter == 4)
+	continue;
+	$id_cat_path .= $sep.$idcat_obj->getUrlKey();
+	$sep = '/';		
+}
+
+*/
+//////////////////////////////////lowest custom option price differenct///////////////////////////
+
+if(in_array(34,$ids))
+$lowestCustomOptionPriceDifference = 100;
+else
+$lowestCustomOptionPriceDifference = 0;
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+$pathINformatino = $pathINformatino.'/'.$_category->getId();   // appand categorty id for cart page
+if(in_array(8,$ids) || in_array(3,$ids) || in_array(1022,$ids) //For handling condition for mobile case
+{
+  $folderURL = Mage::helper('function')->graGetFolderUrl($id_cat_path);
+  $folderPath = Mage::helper('function')->graGetFolderPath($id_cat_path);
+  if(!is_file($folderPath . DS . 'resized' . DS . 'mask.png'))
+   $blank_backImagePath = Mage::helper('function')->resizeImg('mask.png', 400, 400,$folderURL,$folderPath,'resized');	   
+  else 	
+   $blank_backImagePath = $siteBaseUrl.'media/blank_images/'.$id_cat_path.'/'.$graBlankImageFolderKey.'/resized/mask.png';    
+}
+else if( ( in_array(478,$ids) && $checkShopCategory != 477 ) || in_array(34,$ids))
+{ 
+
+   $folderURL = Mage::helper('function')->graGetFolderUrl($id_cat_path);		 
+   $folderPath = Mage::helper('function')->graGetFolderPath($id_cat_path);
+   if(!is_file($folderPath . DS . 'resized' . DS . 'mask-front.png'))
+	   $blank_frontImagePath = Mage::helper('function')->resizeImg('mask-front.png', 400, 400,$folderURL,$folderPath,'resized');	   
+   else	  
+	   $blank_frontImagePath = $siteBaseUrl.'media/blank_images/'.$id_cat_path.'/resized/mask-front.png';	
+	  
+   if(!is_file($folderPath . DS . 'resized' . DS . 'mask-back.png')) 
+ 	  $blank_backImagePath = Mage::helper('function')->resizeImg('mask-back.png', 400, 400,$folderURL,$folderPath,'resized');	   
+   else 
+	  $blank_backImagePath = $siteBaseUrl.'media/blank_images/'.$id_cat_path.'/resized/mask-back.png';   
+}	
+*/
+ 
+/***********************************End Code for fetching blank image************************************************/
+
+if(($cat_name == 'T-Shirt') ||($cat_name == 'Him') ||($cat_name == 'Her') ||($cat_name == 'Kids-Teens') || ($params_cat_id == 4) || ($params_cat_id == 39) || ($params_cat_id == 292) || ($params_cat_id == 295))
+{	$col = '4 col-xs-6';$col2temp = 4; }else{ $col = '3 col-sm-4 col-xs-6';$col2temp = 3;}
+
+
+if($blank_backImagePath!='')
+	echo '<img id="maskImageBackBhishoom" src="'.$blank_backImagePath.'" style="position:absolute;z-index:-100;top:-9000px;left:-9000px;" />';
+?> 
+<?php /*?><script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery-ias.min.js') ?>"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('css/jquery.ias.css');?>" media="all" /><?php */?>
+<script  type="text/javascript">
+jQuery(document).ready(function(){
+	jQuery.ias({
+		container : ".category-products",
+		item : ".col-md-<?php echo $col2temp;?>",
+		next : "a.next",
+		pagination : '.pages',
+		loader : "<img src='<?php echo $this->getSkinUrl('images/728.GIF');?>' style='clear:both;' />",
+		triggerPageThreshold : 9999 
+	});
+	
+jQuery("img#maskImageBackBhishoom").one("load", function() {
+  jQuery(".category-products").removeClass("visibilityHidden");
+}).each(function() {
+  if(this.complete){	
+	 jQuery(".category-products").removeClass("visibilityHidden");
+  } 
+});	
+	
+});
+</script>
+<?php
+$_productCollection=$this->getLoadedProductCollection();
+
+
+global $productCollectionSizeForDisplay;
+$productCollectionSizeForDisplay = $_productCollection->getSize();
+$_helper = $this->helper('catalog/output');
+
+$base_url = $siteBaseUrl;
+
+$model_id = '';
+
+if(in_array(3, $path_id))
+{
+	$model_id = 3;
+}
+else if(in_array(34, $path_id))
+{
+	$model_id = 34;
+}
+else if(in_array(478, $path_id))
+{
+	$model_id = 478;
+}
+ 
+ 
+ 
+ 
+           // $helper = Mage::helper(strtolower('Mana_Filters'));
+           // $filters = array();
+           //  $collection = $helper->getFilterOptionsCollection();		 
+           //$this->setData('filters', $filters); 
+ 
+ 
+?>
+<?php if(!$_productCollection->count()): ?>
+ 
+ <?php if(in_array(4, $path_id)){?>
+ <div class="note-msg"><?php echo $this->__(' Currently, We do not have any t-shirts in this category but do check our awesome collection in other categories.') ?>
+ 
+ 
+<?php echo $this->getLayout()->createBlock("cms/block")->setBlockId("tshirt-noproduct-block")->toHtml();?>
+ 
+ 
+ </div>
+ <?php }else{?>
+ <div class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></div>
+ <?php }?>
+ 
+ <?php else: ?>
+ <?php echo $this->getToolbarHtml() ?>
+ <?php echo $this->getChildHtml('mana.catalog.leftnav') ?>
+ 
+ 
+ <?php
+/*
+ $filter = Mage::getSingleton('mana_filters/repository')->getFilter('case_style');
+  
+ echo $filter->getItemsCount();
+ $layer = Mage::registry('current_layer');
+  
+
+    $brandId = Mage::app()->getRequest()->getParam('brand-id');
+    $brand = Mage::getModel('brands/brands')->load($brandId);
+
+    $collection = $layer->getProductCollection()
+        ->addAttributeToFilter('supplier_code', $brand->getBrandCode());
+ 
+ 
+ exit;
+
+*/ 
+ if($checkMobileDeviceBhishoom || 1){
+ ?>
+ 
+<div id="filterBarMobile">
+<script type="text/javascript">
+case_style_mobile_filter = '<?php echo $this->getRequest()->getParam('case_style')?>';
+texturedPrdStr_mobile_filter = '<?php echo $this->getRequest()->getParam('texturedPrdStr')?>';
+function redirectToMobileFilterWebsite(ele){
+
+   currentUrl = ele.value.split('#')[0];
+   
+   currentUrl = currentUrl.split('&texturedPrdStr')[0];
+   currentUrl = currentUrl.split('?texturedPrdStr')[0];
+   //currentUrl = window.location.href.split('?')[0];
+   //currentUrl = currentUrl.split('#')[0];
+   //alert(currentUrl)
+   
+	
+   if(case_style_mobile_filter != '' && texturedPrdStr_mobile_filter != '')
+    currentUrl = currentUrl+'?case_style='+case_style_mobile_filter+'&texturedPrdStr='+texturedPrdStr_mobile_filter;
+   else if(case_style_mobile_filter == '' && texturedPrdStr_mobile_filter != '')
+    currentUrl = currentUrl+'?texturedPrdStr='+texturedPrdStr_mobile_filter;
+   else if(case_style_mobile_filter != '' && texturedPrdStr_mobile_filter == '')
+    currentUrl = currentUrl+'?case_style='+case_style_mobile_filter;
+   else
+    currentUrl = currentUrl;
+	//alert(currentUrl)
+	return currentUrl;	
+}
+function mobileFilterCaseStyleChkVal(val){
+	val = val.replace("'",'')
+	val = val.replace("'",'')
+	valArr = val.split(',');
+	
+	
+	
+	if(valArr[0]=='goToUrlMobileBhishoom'){
+		 valArr.splice(0, 1);
+		 
+		 parameterToPassFunction = valArr.join(',');
+		 
+		movetourl = goToUrlMobileBhishoom(parameterToPassFunction)
+				
+		movetourl = removeURLParameter(movetourl,'case_style');
+		location.href = movetourl
+	}	
+	else
+	location.href = val
+}
+</script>
+
+  <div class="filterBox">
+  
+    <select class="form-control " id="mobile_case_style_filter" onchange="mobileFilterCaseStyleChkVal(this.value);">
+
+    </select>
+  </div>
+ 
+<script type="text/javascript">
+
+html_case_style='';
+
+if(skinByGenere == 'yes'){
+	
+if(case_style_mobile_filter != '' || texturedPrdStr_mobile_filter != ''){
+	
+	newUrl = '';
+	
+	if(case_style_mobile_filter!='')
+		newUrl = removeURLParameter('<?php echo $_SERVER['REQUEST_URI']?>','case_style')
+
+	if(texturedPrdStr_mobile_filter!=''){
+		
+		if(newUrl!=''){
+			
+			
+			newUrl = removeURLParameter(newUrl,'texturedPrdStr')
+		
+		}else{
+			
+			newUrl = removeURLParameter('<?php echo $_SERVER['REQUEST_URI']?>','texturedPrdStr')
+			
+		}	
+		
+	}
+
+html_case_style=html_case_style+'<option value="'+newUrl+'">All Style</option>';
+}
+else	
+html_case_style=html_case_style+'<option value="">Choose Style</option>';
+	
+html_case_style=html_case_style+'<optgroup label="SKINS BY GENRE">';
+}
+else{
+	
+if(case_style_mobile_filter != '')
+html_case_style=html_case_style+'<option value="'+removeURLParameter('<?php echo $_SERVER['REQUEST_URI']?>','case_style')+'">All Style</option>';
+else	
+html_case_style=html_case_style+'<option value="">Choose Style</option>';	
+}
+
+
+for (i = 0; i < styleArray.length; i++) {
+
+if(styleLinkArray[i]=='javascript:void(0)')
+{
+	html_case_style=html_case_style+'</optgroup>';
+	html_case_style=html_case_style+'<optgroup label="'+styleArray[i]+'">';
+}
+else{
+	selected = '';
+   if(styleLinkArray[i] != ''){
+
+	var case_style_value = getParameterByName('case_style',styleLinkArray[i]); // "lorem"
+	
+		if(case_style_value != null){
+		
+			case_style_value = case_style_value.split('_');
+	
+			styleLinkArray[i] = styleLinkArray[i].replace(/(case_style=)[^\&]+/, '$1' + case_style_value[case_style_value.length-1]);
+	
+			if(!case_style_value[case_style_value.length-1]){
+				selected = 'selected="selected"';		
+			}	
+			else
+				selected = '';
+		}
+			
+		if(styleLinkArray[i].indexOf('goToUrlMobileBhishoom') > 0){
+		
+			if(styleLinkArray[i].indexOf(texturedPrdStr_mobile_filter) > 0){
+				selected = 'selected="selected"';		
+			}	
+			else
+				selected = '';
+		}
+		
+		
+		
+		
+		
+   }	
+	
+html_case_style=html_case_style+'<option '+selected+' value="'+styleLinkArray[i]+'">'+styleArray[i]+'</option>';
+}
+
+}
+
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+function removeURLParameter(url, parameter) {
+	
+	
+	
+    //prefer to use l.search if you have a location/link object
+    var urlparts= url.split('?');   
+    if (urlparts.length>=2) {
+
+        var prefix= encodeURIComponent(parameter)+'=';
+        var pars= urlparts[1].split(/[&;]/g);
+
+        //reverse iteration as may be destructive
+        for (var i= pars.length; i-- > 0;) {    
+            //idiom for string.startsWith
+            if (pars[i].lastIndexOf(prefix, 0) !== -1) {  
+                pars.splice(i, 1);
+            }
+        }
+
+        url= urlparts[0]+'?'+pars.join('&');
+        return url;
+    } else {
+        return url;
+    }
+}
+
+
+if(skinByGenere == 'yes')	
+html_case_style=html_case_style+'</optgroup>';
+document.getElementById("mobile_case_style_filter").innerHTML  = html_case_style;
+</script>
+ <div class="filterBox">
+    <select class="form-control " name="forma" onchange="javascript:location.href = redirectToMobileFilterWebsite(this);">
+	
+	
+<?php
+ if($parent_catid == 4 || $currentCategoryId == 4){
+?>	
+	 <option>GENDER</option> 
+     <option value="<?php echo $siteBaseUrl;?>shop/t-shirt/for-her.html" <?php if($currentCategoryId == 292) echo 'selected';?>>For Her</option>
+     <option value="<?php echo $siteBaseUrl;?>shop/t-shirt/for-him.html" <?php if($currentCategoryId == 39) echo 'selected';?>>For Him</option>
+
+
+<?php
+ }
+ else if((in_array(8, $path_id)) || (in_array(21, $path_id)) || (in_array(42, $path_id)) || (in_array(44, $path_id)) || (in_array(972, $path_id))){
+?>	 
+	 <option>SIZE</option>
+     <option value="<?php echo $siteBaseUrl;?>shop/laptop-skin/11inch-12inch.html" <?php if($currentCategoryId == 21) echo 'selected';?>>11 Inch - 12 Inch</option>
+     <option value="<?php echo $siteBaseUrl;?>shop/laptop-skin/13inch-14inch.html" <?php if($currentCategoryId == 42) echo 'selected';?>>13 Inch - 14 Inch</option>
+     <option value="<?php echo $siteBaseUrl;?>shop/laptop-skin/15inch-16inch.html" <?php if($currentCategoryId == 44) echo 'selected';?>>15 Inch - 16 Inch</option>
+     <option value="<?php echo $siteBaseUrl;?>shop/laptop-skin/17inch-18inch.html" <?php if($currentCategoryId == 972) echo 'selected';?>>17 Inch - 18 Inch</option>
+     <option value="<?php echo $siteBaseUrl;?>shop/laptop-skin/custom-size.html" <?php if($currentCategoryId == 1143) echo 'selected';?>>Custom Size</option>
+
+<?php	 
+ }
+ else{
+?>	
+	
+      <option>ALL MODEL</option>
+	  
+	  
+<?php
+echo $model_id;
+
+$children = Mage::getModel('catalog/category')->getCategories($model_id);
+foreach ($children as $category){
+?>	  
+	  
+	  
+      <optgroup label="<?php echo $category->getName();?>">
+	  <?php 
+	  if($category->hasChildren()){
+		  
+		  
+					$cat = Mage::getModel('catalog/category')->load($category->getId());
+					$sub_children = $cat->getChildren();
+					//$sub_children = Mage::getModel('catalog/category')->getCategories($category->getId());
+					$sub_children = explode(',', $sub_children);
+					sort($sub_children);		  
+		  
+		  foreach ($sub_children as $sub_cat_child) {
+			  
+			  
+						$sub_cats = Mage::getModel('catalog/category')->load($sub_cat_child);
+						//print_r($sub_cats);
+						if(isset($params['texturedPrdStr']) && $params['texturedPrdStr'] != '')
+						{
+							$str = '?texturedPrdStr='.$params['texturedPrdStr'];
+						}			  
+			  
+			  
+	  ?>
+	  
+      <option value="<?php echo rtrim($base_url.$sub_cats['url_path'],'/').$str?>" <?php if($currentCategoryId == $sub_cats->getId()) echo 'selected';?>><?php echo $sub_cats->getName()?></option>
+	  
+	  
+	  <?php 
+	  }
+	  }
+	else{
+				  
+				  //print_r($category);exit;
+				  
+				  
+				   $cat = Mage::getModel('catalog/category')->load($category->getId());
+		?>		   
+				    <option value="<?php echo $cat->getUrl($cat)?>" <?php if($currentCategoryId == $sub_cats->getId()) echo 'selected';?>><?php echo $category->getName()?></option>
+		<?php		   
+				   
+				  
+	}		  
+	  
+	  
+	  
+	  
+	  } 
+	  
+	  ?>
+
+      </optgroup>
+	  
+ <?php }?>
+	  
+	  
+	  
+    </select>
+  </div>
+  
+</div> 
+
+ <?php }?>
+ 
+ 
+ 
+ 		
+
+ <div class="category-products sdf clear <?php if($blank_backImagePath!=''){?>visibilityHidden<?php }?>"> 
+ 			
+ <?php // List mode 
+ /*echo "<pre>";
+print_r($_productCollection);
+echo "</pre>";
+exit();*/
+ ?>
+ <?php if($this->getMode()!='grid'): ?>
+  <?php $_iterator = 0; ?>
+  <div class="products-list" id="products-list">
+		
+   <?php foreach ($_productCollection as $_product): ?>
+   <div class=" col-sm-12 item<?php if( ++$_iterator == sizeof($_productCollection) ): ?> last<?php endif; ?>">
+   <?php // Product Image ?>
+   <div class="col-sm-4"> <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image">
+   <?php $_imgSize = 300; ?>
+   <img id="product-collection-image-<?php echo $_product->getId(); ?>"src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->keepFrame(false)->resize($_imgSize); ?>"
+    alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" /> </a></div>
+    <?php // Product description ?>
+  <div class="col-sm-8">  <div class="product-shop">
+      <div class="f-fix">
+        <div class="product-primary">
+          <?php $_productNameStripped = $this->stripTags($_product->getName(), null, true); ?>
+          <h2 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_productNameStripped; ?>"><?php echo $_helper->productAttribute($_product, $_product->getName() , 'name'); ?></a></h2>
+          <?php if($_product->getRatingSummary()): ?>
+          <?php echo $this->getReviewsSummaryHtml($_product) ?>
+          <?php endif; ?>
+          <?php
+			  $_nameAfterChildren = $this->getChild('name.after')->getSortedChildren();
+			  foreach($_nameAfterChildren as $_nameAfterChildName):
+				  $_nameAfterChild = $this->getChild('name.after')->getChild($_nameAfterChildName);
+				  $_nameAfterChild->setProduct($_product);
+		  		  echo $_nameAfterChild->toHtml();
+			  endforeach; ?>
+        </div>
+        <div class="product-secondary"> <?php echo $this->getPriceHtml($_product, true) ?> </div>
+        <div class="product-secondary">
+          <?php if($_product->isSaleable() && !$_product->canConfigure()): ?>
+          <p class="action">
+            <button type="button" title="<?php echo $this->__('Buy') ?>" class="button btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><span><span><?php echo $this->__('Buy') ?></span></span></button>
+          </p>
+          <?php elseif($_product->isSaleable()): ?>
+          <p class="action"><a title="<?php echo $this->__('View Details') ?>" class="button" href="<?php echo $_product->getProductUrl() ?>"><?php echo $this->__('View Details') ?></a></p>
+          <?php else: ?>
+          <p class="action availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+          <?php endif; ?>
+          <ul class="add-to-links">
+            <?php if ($this->helper('wishlist')->isAllow()) : ?>
+            <li><a href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" class="link-wishlist"><?php echo $this->__('Add to Wishlist') ?></a></li>
+            <?php endif; ?>
+            <?php if($_compareUrl=$this->getAddToCompareUrl($_product)): ?>
+            <li><span class="separator">|</span> <a href="<?php echo $_compareUrl ?>" class="link-compare"><?php echo $this->__('Add to Compare') ?></a></li>
+            <?php endif; ?>
+          </ul>
+        </div>
+        <div class="desc std"> <?php echo $_helper->productAttribute($_product, $_product->getShortDescription(), 'short_description') ?> <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_productNameStripped ?>" class="link-learn"><?php echo $this->__('Learn More') ?></a> </div>
+      </div>
+    </div></div>
+    </div>
+    <?php endforeach; ?>
+  </div>
+  <script type="text/javascript">decorateList('products-list', 'none-recursive')</script>
+  <?php else: ?>
+  <?php // Grid Mode 
+	$parentCategoryId = $_category->getParentId();
+	//$mobile = '';
+	/*if($new_info == 'Mobile Case')
+	{
+		$mobile = 'case';
+	}
+	else if($new_info == 'Mobile Skin' || $new_info == 'Tablet Skin')
+	{
+		$mobile = 'skin';
+	}*/
+
+ 
+	
+  ?>   	  
+  <?php $_collectionSize = $_productCollection->count() ?>
+  <?php $_columnCount = $this->getColumnCount(); 
+  //print_r($_productCollection);
+  ?>
+  <div id="id-<?php echo $cat_url_key;?>" class="row row-xs products-grid products-grid--max-<?php echo $_columnCount; ?>-col <?php echo $mobile;?>">
+
+<!--Create your own-->
+
+
+<div class="col-md-3 col-sm-4 col-xs-6 item last">
+    <div class="pro-feature terst">
+        <div id="slider" class="product-block">
+            <!--<a href="http://magento.itcslive.com/napfond/catalog/product/view/id/253997/s/3d-apple-metal/category/1183/" title="Front" class="product-image pro-imglx" id="prod-image-0">-->
+                <div class="product-cc">
+                    <table class="box-table mask-image-product">
+                        <tbody>
+                            <tr>
+				                <td style="background-image:url(<?php echo $blank_backImagePath;?>)">
+				                	<a href="<?php echo $this->getUrl(); ?>designer?id=<?php echo $blankPrdId ?>&cat_id=<?php echo $ncollection->getId();?>">
+					          		<img src="<?php echo $this->getSkinUrl('images/hidden-image-cc.png');?>" class="hidden-img-cc gh-1" alt="own">
+				          			<h3>Create <br> your <br>own <br>design</h3>
+				         		</a>
+				                </td>
+				             </tr>
+                        </tbody>
+                    </table>
+                    <table class="box-table image-product">
+                        <tbody>
+                            <tr>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="clearfix"></div>
+                <img src="http://magento.itcslive.com/napfond/skin/frontend/rwd/default/images/hidden-image-cc.png" class="hidden-img-cc gh-2">
+            </a>
+            <div id="pro-dis-ss" class="margin-top-pro-dis">
+                <div id="discription-pro">
+                    <div class="product-info">
+                        <hr>
+                        <!--<div class="quickView displayNone">
+                            <i class="fa fa-search "></i>
+                            <a href="http://magento.itcslive.com/napfond/ajax/product/quickview/id/253997/?catid=1183&amp;shop_page=" title="3D Apple Metal" id="quick_view" class="ajax">Quick View</a>
+                        </div>-->
+                        <h2 class="product-name">
+           
+			Create Your Own						
+           
+          </h2>
+          <div class="price-box">
+             <span class="regular-price a" id="product-price-253997">
+                <span class="price"></span> </span>
+          </div>
+        </div>
+                    <div class="actions hover-btn ">
+
+                        <div class="gpd-button">
+                            <button type="button" title="Customize" class="btn btn-primary" onclick="setLocation('http://magento.itcslive.com/napfond/designer?id=<?php echo $blankPrdId ?>&cat_id=<?php echo $cat_id?>')">
+                                <span><span>Customize</span></span>
+                            </button>
+                        </div>
+
+                        <!--<div class="btn-add2cart">
+
+                            <form method="post" action="http://magento.itcslive.com/napfond/checkout/cart/add/uenc/aHR0cDovL21hZ2VudG8uaXRjc2xpdmUuY29tL25hcGZvbmQvc2hvcC9tb2JpbGUtY2FzZS9hcHBsZS9pcGhvbmUtNnMtcGx1cy5odG1s/product/253997/form_key/06SGHOUTZvZriuvs/?options[73388]=">
+                                <input name="form_key" type="hidden" value="06SGHOUTZvZriuvs">
+
+                                <input type="hidden" name="options[73388]" value="">
+                                <input type="hidden" name="fromListType" value="Choose Model">
+                                <input type="hidden" name="fromListBrand" value="Apple">
+                                <input type="hidden" name="fromListModel" value="iphone 6s plus">
+                                <input type="hidden" name="fromListCat" value="1183">
+                                <input type="hidden" name="bhishoom_product_fromCat" value="1183">
+                                <input type="hidden" name="fromListPage" value="yes">
+
+                                <button type="submit" title="Buy" class="btn btn-danger"><span><span>Buy</span></span>
+                                </button>
+                            </form>
+                        </div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Create your own close-->
+
+   <?php $i=0; foreach ($_productCollection as $_product):
+
+$quickViewPassId = '';
+$designerCatId = NULL; 
+  
+		 if($checkShopCategory == 24)
+		 {		
+		 
+			$ids = $_product->getCategoryIds();
+			
+				
+			rsort($ids);
+			foreach($ids as $idval)
+			 {			    
+				$_tempcategory = Mage::getModel('catalog/category')->load($idval);
+				 $path = $_tempcategory->getPath();
+				 $idsPath  = explode('/', $path);
+				 
+				 if(in_array(25,$idsPath) || in_array(26,$idsPath) || in_array(27,$idsPath) || in_array(1021,$idsPath))
+				  continue;
+			  
+				 $blank_backImagePath = '';	
+				 
+			 
+				  /*$passCatIdObjSkin = Mage::getModel('catalog/category')->load(17);
+				 
+					$passCatIdObjMCase = Mage::getModel('catalog/category')->load(11);
+				 
+					$passCatIdObjLaptop = Mage::getModel('catalog/category')->load(21);
+				 
+					$passCatIdObjTablet = Mage::getModel('catalog/category')->load(991);
+				
+					$passCatIdObjThsirt = Mage::getModel('catalog/category')->load(39);				  */
+				 
+				 if(in_array(1141,$ids)) //Condition for mobile skin
+ 				 {
+					$passCatIdObj = $passCatIdObjSkin;
+					$quickViewPassId = $quickViewPassIdSkin;
+					
+					$pathINformatino = Mage::helper('function')->getCategoryPathByName(/*$idval*/1141,34,false,false);
+					
+					$blank_backImagePath = Mage::getBaseUrl('media').'blank_images/mobile-skin/iphone-6/resized/mask-back.png';
+					
+				 } 
+				 if(in_array(231,$ids)) //Condition for mobile tab case
+ 				 {
+					$passCatIdObj = $passCatIdObjMTabCase;
+					$quickViewPassId = $quickViewPassIdSkin;
+					
+					$pathINformatino = Mage::helper('function')->getCategoryPathByName(/*$idval*/231,3,false,false);
+					
+					$blank_backImagePath = Mage::getBaseUrl('media').'blank_images/mobile-case/ipad-2/resized/mask.png';
+					
+				 } 
+				 else if(in_array(11,$ids)) //Condition for mobile case 
+				 {
+					$passCatIdObj = $passCatIdObjMCase;
+					$quickViewPassId = $quickViewPassIdCase;
+					
+					$pathINformatino = Mage::helper('function')->getCategoryPathByName(/*$idval*/11,3,false,false);
+					
+					$blank_backImagePath = Mage::getBaseUrl('media').'blank_images/mobile-case/iphone-6/resized/mask.png';
+					
+				 }	
+				 else if(in_array(8,$ids) || in_array(8,$idsPath)) //Condition for Laptop 
+					$passCatIdObj = $passCatIdObjLaptop;
+				 else if(in_array(214,$ids)) //Condition for tablet
+				 {
+					$passCatIdObj = $passCatIdObjTablet;
+					$pathINformatino = Mage::helper('function')->getCategoryPathByName(/*$idval*/214,3,false);
+					$blank_backImagePath = Mage::getBaseUrl('media').'blank_images/tablet-skin/ipad-2/resized/mask-back.png';					
+				 }
+				 else if(in_array(477,$ids) || in_array(1144,$ids)) //Condition for Laptop 
+					$passCatIdObj = $passCatIdObjTabletOther;				 
+				 else if(in_array(39,$ids)) //Condition for him tshirt
+					$passCatIdObj = $passCatIdObjThsirtHim;
+				 else if(in_array(292,$ids)) //Condition for her tshirt
+					$passCatIdObj = $passCatIdObjThsirtHer;
+				 else if(in_array(295,$ids)) //Condition for kid teens 
+					$passCatIdObj = $passCatIdObjThsirtKid;
+					
+				break;	
+			 }
+			 
+			 /*$blank_backImagePath = '';
+			 
+			 $blank_backImagePathArr = Mage::helper('function')->getBlankFrontBackImages($ids[rand(0,(count($ids)-1))]);		 
+			 if(count($blank_backImagePathArr) == 1)
+				$blank_backImagePath = $blank_backImagePathArr[0];
+			 else if(count($blank_backImagePathArr) == 2)
+				$blank_backImagePath = $blank_backImagePathArr[1];*/
+			
+			
+			/*
+			 if(in_array(8,$ids) || in_array(477,$ids) || in_array(1144,$ids) || in_array(4,$ids)){
+				if($temp_blankImagePath == ''){
+					$temp_blankImagePath = $blank_backImagePath;
+				
+				$blank_backImagePath = '';
+				}
+			 }	
+			 else
+			 {
+				if($temp_blankImagePath != ''){
+				$blank_backImagePath = $temp_blankImagePath;
+				$temp_blankImagePath = '';
+				}
+			 }*/
+			 
+			$productUrl = Mage::helper('function')->getUrlPath($_product,$passCatIdObj);
+			
+			if($this->getRequest()->getParam('laptabtexturedskin') == 'yes' && (in_array(477,$ids) || in_array(1144,$ids)))
+			$productUrl = $siteBaseUrl.'shop/tablet-skin.html?texturedPrdStr='.$texturedPrdStr.'&laptabtexturedskin=yes';
+			
+			if(is_object($passCatIdObj)){
+			$shop_page = $passCatIdObj->getId();
+			$designerCatId = $passCatIdObj->getId(); 
+			}
+		  }
+		  else{
+		   $productUrl = $_product->getProductUrl();
+		   $quickViewPassId = $_category->getId(); 
+		   
+		  }
+		  /*$attributeDetails = Mage::getSingleton("eav/config")->getAttribute("catalog_product", 'color');
+		  $optionValue = $attributeDetails->getSource()->getOptionText($_product['color']);
+		  $optionValueColor = strtolower(str_replace(" ", "", $optionValue));
+		  if($optionValueColor == 'greymelange'){$optionValueColor = 'grey';}*/
+		  
+		  	   
+				$product = Mage::getModel("catalog/product")->load($_product->getId());
+				$attVal = $product->getOptions();
+
+				$customOptionStr = '';  
+				$customOptionStrAnd = '';   
+	   			
+				foreach($attVal as $optionKey => $optionVal) {
+				
+					 if($optionVal->getTitle() == 'Product Detail'){
+					  $customOptionStr = $customOptionStr . $customOptionStrAnd . 'options[' . $optionVal->getId() . ']=' . $pathINformatino;
+					  $customOptionStrAnd = '&';   
+					  }
+					 if($optionVal->getTitle() == 'Price'){ 
+							foreach($optionVal->getValues() as $valuesKey => $valuesVal) {
+								if($valuesVal->getTitle() == 'Back'){
+								$customOptionStr = $customOptionStr . $customOptionStrAnd . 'options[' . $optionVal->getId() . ']=' . $valuesVal->getId();
+								$customOptionStrAnd = '&'; 
+								break;
+						}
+					}
+				}
+			}	
+			$colorValue = $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true);
+			$colorName = strtolower(str_replace(" ", "", $colorValue));
+			if($colorName == 'greymelange'){$colorName = 'gray';}	
+
+
+			
+   ?>
+   <?php /*if ($i++%$_columnCount==0): ?><?php endif*/ ?> 
+    <div class="col-md-<?php echo $col;?> item<?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif; ?>">
+     <div class="pro-feature terst">
+      <div id="slider" class="product-block"> 
+       <a  href="<?php echo $productUrl ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image pro-imglx" id="prod-image-<?php echo $i;?>" <?php
+		if(($_category['entity_id'] == 4) || ($_category['entity_id'] == 91) || ($parentCategoryId == 4) || ($parentCategoryId == 91) || ($params_cat_id == 4) || ($params_cat_id == 39) || ($params_cat_id == 292) || ($params_cat_id == 295)){?>
+        onmouseover="document.getElementById('loading-<?php echo $_product->getId(); ?>').style.backgroundColor = '<?php echo $colorName; ?>';" onmouseout="document.getElementById('loading-<?php echo $_product->getId(); ?>').style.backgroundColor = '#fff';"<?php } ?>>
+        
+
+	
+	    <?php
+		if($blankImageParentFolderName !=''){?>
+		
+	<?php 
+		
+
+	/* ?>
+			
+	 <div class="pro-feature terst">
+      <div class="product-block" id="slider"> 
+	  <a id="prod-image-1" class="product-image pro-imglx" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" href="#">
+	  <?php */ ?>
+	  
+        <div class="product-cc">
+          <table class="box-table mask-image-product">
+            <tbody>
+              <tr>
+                <td style="background-image:url(<?php echo $blank_backImagePath;?>)"><img src="http://magento.itcslive.com/napfond/media/blank_images/mobile-case/iphone-6s-plus/resized/mask.png" class="hidden-img-cc gh-1"></td>
+              </tr>
+            </tbody>
+          </table>
+          <table class="box-table image-product">
+            <tbody>
+              <tr>
+                <td alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" style="background-image:url(<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->constrainOnly(true)->keepAspectRatio(true)->keepFrame(false)->resize(400, null); ?>)"><img src="<?php echo $this->getSkinUrl('images/hidden-image-cc.png');?>" class="hidden-img-cc gh-2"></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="clearfix"></div>
+        </div>
+        <div class="clearfix"></div>
+        <img src="<?php echo $this->getSkinUrl('images/hidden-image-cc.png');?>" class="hidden-img-cc gh-2"> 
+		
+		
+		<?php /* ?>
+		</a>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+	
+         <img src="<?php echo $blank_backImagePath;?>" width="400" height="400" style="position:absolute">	
+        
+        
+         <img id="product-collection-image-<?php echo $_product->getId(); ?>" src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->constrainOnly(true)->keepAspectRatio(true)->keepFrame(false)->resize(400, null); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+		 <?php */ ?>
+		 
+	<?php }
+	else if(($_category['entity_id'] == 4) || ($_category['entity_id'] == 91) || ($parentCategoryId == 4) || ($parentCategoryId == 91) || ($params_cat_id == 4) || ($params_cat_id == 39) || ($params_cat_id == 292) || ($params_cat_id == 295)){?>
+    
+    
+			<img id="product-collection-image-<?php echo $_product->getId(); ?>" src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->constrainOnly(true)->keepAspectRatio(true)->keepFrame(false)->resize(400, null); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" 
+			onmouseover="document.getElementById('product-collection-image-<?php echo $_product->getId(); ?>').style.display='none';document.getElementById('loading-<?php echo $_product->getId(); ?>').style.display='';"/>	
+    
+            
+            
+           <img  src="<?php echo Mage::getModel('catalog/product')->load($_product->getId())->getMediaGalleryImages()->getItemByColumnValue('label','Cover Image')->getUrl(); ?>" style="display:none" id="loading-<?php echo $_product->getId(); ?>" onmouseout="document.getElementById('loading-<?php echo $_product->getId(); ?>').style.display='none';document.getElementById('product-collection-image-<?php echo $_product->getId(); ?>').style.display='';">
+    
+            
+	<?php }else{?>    
+    
+    
+    
+          <img id="product-collection-image-<?php echo $_product->getId(); ?>" src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->constrainOnly(true)->keepAspectRatio(true)->keepFrame(false)->resize(400, null); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+    
+          
+          
+	<?php }?>		 
+	   </a>   
+
+ 
+       <div id="pro-dis-ss">       
+        <div id="discription-pro">            
+         <div class="product-info">            
+          <hr>
+          <div class="quickView displayNone">
+           <i class="fa fa-search "></i>
+            <a href="<?php echo $this->getUrl('ajax/product/quickview/id/' . $_product->getId()).'?catid='.$quickViewPassId ?>&shop_page=<?php echo $shop_page?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>" id="quick_view" class="ajax">Quick View</a>
+          </div>
+          <h2 class="product-name">
+           <a href="<?php echo $productUrl ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>">
+		   
+			<?php if($checkMobileDeviceBhishoom){?>
+			<?php echo substr($this->stripTags($_product->getName(), null, true),0,9); if(strlen($this->stripTags($_product->getName())) > 9){?>...<?php }?>
+			<?php } else{?>				
+			<?php echo substr($this->stripTags($_product->getName(), null, true),0,16); if(strlen($this->stripTags($_product->getName())) > 16){?>...<?php }?>
+			<?php }?>
+			
+           </a>
+          </h2>
+          <?php
+           $_nameAfterChildren = $this->getChild('name.after')->getSortedChildren();
+           foreach($_nameAfterChildren as $_nameAfterChildName):
+            $_nameAfterChild = $this->getChild('name.after')->getChild($_nameAfterChildName);
+            $_nameAfterChild->setProduct($_product);
+          ?>
+           <?php echo $_nameAfterChild->toHtml(); ?>
+          <?php endforeach; ?>
+		  
+		 <?php if($lowestCustomOptionPriceDifference == 0){?>
+          <?php echo $this->getPriceHtml($_product, true) ?>
+		 <?php }else{?>
+
+<div class="price-box">                                            
+            <p class="old-price">
+                <span class="price-label">Regular Price:</span>
+                <span id="old-price-199762" class="price">
+                    <?php echo Mage::helper('core')->currency(($_product->getPrice() - $lowestCustomOptionPriceDifference), true, false)?> </span>
+            </p>
+
+            <p class="special-price">
+                    <span class="price-label">Special Price</span>
+                <span id="product-price-199762" class="price">
+                    <?php echo Mage::helper('core')->currency(($_product->getFinalPrice() - $lowestCustomOptionPriceDifference), true, false)?>                </span>
+            </p>   
+</div>		 
+		 
+		 
+		 <?php }?>	
+         
+<?php
+$originalPrice = $_product->getPrice();
+$finalPrice = $_product->getFinalPrice();
+$percentage = 0;
+if ($originalPrice > $finalPrice) {
+    $percentage = ($originalPrice - $finalPrice) * 100 / $originalPrice;
+}
+
+if ($percentage) {
+    echo '<span class="bhishoomGrey floatRightCss marRight5pxCss">( You save '.round($percentage).' % )</span>';
+}
+?>		  
+		  
+          <?php if($_product->getRatingSummary()): ?>
+            <?php echo $this->getReviewsSummaryHtml($_product, 'short') ?>
+          <?php endif; ?>
+         </div>
+         <?php $flag = 0;
+		 if(!$_product->getEnableProductDesigner()){
+			 $flag = 1;
+		 }?>
+         <div class="actions hover-btn <?php if($flag == 1){?>only-buy<?php }?>">			
+		  <?php		  
+          if (Mage::helper('gomage_designer')->isEnabled()) {
+           $buttons[] = array(
+            'add_to_cart_enabled' => (!$_product->getEnableProductDesigner() || !$_disabledAddToCart) ? true : false,
+            'add_to_design_enabled' => $_product->getEnableProductDesigner() ? true : false,
+            'design_url' => GoMage_ProductDesigner_Block_Catalog_Product_List::_getDesignUrl($_product)
+           ); 
+		  if($_product->getEnableProductDesigner()){
+          ?>			
+          <div class="gpd-button">
+           <button type="button" title="<?php echo Mage::helper('gomage_designer')->__('Customize') ?>" class="btn btn-primary" onclick="setLocation('<?php echo GoMage_ProductDesigner_Block_Catalog_Product_List::_getDesignUrl($_product,$designerCatId)?>')">
+            <span><span><?php echo $this->__('Customize') ?></span></span>
+           </button>
+          </div>	               
+       <?php } }
+	   /*
+		if($num_stock != 'Not')
+		{	
+			if($num_stock > 0)
+			$productSalable = true;
+			else
+			$productSalable = false;
+		}
+		else{
+			$productSalable = $_product->isSaleable();
+		}	
+		*/
+		$productSalable = $_product->isSaleable();
+	   ?>	
+          <div class="btn-add2cart">
+           <?php if($productSalable && !$_product->canConfigure()): 
+		   
+		   
+		   $customOptionStrArr = explode('&',$customOptionStr);
+		   
+		   ?>
+
+			<?php if($redirect_to_shopping_cart_page == 'yes'){?>
+            <form method="post" action="<?php echo Mage::helper('checkout/cart')->getAddUrl($_product); ?>?<?php echo $customOptionStr?>">
+			<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+			<?php foreach($customOptionStrArr as $customOptionStrArrVal){
+				
+				$customOptionStrArrValArr = explode('=',$customOptionStrArrVal);
+				?>		
+				<input type="hidden" name="<?php echo $customOptionStrArrValArr[0]?>" value="<?php echo $customOptionStrArrValArr[1]?>" />
+				<?php }?>
+				<input type="hidden" name="fromListType" value="<?php echo $full_path[3]?>" />
+				<input type="hidden" name="fromListBrand" value="<?php echo $full_path[4]?>" />
+				<input type="hidden" name="fromListModel" value="<?php echo $full_path[5]?>" />
+				<input type="hidden" name="fromListCat" value="<?php echo $currentCategoryId?>" />
+				<input type="hidden" name="bhishoom_product_fromCat" value="<?php echo $currentCategoryId?>" />
+				<input type="hidden" name="fromListPage" value="yes" />
+			
+			  <button type="submit" title="<?php echo $this->__('Buy') ?>" class="btn btn-danger" <?php /*?>onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>?<?php echo $customOptionStr?>')"<?php */?>><span><span><?php echo $this->__('Buy') ?></span></span></button>
+			</form>			
+			<?php }else{?>
+			  <button type="submit" title="<?php echo $this->__('Buy') ?>" class="btn btn-danger" onclick="setLocation('<?php echo $productUrl ?>')"><span><span><?php echo $this->__('Buy') ?></span></span></button>
+			<?php }?>
+             <?php elseif($productSalable): 
+			 
+
+			 
+?>
+          
+		  <button type="button" title="<?php echo $this->__('Buy') ?>" class="btn btn-danger" onclick="setLocation('<?php echo $productUrl ?>')"><span><span><?php echo $this->__('Buy') ?></span></span></button>
+             <?php else: ?>
+              <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+             <?php endif; ?>
+          </div>
+         </div>
+        </div>
+       </div>
+	   
+	   
+	   
+	   
+	   
+      </div>
+     </div>
+    </div>
+    <?php /*if ($i%$_columnCount==0 || $i==$_collectionSize): ?><?php endif*/ ?>
+   <?php $i++; endforeach ?>
+  </div>
+  <?php /*?><script type="text/javascript">decorateGeneric($$('ul.products-grid'), ['odd','even','first','last'])</script><?php */?>
+ <?php endif; ?>
+ <div class="toolbar-bottom" style="display:none;"> <?php echo $this->getToolbarHtml() ?> </div>
+</div>
+<?php endif; ?>
+<?php
+    //set product collection on after blocks
+    $_afterChildren = $this->getChild('after')->getSortedChildren();
+    foreach($_afterChildren as $_afterChildName):
+        $_afterChild = $this->getChild('after')->getChild($_afterChildName);
+        $_afterChild->setProductCollection($_productCollection);
+    ?>
+<?php echo $_afterChild->toHtml(); ?>
+<?php endforeach; ?>
+
+

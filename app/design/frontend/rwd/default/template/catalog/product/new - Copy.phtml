@@ -1,0 +1,411 @@
+<div class="products-grid products-grid--max-3-col">
+  <div class="col-md-4">
+     <div class="cat-pro-outer carousel slide pick-slider bgBack1" id="pick-slider1" data-interval="false" data-ride="carousel">
+      <div class="carousel-inner"> 
+<?php
+	$catIdArr = array(); 
+	
+function getSubcategoriesOfCategories($catId)	
+ { 
+	global $catIdArr;
+    $children = Mage::getModel('catalog/category')->getCategories($catId);
+	foreach ($children as $category) {		 
+	    $catIdArr[] = $category->getId();
+		getSubcategoriesOfCategories($category->getId());
+	} 
+	return $catIdArr; 
+ }
+
+function getOptionText($attrId,$attrVal) 
+ {
+		$productModel = Mage::getModel('catalog/product');
+		$str_attr_label = "color";  //or "size", etc...
+		$int_attr_id = $attrId; // or any given id.
+		$int_attr_value = $attrVal; // or any given attribute value id.
+
+		// Chose either
+		/*
+		if ($byLabel){
+			$attr = $productModel->getResource()->getAttribute($str_attr_label);
+		}*/
+		
+			$attr = Mage::getModel('catalog/resource_eav_attribute')->load($int_attr_id); 
+
+			if ($attr->usesSource()) {
+				return  $color_label = $attr->getSource()->getOptionText($int_attr_value);
+			}  
+ }
+
+function getTrendingProductsCollection($pCatId,$styleId,$catIdArr)
+ {
+	 global $catIdArr;
+     $catIdArr = array();
+	 $catIdArr = getSubcategoriesOfCategories($pCatId); 
+ 
+	 
+				$products = Mage::getModel('catalog/product')->getCollection();
+				$products->joinField(
+					'qty',
+					'cataloginventory/stock_item',
+					'qty',
+					'product_id=entity_id',
+					'{{table}}.stock_id=1',
+					'left'
+				);
+				$products->addAttributeToFilter('qty', array('neq' => 0));
+				 
+				$products->addAttributeToFilter('status', 1);
+				$products->addAttributeToFilter('visibility', 4);
+				$products->addAttributeToSelect('sku');
+				$products->addAttributeToSelect('case_style', $styleId);
+				$products->addAttributeToSelect('name');
+				$products->addAttributeToSelect('description');
+				$products->addAttributeToSelect('short_description');
+				$products->addAttributeToSelect('url');
+				$products->addAttributeToSelect('image'); 
+				$products->addAttributeToSelect('special_price');
+				$products->addAttributeToSelect('manufacturer');
+				$products->joinField('category_id',
+					'catalog/category_product',
+					'category_id',
+					'product_id=entity_id',
+					null,
+					'left'
+				);
+			
+
+		/*
+         $catNum = 7; //The number of the category you want to load
+		$category = Mage::getModel('catalog/category')->load($catNum);
+		$products = Mage::getResourceModel('reports/product_collection')
+		->addOrderedQty()
+		->addAttributeToSelect('*')
+		->setStoreId($storeId)
+		->addStoreFilter($storeId)
+		->addCategoryFilter($category);*/
+
+			
+				
+	 $products->addAttributeToFilter('category_id', array('in' => $catIdArr));	 			 
+	 $products->getSelect()->limit(5); 
+ 
+ 
+     return $products;
+ }	   
+	   
+	   
+	   
+	   /*
+		 $products = Mage::getModel('catalog/category')->load(3)
+			 ->getProductCollection()
+			 ->addAttributeToSelect('*')
+			 ->addAttributeToSelect('case_style', 58) // add all attributes - optional		 
+			 ->addAttributeToFilter('status', 1) // enabled
+			 ->addAttributeToFilter('visibility', 4) //visibility in catalog,search
+			 ->setOrder('price', 'ASC'); //sets the order by price
+			 
+		 $products->getSelect()->limit(5);*/
+		 
+ $catIdArr = array();		
+ $products = getTrendingProductsCollection(3,58);
+		 
+ $OptionText = getOptionText(137,58);
+
+
+		 
+		  $i=1;
+		  foreach($products as $product)
+		  { ?>
+              <div class="item <?php if($i == 1){ echo 'active';}?>">
+            	<a href="<?php echo $product->getProductUrl();?>"><img src="<?php echo $product->getImageUrl();?>"></a>
+                 <div class="carousel-caption">
+             		<h3><a href="<?php echo $product->getProductUrl();?>"><?php echo $product->getName();?></a></h3>                  
+            	</div> 
+           	  </div><?php 
+			 $i++;
+		  }
+		?>            
+       <?php /*?><div class="item">
+        <a class="pro-imglxx" href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->escapeHtml($_product->getName()) ?>" class="product-image">
+         <img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(263, 263); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+        </a>
+        <div id="discription-pro" class="carousel-caption">
+         <h3 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->escapeHtml($_product->getName()) ?>"><?php echo $this->escapeHtml($_product->getName()) ?></a></h3>
+         <?php //echo $this->getReviewsSummaryHtml($_product, 'short') ?>
+           <?php //echo $this->getPriceHtml($_product, true, '-new') ?>
+        </div>         
+       </div><?php */?>            
+      </div>
+      <a class="carousel-control left" href="#pick-slider1" data-slide="prev">
+       <i class="fa fa-angle-left fa-lg"></i>
+      </a>
+      <a class="carousel-control right" href="#pick-slider1" data-slide="next">
+       <i class="fa fa-angle-right fa-lg"></i>
+      </a>
+     <h2 class="skin-name"><?php echo $OptionText?></h2>
+
+     </div>
+    </div>
+  
+  <div class="col-md-4">
+   <div class="cat-pro-outer carousel slide pick-slider bgBack1" id="pick-slider2" data-interval="false" data-ride="carousel">
+    <div class="carousel-inner">  
+
+	<?php /*?>
+     <div class="item">
+      <img src="<?php echo $this->getSkinUrl('images/military.png');?>">                
+      <div class="carousel-caption">
+       <h3>Second slide label</h3>                  
+      </div>
+     </div> 
+	<?php */?>
+
+
+       <?php
+		 /*$products = Mage::getModel('catalog/category')->load(34)
+			 ->getProductCollection()
+			 ->addAttributeToSelect('*')
+			 ->addAttributeToSelect('case_style', 41) // add all attributes - optional		 
+			 ->addAttributeToFilter('status', 1) // enabled
+			 ->addAttributeToFilter('visibility', 4) //visibility in catalog,search
+			 ->setOrder('price', 'ASC'); //sets the order by price
+			 
+		 $products->getSelect()->limit(5);*/
+		 
+ $catIdArr = array();		
+ $products = getTrendingProductsCollection(34,38);
+		 
+	 $OptionText = getOptionText(137,38);	 
+		  $i=1;
+		  foreach($products as $product)
+		  { ?>
+              <div class="item <?php if($i == 1){ echo 'active';}?>">
+            	<a href="<?php echo $product->getProductUrl();?>"><img src="<?php echo $product->getImageUrl();?>"></a>
+            	 <div class="carousel-caption">
+             		<h3><a href="<?php echo $product->getProductUrl();?>"><?php echo $product->getName();?></a></h3>                  
+            	</div> 
+           	  </div><?php 
+			 $i++;
+		  }
+		?>
+	 
+     <?php /*?><div class="item">
+      <a class="pro-imglxx" href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->escapeHtml($_product->getName()) ?>" class="product-image">
+       <img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(263, 263); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+      </a>
+      <div id="discription-pro" class="carousel-caption">
+       <h3 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->escapeHtml($_product->getName()) ?>"><?php echo $this->escapeHtml($_product->getName()) ?></a></h3>
+       <?php //echo $this->getReviewsSummaryHtml($_product, 'short') ?>
+         <?php //echo $this->getPriceHtml($_product, true, '-new') ?>
+      </div>         
+     </div><?php */?>  
+    
+    </div>
+    <a class="carousel-control left" href="#pick-slider2" data-slide="prev">
+     <i class="fa fa-angle-left fa-lg"></i>
+    </a>
+    <a class="carousel-control right" href="#pick-slider2" data-slide="next">
+     <i class="fa fa-angle-right fa-lg"></i>
+    </a>
+    <h2 class="skin-name"><?php echo $OptionText?></h2>
+   </div>
+   
+  </div>
+  
+  <div class="col-md-4">
+   <div class="cat-pro-outer carousel slide pick-slider bgBack1" id="pick-slider3" data-interval="false" data-ride="carousel">
+    <div class="carousel-inner">        
+     <?php /*?><div class="item">
+      <a class="pro-imglxx" href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->escapeHtml($_product->getName()) ?>" class="product-image">
+       <img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(263, 263); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+      </a>
+      <div id="discription-pro" class="carousel-caption">
+       <h3 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->escapeHtml($_product->getName()) ?>"><?php echo $this->escapeHtml($_product->getName()) ?></a></h3>
+       <?php //echo $this->getReviewsSummaryHtml($_product, 'short') ?>
+         <?php //echo $this->getPriceHtml($_product, true, '-new') ?>
+      </div>         
+     </div><?php */?>  
+     <div class="item active">
+      <img src="<?php echo $this->getSkinUrl('images/flora.png');?>">                
+      <div class="carousel-caption">
+       <h3>Second slide label</h3>                  
+      </div>
+     </div>   
+     <div class="item">
+      <img src="<?php echo $this->getSkinUrl('images/military.png');?>">                
+      <div class="carousel-caption">
+       <h3>Second slide label</h3>                  
+      </div>
+     </div>
+    </div>
+    <a class="carousel-control left" href="#pick-slider3" data-slide="prev">
+     <i class="fa fa-angle-left fa-lg"></i>
+    </a>
+    <a class="carousel-control right" href="#pick-slider3" data-slide="next">
+     <i class="fa fa-angle-right fa-lg"></i>
+    </a>
+    <h2 class="skin-name">Tshirt</h2>
+   </div>
+   
+  </div>
+  <div class="col-md-4">
+   <div class="cat-pro-outer carousel slide pick-slider bgBack1" id="pick-slider4" data-interval="false" data-ride="carousel">
+    <div class="carousel-inner">        
+     <?php /*?><div class="item">
+      <a class="pro-imglxx" href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->escapeHtml($_product->getName()) ?>" class="product-image">
+       <img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(263, 263); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+      </a>
+      <div id="discription-pro" class="carousel-caption">
+       <h3 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->escapeHtml($_product->getName()) ?>"><?php echo $this->escapeHtml($_product->getName()) ?></a></h3>
+       <?php //echo $this->getReviewsSummaryHtml($_product, 'short') ?>
+         <?php //echo $this->getPriceHtml($_product, true, '-new') ?>
+      </div>         
+     </div><?php */?>  
+
+	 
+
+       <?php
+		 /*$products = Mage::getModel('catalog/category')->load(34)
+			 ->getProductCollection()
+			 ->addAttributeToSelect('*')
+			 ->addAttributeToSelect('case_style', 67) // add all attributes - optional		 
+			 ->addAttributeToFilter('status', 1) // enabled
+			 ->addAttributeToFilter('visibility', 4) //visibility in catalog,search
+			 ->setOrder('price', 'ASC'); //sets the order by price
+			 
+		 $products->getSelect()->limit(5);
+		 */
+		 
+ $catIdArr = array();		
+ $products = getTrendingProductsCollection(34,74);
+	 $OptionText = getOptionText(137,74);	 	 
+		  $i=1;
+		  foreach($products as $product)
+		  { ?>
+              <div class="item <?php if($i == 1){ echo 'active';}?>">
+            	<a href="<?php echo $product->getProductUrl();?>"><img src="<?php echo $product->getImageUrl();?>"></a>  
+				<div class="carousel-caption"><a href="<?php echo $product->getProductUrl();?>"><h3><?php echo $product->getName();?>"></h3></a></div>
+            	<?php /*?><div class="carousel-caption">
+             		<h3><a href="<?php echo $product->getProductUrl();?>"><?php echo $product->getName();?></a></h3>                  
+            	</div><?php */?>
+           	  </div><?php 
+			 $i++;
+		  }
+		?>	 
+	 
+	 
+	 
+    </div>
+    <a class="carousel-control left" href="#pick-slider4" data-slide="prev">
+     <i class="fa fa-angle-left fa-lg"></i>
+    </a>
+    <a class="carousel-control right" href="#pick-slider4" data-slide="next">
+     <i class="fa fa-angle-right fa-lg"></i>
+    </a>
+    <h2 class="skin-name"><?php echo $OptionText?></h2>
+   </div>
+   
+  </div>
+  
+  <div class="col-md-4">
+   <div class="cat-pro-outer carousel slide pick-slider bgBack1" id="pick-slider5" data-interval="false" data-ride="carousel">
+    <div class="carousel-inner">        
+     <?php /*?><div class="item">
+      <a class="pro-imglxx" href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->escapeHtml($_product->getName()) ?>" class="product-image">
+       <img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(263, 263); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+      </a>
+      <div id="discription-pro" class="carousel-caption">
+       <h3 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->escapeHtml($_product->getName()) ?>"><?php echo $this->escapeHtml($_product->getName()) ?></a></h3>
+       <?php //echo $this->getReviewsSummaryHtml($_product, 'short') ?>
+         <?php //echo $this->getPriceHtml($_product, true, '-new') ?>
+      </div>         
+     </div><?php */?>  
+
+	 
+       <?php
+		/* $products = Mage::getModel('catalog/category')->load(4)
+			 ->getProductCollection()
+			 ->addAttributeToSelect('*')
+			 ->addAttributeToSelect('case_style', 37) // add all attributes - optional		 
+			 ->addAttributeToFilter('status', 1) // enabled
+			 ->addAttributeToFilter('visibility', 4) //visibility in catalog,search
+			 ->setOrder('price', 'ASC'); //sets the order by price
+		*/	 
+
+ $catIdArr = array();		
+			$products = getTrendingProductsCollection(4,38);
+		  $OptionText = getOptionText(137,38);	 	 
+		  $i=1;
+		  foreach($products as $product)
+		  { ?>
+              <div class="item <?php if($i == 1){ echo 'active';}?>">
+            	<img src="<?php echo $product->getImageUrl();?>">                
+            	<?php /*?><div class="carousel-caption">
+             		<h3><a href="<?php echo $product->getProductUrl();?>"><?php echo $product->getName();?></a></h3>                  
+            	</div><?php */?>
+           	  </div><?php 
+			 $i++;
+		  }
+		?>	 
+     <div class="item">
+      <img src="<?php echo $this->getSkinUrl('images/flora.png');?>">                
+      <div class="carousel-caption">
+       <h3>Second slide label</h3>                  
+      </div>
+     </div>   
+     <div class="item active">
+      <img src="<?php echo $this->getSkinUrl('images/military.png');?>">                
+      <div class="carousel-caption">
+       <h3>Second slide label</h3>                  
+      </div>
+     </div>	 
+	 
+    </div>
+    <a class="carousel-control left" href="#pick-slider5" data-slide="prev">
+     <i class="fa fa-angle-left fa-lg"></i>
+    </a>
+    <a class="carousel-control right" href="#pick-slider5" data-slide="next">
+     <i class="fa fa-angle-right fa-lg"></i>
+    </a>
+     <h2 class="skin-name">Tshirt</h2>
+   </div>
+  
+  </div>
+  
+  <div class="col-md-4">
+   <div class="cat-pro-outer carousel slide pick-slider bgBack1" id="pick-slider6" data-interval="false" data-ride="carousel">
+    <div class="carousel-inner">        
+     <?php /*?><div class="item">
+      <a class="pro-imglxx" href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->escapeHtml($_product->getName()) ?>" class="product-image">
+       <img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(263, 263); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+      </a>
+      <div id="discription-pro" class="carousel-caption">
+       <h3 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->escapeHtml($_product->getName()) ?>"><?php echo $this->escapeHtml($_product->getName()) ?></a></h3>
+       <?php //echo $this->getReviewsSummaryHtml($_product, 'short') ?>
+         <?php //echo $this->getPriceHtml($_product, true, '-new') ?>
+      </div>         
+     </div><?php */?>  
+     <div class="item">
+      <img src="<?php echo $this->getSkinUrl('images/flora.png');?>">                
+      <div class="carousel-caption">
+       <h3>Second slide label</h3>                  
+      </div>
+     </div>   
+     <div class="item active">
+      <img src="<?php echo $this->getSkinUrl('images/military.png');?>">                
+      <div class="carousel-caption">
+       <h3>Second slide label</h3>                  
+      </div>
+     </div>
+    </div>
+    <a class="carousel-control left" href="#pick-slider6" data-slide="prev">
+     <i class="fa fa-angle-left fa-lg"></i>
+    </a>
+    <a class="carousel-control right" href="#pick-slider6" data-slide="next">
+     <i class="fa fa-angle-right fa-lg"></i>
+    </a>
+    <h2 class="skin-name">Cool Stuff</h2>
+   </div>
+   
+  </div>
+</div>  

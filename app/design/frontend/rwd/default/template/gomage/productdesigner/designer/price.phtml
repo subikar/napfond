@@ -1,0 +1,32 @@
+<?php
+/**
+ * GoMage Product Designer Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use/
+ * @version      Release: 1.0.0
+ * @since        Available since Release 1.0.0
+ */
+?>
+<?php $_product = $this->getProduct();?>
+<?php $_taxHelper = $this->helper('tax');?>
+<?php $_coreHelper = $this->helper('core'); ?>
+<?php if ($_product->getId()): ?>
+    <?php echo $this->getChildHtml('product.price');?>
+    <a href="javascript:;" id="price-more-info-switcher">
+        <?php echo $this->__('More Info'); ?>
+    </a>
+    <ul id="price-more-info" style="display: none">
+        <li id="product_price"><?php echo $this->__('Product Price: ');?>
+            <?php $price = $_taxHelper->getPrice($_product, $_product->getFinalPrice(), true); ?>
+            <?php echo $_coreHelper->currency($price, true, true);?>
+        </li>
+        <li style="display: none" id="fixed_price"><?php echo $this->__('Fixed Price: ');?><span class="price"></span></li>
+        <li style="display: none" id="design_areas_price"><?php echo $this->__('Design Area Price: ');?><span class="price"></span></li>
+        <li style="display: none" id="images_price"><?php echo $this->__('Images Price: ');?><span class="price"></span></li>
+        <li style="display: none" id="texts_price"><?php echo $this->__('Texts Price: ');?><span class="price"></span></li>
+    </ul>
+<?php endif; ?>

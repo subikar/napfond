@@ -1,0 +1,157 @@
+<!--/*Editing in Case page showing skin dropdown*/-->
+
+
+<div class="row">
+  <?php  $connection = Mage::helper('function/more')->getDbReadObject();?>
+  <div class="col-md-12" style="position:relative">
+  <div id="after-cr-design" class="col-md-12">
+  <h1 class="pick_device">Choose your Model</h1>
+  </div>
+    <div class="chooseBrand pickBrand">
+    <h2 class="more_case"> Please choose your phone model from over 300 devices <br class="hidden-xs" />
+	and see over 3000 designs to select the perfect one for you ! </h2>
+      <?php 
+  $first_top_cat = $this->getCurrentCategory()->getName();
+  $qry = "select dd.select1, dd.select2 FROM drop_device as dd where dd.device_name = 'Mobile Case'";
+  $rowsArray = $connection->fetchAll($qry); 
+  $rowArray = $connection->fetchRow($qry);
+  $categories = Mage::getModel('catalog/category')->getCategories(34,3);
+  ?>
+      <div class="row">
+      <div class=" col-xs-10 col-xs-offset-1 col-md-12 col-md-offset-0" style="width: 50%;margin-left: 25%;">
+    <div class="row row-xs">
+      <div class="bselect col-md-12 col-sm-5 col-xs-12" style="width:50%;float:left;">
+        <select name="bselect" class="form-control" id="bselect" onchange="get_device(this.value, '<?php echo $rowArray['select2'];?>')">
+        <span class="caret"></span>
+          <option value="0"><?php echo $rowArray['select1'];?> </option>
+          <?php
+	foreach($categories as $category)
+   	{ ?>
+          <option value="<?php echo $category->getId();?>"><?php echo $category->getName();?></option>
+          <?php
+	}?>
+        </select>
+         <div class="dividerSm20"></div>
+      </div>
+     
+      <div class="bvalue col-md-12  col-sm-5 col-xs-12" style="width:50%;float:right;">
+        <select name="bvalue" id="bvalue" class="form-control">
+          <option value="0"><?php echo $rowArray['select2'];?></option>
+        </select>
+         <div class="dividerSm20"></div>
+      </div>
+     
+      <div class="brandBtn col-md-12  col-sm-2  col-xs-12" style="width:40%;margin-left:30%;">
+        <input class="button btn btn-block" type="button" name="view_cases" id="view_cases" value="Go" onclick="chk_validate();" />
+      </div></div></div></div>
+      <div class="device-load" id="device-load" style="display:none;"><img src="<?php echo $this->getSkinUrl('images/ajax-loader.gif');?>"/></div>
+    </div>
+  </div>
+  
+  <div id="after-cr-design" class="col-md-12">
+    <h1 class="pick_device">All Brands</h1>
+    <div id="categories">
+      <?php $_maincategorylisting=$this->getCurrentCategory()?>
+      <?php $_categories=$this->getCurrentChildCategories()?>
+      <?php 
+    $params = Mage::app()->getRequest()->getParams();
+ 	
+    $laptabtexturedskin = $params['laptabtexturedskin'];
+    $texturedPrdStr = $params['texturedPrdStr'];
+	if($texturedPrdStr!='' && $laptabtexturedskin!='')
+	$textureQueryString = '?texturedPrdStr='.$texturedPrdStr.'&laptabtexturedskin='.$laptabtexturedskin;
+	
+   //if($_categories->count()):
+   //echo count($_categories);
+   if(count($_categories)):   
+   ?>
+      <?php $i=1; foreach ($_categories as $_category):?>
+      <?php if($_category->getIsActive()):
+		$cur_category=Mage::getModel('catalog/category')->load($_category->getId());
+   		$layer = Mage::getSingleton('catalog/layer');
+		$layer->setCurrentCategory($cur_category);
+    	$catName = $this->getCurrentCategory()->getName();   
+	    $_imageUrl = $cur_category->getThumbnail();
+		if($_imageUrl != ''){
+		?>
+      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6  ">
+        <div class="category-box"> <a href="<?php echo $this->getCategoryUrl($_category)?><?php echo $textureQueryString;?>"> <img src="<?php echo $this->getUrl() . 'media/catalog/category/' .$_imageUrl?>"> </a> </div>
+      </div>
+      <?php } ?>
+      <?php  endif;?>
+      <?php $i++;endforeach ?>
+      <?php $layer->setCurrentCategory($_maincategorylisting);  ?>
+      <?php endif; ?>
+    </div>
+  </div>
+  
+  
+  
+</div>
+<script src="<?php echo Mage::getBaseUrl('js')?>jquery-scrolltofixed.js" type="text/javascript"></script> 
+<script type="text/javascript">
+ jQuery(document).ready(function() {
+   jQuery('#scroll_rgt_div').scrollToFixed( { top: 0, limit: function(){   
+   var limit = (jQuery('#scroll_rgt_div_wrapper').offset().top + jQuery('#scroll_rgt_div_wrapper').outerHeight() + 420);
+   jQuery('#scroll_rgt_div').css("left","auto")
+   return limit;
+   } } );    
+});
+function get_device(val, select2)
+{
+   document.getElementById("device-load").style.display = 'block';
+   var dataString = "get_device="+val+"&select="+select2;
+   var reloadurl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'admin_cat.php'?>';
+	//Element.show('loadingmask');
+	new Ajax.Request(reloadurl, {
+	method: 'post',
+	parameters: dataString,
+	onComplete: function(transport) {
+	//Element.hide('loadingmask');
+	document.getElementById("device-load").style.display = 'none';
+	document.getElementById("bvalue").innerHTML = transport.responseText;
+	}
+	});
+}
+/*function get_device1(val, type_id, select2)
+{
+   var dataString = "get_device="+val+"&type_id="+type_id+"&select="+select2;
+   var reloadurl = '<?php //echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'admin_cat.php'?>';
+	//Element.show('loadingmask');
+	new Ajax.Request(reloadurl, {
+	method: 'post',
+	parameters: dataString,
+	onComplete: function(transport) {
+	//Element.hide('loadingmask');
+	document.getElementById("bvalue1").innerHTML = transport.responseText;
+	}
+	});
+}*/
+function chk_validate()
+{
+	var bselect = document.getElementById("bselect").value;
+	var bvalue = document.getElementById("bvalue").value;
+	
+	if(bselect == 0)
+	{
+		alert("Please Select First Value");
+		return false;
+	}
+	if(bvalue == 0)
+	{
+		alert("Please Select Second Value");
+		return false;
+	}
+	
+	var dataString = "get_bselect="+bselect+"&get_bvalue="+bvalue;
+    var reloadurl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'admin_cat.php'?>';
+	//Element.show('loadingmask');
+	new Ajax.Request(reloadurl, {
+	method: 'post',
+	parameters: dataString,
+	onComplete: function(transport) {
+	window.location.href = transport.responseText;
+	}
+	});
+}
+</script>

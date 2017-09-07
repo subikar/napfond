@@ -1,0 +1,160 @@
+<?php 
+
+$siteBaseUrl = Mage::helper('function/more')->getBhishoomSiteBaseUrl();
+
+		$write = Mage::helper('function/more')->getDbWriteObject();
+		$read = Mage::helper('function/more')->getDbReadObject();
+
+function getFeaturedProductsCollection($pCatId,$styleId)
+{
+	 $products = Mage::getModel('catalog/category')->load($pCatId); //put your category id here
+	 $productslist = $products->getProductCollection()->addAttributeToSelect('*')->addAttributeToSelect('case_style', $styleId)->setCurPage(1)->setPageSize(5); 
+	 $productslist->getSelect()->order(new Zend_Db_Expr('RAND()'));
+	 return $productslist;
+}
+
+
+		 
+
+
+?>
+  
+<div class="row" id="home-cat-1">
+  <div class="mid-line">
+    <h2 class="feature-tag">Featured Products</h2>
+  </div>
+ 
+  <?php
+ for($iiCounter=1;$iiCounter<5;$iiCounter++)
+ {	
+  if($iiCounter == 4)
+  { ?>
+
+  <?php  
+   }
+   else
+   {
+   ?>
+  <div class="col-sm-4 <?php  if($iiCounter == 2){?>col-xs-6<?php } ?> <?php  if($iiCounter == 3){?>col-xs-6<?php } ?>">
+    <div id="case-slider<?php echo $iiCounter;?>" class="carousel slide case-slide1" data-interval="false" data-ride="carousel">
+      <?php 
+   	  if($iiCounter == 1)
+  	  {?>
+      <div class="carousel-inner s6">
+        <?php
+	  	 $case_qry = $read->query("SELECT * FROM `featuredproduct` WHERE `cat_id` = 3 AND `active` = 1");
+		 $case_res = $case_qry->fetchAll();
+		 for($c=0;$c<count($case_res);$c++)
+		 {?>
+        <div class="item <?php if($c == 0){ echo 'active';}?>">
+          <?php //echo $case_res[$c]['prod_link'];?>
+          <div class="carousel-caption">
+            <h3>
+              <?php //echo $case_res[$c]['prod_link'];?>
+              <?php echo $case_res[$c]['prod_name'];?></h3>
+          </div>
+          <a href="<?php echo $siteBaseUrl.'shop/mobile-case.html';?>" ><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'/home_banner_img/'.$case_res[$c]['prod_img'];?>"></a> </div>
+        <?php }?>
+      </div>
+      <h2 class="skin-name"><a href="<?php echo $siteBaseUrl.'shop/mobile-case.html';?>">Mobile Cases</a></h2>
+      <?php
+	   }	 
+ 	   if($iiCounter == 2)
+  	   {?>
+      <div class="carousel-inner s1">
+        <?php
+	  	 $skin_qry = $read->query("SELECT * FROM `featuredproduct` WHERE `cat_id` = 34 AND `active` = 1");
+		 $skin_res = $skin_qry->fetchAll();
+		 for($s=0;$s<count($skin_res);$s++)
+		 {?>
+        <div class="item <?php if($s == 0){ echo 'active';}?>">
+          <?php //echo $skin_res[$s]['prod_link'];?>
+          <div class="carousel-caption">
+            <h3>
+              <?php //echo $skin_res[$s]['prod_link'];?>
+              <?php echo $skin_res[$s]['prod_name'];?></h3>
+          </div>
+          <a href="<?php echo $siteBaseUrl.'shop/mobile-skin.html';?>" ><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'/home_banner_img/'.$skin_res[$s]['prod_img'];?>"></a> </div>
+        <?php }?>
+      </div>
+      <h2 class="skin-name"><a href="<?php echo $siteBaseUrl.'shop/mobile-skin.html';?>">Mobile Skins</a></h2>
+      <?php  
+		}
+   		if($iiCounter == 3)
+  		{ ?>
+      <div class="carousel-inner s2">
+        <?php
+	  	 $lapi_qry = $read->query("SELECT * FROM `featuredproduct` WHERE `cat_id` = 8 AND `active` = 1");
+		 $lapi_res = $lapi_qry->fetchAll();
+		 for($l=0;$l<count($lapi_res);$l++)
+		 {?>
+        <div class="item <?php if($l == 0){ echo 'active';}?>">
+          <?php //echo $lapi_res[$l]['prod_link'];?>
+          <div class="carousel-caption">
+            <h3>
+              <?php //echo $lapi_res[$l]['prod_link'];?>
+              <?php echo $lapi_res[$l]['prod_name'];?></h3>
+          </div>
+          <a href="<?php echo $siteBaseUrl.'shop/mobile-skin.html';?>" ><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'/home_banner_img/'.$lapi_res[$l]['prod_img'];?>"></a> </div>
+        <?php }?>
+      </div>
+      <h2 class="skin-name"><a href="<?php echo $siteBaseUrl.'shop/laptop-skin.html';?>" >Mobile Cover</a></h2>
+      <?php  
+		 }
+         /*if($iiCounter == 5)
+  		 {
+	      $_category = Mage::getModel('catalog/category')->load(6);
+    	  if($_category->getIsActive()) 
+      	  {?>
+       		<div class="carousel-inner s3">
+	         <div class="active item">
+              <img src="<?php echo $this->getSkinUrl('images/cool1.png');?>">               
+           	  <div class="carousel-caption">
+               <h3>First slide label</h3>                 
+           	  </div>
+          	</div>
+         	<div class="item">
+          	 <img src="<?php echo $this->getSkinUrl('images/cool2.png');?>">                
+           	 <div class="carousel-caption">
+           	  <h3>Second slide label</h3>                  
+          	 </div>
+         	</div>
+           </div>
+           <h2 class="skin-name"><?php echo $_category->getName();?></h2>
+         <?php  
+  		   }
+		  }*/?>
+      <a class="carousel-control left" href="#case-slider<?php echo $iiCounter;?>" data-slide="prev"> <i class="fa fa-angle-left fa-lg"></i> </a> <a class="carousel-control right" href="#case-slider<?php echo $iiCounter;?>" data-slide="next"> <i class="fa fa-angle-right fa-lg"></i> </a> </div>
+	  
+  </div>
+  <?php
+  }
+ }?>
+
+</div>
+<script type="text/javascript">
+  jQuery(document).ready(function() {
+    jQuery("#owl-example2").owlCarousel({
+    items : 4,
+	navigation : true,
+	itemsDesktop : [1199,3],
+    itemsDesktopSmall : [979,3],
+	itemsTablet : [768, 2],     
+    itemsMobile : [479, 2],
+    
+  }); 
+ 
+});
+
+</script>
+<style>
+	  #owl-example .item{
+  margin: 3px;
+}
+#owl-example .item img{
+  display: block;
+  width: 100%;
+  height: auto;
+}
+	 </style>
+

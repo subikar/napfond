@@ -1,0 +1,11 @@
+<?php
+
+class Strapp_Alterproductposition_Adminhtml_IndexController extends Mage_Adminhtml_Controller_Action
+{
+  public function indexAction() 
+    {
+	echo 'loading';exit;
+// 	$this->_initAction()
+// 	->renderLayout();
+    }
+}

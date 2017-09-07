@@ -1,0 +1,384 @@
+<?php
+/**
+ * GoMage Product Designer Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use/
+ * @version      Release: 1.0.0
+ * @since        Available since Release 1.0.0
+ */
+ 
+ $params = Mage::app()->getRequest()->getParams();
+ 
+    $total_texts = Mage::helper('function')->getNumberOfObjectsType($params['id'],'text');
+ 
+?>
+<script type="text/javascript">
+function OpenLoginPopup() {
+	var divToOpen = "font-selector-div";
+	var popupSetting = { width: 'auto', height: 'auto', title: 'Fonts',isFixed:true };
+	ShowPopup(divToOpen, popupSetting);
+}
+
+// Function to Show Div Popup
+function ShowPopup(divId, popupSetting) {
+
+	var divElt = document.getElementById(divId);
+	divElt.style.display = 'block';
+	var element = divElt.parentElement;
+	popupSetting = popupSetting || {};
+
+	if (!popupSetting.width) { popupSetting.width = divElt.offsetWidth };
+	if (!popupSetting.height) { popupSetting.height = divElt.offsetHeight };
+	if (!popupSetting.title) { popupSetting.title = 'Dialog' };
+
+	var table = document.createElement('table');
+	table.setAttribute('id', 'table' + divId);table.setAttribute('cellspacing', '0');table.setAttribute('cellpadding', '0');
+
+	var tr1 = document.createElement('tr'); tr1.className = 'PopupHeader';
+	tr1.style.borderBottom = '1px solid #000';
+	var td1 = document.createElement('td'); td1.setAttribute('style', 'width: 90%; padding: 5px;');
+	var span = document.createElement('span'); span.innerHTML = popupSetting.title;
+	span.setAttribute('style', 'font-size: 14px; font-weight: bold;');
+	td1.appendChild(span); tr1.appendChild(td1); table.appendChild(tr1);
+
+	var tr2 = document.createElement('tr');
+	var tdDynamic = document.createElement('td');
+	tdDynamic.setAttribute('align', 'center');
+	tdDynamic.setAttribute('style', 'padding: 10px; vertical-align:top;');
+
+	var tempElt = document.createElement('div');
+	tempElt.setAttribute('id', 'tempElt' + divElt.id);
+	divElt.parentElement.insertBefore(tempElt, divElt);
+
+	tdDynamic.appendChild(divElt);
+	tr2.appendChild(tdDynamic);
+	table.appendChild(tr2);
+	var cssText = 'display: block; border:1px solid black;  z-index:92000; background-color:white; top:30%; left:72%;';
+	cssText += 'width: ' + popupSetting.width + 'px; height: ' + popupSetting.height + 'px; margin-left: -' + Math.round(popupSetting.width / 2) + 'px; margin-top: -' + Math.round(popupSetting.height / 2) + 'px;';
+
+	if (popupSetting.isFixed === true) { cssText += 'position: fixed;';}
+	else { cssText += 'position: absolute;'; }
+
+	table.setAttribute('style', cssText);
+	element.appendChild(table);
+
+	var shadeElt = document.createElement('div');
+	shadeElt.id = "ShadedBG";shadeElt.className = "ShadedBG";
+	tempElt.appendChild(shadeElt);	
+}
+
+// Function to Close Div Popup
+function ClosePopupDiv(divId) {
+	var table = document.getElementById('table' + divId);
+	var element = table.parentElement;
+	var divElt = document.getElementById(divId);
+	divElt.style.display = 'none';
+	var tempElt = document.getElementById('tempElt' + divId);
+	tempElt.parentElement.insertBefore(divElt, tempElt);
+	table.parentElement.removeChild(table);
+	table.setAttribute('style', 'display: none');
+	tempElt.parentElement.removeChild(tempElt);
+}
+
+function changeval(val)
+{
+	document.getElementById("font-selector").value = val;
+}
+</script>
+<?php
+$colors = $this->getAvailableColors();
+$defaultFonts = $this->getDefaultFonts();
+$fonts = $this->getFonts();
+$sizes = $this->getFontSizes();
+?>
+<style type="text/css">
+<?php foreach($fonts as $font):
+
+                $fontNameIdToDisplay = str_replace('_','',$this->getFontName($font));
+                $fontNameIdToDisplay = str_replace('-','',$fontNameIdToDisplay);
+                $fontNameIdToDisplay = str_replace(' ','',$fontNameIdToDisplay);
+                $fontNameIdToDisplay = ucwords(strtolower($fontNameIdToDisplay));
+
+?>
+    @font-face {
+        font-family: <?php echo $this->getFontName($font);?>;
+        src: url("<?php echo $this->getFontUrl($font->getFont());?>");
+    }
+	#<?php echo $fontNameIdToDisplay?>{
+		font-family: <?php echo $this->getFontName($font);?>;
+	}
+	
+<?php endforeach;?>
+</style>
+		
+<style type="text/css">
+.pd-element-block {
+    display: inline-block;
+    width: 78%;
+}
+.pd-element-block1 {
+    background: none repeat scroll 0 0 #fff;
+    border: 1px solid #ccc;
+    display: inline-block;
+    height: 33px;
+    position: relative;
+    text-align: center;
+    top: -11px;
+    width: 20%;
+}
+.fontTypeSelectedBhishoom{
+background:#fff;
+padding:10px;
+width:175px;
+}
+.fontTypeDropDownUlLi {
+    background: none repeat scroll 0 0 #fff;
+    display: none;
+    height: 200px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    padding: 10px;
+    position: absolute;
+    width: 91%;
+    z-index: 1;
+}
+.fontTypeSelectedBhishoom {
+    background: none repeat scroll 0 0 #fff;
+    height: 34px;
+    padding: 7px;
+    width: 100%;
+    border:1px solid #dadada;
+}
+.fontSizeDropDownUlLi {
+    background: none repeat scroll 0 0 #fff;
+    border: 1px solid #ddd;
+    display: none;
+    height: 200px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    padding: 10px 0;
+    position: absolute;
+    width: 63px;
+    z-index: 1;
+}
+.fontSizeSelectedBhishoom {
+    height: 33px;
+    line-height: 33px;
+}
+</style>
+			  <select id="choose_tpl_txt_no" name="choose_tpl_txt_no" onchange="if(this.value=='') jQuery('#txtTplEditorOptions').hide(); else jQuery('#txtTplEditorOptions').show(); curr_obj_id=this.value; setColorTextBoxValues()"  class="tpl-customizer-select">
+				<option value="">Choose Text</option>
+			  <?php	for($ii=0;$ii<count($total_texts);$ii++){?>
+			    <option value="<?php echo $total_texts[$ii]?>">Chnage Text <?php echo ($ii+1)?></option>
+			  <?php }?>
+			  </select>
+
+<script type="text/javascript">
+function setColorTextBoxValues(){
+	//objsText[curr_obj_id].selectable = false;
+	objCallDirectForCanvas.setActiveObject(objsText[curr_obj_id]);	
+	jQuery("#add_text_textarea").val(objsText[curr_obj_id].text);	
+	jQuery("#font-selector").val(objsText[curr_obj_id].fontFamily);
+	jQuery("#font_size_selector").val(objsText[curr_obj_id].fontSize);
+	jQuery('.fontSizeSelectedBhishoom').html(objsText[curr_obj_id].fontSize);
+	jQuery('.fontTypeSelectedBhishoom').html(objsText[curr_obj_id].fontFamily);
+	
+}
+</script>
+
+<div id="txtTplEditorOptions" style="display:none">
+
+
+
+
+    <div class="pd-element-wrapper">
+     <input type="text" id="add_text_textarea" class="input-text pd-textarea" placeholder="<?php echo $this->__('Enter text here') ?>" style="width:220px;" />
+     <button style="float:right; padding:0; height:30px;" id="add_text_button" class="panel-btn pd-btn-add-text"><?php echo $this->__('Add'); ?></button>
+    </div>
+    
+    <div class="pd-element-wrapper">
+     <?php /*?><div id="font-selector-div" style="display:none;">     
+      <select class="font-picker" id="font-selector" size="8" <?php echo $this->getFontName($font); ?> onchange="changeval(this.value);">
+      <?php foreach($fonts as $font): ?>
+            <option value="<?php echo $this->getFontName($font); ?>" style="font-family:<?php echo $this->getFontName($font); ?>"><?php echo $this->getFontName($font); ?></option>
+        <?php endforeach; ?> 
+     </select>         
+      <input type="button" value="Close" style="background-color: #de0003; color:#fff; padding:3px; border:0; margin-top:10px;" onclick="ClosePopupDiv('font-selector-div')" />
+     </div><?php */?> 
+      
+     <?php /*foreach ($defaultFonts as $font):?>
+    <!-- <span>Fonts : </span> -->
+     <input type="text" name="" value="<?php //echo $font['value']; ?>Select Font Family" id="font-selector" class="font-picker" autocomplete="off" onclick="OpenLoginPopup()" style="width:200px;" />
+     <?php break; endforeach;*/?>
+
+        <div class="pd-element-block">    
+            
+
+        <select class="font-picker" id="font-selector" style="display:none">
+        <?php foreach ($defaultFonts as $font):?>
+            <option value="<?php echo $font['value']; ?>" <?php echo $this->getDefaultFontFamily() == $font['value'] ? 'selected="selected"' : ''?>><?php echo $font['label']; ?></option>
+        <?php endforeach;?>
+        <?php foreach($fonts as $font): 
+        
+                $fontNameToDisplay = str_replace('_',' ',$this->getFontName($font));
+                $fontNameToDisplay = str_replace('-',' ',$fontNameToDisplay);
+                $fontNameToDisplay = ucwords(strtolower($fontNameToDisplay));
+        
+        ?>
+            <option value="<?php echo $this->getFontName($font); ?>"><?php echo $fontNameToDisplay; ?></option>
+        <?php endforeach; ?>
+        </select>    
+
+
+        <?php foreach ($defaultFonts as $font):     
+                if($this->getDefaultFontFamily() == $font['value']){
+        ?>
+            <div style="overflow:hidden" class="fontTypeSelectedBhishoom" onmouseover="jQuery('#font_ul_li').show();" onmouseout="jQuery('#font_ul_li').hide();"><?php echo $font['label']; ?></div>
+        <?php   break;}
+              endforeach;?>
+
+        <ul id="font_ul_li" onmouseover="jQuery('#font_ul_li').show();" onmouseout="jQuery('#font_ul_li').hide();" class="fontTypeDropDownUlLi">
+        <?php foreach ($defaultFonts as $font):?>
+            <li style="cursor:pointer;font-family:<?php echo strtolower($font['label']); ?>;" onclick="jQuery('#font-selector').val('<?php echo $font['value']; ?>').trigger('change');jQuery('.fontTypeSelectedBhishoom').css('font-family', '<?php echo $font['value']; ?>'); objCallDirect.customBhishoom_observeFontChange();jQuery('.fontTypeSelectedBhishoom').html('<?php echo $font['label']; ?>')"><?php echo $font['label']; ?></li>
+        <?php endforeach;?>
+        <?php foreach($fonts as $font): 
+        
+                $fontNameToDisplay = str_replace('_',' ',$this->getFontName($font));
+                $fontNameToDisplay = str_replace('-',' ',$fontNameToDisplay);
+                $fontNameToDisplay = ucwords(strtolower($fontNameToDisplay));
+ 
+                $fontNameIdToDisplay = str_replace('_','',$this->getFontName($font));
+                $fontNameIdToDisplay = str_replace('-','',$fontNameIdToDisplay);
+                $fontNameIdToDisplay = str_replace(' ','',$fontNameIdToDisplay);
+                $fontNameIdToDisplay = ucwords(strtolower($fontNameIdToDisplay));
+
+ 
+        ?>
+            <li id="<?php echo $fontNameIdToDisplay; ?>_Id" style="cursor:pointer;font-family:<?php echo strtolower($this->getFontName($font)); ?>;"  onclick="jQuery('#font-selector').val('<?php echo $this->getFontName($font); ?>').trigger('change');jQuery('.fontTypeSelectedBhishoom').css('font-family', '<?php echo $this->getFontName($font); ?>');  objCallDirect.customBhishoom_observeFontChange();jQuery('.fontTypeSelectedBhishoom').html('<?php echo $fontNameToDisplay; ?>')"><?php echo $fontNameToDisplay; ?></li>
+        <?php endforeach; ?>
+        </ul>
+        </div>
+         <div class="pd-element-block1">
+          <select class="font-size-selector" id="font_size_selector" style="display:none">
+            <?php foreach ($sizes as $size):?>
+                <option value="<?php echo $size; ?>" <?php echo $this->getDefaultFontSize() == $size ? 'selected="selected"' : ''?>><?php echo $size; ?></option>
+            <?php endforeach;?>
+        </select>
+        
+        
+        <?php foreach ($sizes as $size):        
+                if($this->getDefaultFontSize() == $size){
+        ?>
+            <div class="fontSizeSelectedBhishoom" onmouseover="jQuery('#font_size_ul_li').show();" onmouseout="jQuery('#font_size_ul_li').hide();"><?php echo $size; ?></div>
+        <?php   break;}
+              endforeach;?>
+
+        <ul id="font_size_ul_li" onmouseover="jQuery('#font_size_ul_li').show();" onmouseout="jQuery('#font_size_ul_li').hide();" class="fontSizeDropDownUlLi">
+        <?php foreach ($sizes as $size):?>
+            <li style="cursor:pointer;" onclick="jQuery('#font_size_selector').val('<?php echo $size; ?>').trigger('change'); objCallDirect.customBhishoom_observeFontSizeChange();jQuery('.fontSizeSelectedBhishoom').html('<?php echo $size; ?>')"><?php echo $size; ?></li>
+        <?php endforeach;?>
+        <?php foreach ($sizes as $size):?>
+            <li style="cursor:pointer;"  onclick="jQuery('#font_size_selector').val('<?php echo $size; ?>').trigger('change'); objCallDirect.customBhishoom_observeFontSizeChange();jQuery('.fontSizeSelectedBhishoom').html('<?php echo $size; ?>')"><?php echo $size; ?></li>
+        <?php endforeach; ?>
+        </ul>       
+        </div>
+
+        
+    </div>
+	
+	  
+	
+    <div class="pd-element-wrapper">
+        
+    			        <button class="panel-btn pd-btn-bold" id="add_text_btn_bold"><?php echo $this->__('B'); ?></button>
+        <button class="panel-btn pd-btn-italic" id="add_text_btn_italic"><?php echo $this->__('I'); ?></button>
+        <button class="panel-btn pd-btn-underline" id="add_text_btn_underline"><?php echo $this->__('U'); ?></button>
+        <!--<button class="panel-btn pd-btn-vert-output" id="add_text_btn_vert_out" data-state="horizontal">|</button>
+        <button id="curved-text-button" class="panel-btn">↭</button>-->
+            <button id="shadow-button" class="panel-btn"><?php echo $this->__('Shadow'); ?></button>
+            <button id="outline-button" class="panel-btn"><?php echo $this->__('Outline'); ?></button>
+    </div>
+    <?php if ($this->effectsEnabled()):?>
+      <!--  <div class="pd-element-wrapper">
+            <button id="curved-text-button" class="panel-btn">↭</button>
+            <button id="shadow-button" class="panel-btn"><?php echo $this->__('Shadow'); ?></button>
+            <button id="outline-button" class="panel-btn"><?php echo $this->__('Outline'); ?></button>
+        </div>-->
+        <div>
+            <fieldset class="curved-text-config text-effect">
+                <legend><?php echo $this->__('Curved Text'); ?></legend>
+                <div id="curved-text-cancel" title="<?php echo $this->__('Cancel Curved') ?>" data-effect="curved" class="panel-cancel-btn">&times;</div>
+                <div class="pd-element-wrapper">
+                    <label for="curve_spacing"><?php echo $this->__('Radius'); ?>: </label>
+                    <input type="range" id="curve_spacing" min='-40' max='40' step="1" value='0' style="width: 250px;">
+                </div>
+            </fieldset>
+            <fieldset class="shadow-config text-effect">
+                <legend><?php echo $this->__('Shadow'); ?></legend>
+                <div id="shadow-cancel" title="<?php echo $this->__('Cancel Shadow') ?>" data-effect="shadow" class="panel-cancel-btn">&times;</div>
+                <div class="pd-element-wrapper">
+                    <label><?php echo $this->__('Offset Y'); ?>: </label>
+                    <input type="range" value="0" id="shadow_y_range" min="-25" max="25" step="1">
+                </div>
+                <div class="pd-element-wrapper">
+                    <label><?php echo $this->__('Offset X'); ?>: </label>
+                    <input type="range" value="0" id="shadow_x_range" min="-25" max="25" step="1">
+                </div>
+                <div class="pd-element-wrapper">
+                    <label><?php echo $this->__('Blur'); ?>: </label>
+                    <input type="range" value="0" id="shadow_blur" min="0" max="50" step="1">
+                </div>
+                <div class="pd-element-wrapper">
+                    <canvas height="20" width="230" id="textShadow" class="color-picker"></canvas>
+                </div>
+            </fieldset>
+            <fieldset class="outline-config text-effect">
+                <legend><?php echo $this->__('Outline'); ?></legend>
+                <div id="outline-cancel" title="<?php echo $this->__('Cancel Outline') ?>" data-effect="outline" class="panel-cancel-btn">&times;</div>
+                <div class="pd-element-wrapper">
+                    <label><?php echo $this->__('Size')?>:</label>
+                    <input type="range" value="0.00001" id="outline_range" min="0.00001" max="1.50001" step="0.05">
+                </div>
+                <div class="pd-element-wrapper">
+                    <canvas height="20" width="230" id="strokeStyle" class="color-picker"></canvas>
+                </div>
+            </fieldset>
+        </div>
+    <?php endif;?>
+    <div class="colors-panel" id="add_text_colors_panel">
+        <?php foreach($colors as $color): ?>
+            <span class="color-btn color-code-<?php echo $color; ?>" style="background-color:#<?php echo $color; ?>">&nbsp;</span>
+        <?php endforeach; ?>
+    </div>
+    <div class="pd-element-wrapper">
+        <canvas height="40" width="276" id="color" class="color-picker"></canvas>
+    </div>
+</div>
+
+<script type="text/javascript">
+    document.observe("dom:loaded", function(e){
+        var textEditor = new GoMage.TextEditor('<?php echo $this->getDefaultFontFamily();?>', '<?php echo $this->getDefaultFontSize()?>');
+    }.bind(this))
+    var fonts = '<?php echo $this->getImplodedFontsString();?>'.split(',');
+    if (fonts != '') {
+        WebFontConfig = {
+            custom: {
+                families: fonts
+            }
+        };
+
+        (function() {
+            var wf = document.createElement('script');
+            wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+                '://ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js';
+            wf.type = 'text/javascript';
+            wf.async = 'true';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(wf, s);
+        })();
+    }
+</script>

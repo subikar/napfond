@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+  <config>
+     <modules>
+           <GA_Quicklogin>
+                 <version>0.1.0</version>
+           </GA_Quicklogin>
+      </modules>
+	 <global>
+           <rewrite>
+		    <ga_quicklogin>
+               
+                              <from><![CDATA[#^/customer/account/#]]></from>
+                               <to><![CDATA[/quicklogin/account/]]></to>
+            </ga_quicklogin>
+		 </rewrite>
+	 </global>
+    <frontend>
+        <routers>
+            <ga_quicklogin>
+                <use>standard</use>
+                <args>
+                    <module>GA_Quicklogin</module>
+                    <frontName>quicklogin</frontName>
+                </args>
+            </ga_quicklogin>
+			
+        </routers>
+		<layout>
+            <updates>
+                <quicklogin>
+                    <file>quicklogin.xml</file>
+                </quicklogin>
+            </updates>
+        </layout>
+    </frontend> 
+ </config>

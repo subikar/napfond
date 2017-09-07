@@ -1,0 +1,60 @@
+<div class="content-header">
+    <table cellspacing="0" class="grid-header">
+        <tr>
+            <td><h3><?=$this->__('Shop By Interest')?></h3></td>
+            <td class="a-right">
+                <button onclick="editForm.submit()" class="scalable save" type="button"><span>Submit my form</span></button>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="entry-edit">
+    <form id="edit_form" name="edit_form" method="post" action="<?=$this->getUrl('*/*/post')?>" enctype="multipart/form-data">
+        <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+        <h4 class="icon-head head-edit-form fieldset-legend"><?=$this->__('Shop By Interest Images')?></h4>
+        <fieldset id="my-fieldset">
+            <table cellspacing="0" class="form-list" width="100%" style="width:100%">
+                <tr>                   
+                    <td class="input-ele"><input class="input-text required-entry" type="hidden" name="attr_id" value="137" />
+					
+<?php
+// use your own attribute code here 
+$attribute_code = "case_style"; 
+$attribute_details = Mage::getSingleton("eav/config")->getAttribute('catalog_product', $attribute_code); 
+$attribute = $attribute_details->getData(); // returns array - See more at: http://www.techdilate.com/code/magento-get-attribute-details-by-attribute-code/#sthash.d0kcxQNE.dpuf
+
+$read = Mage::getSingleton( 'core/resource' )->getConnection( 'core_read' ); // To read from the database
+$write = Mage::getSingleton( 'core/resource' )->getConnection( 'core_write' ); // To write to the database
+
+$mEdia_Base_Dir = Mage::getBaseDir('media');
+$mEdia_Base_URL = Mage::getBaseUrl('media');
+$attribute = Mage::getSingleton('eav/config')->getAttribute('catalog_product', 'case_style');
+if ($attribute->usesSource()) {
+    $options = $attribute->getSource()->getAllOptions(false);	 
+}
+
+foreach($options as $optionsValue){
+?>					
+<div style="float:left;width:200px;height:200px;">
+<label><strong><?php echo $optionsValue["label"]?></strong></label><br />
+<input type="file" name="case_style_image[]"  />
+<input type="hidden" name="case_style_image_id[]" value="<?php echo $optionsValue["value"]?>" />
+<?php
+$result = $read->query( "select * from case_style_images where attr_id='137' and attr_val_id='".$optionsValue["value"]."'" );
+$row = $result->fetch();
+if(is_file($mEdia_Base_Dir.'/case_style_home/'.$row['img_name'])){
+?>
+<img src="<?php echo $mEdia_Base_URL?>case_style_home/<?php echo $row['img_name'];?>" style="width:100px;height:100px;"/><br />
+<input type="checkbox" name="show_home[<?php echo $optionsValue["value"];?>]" <?php if($row['active'] == 1){?> checked="checked" <?php } ?> />&nbsp;&nbsp;&nbsp;&nbsp;Show on home page
+<?php }?>
+</div>
+<?php }?>					
+					</td>
+                </tr>
+            </table>
+        </fieldset>
+    </form>
+</div>
+<script type="text/javascript">
+    var editForm = new varienForm('edit_form');
+</script>

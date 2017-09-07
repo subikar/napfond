@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<layout>
+    <stockimage_adminhtml_stockimageform_index>
+        <update handle="stockimage_stockimageform_index"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="stockimageform" template="stockimage/stockimageform.phtml"/>
+        </reference>
+    </stockimage_adminhtml_stockimageform_index>
+</layout>

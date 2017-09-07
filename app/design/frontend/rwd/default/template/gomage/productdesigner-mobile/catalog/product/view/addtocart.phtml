@@ -1,0 +1,67 @@
+<?php
+/**
+ * GoMage Product Designer Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use/
+ * @version      Release: 1.0.0
+ * @since        Available since Release 1.0.0
+ */
+?>
+<?php $_product = $this->getProduct(); ?>
+<?php $_wishlistSubmitUrl = $this->helper('wishlist')->getAddUrl($_product); ?>
+<?php $buttonTitle = $this->__('Buy Now'); ?>
+<?php if($_product->isSaleable()): ?>
+ <div class="add-to-cart">
+  <?php if (!$this->addToCartDisabled()): ?>
+   <!--<div class="box-bottom-border box-right-section">
+        <div class="box-info">
+         <span class="box-left">
+           PRICE
+         </span>
+         <span class="box-qty">
+          QTY
+         </span>
+        </div>
+       </div>-->
+     <div class="price-info">
+      <?php echo $this->getPriceHtml($_product); ?>
+      <?php echo $this->getChildHtml('bundle_prices') ?>
+      <?php echo $this->getTierPriceHtml() ?>
+     </div>
+	 <?php /*?><label for="qty"><?php echo $this->__('Qty:') ?></label><?php */?>
+     <div class="clear"></div>
+     <div class="add_con df">
+      <div class="dec add" onclick="decrease()">-</div>
+      <!--<input type="submit" value="-" id="less1" class="dec add" onclick="decrease()" />-->
+      <input type="text" name="qty" id="qty" maxlength="12" value="1" title="<?php echo $this->__('Qty') ?>" class="input-text qty" style="width:30px;" /> 		  
+      <div class="add more" onclick="increase()">+</div>
+      <!--<input type="submit" value="+" id="add1" class="add more" onclick="increase()" />-->
+      <button type="button" title="<?php echo $buttonTitle ?>" class="button btn-cart pinkC" onclick="productAddToCartForm.submit(this)"><span><span><?php echo $buttonTitle ?></span></span></button>
+             
+     <?php endif;?>
+       <?php echo $this->getChildHtml('', true, true) ?>
+       <a href="<?php echo $_wishlistSubmitUrl ?>" onclick="productAddToCartForm.submitLight(this, this.href); return false;" class="link-wishlist" title="<?php echo $this->__('Add to Wishlist') ?>"><?php echo $this->__('Add to Wishlist') ?><i class="fa fa-heart"></i></a>
+      </div>
+    </div>
+<?php endif; ?>
+<script type="text/javascript">
+function decrease()
+{
+	var val = document.getElementById("qty").value;
+	if(val > 1)
+	{
+		var new_val = --val;
+		document.getElementById("qty").value = new_val;
+	}
+}
+function increase()
+{
+	var val = document.getElementById("qty").value;
+	var new_val = ++val;
+	document.getElementById("qty").value = new_val;
+}
+</script>

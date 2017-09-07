@@ -1,0 +1,189 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Clearandfizzy
+ *
+ * NOTICE OF LICENSE
+ *
+ *
+ * THE WORK (AS DEFINED BELOW) IS PROVIDED UNDER THE TERMS OF THIS CREATIVE
+ * COMMONS PUBLIC LICENSE ("CCPL" OR "LICENSE"). THE WORK IS PROTECTED BY
+ * COPYRIGHT AND/OR OTHER APPLICABLE LAW. ANY USE OF THE WORK OTHER THAN AS
+ * AUTHORIZED UNDER THIS LICENSE OR COPYRIGHT LAW IS PROHIBITED.
+
+ * BY EXERCISING ANY RIGHTS TO THE WORK PROVIDED HERE, YOU ACCEPT AND AGREE
+ * TO BE BOUND BY THE TERMS OF THIS LICENSE. TO THE EXTENT THIS LICENSE MAY
+ * BE CONSIDERED TO BE A CONTRACT, THE LICENSOR GRANTS YOU THE RIGHTS
+ * CONTAINED HERE IN CONSIDERATION OF YOUR ACCEPTANCE OF SUCH TERMS AND
+ * CONDITIONS.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * versions in the future. If you wish to customize this extension for your
+ * needs please refer to http://www.clearandfizzy.com for more information.
+ *
+ * @category    Community
+ * @package     Clearandfizzy_Reducedcheckout
+ * @copyright   Copyright (c) 2014 Clearandfizzy ltd. (http://www.clearandfizzy.com)
+ * @license     http://creativecommons.org/licenses/by-nd/3.0/ Creative Commons (CC BY-ND 3.0) 
+ * @author		Gareth Price <gareth@clearandfizzy.com>
+ * 
+ */
+-->
+
+<config>     
+ 
+	<modules>
+		<Clearandfizzy_Reducedcheckout>
+			<version>1.8.1</version>
+		</Clearandfizzy_Reducedcheckout>
+	</modules>
+ 
+    <global>
+ 
+		<!-- maps blocks to the "{{extension}}" namespace (use "extension" for overriding) -->
+        <blocks>
+             <clearandfizzy_reducedcheckout>
+                <class>Clearandfizzy_Reducedcheckout_Block</class>
+             </clearandfizzy_reducedcheckout>
+        </blocks>
+        
+        <models>
+             <clearandfizzy_reducedcheckout>
+                <class>Clearandfizzy_Reducedcheckout_Model</class>
+             </clearandfizzy_reducedcheckout>
+             
+             <shipping_resource>
+             	<rewrite>
+             		<carrier_tablerate>Clearandfizzy_Reducedcheckout_Model_Resource_Carrier_TablerateFix</carrier_tablerate>
+             	</rewrite>
+             </shipping_resource>
+             
+        </models>   
+        
+        <resources>
+            <reducedcheckout_setup>
+                <setup>
+                    <module>Clearandfizzy_Reducedcheckout</module>
+                    <class>Clearandfizzy_Reducedcheckout_Model_Resource_Setup</class>
+                </setup>
+            </reducedcheckout_setup>
+        </resources>
+        
+
+        <helpers>
+             <clearandfizzy_reducedcheckout>
+                <class>Clearandfizzy_Reducedcheckout_Helper</class>
+             </clearandfizzy_reducedcheckout>
+        </helpers>               
+        
+		<events>
+			<customer_register_success>
+                <observers>
+                    <checkCustomerCreated>
+                        <class>Clearandfizzy_Reducedcheckout_Model_Observer_Signup</class>
+                        <method>checkCustomerCreated</method>
+                    </checkCustomerCreated>
+                </observers>
+			
+			</customer_register_success>
+
+            <controller_action_layout_load_before>
+                <observers>
+                    <checkReducedCheckout>
+                        <class>Clearandfizzy_Reducedcheckout_Model_Observer</class>
+                        <method>checkReducedCheckout</method>
+                    </checkReducedCheckout>
+                </observers>
+            </controller_action_layout_load_before>
+        </events>  
+ 
+    </global>	
+    
+    <admin>
+        <routers>        
+            <adminhtml>
+                <args>
+                    <modules>
+                        <clearandfizzy_reducedcheckout before="Mage_Adminhtml">Clearandfizzy_Reducedcheckout_Adminhtml</clearandfizzy_reducedcheckout>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    
+    <adminhtml>
+        <layout>
+            <updates>
+                <clearandfizzy_reducedcheckout>
+                    <file>clearandfizzy/reducedcheckout.xml</file>
+                </clearandfizzy_reducedcheckout>
+            </updates>
+        </layout>
+    </adminhtml>
+	    
+	<frontend>
+		<routers>
+ 
+			<!-- Sets up the frontend URL we need to hit to run code, needs to be a unique handle (use the extension name a prefix?)-->
+			<clearandfizzy_reducedcheckout> 
+				<use>standard</use>
+				<args>
+					<module>Clearandfizzy_Reducedcheckout</module>
+					<frontName>reducedcheckout</frontName>
+				</args>
+			</clearandfizzy_reducedcheckout>
+ 
+		</routers>
+ 
+        <default>
+            <router>reducedcheckout</router>
+        </default>
+ 
+		<layout>
+			<updates>
+				<clearandfizzy_reducedcheckout>
+					<file>clearandfizzy/reducedcheckout/reducedcheckout.xml</file>	
+				</clearandfizzy_reducedcheckout>
+			</updates>
+		</layout>
+ 
+	</frontend>        
+
+	<default>
+		<clearandfizzy_reducedcheckout_settings>
+
+			<reducedcheckout>
+				<isenabled>0</isenabled>		
+				<enable28112fix>0</enable28112fix>
+				<loginstep_type>0</loginstep_type>		
+				<default_shipping>noskip</default_shipping>		
+				<default_payment>noskip</default_payment>
+				<hide_telephone_fax>0</hide_telephone_fax>
+				<register_on_order_success>0</register_on_order_success>
+				<register_on_order_success_cms_block>reducedcheckout_success_form_register</register_on_order_success_cms_block>
+			</reducedcheckout>
+			
+			<reducedcheckout_focus>
+				<tidy_header>0</tidy_header>
+				<onecolumn>0</onecolumn>
+				<hide_edityourcart>0</hide_edityourcart>
+			</reducedcheckout_focus>
+			
+			<reducedcheckout_cart>
+				<hide_emptycart>0</hide_emptycart>
+				<hide_crosssells>0</hide_crosssells>
+				<hide_estimateshipping>0</hide_estimateshipping>
+				<hide_discountcode>0</hide_discountcode>
+			</reducedcheckout_cart>
+			
+			
+			<reducedcheckout_customergroups>
+				<customergroups_enabled>0</customergroups_enabled>
+			</reducedcheckout_customergroups>			
+
+		</clearandfizzy_reducedcheckout_settings>
+	</default>
+ 
+</config>

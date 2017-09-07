@@ -1,0 +1,131 @@
+<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('quicklogin/quicklogin.css');?>" media="all" />
+<script type="text/javascript">
+function showlogin()
+{
+	alert("hello");
+ 
+}
+</script>
+<div id="quicklogin">
+  <div class="quickbg" >
+  
+    <div class="page-title">
+	    <h2><?php echo $this->__('Login or Create an Account') ?></h2>
+	</div>
+	<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+	
+	    <fieldset class="col2-set login-page">
+		<?php /*?><legend><?php echo $this->__('Login or Create an Account') ?></legend><?php */?>
+		
+		<div class="col-2 registered-users" id="old_user">
+		   <form action="#" method="post" id="login-form" class="frm-login">
+		    <div class="content">
+			<h3><?php echo $this->__('Registered Customers') ?></h3>
+			<p><?php echo $this->__('If you have an account with us, please log in.') ?></p>
+			<ul class="form-list">
+			    <li>
+				<label for="email"><?php echo $this->__('Email Address') ?> <span class="required">*</span></label><br />
+				<input name="login[username]" value="<?php echo $this->htmlEscape($this->getUsername()) ?>" id="email" type="text" class="input-text required-entry" title="<?php echo $this->__('Email Address') ?>" />
+			    </li>
+                <div class="clear"></div>
+			    <li>
+				<label for="pass"><?php echo $this->__('Password') ?> <span class="required">*</span></label><br />
+				<input name="login[password]" type="password" class="input-text required-entry validate-password" id="pass" title="<?php echo $this->__('Password') ?>" />
+			    </li>
+			</ul>
+			<p class="required"><?php echo $this->__('* Required Fields') ?></p>
+		    </div>
+		    <div class="buttons-set">
+			<div class="fpasscheck">
+             <div class="log-but">
+              <button class="action-btn" type="button" name="send" id="send2" onclick="loginAjax();"><?php echo $this->__('Login') ?></button>
+             </div>
+             <div class="for_pass">
+			  <input type="checkbox" name="modtype" value="value1" onclick="showForgotSection('fpass', this)" />
+			  <span><?php echo $this->__('Forgot Your Password?') ?></span></div>
+			</div>		
+		    </div>           
+            <div class="new_user_text">New around here? <a onclick='show_reg()'; style="cursor:pointer; text-decoration:underline;">Register </a> now.</div>
+		    </form>
+			<div style="display:none;position: absolute;bottom:40px;" id="fpass">
+              <form class="for-pass" id="forgot-form" method="post" action="<?php echo $this->getUrl('customer/account/ajaxForgotPassword/') ?>">
+              <p><?php echo $this->__('Please enter your email to get the password') ?></p>
+              <ul class="form-list">
+                  <li>
+                      <label class="required" for="email"><em>*</em><?php echo $this->__('Email Address') ?></label>
+                      <div class="input-box">
+                          <input type="text" title="Email Address" class="input-text required-entry validate-email" id="forgot_email" value="" name="forgotemail">
+                      </div>
+                  </li>
+                
+              </ul>
+              <div style="border:0px;" class="col-2 registered-users">
+                  <div class="buttons-set">
+      
+          <button type="button" id="send3" name="send3" class="action-btn" onclick="return forgetpass();"><span><?php echo $this->__('Submit') ?></span></button>
+                       <p style="display:none;" id="loading"></p> 
+                  </div>
+               </div>
+             
+              </form>
+              </div>
+		</div>
+        
+		<div class="col-1 new-users" id="new_register" style="display:none;">
+		 <form action="#" method="post" id="regis-form" class="frm-regis">
+		    <div class="content">
+			<h3><?php echo $this->__('New Customers') ?></h3>
+			
+		        <div class="content">
+				<ul class="form-list">
+				    <li>
+					<label for="email"><?php echo $this->__('First Name') ?> <span class="required">*</span></label><br />
+					<input id="firstname" class="input-text required-entry" type="text" title="First Name" value="" name="firstname" />
+				    </li>
+				    <div class="clear"></div>
+				     <li>
+					<label for="pass"><?php echo $this->__('Last Name') ?> <span class="required">*</span></label><br />
+					<input id="lastname" class="input-text required-entry" type="text" title="Last Name" value="" name="lastname" />
+				    </li>
+                    <div class="clear"></div>
+				     <li>
+					<label for="pass"><?php echo $this->__('Email Address') ?> <span class="required">*</span></label><br />
+					<input id="email_address" class="input-text validate-email required-entry" type="text" title="Email Address" value="" name="email" />
+				    </li>
+					<div class="clear"></div>
+				     <li>
+					<label for="pass"><?php echo $this->__('Password') ?> <span class="required">*</span></label><br />
+					<input id="password" class="input-text required-entry validate-password" type="password" title="Password" name="password"/>
+				    </li>
+					<div class="clear"></div>
+				     <li>
+					<label for="pass"><?php echo $this->__('Confirm Password') ?> <span class="required">*</span></label><br />
+					<input id="confirmation" class="input-text required-entry validate-password" type="password" title="Password" name="confirmation"/>
+				    </li>
+                    <div class="clear"></div>
+                      <li class="control">
+                    <div class="input-box">
+                        <input type="checkbox" name="is_subscribed" title="<?php echo $this->__('Sign Up for Newsletter') ?>" value="1" id="is_subscribed" />
+                    </div>
+                    <label for="is_subscribed"><?php echo $this->__('Sign Up for Newsletter') ?></label>
+                    <p class="required"><?php echo $this->__('* Required Fields') ?></p>
+                </li>
+				</ul>				
+	         </div>			
+           </div>
+		    <div class="buttons-set">
+			<button type="button" class="action-btn" onclick="return registerAjax();"><span><?php echo $this->__('Create an Account') ?></span></button>
+		    </div>
+            <div class="new_user_text">Already Registered? <a onclick='show_login()'; style="cursor:pointer; text-decoration:underline;">Sign In </a>.</div>
+		    </form>
+		</div>
+	    </fieldset>
+	
+	<script type="text/javascript">
+	//<![CDATA[
+	     // var dataForm = new VarienForm('login-form', true);
+	      //var dataForm1 = new VarienForm('regis-form', true);
+	//]]>	
+	</script>
+	</div>	
+</div>

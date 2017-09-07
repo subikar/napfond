@@ -1,0 +1,125 @@
+<?php
+
+class Strapp_Customertestimonials_Block_Adminhtml_Customertestimonials_Grid extends Mage_Adminhtml_Block_Widget_Grid
+{
+  public function __construct()
+  {
+      parent::__construct();
+      $this->setId('customertestimonialsGrid');
+      $this->setDefaultSort('customertestimonials_id');
+      $this->setDefaultDir('ASC');
+      $this->setSaveParametersInSession(true);
+  }
+
+  protected function _prepareCollection()
+  {
+      $collection = Mage::getModel('customertestimonials/customertestimonials')->getCollection();
+      $this->setCollection($collection);
+      return parent::_prepareCollection();
+  }
+
+  protected function _prepareColumns()
+  {
+      $this->addColumn('customertestimonials_id', array(
+          'header'    => Mage::helper('customertestimonials')->__('ID'),
+          'align'     =>'right',
+          'width'     => '50px',
+          'index'     => 'customertestimonials_id',
+      ));
+
+      $this->addColumn('reviewer', array(
+          'header'    => Mage::helper('customertestimonials')->__('Reviewer'),
+          'align'     =>'left',
+          'index'     => 'reviewer',
+      ));
+	  
+	  $this->addColumn('feedback', array(
+          'header'    => Mage::helper('customertestimonials')->__('Feedback'),
+          'align'     =>'left',
+          'index'     => 'feedback',
+      ));
+
+	  
+      	  
+	  $this->addColumn('image', array(
+          'header'    => Mage::helper('customertestimonials')->__('Image'),
+          'align'     =>'left',
+          'index'     => 'image',
+      ));
+	  
+	  
+
+      $this->addColumn('status', array(
+          'header'    => Mage::helper('customertestimonials')->__('Status'),
+          'align'     => 'left',
+          'width'     => '80px',
+          'index'     => 'status',
+          'type'      => 'options',
+          'options'   => array(
+              1 => 'Enabled',
+              2 => 'Disabled',
+          ),
+      ));
+	  
+        $this->addColumn('action',
+            array(
+                'header'    =>  Mage::helper('customertestimonials')->__('Action'),
+                'width'     => '100',
+                'type'      => 'action',
+                'getter'    => 'getId',
+                'actions'   => array(
+                    array(
+                        'caption'   => Mage::helper('customertestimonials')->__('Edit'),
+                        'url'       => array('base'=> '*/*/edit'),
+                        'field'     => 'id'
+                    )
+                ),
+                'filter'    => false,
+                'sortable'  => false,
+                'index'     => 'stores',
+                'is_system' => true,
+        ));
+		
+		echo '<script type="text/javascript">$jq(document).ready(function(){ $jq("td.a-left").each(function(){var f1 = $jq(this);var t2=f1.html();t2=t2.replace(/&lt;img/g, "<img");t2=t2.replace(/&gt;/g, ">");t2 = t2.replace("yoururl/","'.Mage::getBaseUrl('media').'"); f1.html(t2);})});</script>';
+		$this->addExportType('*/*/exportCsv', Mage::helper('customertestimonials')->__('CSV'));
+		$this->addExportType('*/*/exportXml', Mage::helper('customertestimonials')->__('XML'));
+	  
+      return parent::_prepareColumns();
+  }
+
+    protected function _prepareMassaction()
+    {
+        $this->setMassactionIdField('customertestimonials_id');
+        $this->getMassactionBlock()->setFormFieldName('customertestimonials');
+
+        $this->getMassactionBlock()->addItem('delete', array(
+             'label'    => Mage::helper('customertestimonials')->__('Delete'),
+             'url'      => $this->getUrl('*/*/massDelete'),
+             'confirm'  => Mage::helper('customertestimonials')->__('Are you sure?')
+        ));
+
+        $statuses = Mage::getSingleton('customertestimonials/status')->getOptionArray();
+
+        array_unshift($statuses, array('label'=>'', 'value'=>''));
+        $this->getMassactionBlock()->addItem('status', array(
+             'label'=> Mage::helper('customertestimonials')->__('Change status'),
+             'url'  => $this->getUrl('*/*/massStatus', array('_current'=>true)),
+             'additional' => array(
+                    'visibility' => array(
+                         'name' => 'status',
+                         'type' => 'select',
+                         'class' => 'required-entry',
+                         'label' => Mage::helper('customertestimonials')->__('Status'),
+                         'values' => $statuses
+                     )
+             )
+        ));
+        return $this;
+    }
+
+  public function getRowUrl($row)
+  {
+      return $this->getUrl('*/*/edit', array('id' => $row->getId()));
+  }
+
+}

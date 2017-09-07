@@ -1,0 +1,226 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<div class="page-title">
+    <h1><?php echo $this->__('Your order has been received.') ?></h1>
+</div>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<h2 class="sub-title"><?php echo $this->__('Thank you for your purchase!') ?></h2>
+
+<?php if ($this->getOrderId()):?>
+<?php if ($this->getCanViewOrder()) :?>
+    <p><?php echo $this->__('Your order # is: %s.', sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getViewOrderUrl()), $this->escapeHtml($this->getOrderId()))) ?></p>
+<?php  else :?>
+    <p><?php echo $this->__('Your order # is: %s.', $this->escapeHtml($this->getOrderId())) ?></p>
+<?php endif;?>
+    <p><?php echo $this->__('You will receive an order confirmation email with details of your order and a link to track its progress.') ?></p>
+<?php if ($this->getCanViewOrder() && $this->getCanPrintOrder()) :?>
+    <p>
+        <?php echo $this->__('Click <a href="%s" onclick="this.target=\'_blank\'">here to print</a> a copy of your order confirmation.', $this->getPrintUrl()) ?>
+        <?php echo $this->getChildHtml() ?>
+    </p>
+<?php endif;?>
+<?php endif;?>
+
+<?php if ($this->getAgreementRefId()): ?>
+    <p><?php echo $this->__('Your billing agreement # is: %s.', sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getAgreementUrl()), $this->escapeHtml($this->getAgreementRefId())))?></p>
+<?php endif;?>
+
+<?php if ($profiles = $this->getRecurringProfiles()):?>
+<p><?php echo $this->__('Your recurring payment profiles:'); ?></p>
+<ul class="disc">
+<?php foreach($profiles as $profile):?>
+<?php $profileIdHtml = ($this->getCanViewProfiles() ? sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getProfileUrl($profile)), $this->escapeHtml($this->getObjectData($profile, 'reference_id'))) : $this->escapeHtml($this->getObjectData($profile, 'reference_id')));?>
+    <li><?php echo $this->__('Payment profile # %s: "%s".', $profileIdHtml, $this->escapeHtml($this->getObjectData($profile, 'schedule_description')))?></li>
+<?php endforeach;?>
+</ul>
+<?php endif;?>
+
+<div class="buttons-set">
+    <button type="button" class="button" title="<?php echo $this->__('Continue Shopping') ?>" onclick="window.location='<?php echo $this->getUrl() ?>'"><span><span><?php echo $this->__('Continue Shopping') ?></span></span></button>
+</div>
+
+<?php
+// code for t-shirt api
+$read = Mage::getSingleton( 'core/resource' )->getConnection( 'core_read' );
+$write = Mage::getSingleton( 'core/resource' )->getConnection( 'core_write' );
+
+$orderIncrementId = $this->getOrderId();
+$order = Mage::getModel('sales/order')->loadByIncrementId($orderIncrementId);
+$order_id = $order->getEntity_id();
+
+$orderItem = $read->query("SELECT `item_id` FROM `sales_flat_order_item` WHERE `order_id` = '".$order_id."' AND `product_type` = 'configurable'");
+$allOrderItem = $orderItem->fetch();
+$item_id = $allOrderItem['item_id'];
+//$itemCount = count($allOrderItem);
+if($item_id != '')
+{
+	// Shipping Address Data
+	$shipping_address = $order->getShippingAddress();
+	$shipping_data = $shipping_address->getData();
+	$spostcode = $shipping_data['postcode'];
+	$saddress1 = $shipping_data['street'];
+	$scity = $shipping_data['city'];
+	$sstate = $shipping_data['region'];
+	$stelephone = $shipping_data['telephone'];
+	$scountry_id = $shipping_data['country_id'];
+	$countryModel = Mage::getModel('directory/country')->loadByCode($scountry_id);
+	$scountryName = $countryModel->getName();
+	
+	// Billing Address Data
+	$billing_address = $order->getBillingAddress();
+	$billing_data = $billing_address->getData();
+	$bpostcode = $billing_data['postcode'];
+	$bsaddress1 = $billing_data['street'];
+	$bcity = $billing_data['city'];
+	$bstate = $shipping_data['region'];
+	$btelephone = $billing_data['telephone'];
+	$bcountry_id = $billing_data['country_id'];
+	$countryModel = Mage::getModel('directory/country')->loadByCode($bcountry_id);
+	$bcountryName = $countryModel->getName();
+		
+	$payment_method = $order->getPayment()->getMethodInstance()->getTitle();
+	
+	if($order->canInvoice() and $order->getIncrementId())
+	{
+		$items = array();
+		foreach ($order->getAllItems() as $item1) 
+		{
+		$items[$item1->getId()] = $item1->getQtyOrdered();
+		}
+		//public function create($orderIncrementId, $itemsQty, $comment = null, $email = false, $includeComment = false)
+		$invoiceId = Mage::getModel('sales/order_invoice_api')->create($order->getIncrementId(),$items,null,false,true);
+		//$invoice = Mage::getModel('sales/order_invoice_api')->capture($invoiceId);
+	}
+	
+	if ($order->hasInvoices()) {
+		foreach ($order->getInvoiceCollection() as $inv) {
+		$invIncrementIDs = $inv->getIncrementId();
+		$inv_total = round($inv->getGrandTotal());
+		}	
+	}
+	
+	$order_date = $order->getCreatedAt();
+	$order_qty = $order->getTotalQtyOrdered();
+	$subtotal = $order->getSubtotal();
+	$grandtotal = $order->getGrandTotal();		
+	$customer_id = $order->getCustomerId();
+	$base_currency_code = $order->getBaseCurrencyCode();
+	$bill_id = $order->getBillingAddressId();
+	$ship_id = $order->getShippingAddressId();
+	$email = $order->getCustomerEmail();
+	$title = $order->getCustomerPrefix();
+	$fname = $order->getCustomerFirstname();
+	$lname = $order->getCustomerLastname();
+	$shipping_amount = $order->getShippingAmount();
+	$discount = $order->getDiscountAmount();
+	$coupon = $order->getCouponCode();
+	$ship_method = $order->getShippingMethod();
+	
+	$xml = new SimpleXMLElement("<?xml version=\"1.0\" encoding=\"utf-8\"?><order></order>");
+	$xml->addChild('order_id', $order_id);
+	$xml->addChild('order_date', $order_date);
+	$customer_details = $xml->addChild('customer_details');
+	$customer_details->addChild('title', $title);
+	$customer_details->addChild('first_name', $fname);
+	$customer_details->addChild('last_name', $lname);
+	$customer_details->addChild('email', $email);
+	$shipping_address = $xml->addChild('shipping_address');
+	$shipping_address->addChild('title', $title);
+	$shipping_address->addChild('first_name', $fname);
+	$shipping_address->addChild('last_name', $fname);
+	$shipping_address->addChild('address_line1', $saddress1);
+	$shipping_address->addChild('address_line2', $saddress1);
+	$shipping_address->addChild('country', $scountryName);
+	$shipping_address->addChild('city', $scity);
+	$shipping_address->addChild('state', $sstate);
+	$shipping_address->addChild('pincode', $spostcode);
+	$shipping_address->addChild('mobile', $stelephone);
+	$xml->addChild('self_shipping', 'no');
+	$billing_address = $xml->addChild('billing_address');
+	$billing_address->addChild('title', $title);
+	$billing_address->addChild('first_name', $fname);
+	$billing_address->addChild('last_name', $fname);
+	$billing_address->addChild('address_line1', $saddress1);
+	$billing_address->addChild('address_line2', $saddress1);
+	$billing_address->addChild('country', $bcountryName);
+	$billing_address->addChild('city', $scity);
+	$billing_address->addChild('state', $bstate);
+	$billing_address->addChild('pincode', $bpostcode);
+	$billing_address->addChild('mobile', $stelephone);
+	$invoice = $xml->addChild('invoice');
+	$invoice->addChild('invoice_number', $invIncrementIDs);
+	$invoice->addChild('invoice_value', $inv_total);
+	$invoice->addChild('payment_mode', $payment_method);
+	$invoice->addChild('special_instruction', 'Test');
+	$invoice->addChild('discount', round($discount));
+	$invoice->addChild('shipping_charges', round($shipping_amount));
+	$invoice->addChild('order_comment', 'Test');
+	$invoice->addChild('voucher_text', 'Test');
+	$invoice->addChild('voucher_value', '123');
+	$invoice->addChild('cod_convenience_fee', '50');
+	$invoice->addChild('currency', $base_currency_code);
+	$courier = $xml->addChild('courier');
+	$courier->addChild('courier_name', 'Delhivery COD');
+	$courier->addChild('docket_number', '11');
+	$products = $xml->addChild('products');
+	
+	$orderItem = $read->query("SELECT `item_id` FROM `sales_flat_order_item` WHERE `order_id` = '".$order_id."' AND `product_type` = 'configurable'");
+	$allOrderItem = $orderItem->fetchAll();
+	for($i=0;$i<count($allOrderItem);$i++)
+	{	
+		$getSimple = $read->query("SELECT * FROM `sales_flat_order_item` WHERE `order_id` = '".$order_id."' AND `parent_item_id` = '".$allOrderItem[$i]['item_id']."'");
+		$getSimpleRes = $getSimple->fetch();	
+				
+		$_product = Mage::getModel('catalog/product')->load($getSimpleRes['product_id']);	
+				
+		$color_qry = $read->query("SELECT `value` FROM `eav_attribute_option_value` WHERE `option_id` = '".$_product['color']."'");
+		$color_row = $color_qry->fetch();
+			
+		$size_qry = $read->query("SELECT `value` FROM `eav_attribute_option_value` WHERE `option_id` = '".$_product['size']."'");
+		$size_row = $size_qry->fetch();	
+		
+		$color = $color_row['value'];
+		$size = $size_row['value'];
+		$price = $_product['price'];
+		$name = $_product['name'];	
+						
+		$product_detail = $products->addChild('product_detail');
+		$product_detail->addChild('product_name', $name);
+        $product_detail->addChild('product_code', '99-RF-100112-190/SJ');
+		$product_detail->addChild('product_color', $color);
+		$product_detail->addChild('product_design_id', '001');
+        $product_detail->addChild('tax', '0');
+		$product_size = $product_detail->addChild('product_size');
+		$product_size->addChild('size_name', $size);
+		$product_size->addChild('size_quantity', round($order_qty));
+		$product_size->addChild('unit_price', round($price));			
+	}
+	
+	$xml->asXML('xml-file.xml');
+	$xml_str = $xml->asXML();
+}
+?>

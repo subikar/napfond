@@ -1,0 +1,493 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Clearandfizzy
+ *
+ * NOTICE OF LICENSE
+ *
+ *
+ * THE WORK (AS DEFINED BELOW) IS PROVIDED UNDER THE TERMS OF THIS CREATIVE
+ * COMMONS PUBLIC LICENSE ("CCPL" OR "LICENSE"). THE WORK IS PROTECTED BY
+ * COPYRIGHT AND/OR OTHER APPLICABLE LAW. ANY USE OF THE WORK OTHER THAN AS
+ * AUTHORIZED UNDER THIS LICENSE OR COPYRIGHT LAW IS PROHIBITED.
+
+ * BY EXERCISING ANY RIGHTS TO THE WORK PROVIDED HERE, YOU ACCEPT AND AGREE
+ * TO BE BOUND BY THE TERMS OF THIS LICENSE. TO THE EXTENT THIS LICENSE MAY
+ * BE CONSIDERED TO BE A CONTRACT, THE LICENSOR GRANTS YOU THE RIGHTS
+ * CONTAINED HERE IN CONSIDERATION OF YOUR ACCEPTANCE OF SUCH TERMS AND
+ * CONDITIONS.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * versions in the future. If you wish to customize this extension for your
+ * needs please refer to http://www.clearandfizzy.com for more information.
+ *
+ * @category    Community
+ * @package     Clearandfizzy_Reducedcheckout
+ * @copyright   Copyright (c) 2014 Clearandfizzy ltd. (http://www.clearandfizzy.com)
+ * @license     http://creativecommons.org/licenses/by-nd/3.0/ Creative Commons (CC BY-ND 3.0) 
+ * @author		Gareth Price <gareth@clearandfizzy.com>
+ * 
+ */
+-->
+<config>
+
+	<!-- a tab is the BOLD heading on the left hand menu -->
+	<tabs>
+        <clearandfizzy translate="label">
+			<label><![CDATA[<img height="16" width="16" style="vertical-align: top;" src="data:image/png;base64,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" />&nbsp;Clearandfizzy]]></label>
+            <sort_order>1</sort_order>
+        </clearandfizzy>
+    </tabs>  
+    
+	<!-- Group appears as a heading on the right hand side of the screen -->
+    <sections>
+        <clearandfizzy_reducedcheckout_settings>
+ 
+	        <label>Reduced Checkout</label>
+	        <tab>clearandfizzy</tab>    
+			<frontend_type>text</frontend_type>
+	        <sort_order>1020</sort_order>
+	        <show_in_default>1</show_in_default>
+	        <show_in_website>1</show_in_website>
+	        <show_in_store>1</show_in_store>   
+ 
+           	<groups>
+				<reducedcheckout_about>
+					<label>Reduced Checkout</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>10</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+					<comment><![CDATA[ <ol>
+						<li><h3>About</h3></li>
+						<li>Quick checkout without changing the Magento checkout workflow </li>
+						<li>Allows forced Guest Registration.</li>
+						<li>Allows forced Payment method.</li>
+						<li>Allows forced Shipping method.</li>
+						<li>Fix for Magento Shipping Tablerates in 1.7.0.2 <a target="_blank" href="http://www.magentocommerce.com/bug-tracking/issue?issue=14069">http://www.magentocommerce.com/bug-tracking/issue?issue=14069</a></li>
+						<li>Allows you to setup rules based on Customer groups.</li>
+						<li>Focus Checkout mode, configure the checkout page to have reduced clutter.</li>
+                        <li>For support and buckets more features <a target="_blank" style="color: blue;" href="http://www.magentocommerce.com/magento-connect/reduced-checkout-pro-guest-converter.html">Upgrade to the PRO version</a></li>
+						<li>&nbsp;</li>
+						<li><h3>Systems Check</h3></li>
+						<li>Web &gt; Secure &gt; Base URL: <strong id="is-enabled"></span></strong>
+						<li>Web &gt; Secure &gt; Use Secure URLs in Frontend: <strong id="is-secure"></span></strong>
+						<li>&nbsp;</li>
+						<script>
+			            var request_enabled =	new Ajax.Request('/admin/reducedcheckout/issecureenabled', {
+			                parameters: {isAjax: 1, method: 'POST'},
+			                onLoading: function(){$('is-enabled').show();},
+			                onSuccess: function(transport) {
+			                    $('is-enabled').innerHTML = transport.responseText;
+			                }
+			            });
+
+			            var request_secureurl =	new Ajax.Request('/admin/reducedcheckout/isfrontendssl', {
+			                parameters: {isAjax: 1, method: 'POST'},
+			                onLoading: function(){$('is-secure').show();},
+			                onSuccess: function(transport) {
+			                    $('is-secure').innerHTML = transport.responseText;
+			                }
+			            });
+
+
+						</script>
+
+					</ol> ]]></comment>				
+					<expanded>1</expanded>							
+				</reducedcheckout_about>
+				
+				<reducedcheckout>
+					<label>Reduced Checkout Settings </label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>20</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>   
+					<expanded>1</expanded>
+
+					<fields>
+				        <isenabled>
+							<label>Enable Reduced Checkout</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>    				        
+				            <comment>Enable reduced checkout functionality</comment>
+				            <sort_order>10</sort_order>
+				            <show_in_default>1</show_in_default>
+				            <show_in_website>1</show_in_website>
+				            <show_in_store>1</show_in_store>                    
+				        </isenabled>
+				        
+				        <loginstep_type>
+							<label>Login Step</label>
+							<frontend_type>select</frontend_type>
+				            <source_model>clearandfizzy_reducedcheckout/system_config_source_login_step</source_model>
+				            <comment>
+				            <![CDATA[
+				            <a target="_blank" style="color: blue;"href="http://www.magentocommerce.com/magento-connect/reduced-checkout-pro-guest-converter.html">Upgrade to the PRO version</a></li><br />
+				            Select the look of of the login step of the checkout process.
+				            
+				            <script>
+				            	$$('select#clearandfizzy_reducedcheckout_settings_reducedcheckout_loginstep_type option').each(function(o) {
+									if(o.readAttribute('value') == '2') { 
+										o.disabled = true;
+		  							} // end if
+								});
+							</script>
+				            
+				            ]]>
+				            </comment>
+				            <sort_order>20</sort_order>
+				            <show_in_default>1</show_in_default>
+				            <show_in_website>1</show_in_website>
+				            <show_in_store>1</show_in_store>                    
+				        </loginstep_type>					        
+
+						<hide_telephone_fax>
+							<label>Hide Telephone and Fax</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>    				        
+				            <comment>Removes Telephone and Fax from Billing &amp; Shipping steps, hides &amp; defaults these required fields to 00</comment>
+				            <sort_order>21</sort_order>
+				            <show_in_default>1</show_in_default>
+				            <show_in_website>1</show_in_website>
+				            <show_in_store>1</show_in_store>                    
+				        </hide_telephone_fax>	  					        					        					        		        
+
+						<!-- todo: Gp - make this into a drop down menu -->
+				        <default_shipping>
+				            <label>Shipping Method Step</label>
+				            <frontend_type>select</frontend_type>
+				            <source_model>clearandfizzy_reducedcheckout/system_config_source_shipping_enabledmethods</source_model>
+				            <comment>The code for the default shipping method</comment>
+				            <sort_order>30</sort_order>
+				            <show_in_default>1</show_in_default>
+				            <show_in_website>1</show_in_website>
+				            <show_in_store>1</show_in_store>                    
+				        </default_shipping>
+			        
+			        	<default_payment>
+							<!-- todo: Gp - make this into a drop down menu -->
+				            <label>Payment Method Step</label>
+				            <frontend_type>select</frontend_type>
+				            <source_model>clearandfizzy_reducedcheckout/system_config_source_payment_enabledmethods</source_model>
+				            <comment>The code for the default payment method</comment>
+				            <sort_order>40</sort_order>
+				            <show_in_default>1</show_in_default>
+				            <show_in_website>1</show_in_website>
+				            <show_in_store>1</show_in_store>                    
+				        </default_payment>		
+
+						<register_on_order_success>
+							<label>Order Success page - Guest to Customer Converter</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+				            <comment>
+				               <![CDATA[<a target="_blank" style="color: blue;"href="http://www.magentocommerce.com/magento-connect/reduced-checkout-pro-guest-converter.html">Upgrade to the PRO version</a><br />
+				            Enable "Register now" Form on Order Success page - Displays a form encouraging guest users to register. 
+
+							<script>
+								Form.Element.disable('clearandfizzy_reducedcheckout_settings_reducedcheckout_register_on_order_success');
+							</script>
+				               ]]>
+				            </comment>
+				            <sort_order>50</sort_order>
+				            <show_in_default>1</show_in_default>
+				            <show_in_website>1</show_in_website>
+				            <show_in_store>1</show_in_store>                    
+				        </register_on_order_success>	
+				       
+				       	<enable28112fix>
+							<label>Enable Shipping Tablerates Bug #28112 fix</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>    				        
+				            <comment>Enable fix for Magento bug #28112 Shipping tablerates</comment>
+				            <sort_order>70</sort_order>
+				            <show_in_default>1</show_in_default>
+				            <show_in_website>1</show_in_website>
+				            <show_in_store>1</show_in_store>                    
+				        </enable28112fix>	        
+
+				    </fields>    
+				</reducedcheckout>
+				
+				<reducedcheckout_focus>
+					<label>Focus Checkout Settings </label>
+                    <sort_order>30</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>   
+					<expanded>1</expanded>
+					<comment><![CDATA[ <ol>
+						<li><h3>Focus Checkout Settings</h3></li>
+						<li>Streamline the checkout process further by removing as many outbound links / checkout distractions as possible.</li>
+                        <li>&nbsp;</li>
+						<li><b>PLEASE NOTE:</b> These settings will work in the majority of cases however be aware that customised themes may not adhere to best practice guidelines.  For support and buckets more features <a target="_blank" style="color: blue;"href="http://www.magentocommerce.com/magento-connect/reduced-checkout-pro-guest-converter.html">Upgrade to the PRO version</a></li>
+	
+					</ol> ]]></comment>		
+					
+					<fields>
+				        <tidy_header>
+							<label>Clear the Header block of links</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>    				        
+				            <sort_order>10</sort_order>
+				            <show_in_default>1</show_in_default>
+				            <show_in_website>1</show_in_website>
+				            <show_in_store>1</show_in_store>     
+				            <comment>
+					            <![CDATA[
+					            <a target="_blank" style="color: blue;"href="http://www.magentocommerce.com/magento-connect/reduced-checkout-pro-guest-converter.html">Upgrade to the PRO version</a></li><br />
+					            Removed all child blocks from within the "Header" Block.
+					            
+								<script>
+									Form.Element.disable('clearandfizzy_reducedcheckout_settings_reducedcheckout_focus_tidy_header');
+								</script>
+					            
+					            ]]>
+				            </comment>               
+				        </tidy_header>
+				        
+				        <onecolumn>
+							<label>Enabled One Column Layout</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>    				        
+				            <sort_order>20</sort_order>
+				            <show_in_default>1</show_in_default>
+				            <show_in_website>1</show_in_website>
+				            <show_in_store>1</show_in_store>  
+				            <comment>
+					            <![CDATA[
+					            <a target="_blank" style="color: blue;"href="http://www.magentocommerce.com/magento-connect/reduced-checkout-pro-guest-converter.html">Upgrade to the PRO version</a></li><br />
+					            Put the Checkout into a One Column Layout removing any links on the left and right columns.
+					            
+								<script>
+									Form.Element.disable('clearandfizzy_reducedcheckout_settings_reducedcheckout_focus_onecolumn');
+								</script>
+					            
+					            ]]>
+				            </comment>               
+
+				        </onecolumn>	
+				        
+				        <hide_edityourcart>
+							<label>Hide "Edit Your Cart" on checkout</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>    				        
+				            <sort_order>30</sort_order>
+				            <show_in_default>1</show_in_default>
+				            <show_in_website>1</show_in_website>
+				            <show_in_store>1</show_in_store> 
+				            <comment>
+					            <![CDATA[
+					            <a target="_blank" style="color: blue;"href="http://www.magentocommerce.com/magento-connect/reduced-checkout-pro-guest-converter.html">Upgrade to the PRO version</a></li><br />
+					            Hides the "Edit Your Cart" link on the final step of the checkout process - forcusing the user on proceeding onto completing the order.
+					            
+								<script>
+									Form.Element.disable('clearandfizzy_reducedcheckout_settings_reducedcheckout_focus_hide_edityourcart');
+								</script>
+					            
+					            ]]>
+				            </comment>               
+				        </hide_edityourcart>	
+				
+					</fields>
+				</reducedcheckout_focus>
+				
+				<reducedcheckout_cart>
+					<label>Cart Settings</label>
+                    <sort_order>40</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>   
+					<expanded>1</expanded>
+					<comment><![CDATA[ <ol>
+						<li><h3>Focus Cart Settings</h3></li>
+						<li>Streamline the shopping cart by removing checkout distractions.</li>
+                        <li>&nbsp;</li>
+						<li><b>PLEASE NOTE:</b> These settings will work in the majority of cases however be aware that customised themes may not adhere to best practice guidelines.  For support and buckets more features <a target="_blank" style="color: blue;"href="http://www.magentocommerce.com/magento-connect/reduced-checkout-pro-guest-converter.html">Upgrade to the PRO version</a></li>
+					</ol> ]]></comment>		
+					
+					<fields>
+				        <hide_emptycart>
+							<label>Hide Empty-Cart Button</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>    				        
+				            <sort_order>1</sort_order>
+				            <show_in_default>1</show_in_default>
+				            <show_in_website>1</show_in_website>
+				            <show_in_store>1</show_in_store>     
+				            <comment>
+					            <![CDATA[
+					            <a target="_blank" style="color: blue;"href="http://www.magentocommerce.com/magento-connect/reduced-checkout-pro-guest-converter.html">Upgrade to the PRO version</a></li><br />
+					            Remove the "Empty Cart" button focusing the customer to proceed with purchasing all items.
+					            
+								<script>
+									Form.Element.disable('clearandfizzy_reducedcheckout_settings_reducedcheckout_cart_hide_emptycart');
+								</script>
+					            
+					            ]]>
+				            </comment> 
+				        </hide_emptycart>
+
+				        <hide_crosssells>
+							<label>Hide Cross-sells block</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>    				        
+				            <sort_order>2</sort_order>
+				            <show_in_default>1</show_in_default>
+				            <show_in_website>1</show_in_website>
+				            <show_in_store>1</show_in_store>
+				            <comment>
+				            <![CDATA[
+				            <a target="_blank" style="color: blue;"href="http://www.magentocommerce.com/magento-connect/reduced-checkout-pro-guest-converter.html">Upgrade to the PRO version</a></li><br />
+				            Removes the "Cross Sells" block.
+				            
+							<script>
+								Form.Element.disable('clearandfizzy_reducedcheckout_settings_reducedcheckout_cart_hide_crosssells');
+							</script>
+				            
+				            ]]>
+				        	</comment>                      
+				        </hide_crosssells>
+				        
+				        <hide_estimateshipping>
+							<label>Hide Estimate Delivery block</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>    				        
+				            <sort_order>3</sort_order>
+				            <show_in_default>1</show_in_default>
+				            <show_in_website>1</show_in_website>
+				            <show_in_store>1</show_in_store> 
+							<comment>
+				            <![CDATA[
+				            <a target="_blank" style="color: blue;"href="http://www.magentocommerce.com/magento-connect/reduced-checkout-pro-guest-converter.html">Upgrade to the PRO version</a></li><br />
+				            Remove the "Estimate Delivery" Form
+				            
+							<script>
+								Form.Element.disable('clearandfizzy_reducedcheckout_settings_reducedcheckout_cart_hide_estimateshipping');
+							</script>
+				            
+				            ]]>
+				        	</comment>  
+				                            			        
+				        </hide_estimateshipping>	
+				        				        
+				        <hide_discountcode>
+							<label>Hide Discount Code block</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>    				        
+				            <sort_order>4</sort_order>
+				            <show_in_default>1</show_in_default>
+				            <show_in_website>1</show_in_website>
+				            <show_in_store>1</show_in_store>          
+							<comment>
+				            <![CDATA[
+				            <a target="_blank" style="color: blue;"href="http://www.magentocommerce.com/magento-connect/reduced-checkout-pro-guest-converter.html">Upgrade to the PRO version</a></li><br />
+				            Remove the "Discount Code" Block
+				            
+							<script>
+								Form.Element.disable('clearandfizzy_reducedcheckout_settings_reducedcheckout_cart_hide_discountcode');
+							</script>
+				            
+				            ]]>
+				        	</comment>  				            
+				                    			        
+				        </hide_discountcode>	
+
+					</fields>
+				
+				</reducedcheckout_cart>							
+				
+				
+				<reducedcheckout_customergroups>
+					<label>Reduced Checkout Customer Group Settings </label>
+                    <sort_order>50</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>   
+					<expanded>1</expanded>
+					<comment><![CDATA[ 
+					<ol>
+						<li><h3>Customer Groups Rules</h3></li>
+                        <li>This feature will not work if you have chosen to "Hide login step" in the login step options above. This is because a customer needs to login before we can see what group they are in.</li>
+                        <li>For support and buckets more features <a target="_blank" style="color: blue;"href="http://www.magentocommerce.com/magento-connect/reduced-checkout-pro-guest-converter.html">Upgrade to the PRO version</a></li>
+					</ol> ]]></comment>		
+	
+					<fields>
+				        <customergroups_enabled>
+							<label>Enabled Customer Groups</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>    	
+							<comment>				            
+							<![CDATA[
+							<script>
+								Form.Element.disable('clearandfizzy_reducedcheckout_settings_reducedcheckout_customergroups_customergroups_enabled');
+							</script>
+				            ]]>
+							</comment>	
+				            <sort_order>1</sort_order>
+				            <show_in_default>1</show_in_default>
+				            <show_in_website>1</show_in_website>
+				            <show_in_store>1</show_in_store>                    
+				        </customergroups_enabled>
+
+				        <shipping_noskip_customergroups>
+							<label>Do not skip Shipping Method for Customer Groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<source_model>adminhtml/system_config_source_customer_group</source_model>    				        
+				            <sort_order>20</sort_order>
+				            <show_in_default>1</show_in_default>
+				            <show_in_website>1</show_in_website>
+				            <show_in_store>1</show_in_store>             
+				            <comment>
+				            
+				            <![CDATA[
+				            <a target="_blank" style="color: blue;"href="http://www.magentocommerce.com/magento-connect/reduced-checkout-pro-guest-converter.html">Upgrade to the PRO version</a></li><br />
+							Do not skip the shipping method step for these Customer Groups (Useful for b2b or premium customers that need Next Day couriers).				            
+							
+							<script>
+								Form.Element.disable('clearandfizzy_reducedcheckout_settings_reducedcheckout_customergroups_shipping_noskip_customergroups');
+							</script>
+				            
+				            ]]>
+				                       
+				            </comment>                   
+				        </shipping_noskip_customergroups>
+
+				        <payment_noskip_customergroups>
+							<label>Do not skip Payment Method for Customer Groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<source_model>adminhtml/system_config_source_customer_group</source_model>    				        
+				            <sort_order>30</sort_order>
+				            <show_in_default>1</show_in_default>
+				            <show_in_website>1</show_in_website>
+				            <show_in_store>1</show_in_store>                    
+				            <comment>
+				            
+				            <![CDATA[
+				            <a target="_blank" style="color: blue;"href="http://www.magentocommerce.com/magento-connect/reduced-checkout-pro-guest-converter.html">Upgrade to the PRO version</a></li><br />
+							Do not skip the payment method step for these Customer Groups (Useful for b2b customers that have a non-standard / alternative way of paying).				            
+							
+							<script>
+								Form.Element.disable('clearandfizzy_reducedcheckout_settings_reducedcheckout_customergroups_payment_noskip_customergroups');
+							</script>
+				            
+				            ]]>
+				                       
+				            </comment>                   
+				            
+				        </payment_noskip_customergroups>
+					</fields>
+
+				</reducedcheckout_customergroups>
+
+	        </groups>                            
+ 
+        </clearandfizzy_reducedcheckout_settings>
+    </sections>
+ 
+</config>

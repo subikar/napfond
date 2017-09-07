@@ -1,0 +1,2746 @@
+<?php
+/*
+ *
+ * GoMage Product Designer Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use/
+ * @version      Release: 1.0.0
+ * @since        Available since Release 1.0.0
+ */
+$siteBaseUrl = Mage::helper('function/more')->getBhishoomSiteBaseUrl();
+
+
+ $productModel =  Mage::getModel("catalog/product");
+  
+ $_product = $productModel->load( $_GET['id'] ); 
+ 
+ $getMediaGalleryImages = $_product->getMediaGalleryImages(); 
+ 
+$gravitaCustomSessionId =Mage::helper('function')->generateUniqueId(30);
+Mage::getSingleton('core/session')->setGravitaCustomSessionId($gravitaCustomSessionId);
+
+ /******************Code for fetching blank image for masking*********************/  
+ $categoryIds = $_product->getCategoryIds();
+ 
+
+ $graCatLevel = 0; 
+ $graCatIndex = 0;
+ foreach($categoryIds as $categoryIdsIndex => $categoryIdsVal)
+  {
+	$_category2 = Mage::getModel('catalog/category')->load($categoryIdsVal);
+	$categoryLevel = $_category2->getLevel();
+	if($graCatLevel < $categoryLevel){
+	 $graCatLevel = $categoryLevel;
+	 $graCatIndex = $categoryIdsIndex;
+	} 
+  }
+ 
+
+ 
+	$reqCateVar = Mage::app()->getRequest()->getParam('cat_id');
+	$_category = Mage::getModel('catalog/category')->load($reqCateVar); 
+	
+    $path_to_parent_categories = explode('/',$_category->getPath());	
+	 
+	//$graBlankImageFolderKey = $_category->getUrlKey(); 
+	  	  
+	$path = $_category->getPath();
+	
+
+////////////////////////////////////////Code To Save Product Description In Session//////////////////////////////////////////
+
+$full_path = array();
+
+
+
+//$category_id = Mage::getSingleton('core/session')->getCid();
+
+$currentProductId =  $_GET['id'];
+
+
+
+
+
+
+
+
+$path_id = explode("/", $path);
+if($path != '')
+{
+  for($qp=0;$qp<count($path_id);$qp++)
+  {
+	 $full_path[] = Mage::getModel('catalog/category')->load($path_id[$qp])->getName();   
+  }		  
+}
+if($full_path[3] != '')
+{
+	//Mage::getSingleton('core/session')->setType($full_path[3]);
+	$arrSession[$reqCateVar][$currentProductId]['type'] = '';
+}
+if($full_path[4] != '')
+{
+	//Mage::getSingleton('core/session')->setBrand($full_path[4]);
+	$arrSession[$reqCateVar][$currentProductId]['brand'] = $full_path[4];
+}
+if($full_path[5] != '')
+{
+	//Mage::getSingleton('core/session')->setModel($full_path[5]);
+	$arrSession[$reqCateVar][$currentProductId]['model'] = $full_path[5];
+}
+
+$arrSession[$reqCateVar][$currentProductId]['category_id'] = $reqCateVar;
+$arrSession[$reqCateVar][$currentProductId]['detail_url'] = 'noURL';
+//Mage::getSingleton('core/session')->setCid($reqCateVar);
+
+
+//echo '<pre>';
+//print_r($arrSession);
+
+
+//Mage::getSingleton('core/session')->unsPrdetails();
+
+$session_arr = Mage::getSingleton('core/session')->getPrdetails();
+
+if(!is_array($session_arr))
+   	$session_arr = array();
+	
+if(!in_array($arrSession,$session_arr))	
+	array_push($session_arr,$arrSession);
+
+
+Mage::getSingleton('core/session')->setPrdetails($session_arr);
+
+
+//////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+	
+	
+	$ids  = explode('/', $path);
+			unset($ids[0]);
+			
+	$sep='';
+	$id_cat_path='';	
+	$id_cat_path_counter=0;	
+	$sepName='';
+	$id_cat_path_name = '';
+	foreach($ids as $idcat)
+	 {
+		$id_cat_path_counter++;
+	    if($id_cat_path_counter <= 2)
+		continue;
+		$idcat_obj = Mage::getModel('catalog/category')->load($idcat);	
+		$id_cat_path_name .= $sepName.$idcat_obj->getName();
+		$sepName = '/';
+		if((in_array(34,$ids) || in_array(75,$ids) || in_array(3,$ids) || in_array(66,$ids) || ((in_array(478,$ids) || in_array(532,$ids)) && (!in_array(477,$ids) && !in_array(535,$ids)))) && $id_cat_path_counter == 4 /**For handling condition for mobile case and mobile skin**/)
+		  continue;
+		
+			 
+		$id_cat_path .= $sep.$idcat_obj->getUrlKey();
+		$sep = '/';
+	 }	
+	/////Code for passing category path on shopping cart to identify the category of product///////////////////	
+	$id_cat_path_name = $id_cat_path_name.'/'.$reqCateVar;	
+	echo '<script type="text/javascript">jQuery(".txtGraProductDetailsAbt").val("'.$id_cat_path_name.'")</script>';
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	/******************Customizer mask image Contition*******************/ 
+	if(in_array(91,$ids) || in_array(4,$ids)){
+	$for_customizer = 'yes-mobile';
+	$for_customizer_path = 'resized320/for_customizer';
+	$change_popup_options = 'Change Size';
+	}
+	else{
+	$for_customizer = 'yes-mobile';
+	$for_customizer_path = 'resized320/for_customizer';
+	
+		/*if(in_array(3,$ids) || in_array(66,$ids) || in_array(34,$ids) || in_array(75,$ids))
+			$change_popup_options = 'Change Model';*/
+		if(in_array(34,$ids) || in_array(75,$ids))
+			$change_popup_options = 'Change Side';
+		else if(in_array(8,$ids) || in_array(84,$ids) || in_array(478,$ids) || in_array(532,$ids))
+			$change_popup_options = 'Change Size';
+	}
+	 
+	 
+	
+
+	if(in_array(3,$ids) || in_array(66,$ids) /**For handling condition for mobile case and t-shirt**/ || in_array(8,$ids) || in_array(84,$ids) || in_array(478,$ids) || in_array(532,$ids) || in_array(91,$ids) || in_array(4,$ids)){ 
+	
+	  $folderURL = Mage::helper('function')->graGetFolderUrl($id_cat_path);		 
+	  $folderPath = Mage::helper('function')->graGetFolderPath($id_cat_path);
+	  
+	if((in_array(478,$ids) || in_array(532,$ids)) && (!in_array(477,$ids) && !in_array(535,$ids))){
+	  if(!is_file($folderPath . DS . 'resized320/for_customizer' . DS . 'mask-back.png'))
+ 	   $blank_backImagePath = Mage::helper('function')->resizeImg('mask-back.png', 320, 320,$folderURL,$folderPath,'resized320',$for_customizer);
+	  else 	
+	   $blank_backImagePath = $siteBaseUrl.'media/blank_images/'.$id_cat_path.'/'.$graBlankImageFolderKey.'/'.$for_customizer_path.'/mask-back.png';
+	}else{
+	  if(!is_file($folderPath . DS . 'resized320/for_customizer' . DS . 'mask.png'))
+ 	   $blank_backImagePath = Mage::helper('function')->resizeImg('mask.png', 320, 320,$folderURL,$folderPath,'resized320',$for_customizer);
+	  else 	
+	   $blank_backImagePath = $siteBaseUrl.'media/blank_images/'.$id_cat_path.'/'.$graBlankImageFolderKey.'/'.$for_customizer_path.'/mask.png';
+	}   
+	   
+	   //////////////Which side of product show on designer (Fron or Back)//////////////////// This is for case
+	   $showWhichSide = 1;
+	 }
+	else
+	 {
+
+	 
+	    $folderURL = Mage::helper('function')->graGetFolderUrl($id_cat_path);		 
+	    $folderPath = Mage::helper('function')->graGetFolderPath($id_cat_path);
+	   
+	  if(!is_file($folderPath . DS . 'resized320/for_customizer' . DS . 'mask-front.png'))
+	   $blank_frontImagePath = Mage::helper('function')->resizeImg('mask-front.png', 320, 320,$folderURL,$folderPath,'resized320',$for_customizer);
+	  else	  
+	   $blank_frontImagePath = $siteBaseUrl.'media/blank_images/'.$id_cat_path.'/'.$for_customizer_path.'/mask-front.png';	
+	   
+	  if(!is_file($folderPath . DS . 'resized320/for_customizer' . DS . 'mask-back.png')) 
+ 	   $blank_backImagePath = Mage::helper('function')->resizeImg('mask-back.png', 320, 320,$folderURL,$folderPath,'resized320',$for_customizer);	   
+	  else 
+	   $blank_backImagePath = $siteBaseUrl.'media/blank_images/'.$id_cat_path.'/'.$for_customizer_path.'/mask-back.png'; 
+	   
+	   //////////////Which side of product show on designer (Fron or Back) This is for skin////////////////////
+	   $showWhichSide = 2;
+	   
+	 }
+
+ /********************************************************************************/
+			
+/**********************Code for setting color option for customizer************************/			
+ 
+if(in_array(91,$ids) || in_array(4,$ids)){
+//////////////Which side of product show on designer (Fron or Back) This is for tshirt////////////////////
+$showWhichSide=1;
+$change_popup_options = 'Change Size';
+$tshirtCustomizerPage = 'yes';
+
+//$arrcolor_options = array('black'=>'0, 0, 0','green'=>'0, 128, 0','light_blue'=>'173, 216, 230','mahroon'=>'128, 0, 0','navy_blue'=>'0, 0, 128','pink'=>'250, 175, 190','purple'=>'128, 0, 128','red'=>'255, 0, 0','royal_blue'=>'43, 96, 222','white'=>'255, 255, 255','yellow'=>'255, 255, 0','grey_melenge'=>'84, 84, 84'); 
+
+$arrcolor_options = array('black'=>'17, 17, 17','green'=>'0, 165, 66','light_blue'=>'0, 189, 205','mahroon'=>'92, 0, 4','navy_blue'=>'11, 30, 62','pink'=>'255, 170, 214','purple'=>'75, 7, 125','red'=>'196, 0, 0','royal_blue'=>'0, 64, 193','white'=>'243, 243, 243','yellow'=>'234, 236, 64','grey_melenge'=>'224, 213, 202');
+$style_for_tshirt="background:rgba(255, 255, 255, 0.7);z-index: 1000;";
+$for_customizer = 'yes';
+
+ 
+  foreach($arrcolor_options as $arrcolor_options_key=>$arrcolor_options_val){
+	  $folderURL = Mage::helper('function')->graGetFolderUrl($id_cat_path);		 
+	  $folderPath = Mage::helper('function')->graGetFolderPath($id_cat_path);
+    ///////FOR A3
+	  if(!is_file($folderPath . DS . 'resized320/for_customizer/A3/'.$arrcolor_options_key. DS . 'mask.png'))
+	  {
+	   if(!is_dir($folderPath . DS . 'resized320'. DS .'for_customizer'. DS .'A3')){
+	    mkdir($folderPath . DS . 'resized320'. DS .'for_customizer'. DS .'A3');
+	   }
+	   if(!is_dir($folderPath . DS . 'resized320'. DS .'for_customizer'. DS .'A3'. DS .$arrcolor_options_key)){
+	    mkdir($folderPath . DS . 'resized320'. DS .'for_customizer'. DS .'A3'. DS .$arrcolor_options_key);
+	   }
+ 	   Mage::helper('function')->resizeImg('A3/'.$arrcolor_options_key. DS .'mask.png', 320, 320,$folderURL,$folderPath,'resized320',$for_customizer);  
+	  } 
+	  if(!is_file($folderPath . DS . 'resized320/for_customizer/A4/'.$arrcolor_options_key. DS . 'mask.png'))
+	  {
+	   if(!is_dir($folderPath . DS . 'resized320'. DS .'for_customizer'. DS .'A4')){
+	    mkdir($folderPath . DS . 'resized320'. DS .'for_customizer'. DS .'A4');
+	   }
+	   if(!is_dir($folderPath . DS . 'resized320'. DS .'for_customizer'. DS .'A4'. DS .$arrcolor_options_key)){
+	    mkdir($folderPath . DS . 'resized320'. DS .'for_customizer'. DS .'A4'. DS .$arrcolor_options_key);
+	   }
+ 	   Mage::helper('function')->resizeImg('A4/'.$arrcolor_options_key. DS .'mask.png', 320, 320,$folderURL,$folderPath,'resized320',$for_customizer);  
+	  } 
+	  
+	  echo "<img src='".$folderURL."/resized320/for_customizer/A3/".$arrcolor_options_key."/mask.png' class='displayNone' />";
+	  echo "<img src='".$folderURL."/resized320/for_customizer/A4/".$arrcolor_options_key."/mask.png' class='displayNone' />";
+	  
+	  //////////////////////////////////////////////Without inner border///////////////////////////////////////////////////////
+
+    ///////FOR A3
+	  if(!is_file($folderPath . DS . 'resized320/for_customizer/without-inner-border/A3/'.$arrcolor_options_key. DS . 'mask.png'))
+	  {
+	   if(!is_dir($folderPath . DS . 'resized320'. DS .'for_customizer/without-inner-border'. DS .'A3')){
+	    mkdir($folderPath . DS . 'resized320'. DS .'for_customizer/without-inner-border'. DS .'A3');
+	   }
+	   if(!is_dir($folderPath . DS . 'resized320'. DS .'for_customizer/without-inner-border'. DS .'A3'. DS .$arrcolor_options_key)){
+	    mkdir($folderPath . DS . 'resized320'. DS .'for_customizer/without-inner-border'. DS .'A3'. DS .$arrcolor_options_key);
+	   }
+		Mage::helper('function')->resizeImg('without-inner-border/A3/'.$arrcolor_options_key. DS .'mask.png', 320, 320,$folderURL,$folderPath,'resized320',$for_customizer);  
+	  } 
+	  if(!is_file($folderPath . DS . 'resized320/for_customizer/without-inner-border/A4/'.$arrcolor_options_key. DS . 'mask.png'))
+	  {
+	   if(!is_dir($folderPath . DS . 'resized320'. DS .'for_customizer/without-inner-border'. DS .'A4')){
+	    mkdir($folderPath . DS . 'resized320'. DS .'for_customizer/without-inner-border'. DS .'A4');
+	   }
+	   if(!is_dir($folderPath . DS . 'resized320'. DS .'for_customizer/without-inner-border'. DS .'A4'. DS .$arrcolor_options_key)){
+	    mkdir($folderPath . DS . 'resized320'. DS .'for_customizer/without-inner-border'. DS .'A4'. DS .$arrcolor_options_key);
+	   }
+		Mage::helper('function')->resizeImg('without-inner-border/A4/'.$arrcolor_options_key. DS .'mask.png', 320, 320,$folderURL,$folderPath,'resized320',$for_customizer);  
+	  } 
+	  
+	  echo "<img src='".$folderURL."/resized320/for_customizer/without-inner-border/A3/".$arrcolor_options_key."/mask.png' class='displayNone' />";
+	  echo "<img src='".$folderURL."/resized320/for_customizer/without-inner-border/A4/".$arrcolor_options_key."/mask.png' class='displayNone' />";
+	  
+	  
+  }
+  
+
+  
+?>
+<script type="text/javascript">
+folderUrl = '<?php echo $folderURL?>';
+jQuery('.size_chart').removeClass("displayNone");
+var tshirtObj =  {
+    'A3W': '',
+    'A3H': '',
+    'A3L': '',
+    'A3T': '',
+    'A3ImageId': '',
+    'A4W': '',
+    'A4H': '',
+    'A4L': '',
+    'A4T': '',
+    'A4ImageId': ''
+};
+<?php
+$images = $this->getProductImages();
+foreach ($images as $k => $v){
+
+?>
+<?php
+if($_product->getMediaGalleryImages()->getItemByColumnValue('label', 'A3')->getId() == $v['image_id']){
+?>
+tshirtObj.A3W = '<?php echo $v['w']?>';
+tshirtObj.A3H = '<?php echo $v['h']?>';
+tshirtObj.A3T = '<?php echo $v['t']?>';
+tshirtObj.A3L = '<?php echo $v['l']?>';
+tshirtObj.A3ImageId = '<?php echo $v['image_id']?>';
+<?php 
+}
+if($_product->getMediaGalleryImages()->getItemByColumnValue('label', 'A4')->getId() == $v['image_id']){
+?>
+tshirtObj.A4W = '<?php echo $v['w']?>';
+tshirtObj.A4H = '<?php echo $v['h']?>';
+tshirtObj.A4T = '<?php echo $v['t']?>';
+tshirtObj.A4L = '<?php echo $v['l']?>';
+tshirtObj.A4ImageId = '<?php echo $v['image_id']?>';
+<?php 
+}
+}
+?>
+function adjustCanvasObjectProportionally(tshirtObjDsgArea){
+
+jQuery("#pd_container").css( "background","none" );		
+	//return;
+	/*if(tshirtObjDsgArea == 'A3'){
+		w = tshirtObj.A3W
+		h = tshirtObj.A3H
+		t = tshirtObj.A3T
+		l = tshirtObj.A3L
+		ratioW = (tshirtObj.A3W/tshirtObj.A4W)
+		ratioH = (tshirtObj.A3H/tshirtObj.A4H)
+		
+		marginTop = parseInt(t) - Math.round(parseInt(h) / 2);		
+        var x1 = Math.round(objCallDirectContainer.getWidth() / 2);
+        var x2 = Math.round(w / 2);		
+		marginLeft = parseInt(x1 - x2) + parseInt(l) - Math.round(w / 2);
+		objCallDirectForDesignArea.setAttribute('id', 'designArea-'+tshirtObj.A3ImageId);
+		delete objCallDirectForDesignAreaThisObj.containerCanvases[tshirtObj.A4ImageId];
+		objCallDirectForDesignAreaThisObj.containerCanvases[tshirtObj.A3ImageId] = objCallDirectForDesignAreaThisObj.canvas;
+	}
+	else if(tshirtObjDsgArea == 'A4'){
+		w = tshirtObj.A4W
+		h = tshirtObj.A4H
+		t = tshirtObj.A4T
+		l = tshirtObj.A4L
+		
+		ratioW = (tshirtObj.A4W/tshirtObj.A3W);
+		ratioH = (tshirtObj.A4H/tshirtObj.A3H);
+
+		marginTop = parseInt(t) - Math.round(parseInt(h) / 2);
+        var x1 = Math.round(objCallDirectContainer.getWidth() / 2);
+        var x2 = Math.round(w / 2);
+		marginLeft = parseInt(x1 - x2) + parseInt(l) - Math.round(w / 2);
+		objCallDirectForDesignArea.setAttribute('id', 'designArea-'+tshirtObj.A4ImageId);
+		delete objCallDirectForDesignAreaThisObj.containerCanvases[tshirtObj.A3ImageId];
+		objCallDirectForDesignAreaThisObj.containerCanvases[tshirtObj.A4ImageId] = objCallDirectForDesignAreaThisObj.canvas;
+	}
+	 
+	
+		marginLeft = Math.round(marginLeft/2)
+		
+        objCallDirectForDesignArea.style.marginLeft = marginLeft + 'px';
+        objCallDirectForDesignArea.style.marginTop  = marginTop + 'px'; 
+		
+  
+		
+		jQuery('.canvas-container').css('width',w+'px');
+		jQuery('.canvas-container').css('height',h+'px');
+							 
+		jQuery('.lower-canvas').css('width',w+'px');
+		jQuery('.lower-canvas').css('height',h+'px');
+							 
+		jQuery('.upper-canvas').css('width',w+'px');
+		jQuery('.upper-canvas').css('height',h+'px');
+							 
+		jQuery('.pd-design-area').css('margin-left',marginLeft+'px');
+		jQuery('.pd-design-area').css('margin-top',marginTop+'px');
+							 
+		jQuery('.lower-canvas').attr('width',w);
+		jQuery('.lower-canvas').attr('height',h);
+							 
+		jQuery('.upper-canvas').attr('width',w);
+		jQuery('.upper-canvas').attr('height',h);
+			
+		objCallDirectForProduct.w = w;
+		objCallDirectForProduct.h = h;
+							 
+		objCallDirectForCanvas['width'] = w;
+		objCallDirectForCanvas['height'] = h;
+		*/
+		
+		////////////////////replaceCode/////////////////////////////
+		if(jQuery('#print_area2').is(':checked'))
+		 {
+			ratioW = 130/162;
+			ratioH = 170/208;
+		 }
+		if(jQuery('#print_area1').is(':checked'))
+		 {
+			ratioW = 162/130;
+			ratioH = 208/170;
+		 }
+		////////////////////////////////////////////////////////////
+		var obj = objCallDirectForCanvas.getObjects();
+		
+		for (var i in obj) {
+
+			var scaleX =0;
+			var scaleY =0;
+		
+		if(typeof obj[i].type == 'undefined')
+		 continue;
+
+		scaleY = obj[i].height;
+		scaleX = obj[i].width; 
+				
+        var left = obj[i].left;
+        var top = obj[i].top;
+        var tempScaleX = scaleX * ratioW;
+        var tempScaleY = scaleY * ratioH;
+        var tempLeft = left * ratioW;
+        var tempTop = top * ratioH; 
+		
+        obj[i].width =  tempScaleX;
+        obj[i].height = tempScaleY;
+        //obj[i].left = tempLeft;
+        //obj[i].top = tempTop;
+
+		if(jQuery('#print_area1').is(':checked'))
+			obj[i].top = obj[i].top + 11;
+		if(jQuery('#print_area2').is(':checked'))
+			obj[i].top = obj[i].top - 11;
+		
+		//alert(obj[i].left);
+		//alert(obj[i].top);
+		
+		
+		
+		
+		 //obj[i].top = obj[i].top-10;			
+		
+        //obj[i].setCoords();
+		
+		objCallDirectForCanvas.renderAll();
+		
+		objCallDirectForCanvas.on('after:render', function(){
+			objCallDirectForCanvas.calcOffset();
+		});
+		
+    }
+
+	orderAthreeAfour = 'adjustCanvasObject'	
+	//jQuery('.btnBoxLeft').removeClass('show');
+}
+</script>
+<?php  
+}
+else if(in_array(34,$ids) || in_array(3,$ids) || in_array(75,$ids) || in_array(66,$ids) || in_array(84,$ids) || in_array(532,$ids)){
+$arrcolor_options = array('255, 255, 255','127, 63, 152','239, 65, 54','35, 31, 32','194, 158, 79','241, 90, 41','204, 255, 51','218, 28, 92','251, 176, 64','255, 0, 0','173, 100, 168','255, 222, 23','28, 190, 202','194, 174, 208','255, 255, 102','243, 115, 33','141, 198, 63','255, 255, 204','185, 47, 146','0, 104, 56','204, 204, 153','255, 0, 0');
+}
+
+/******************************************************************************************/			
+			
+ 
+    
+?>
+<?php /*?>
+<style type="text/css">
+img { display: block; max-width: none !important; height: auto; }
+.col-sm-5{
+width:43.667%;
+}
+.col-sm-3{
+width:23%;
+}
+</style>
+<?php */?>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery.fancybox.js');?>"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('css/jquery.fancybox.css');?>" media="all" />
+<?php
+$_product = $this->getProduct();
+//Is Product Navigation (Choose Product) Tab Enabled
+$navigationEnabled = $this->isNavigationEnabled();
+
+//Is Design (Add Design) Tab Enabled
+$designEnabled = $this->isDesignEnabled() && $_product->getId();
+
+//Is Text (Add Text) Tab Enabled
+$textEnabled = $this->isTextEnabled() && $_product->getId();
+
+//Is Image (Upload Image) Tab Enabled
+$imageEnabled = $this->isUploadImageEnabled() && $_product->getId();
+
+$productImageMinSize = $this->getProductOriginalImageMinSizes();
+
+
+?>
+<script type="text/javascript">
+
+var objCallDirect = 'complete';
+
+var objCallDirectDesignerImage = 'complete';
+
+var objCallDirectContainer = 'complete';
+
+var objCallDirectForResize = 'complete';
+
+var objCallDirectForCanvas = 'complete';
+
+var objCallDirectForDesignAreaThisObj = 'complete';
+
+var objCallDirectForObserveLogin = 'complete';
+var objCallDirectForObserveSaveDesign = 'complete';
+
+var objStoreTshirtImageColor = new Array();
+var objStoreTshirtImageColorKey;
+var objStoreTshirtImageColorKeyArr = new Array();
+
+var objCallDirectForProduct;
+
+var GraProductId = '<?php echo $_GET['id']?>';
+
+var hellotest = '';
+var optionsPrice = new Product.OptionsPrice(<?php echo $this->helper('gomage_designer')->getProductPriceConfigJson(); ?>);
+function initProductDesigner() {
+	var settings = {};
+	settings.navigation = {
+		chooseProduct : $("pd_choose_product"),
+		addDesign : $("pd_add_design"),
+		addText : $("pd_add_text"),
+		addImage : $("pd_add_image"),
+		designGallery : $("pd_design_gallery"),
+		saveDesign: $("pd_save_design"),
+		continue : $('pd_gt_product'),
+		zoom: $('pd_zoom')
+	};
+
+	settings.controls = {
+		undo: 'pd_undo',
+		redo: 'pd_redo',
+		flip_x: 'pd_flip_horizontal',
+		flip_y: 'pd_flip_vertical',
+		allign_by_center: 'pd_allign_by_center',
+		remove: 'pd_delete'
+	};
+
+	settings.imageMinSize = <?php echo $this->getProductOriginalImageMinSizesJson(); ?>;
+
+	settings.prices = <?php echo $this->getDesignPriceConfigJson(); ?>;
+	settings.isCustomerLoggedIn = '<?php echo $this->isCustomerLoggedIn(); ?>';
+	settings.isProductSelected = <?php echo $this->isProductSelected() ? 1 : 0; ?>;
+	settings.isNavigationEnabled = <?php echo $this->isNavigationEnabled(); ?>;
+	settings.isDesignedEnabled = <?php echo $this->isDesignEnabled(); ?>;
+	settings.isTextEnabled = <?php echo $this->isTextEnabled(); ?>;
+	settings.isUploadImageEnabled = <?php echo $this->isUploadImageEnabled(); ?>;
+	settings.product = <?php echo $this->getEditorConfigJson(); ?>;
+	settings.container = $("pd_container");
+
+	window.w = new GoMage.ProductDesigner(settings,
+		'<?php echo Mage::getUrl('*/index/continue')?>',
+		'<?php echo Mage::getUrl('*/customer/loginPost')?>',
+		'<?php echo Mage::getUrl('*/customer/createPost')?>',
+		'<?php echo Mage::getUrl('*/index/saveDesign')?>'
+	);
+}
+document.observe("dom:loaded", function(e){
+	initProductDesigner();
+}.bind(this));
+
+
+jQuery(document).ready(function() {
+	jQuery("#divform").fancybox({
+			'titlePosition'		: 'inside',
+			'transitionIn'		: 'none',
+			'transitionOut'		: 'none',
+		'afterLoad' : function(){
+			 jQuery('#filter_loading_image').show();load_img('3d')
+			}			
+		});
+	
+jQuery("#divform").click(function(){
+jQuery('.UploadPhotoDivCustomizerInsta').hide();jQuery('.UploadPhotoDivCustomizerFB').hide();jQuery('.UploadPhotoDivCustomizer').hide();	
+});
+	
+
+	
+	jQuery("#divform_upload_photos").fancybox({
+			'titlePosition'		: 'inside',
+			'transitionIn'		: 'none',
+			'transitionOut'		: 'none'
+		});
+	/*	
+	jQuery("#cliparts-list").fancybox({
+			'titlePosition'		: 'inside',
+			'transitionIn'		: 'none',
+			'transitionOut'		: 'none'
+		});
+	*/
+	/*	
+	jQuery("#show_bhishoom_font_seleteor_div_fabx").fancybox({
+			'titlePosition'		: 'inside',
+			'transitionIn'		: 'none',
+			'transitionOut'		: 'none'
+		});
+	*/	
+	jQuery("#divform2").fancybox({
+			'titlePosition'		: 'inside',
+			'transitionIn'		: 'none',
+			'transitionOut'		: 'none'
+		});
+		/*
+	jQuery("#divform3").fancybox({
+			'titlePosition'		: 'inside',
+			'transitionIn'		: 'none',
+			'transitionOut'		: 'none'
+		});*/
+});
+
+function load_img(id)
+{
+  jQuery('#filter_loading_image').show();
+  document.getElementById("uploadedImages1").innerHTML = '';
+  //var dataString='cat_id='+id+'&cat_name='+name;
+  var dataString='cat_id='+id+'&tshirtCustomizerPage=<?php echo $tshirtCustomizerPage?>';
+  jQuery.ajax({
+	  type: "POST",
+	  url: '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>stock_images.php',
+	  data: dataString,
+	  success: function(data){
+		  if(data)
+		  {
+			  document.getElementById("uploadedImages1").innerHTML = data;
+			  
+			  jQuery("#uploadedImages1 img").click(function(){
+			  
+			     
+				 
+ data_origin_url = jQuery(this).attr("data-origin-url")
+				 
+				 
+				
+				 
+				 
+if(jQuery(this).attr("data-origin-url") == '')
+ data_origin_url = this.src;
+ 
+ //onClickUserInstImages2(this.src,data_origin_url) 
+ 
+ //////////////////////////////onClickUserInstImages2   funciton code is not working on google chrome, place here/////
+jQuery('#social_media_img_container').append('<li><img class="clipart-image" src="'+this.src+'" data-origin-url="'+data_origin_url+'"><span onclick="jQuery(this).parent().remove();">X</span></li>')				 
+//////////////////////////////end of onClickUserInstImages2   funciton code is not working on google chrome, place here/////				 
+				 
+				 
+
+			  }); 		 
+			  
+			  jQuery('#filter_loading_image').hide();
+		  }
+	  }
+  });
+}
+
+
+
+function load_fonts_by_cat(id)
+{
+ window.scrollTo(0,0);
+  //var dataString='cat_id='+id+'&cat_name='+name;
+  var dataString='cat_id='+id;
+  jQuery.ajax({
+	  type: "GET",
+	  url: '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>fetch_fonts_mobile.php',
+	  data: dataString,
+	  success: function(data){
+		  if(data)
+		  {
+			  document.getElementById("srightHTML").innerHTML = data;
+			  //jQuery(".fancybox-skin .demoTest").bigText();
+			 /* jQuery("#uploadedImages1 img").click(function(){
+			  
+			     
+				 
+ data_origin_url = jQuery(this).attr("data-origin-url")				 
+				 
+				 
+				
+				 
+				 
+if(jQuery(this).attr("data-origin-url") == '')
+ data_origin_url = this.src;
+ 
+ //onClickUserInstImages2(this.src,data_origin_url) 
+ 
+ //////////////////////////////onClickUserInstImages2   funciton code is not working on google chrome, place here/////
+jQuery('#social_media_img_container').append('<li><img class="clipart-image" src="'+this.src+'" data-origin-url="'+data_origin_url+'"><span onclick="jQuery(this).parent().remove();">X</span></li>')				 
+//////////////////////////////end of onClickUserInstImages2   funciton code is not working on google chrome, place here/////				 
+				 
+				 
+
+			  }); 		 */
+			  
+			  jQuery('#filter_loading_image').hide();
+		  }
+	  }
+  });
+}
+
+
+jQuery(document).ready(function () {	
+  /*jQuery('#pd_sides').click(function () {
+	  var text = jQuery(this).children('.pd_sides_list');
+	  if (text.is(':hidden')) {
+		  text.slideDown('1000');
+		  jQuery(this).children('.arror_img').html('<?php echo $img2; ?>');		
+	  } else {
+		  text.slideUp('1000');
+		  jQuery(this).children('.arror_img').html('<?php echo $img1; ?>');		
+	  }		
+  });*/
+  jQuery(".show_popup_mobile_close").click(function(){
+	  jQuery(".show_popup_mobile").addClass('displayNone');
+  });
+});
+function resizedLayerImageDimesion(prodW,prodH,layerW,layerH){
+ 
+
+<?php if($reqCateVar==92 || $reqCateVar==96 || $reqCateVar == 97){ ?>
+		if(jQuery('#print_area1').is(':checked')){
+		 prodH = 208;
+		 prodW = 162;
+		 }
+		if(jQuery('#print_area2').is(':checked')){
+		 prodH = 170;
+		 prodW = 130;
+		 }
+<?php }?> 
+ 
+        var maxWidth = prodH; // Max width for the image
+        var maxHeight = prodH;    // Max height for the image
+        var ratio = 0;  // Used for aspect ratio
+        var width = layerW;    // Current image width
+        var height = layerH;  // Current image height
+
+        // Check if current height is larger than max
+        if(height > maxHeight){
+            ratio = maxHeight / height; // get ratio for scaling image
+            width = width * ratio;    // Reset width to match scaled image
+            height = height * ratio;    // Reset height to match scaled image
+			 
+        }
+		else if(width > maxWidth){
+            ratio = maxWidth / width;   // get ratio for scaling image
+            height = height * ratio;    // Reset height to match scaled image
+            width = width * ratio;    // Reset width to match scaled image
+        }
+
+		 if(width > jQuery("#pd_container").width())
+			width =  (jQuery("#pd_container").width())
+		 
+		 if(height > jQuery("#pd_container").height())
+			height =  (jQuery("#pd_container").height())
+			
+			
+			//width =  width - 10
+			//height =  height - 10
+			
+			
+	return [(width), (height)];
+}
+
+
+
+
+function load_clipart_img(id)
+{
+	jQuery("#show_div_clp_art").removeClass("displayNone");
+  //alert("sdfads")
+  //var dataString='cat_id='+id+'&cat_name='+name;
+  var dataString='mainCategory='+id+'&ajax=true&onlyClipArt=yes';
+  jQuery.ajax({
+	  type: "POST",
+	  url: '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>designer/index/filterCliparts/',
+	  data: dataString,
+	  success: function(data){
+		  if(data)
+		  {
+		     
+			  
+			  document.getElementById("clip_art_images_res").innerHTML = data;
+			  
+			  jQuery("#clip_art_images_res img").click(function(){
+			  
+			     
+				 
+ data_origin_url = jQuery(this).attr("data-origin-url")				 
+				 
+				 
+				
+				 
+				 
+if(jQuery(this).attr("data-origin-url") == '')
+ data_origin_url = this.src;
+ 
+ //onClickUserInstImages2(this.src,data_origin_url) 
+ 
+ //////////////////////////////onClickUserInstImages2   funciton code is not working on google chrome, place here/////
+jQuery('#social_media_img_container').append('<li><img class="clipart-image" src="'+this.src+'" data-origin-url="'+data_origin_url+'"><span onclick="jQuery(this).parent().remove();">X</span></li>')				 
+//////////////////////////////end of onClickUserInstImages2   funciton code is not working on google chrome, place here/////				 
+				 
+				jQuery("#show_div_clp_art").addClass("displayNone"); 
+
+			  }); 		 
+			  
+			  jQuery('#filter_loading_image').hide();
+		  }
+	  }
+  });
+}
+
+function load_bhishoom_fonts(id)
+{
+	window.scrollTo(0,0);
+  //alert("sdfads")
+  //var dataString='cat_id='+id+'&cat_name='+name;
+  jQuery("#show_bhishoom_font_seleteor_div").removeClass("displayNone")
+  var dataString='mainCategory='+id+'&ajax=true&onlyClipArt=yes';
+  var dataString='';
+  jQuery.ajax({
+	  type: "POST",
+	  url: '<?php echo $siteBaseUrl; ?>fetch_fonts_mobile.php',
+	  data: dataString,
+	  success: function(data){
+		  if(data)
+		  {
+		     
+			  
+			  document.getElementById("choose_fonts").innerHTML = data;
+			  //jQuery(".fancybox-skin .demoTest_bigtext").bigText();
+			  
+			 
+			  
+			  jQuery("#bhishoom_font_selector").click(function(){
+					//alert("hello and that")	  
+									 
+					/*			 
+					data_origin_url = jQuery(this).attr("data-origin-url")													 
+					if(jQuery(this).attr("data-origin-url") == '')
+						data_origin_url = this.src;					 
+					//onClickUserInstImages2(this.src,data_origin_url)
+					//////////////////////////////onClickUserInstImages2   funciton code is not working on google chrome, place here/////
+					jQuery('#social_media_img_container').append('<li><img class="clipart-image" src="'+this.src+'" data-origin-url="'+data_origin_url+'"><span onclick="jQuery(this).parent().remove();">X</span></li>')				 
+					//////////////////////////////end of onClickUserInstImages2   funciton code is not working on google chrome, place here/////				 
+					*/ 
+				 
+
+			  }); 		 
+			  
+			  jQuery('#filter_loading_image').hide();
+		  }
+	  }
+  });
+}
+
+
+</script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery.maskImage.js');?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery-ui1.11.1.js');?>"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('css/jquery-ui1.8.css');?>" media="all" />
+<script type="text/javascript">
+//jQuery(function() {
+//				// first, do a quick demo using black-to-red.png
+//	/*jQuery('#img1').maskImage({'src':'http://dev.gravitainfotech.com:8282/projects/Active/jazzy1/media/catalog/product/cache/1/base_image/400x520/17f82f742ffe127f42dca9de82fb58b1/m/a/mask-2_1.png'});*/
+//	
+//	// now, let's set up the select to change things on the fly
+//	jQuery('.clipart-image').click(function(){
+//		alert("hello");
+//		var val=jQuery(this).val();
+//		jQuery('.pd-canvas-pane')
+//			.attr('src', 'http://dev.gravitainfotech.com:8282/projects/Active/jazzy1/media/gomage/productdesigner/uploadedImage/cache/64_64/2m5j4n71f8pimjpngqg52gro65/89a19191b0d94ad44e05ani-005.jpg')
+//			.maskImage({'src':'http://dev.gravitainfotech.com:8282/projects/Active/jazzy1/media/catalog/product/cache/1/base_image/400x520/17f82f742ffe127f42dca9de82fb58b1/m/a/mask-2_1.png'});
+//	});
+//});
+
+/*var c = document.getElementById("pd-canvas-id");
+			var child = c.children[0];
+			alert(child);*/
+			
+jQuery(document).ready(function() 
+{
+	
+	var ctx = jQuery('#pd-canvas-id').get(0);
+ 
+	 //caches the query when dom is ready
+	
+	//var images = jQuery('#myfirsttestt');
+	
+	var CELL_WIDTH = 150;
+	var CELL_HEIGHT = 160;
+	var ASPECT = 1.5;        
+	/*jQuery( "#slider" ).slider({
+		step: 0.1,
+		min: 0.1,
+		max: 3,
+		value:0.1,
+		slide: function(event, ui) {
+		
+			 //jQuery( "#ammount" ).val( "$" + ui.value );
+			 if(ui.value == 0)
+			  return;
+			 objCallDirectForResize.observeCanvasObjectModifiedCustom((ui.value)) 
+			//alert(hellotest)
+				//var images = hellotest;
+			//var size = (CELL_WIDTH * ui.value / 100) + "px";
+			//var size1 = (CELL_HEIGHT * ui.value / 50) + "px";
+			//images.stop(true).animate({width: size, height: size1}, 250);
+		}
+	});	*/
+	
+	
+	jQuery( "#slider" ).change(function(){
+
+			//alert(jQuery(this).val())
+			 //jQuery( "#ammount" ).val( "$" + ui.value );
+			 if(jQuery(this).val() == 0)
+			  return;
+			 objCallDirectForResize.observeCanvasObjectModifiedCustom((jQuery(this).val())) 
+			//alert(hellotest)
+				//var images = hellotest;
+			//var size = (CELL_WIDTH * ui.value / 100) + "px";
+			//var size1 = (CELL_HEIGHT * ui.value / 50) + "px";
+			//images.stop(true).animate({width: size, height: size1}, 250);
+		
+	});
+	/*
+	  jQuery('#slider1').slider({
+		  step: 10,
+		  min: 0,
+		  max: 360,
+		  value: 0,
+		  slide: function(event, ui) {
+				  //jQuery('.pd-canvas-pane').css('transform','rotate('+ui.value+'deg)'); 
+					objCallDirectForResize.observeCanvasObjectModifiedMovingCustom((ui.value));
+
+				  
+		  }
+	 });*/
+	  jQuery('#slider1').change(function(){
+
+				  //jQuery('.pd-canvas-pane').css('transform','rotate('+ui.value+'deg)'); 
+			 if(jQuery(this).val() == 0)
+			  return;				  
+			objCallDirectForResize.observeCanvasObjectModifiedMovingCustom((jQuery(this).val()));
+
+				  
+		  
+	 });
+
+/*
+document.addEventListener('touchmove', function(e) {
+    e.preventDefault();
+    var touch = e.touches[0];
+    alert(touch.pageX + " - " + touch.pageY);
+}, false);
+*/
+	 
+});
+
+
+
+</script>
+<style type="text/css">
+#slider { width: 150px; margin: 20px 0; }
+#slider1 { width: 150px; margin: 20px 0; }
+</style>
+<?php 
+$img1 = '<img src="'.$this->getSkinUrl('images/image-section-arrow-bottom1.png').'" alt="Arrow" width="11" height="8" align="right" style="cursor:pointer; margin-top:5px;"/>';
+$img2 = '<img src="'.$this->getSkinUrl('images/image-section-arrow-right.png').'" alt="Arrow" width="8" height="11" align="right" style="cursor:pointer; margin-top:5px;"/>';
+?>
+
+<div id="product-designer" class="product-designer mobileDesigner">
+  <div class="product-designer-header"></div>
+  
+        <div id="design_price_container" class="product-designer-price" style="<?php if(!$this->isProductSelected()) echo "display: none"?>;height: 93px !important;max-height: 93px !important;"> <?php echo $_product->getName();?> - <?php echo $this->getChildHtml('design_price'); ?> <!--<span id="optionStrsss" class="displayNone"></span>--><span id="chgOptionsCustomize" class="red marLeft10pxCss fontSize10px cursorPointer" onclick="jQuery('#productOptionsDiv').show();"><?php echo $change_popup_options?></span>
+          <?php if($tshirtCustomizerPage == 'yes'){?>
+          <div style="text-align:center;font-weight:normal;position: absolute;z-index: 1001;left:1%;"> Choose Print Area:
+            <input type="radio" name="print_area" id="print_area1" class="class_a3" value="A3" onclick="adjustCanvasObjectProportionally('A3');selectDropDownByText('.printArea','A3');checkCustomizerSelectValue(jQuery('.printArea'));updateCustomizerColorGra(jQuery('.printArea'),'Print Area');">
+            <span id="A3PriceSpan">A3</span>
+            <input type="radio" name="print_area"  id="print_area2" class="class_a4" value="A4" onclick="adjustCanvasObjectProportionally('A4');selectDropDownByText('.printArea','A4');updateCustomizerColorGra(jQuery('.printArea'),'Print Area');"  checked="checked">
+            <span id="A4PriceSpan">A4</span></div>
+          <?php echo '<script type="text/javascript">selectDropDownByText(".printArea","A4");document.getElementById("A3PriceSpan").innerHTML = "A3 "+A3Price;document.getElementById("A4PriceSpan").innerHTML = "A4 "+A4Price;</script>';}?> </div>  
+  
+  
+  <div class="jumbotron">
+    <div class="product-designer-content">
+      <div style="background: none repeat scroll 0 0 #fff;height: 91%;left: 0px;opacity: 0.90;position: absolute;width: 100%;z-index: 1401;" id="designerLoader"> <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN);?>/frontend/rwd/default/images/ajax-loader.gif" style=" margin: 24% auto;" /></div>
+      <div id="filter_loading_image" style="background-color: #ffffff;left: 50%;top: 50%;opacity: 0.5;position: absolute;z-index: 15555;display:none;margin-top: -24px; 
+   margin-left: -24px;"><img src="<?php echo $this->getSkinURL("images/opc-ajax-loader.gif")?>" style="margin:0 auto"/></div>
+      <script type="text/javascript" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>js/html2canvas.js"></script> 
+      <script type="text/javascript" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>js/jquery.plugin.html2canvas.js"></script>
+      <div class="col-md-6 whiteBg" style="overflow:hidden;">
+      <div class="btnBoxLeft" style="width:200px;left: -200px;">
+<div id="directLinkLft"><span class="btn btn-danger btn-showHidie"><span class="fa fa-angle-right"></span> <span class="fa fa-times"></span></span></div>
+<?php /*?>
+<ul class="nav nav-pills nav-stacked productLeft"style="display: block; margin-top:20px;">
+            <li>
+              <button class="button pd-btn disabled btn-info" id="pd_flip_horizontal"><span class="glyphicon glyphicon-asterisk"></span></button>
+            </li>
+            <li>
+              <button class="button pd-btn disabled btn-info" id="pd_flip_vertical"><span class="glyphicon glyphicon-resize-horizontal"></span></button>
+            </li>
+            <li>
+              <button class="button pd-btn disabled btn-info" id="pd_allign_by_center"><span class="glyphicon glyphicon-align-center"></span></button>
+            </li>
+            <li>
+              <button class="button pd-btn disabled btn-info" id="pd_undo"><span class="glyphicon glyphicon-chevron-left"></span></button>
+            </li>
+            <li>
+              <button class="button pd-btn disabled btn-info" id="pd_redo"><span class="glyphicon glyphicon-chevron-right"></span></button>
+            </li>
+            <li>
+              <button class="button pd-btn disabled btn-info" id="pd_delete"><span class="glyphicon glyphicon-trash"></span></button>
+            </li>
+</ul><?php */?>
+        <div class = "panel panel-default">
+          <div class = "panel-heading">
+            <h4 class = "panel-title"> <a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseOne" class="collapseClassBhishoom"> Color </a> </h4>
+          </div>
+          <div id = "collapseOne" class = "panel-collapse collapse">
+            <div class = "panel-body"> <?php if(in_array(25,$path_to_parent_categories)){?>
+            <script type="text/javascript">
+function componentToHex(c) {
+		var hex = c.toString(16);
+		return hex.length == 1 ? "0" + hex : hex;}
+		
+		function rgbToHex(r, g, b) {
+			return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+		}
+</script>
+            <div <?php /*?>id="pd_add_bck_colour-content" class="colors-panel colors-panel-class pd-tab-content topAbs20Px"<?php */?>>
+              <?php foreach($arrcolor_options as $arrcolor_options_key=>$arrcolor_options_val){?>
+              <span id="clr_opt_<?php echo $arrcolor_options_key?>" class="colorSpanClass" style="background-color:rgb(<?php echo $arrcolor_options_val?>);" 
+					onclick="<?php if($tshirtCustomizerPage=='yes'){?>checkTshirtInventory(rgbToHex(<?php echo $arrcolor_options_val?>),'<?php echo $arrcolor_options_key?>')<?php }else{?>setBgImage(rgbToHex(<?php echo $arrcolor_options_val?>),'<?php echo $arrcolor_options_key?>')<?php }?>">&nbsp;</span>
+              <?php }?>
+              <div style="clear:both;"></div>
+            </div>
+            <?php }?> </div>
+          </div>
+        </div>
+        <div class = "panel panel-default">
+          <div class = "panel-heading">
+            <h4 class = "panel-title"> <a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseTwo" class="collapseClassBhishoom"> Upload Photos </a> </h4>
+          </div>
+          <div id = "collapseTwo" class = "panel-collapse collapse">
+            <div class = "panel-body"> <?php if ($this->isUploadImageEnabled()): ?>
+              <div>
+                <a href="javascript:void(0)" onclick="javascript:jQuery('.UploadPhotoDivCustomizerInsta').hide();jQuery('.UploadPhotoDivCustomizerFB').hide();jQuery('.UploadPhotoDivCustomizer').show();">
+                <h4 class="pd-header" style="margin-top:5px;"><?php echo $this->__('Upload Photos'); ?></h4>
+                </a>
+                <div class="pop-up-Int UploadPhotoDivCustomizer" style="display:none;">
+                  <div class="well">
+                    <div class="icon-select-cust"> <i class="fa fa-caret-left"></i> </div>
+                    <div style="float:right;"><a href="javascript:void(0)" onclick="javascript:jQuery('.pop-up-Int').hide();">X</a></div>
+                    <h4>Upload new image</h4>
+                    <div class="checkbox">
+                      <label>
+                        <input type="checkbox" id="upload_permission_bhishoom_cutomizer" checked="checked" >
+                        I have the rights to use these images. <a  target="_blank" href="privacy_policy/#terms_of_use_to_upload">More Info</a> </label>
+                    </div>
+                    <button type="button" onclick="if(jQuery('#upload_permission_bhishoom_cutomizer:checked').length > 0){generateClickEvents('filesToUpload');}else{}" id="btnPopUpUploadPhotos" class="btnPopUpChked btn-primary btn-lg">Upload Photo</button>
+                    <script type="text/javascript">
+ jQuery('#upload_permission_bhishoom_cutomizer').change(function() {
+        if(jQuery(this).is(":checked")) {            
+            jQuery("#btnPopUpUploadPhotos").addClass("btnPopUpChked");
+			jQuery("#btnPopUpUploadPhotos").removeClass("btnPopUp");
+        }
+        else{
+            jQuery("#btnPopUpUploadPhotos").removeClass("btnPopUpChked");
+			jQuery("#btnPopUpUploadPhotos").addClass("btnPopUp");		
+		}
+    });
+ 
+ </script>
+                    <div class="list-group"> <a class="list-group-item"> <span class="glyphicon glyphicon-record"></span> Upload JPG/PNG/GIF</span> </a> <a class="list-group-item"> <span class="glyphicon glyphicon-record"></span> Recommended min 1500x1500 pixels</span> </a> <a class="list-group-item"> <span class="glyphicon glyphicon-record"></span> Upload high resolution image</span> </a> </div>
+                  </div>
+                </div>
+                <?php if ($this->isHelpEnabled('upload_image')):?>
+                <span class="tab-help-icon">?</span>
+                <div class="tab-help-content" style="display: none; width: <?php echo $this->getHelpPopupWidth('upload_image')?>px; height: <?php echo $this->getHelpPopupHeight('upload_image')?>px"> <?php echo $this->getHelpText('upload_image');?> </div>
+                <?php endif;?>
+                <div class="pd-content" class="displayNone">
+                <?php echo $this->getChildHtml('uploadImage'); ?> </div>
+             
+              <div class="displayNone">
+                <div id="uploadedImages_fb">
+                  <div class="image-ppc"><img class="clipart-image" src="" data-origin-url="" id="uploadedImages_fb_img"> </div>
+                </div>
+              </div>
+              <div style="display: none;">
+                <div id="show_div" class="choose-stroke" style="width:700px;height:500px;overflow:auto;">
+                  <h2>Gallery</h2>
+                  <div class="sleft">
+                    <ul>
+                      <?php
+						$connection = Mage::helper('function/more')->getDbReadObject();
+						 
+
+						if($tshirtCustomizerPage == 'yes')
+						$file = fopen(Mage::getBaseDir()."/style_images_tshirt/stylename.csv","r");
+						else
+						$file = fopen(Mage::getBaseDir()."/style_images/stylename.csv","r");
+						
+							$styleNameArray = array();
+							while(! feof($file))
+							  {
+								$arr = fgetcsv($file);
+								if(trim($arr[0]) == '')
+									continue;
+								$styleNameArray[] = trim($arr[0]);
+							  }
+
+							fclose($file);
+							
+							
+							
+							sort($styleNameArray);
+							 
+						 
+						foreach($styleNameArray as $styleNameArrayValue){   
+						
+						?>
+                      <li>
+                        <div onclick="jQuery('#filter_loading_image').show();load_img('<?php echo trim($styleNameArrayValue);?>')"> <?php echo ucwords(str_replace('-',' ',trim($styleNameArrayValue)));?> </div>
+                      </li>
+                      <?php	
+						}
+                     ?>
+                    </ul>
+                  </div>
+                  <div class="sright">
+                    <div id="uploadedImages1">
+                      <div><i class="fa fa-arrow-circle-left"></i> Please select the image gallery.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              
+              <br/>
+              <a onclick="javascript:jQuery('.pop-up-Int').hide();jQuery('.UploadPhotoDivCustomizerInsta').hide();jQuery('.UploadPhotoDivCustomizerFB').show();" href="javascript:void(0)"  >
+              <h4 class="pd-header" style="margin-top:5px;"><?php echo $this->__('Choose From Facebook'); ?></h4>
+              </a>
+			   
+			  <a href="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>api_fbk/fb_upload_photo_mobile.php" id="divform2" data-width="300" data-height="400" class="fancybox fancyboxFBPhotos fancybox.iframe displayNone">test</a>
+			   
+			  
+              <div class="pop-up-Int UploadPhotoDivCustomizerFB" style="display:none;">
+                <div class="well">
+                  <div class="icon-select-cust"> <i class="fa fa-caret-left"></i> </div>
+                  <div style="float:right;"><a href="javascript:void(0)" onclick="javascript:jQuery('.UploadPhotoDivCustomizerFB').hide();">X</a></div>
+                  <h4>Upload Photos From Facebook</h4>
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" checked="checked" id="fbupload_permission_bhishoom_cutomizer" >
+                      I respect the rights of others. I ensure that I have the right to use the images that I upload. <a  target="_blank" href="privacy_policy/#terms_of_use_to_upload">More Info</a> </label>
+                  </div>
+                  <button type="button" onclick="if(jQuery('#fbupload_permission_bhishoom_cutomizer:checked').length > 0){doLogin();}else{}" id="btnPopUpUploadPhotosFB" class="btnPopUpChked btn-primary btn-lg">Upload Photos From Facebook</button>
+                  <script type="text/javascript">
+ jQuery('#fbupload_permission_bhishoom_cutomizer').change(function() {
+        if(jQuery(this).is(":checked")) {            
+            jQuery("#btnPopUpUploadPhotosFB").addClass("btnPopUpChked");
+			jQuery("#btnPopUpUploadPhotosFB").removeClass("btnPopUp");
+        }
+        else{
+            jQuery("#btnPopUpUploadPhotosFB").removeClass("btnPopUpChked");
+			jQuery("#btnPopUpUploadPhotosFB").addClass("btnPopUp");		
+		}
+    });
+ 
+ </script> 
+                </div>
+              </div>
+              <div class="pd-content"> </div>
+              <br/>
+              <a   onclick="javascript:jQuery('.UploadPhotoDivCustomizerFB').hide();jQuery('.pop-up-Int').hide();jQuery('.UploadPhotoDivCustomizerInsta').show();" href="javascript:void(0)">
+              <h4 class="pd-header" style="margin-top:5px;"><?php echo $this->__('Choose From Instagram'); ?></h4>
+              </a>
+              <div class="pop-up-Int UploadPhotoDivCustomizerInsta" style="display:none;top:0;">
+                <div class="well">
+                  <div class="icon-select-cust"> <i class="fa fa-caret-left"></i> </div>
+                  <script type="text/javascript">	
+function uploadPhotosFromInstagram(){
+
+  var left = (screen.width/2)-(800/2);
+  var top = (screen.height/2)-(800/2);
+
+  window.open("<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>Instagram_php_api/code/index_mobile.php", 'mywindow', 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=800, height=800, top='+top+', left='+left+"'");
+}
+</script>
+                  <div style="float:right;"><a href="javascript:void(0)" onclick="javascript:jQuery('.UploadPhotoDivCustomizerInsta').hide();">X</a></div>
+                  <h4>Upload Photos From Instagram</h4>
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" checked="checked" id="instaupload_permission_bhishoom_cutomizer" >
+                      I respect the rights of others. I ensure that I have the right to use the images that I upload. <a target="_blank" href="privacy_policy/#terms_of_use_to_upload">More Info</a> </label>
+                  </div>
+                  <button id="btnPopUpUploadPhotosInsta" onclick='if(jQuery("#instaupload_permission_bhishoom_cutomizer:checked").length > 0){}
+				  uploadPhotosFromInstagram();' class="btnPopUpChked btn-primary btn-lg">Upload Photos From Instagram</button>
+                  <script type="text/javascript">
+ jQuery('#instaupload_permission_bhishoom_cutomizer').change(function() {
+        if(jQuery(this).is(":checked")) {            
+            jQuery("#btnPopUpUploadPhotosInsta").addClass("btnPopUpChked");
+			jQuery("#btnPopUpUploadPhotosInsta").removeClass("btnPopUp");
+        }
+        else{
+            jQuery("#btnPopUpUploadPhotosInsta").removeClass("btnPopUpChked");
+			jQuery("#btnPopUpUploadPhotosInsta").addClass("btnPopUp");		
+		}
+    });
+ 
+ </script> 
+                </div>
+              </div>
+              <a  href="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>Instagram_php_api/code/images_mobile.php" id="divform3" data-width="320" data-height="400" class="fancybox fancyboxFBPhotos displayNone fancybox.iframe">test</a>
+              <div id="instafeed"></div>
+              <div class="pd-content"> </div>
+              <script type="text/javascript">
+
+
+    jQuery(document).ready(function() {
+ 
+				jQuery('.fancyboxFBPhotos').fancybox({
+						fitToView: false,
+						autoSize: false,
+						afterLoad: function () {
+							this.width = jQuery(this.element).data("width");
+							this.height = jQuery(this.element).data("height");
+						},
+					
+					
+						onComplete: function(links, index) {
+						//leave this at the bottom
+						jQuery.fancybox.center(true);
+					}					
+				});
+    });
+</script> 
+            </div>
+            <?php endif;?> </div>
+
+          </div>
+        </div>
+
+
+        <div class = "panel panel-default">
+          <div class = "panel-heading">
+            <h4 class = "panel-title"> <a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseThree" class="collapseClassBhishoom"> Add Text </a> </h4>
+          </div>
+          <div id = "collapseThree" class = "panel-collapse collapse">
+            <div class = "panel-body">  <?php if ($this->isTextEnabled()): ?>
+              <div <?php /*?>class="pd-tab-content topAbs20Px" id="pd_add_text-content" <?php if ($this->isActiveTab('text')): ?>style="display: block;"<?php endif;?><?php */?> >
+                <?php /* ?><h4 class="pd-header"><?php echo $this->__('Add Text'); ?></h4><?php */ ?>
+                <?php if ($this->isHelpEnabled('text')):?>
+                <span class="tab-help-icon">?</span>
+                <div class="tab-help-content" style="display: none; width: <?php echo $this->getHelpPopupWidth('text')?>px; height: <?php echo $this->getHelpPopupHeight('text')?>px"> <?php echo $this->getHelpText('text');?> </div>
+                <?php endif;?>
+                <div class="pd-content"> <?php echo $this->getChildHtml('addText'); ?> </div>
+              </div>
+              <?php endif;?> </div>
+          </div>
+        </div>
+</div>
+<div class="btnBoxRight">
+	<div id="directLinkRgt"><span class="btn btn-danger btn-showHidie"><span class="fa fa-angle-left"></span> <span class="fa fa-times"></span></span></div>
+    <div id="pd_nav_container" class="pd_nav_container leftPdNav">
+        <div id="pd_bottom_panel" class="pd_bottom_panel" style="width: auto; display: <?php echo !$this->isProductSelected() ? 'none' : 'block'?>">
+          <?php if ($this->isUploadImageEnabled()): ?>
+          <div class="pd-tab-content" id="pd_add_image-content" <?php if ($this->isActiveTab('upload_image')): ?>style="display: block; "<?php endif;?>>
+            <div class="scale-toggle">
+              <h4 class="pd-header fontWeightBold" style="margin-top:5px;"><?php echo $this->__('Scale'); ?></h4>
+              <!--<input id="scale-control" type="range" step="0.1" max="3" min="0.1" value="1">-->
+              <!--<div id="slider"></div>-->
+			  <input type="range" name="slider" id="slider" min="0.1" max="3" step=".1" value="0.1">
+              <div class="clearfix"></div>
+            </div>
+            <div class="rotate-toggle">
+              <h4 class="pd-header fontWeightBold" style="margin-top:5px;"><?php echo $this->__('Rotate'); ?></h4>
+              <!--<div id="slider1"></div>-->
+			  <input type="range" name="slider1" id="slider1" min="0" max="360" step="10" value="0">
+              <div class="clearfix"></div>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <?php endif;?>
+          
+        </div>
+      </div>
+</div>
+
+<script>
+jQuery(document).ready(function(e) {
+    jQuery('.btn-showHidie').click(function(){
+		jQuery(this).parent().parent().toggleClass('show')
+	});
+});
+</script>
+
+        <?php if($tshirtCustomizerPage != 'yes'){?>
+        <img src="<?php echo  Mage::getBaseUrl('media')?>80-per-white.png" id="trBlurLayer" style="display:none;" />
+        <?php }?>
+
+        <div class="clearfix"></div>
+        <div class="product-designer-main-col" id="exclude_front_img_div">
+          <?php
+$curDsgSlide=1;
+
+  
+/* product image in exclude in list */
+
+if($tshirtCustomizerPage == 'yes'){
+    if($blank_frontImagePath!=''){
+	
+?>
+          <img id="exclude_front_img<?php echo $curDsgSlide?>" class="exclude_front_img" src="<?php echo $blank_frontImagePath?>" style="z-index:1200 !important;pointer-events:none;" />
+          <?php	   $curDsgSlide++;
+    }
+    if($blank_backImagePath!=''){
+   
+?>
+          <img id="exclude_front_img<?php echo $curDsgSlide?>" class="exclude_front_img" style="<?php echo $style_for_tshirt?>;pointer-events:none;" src="<?php echo $blank_backImagePath?>" />
+          <?php	  $curDsgSlide++;
+    } 
+}
+
+$curDsgSlide=1;
+    if($blank_frontImagePath!=''){
+	
+?>
+          <script type="text/javascript">
+	showWhichSlideJsVar[<?php echo $curDsgSlide?>] = '<?php echo $blank_frontImagePath?>';
+	curDsgSlideVar = '<?php echo $curDsgSlide?>'
+</script>
+          <?php	   $curDsgSlide++;
+    }
+    if($blank_backImagePath!=''){
+   
+?>
+          <script type="text/javascript">
+showWhichSlideJsVar[<?php echo $curDsgSlide?>] = '<?php echo $blank_backImagePath?>';
+curDsgSlideVar = '<?php echo $curDsgSlide?>'
+</script>
+          <?php	  $curDsgSlide++;
+    }
+	
+/*}*/	
+?>
+          <div id="pd_container" style="backgound:<?php echo $exclude_frontback?>;height: 400px; width: 400px;"></div>
+        </div>
+        <?php $images = $this->getProductImages();?>
+        <div id="pd_sides" class="pd_sides pd-box pd_sides_position">
+          <div style=" margin: 0 auto;position: absolute; text-align: center; margin: 0px auto; width: 100%; z-index: 1400;pointer-events: none;<?php if(count($images) > 1 && $tshirtCustomizerPage != 'yes'){}else{?>display:none;<?php }?>">
+            <?php /*?><h4 class="pd-header"><?php echo $this->__('Choose Side') ?> <span class="arror_img"> <img src="<?php echo $this->getSkinUrl('images/image-section-arrow-right.png');?>" alt="Arrow" width="8" height="11" align="right" style="cursor:pointer; margin-top:5px;"/> </span> </h4><?php */?>
+            <ul class="pd_sides_list" style="text-align:center;margin-top: 20px;">
+              <?php $imgFlagSides=1;foreach ($images as $k => $v): 
+				echo '<li id="imageFlagSide_'.$imgFlagSides.'">';
+					if(in_array(25,$path_to_parent_categories))
+					 {
+					    if($imgFlagSides==1){
+						 	$v['u'] = $blank_frontImagePath;
+							
+							echo '<script type="text/javascript">objStoreTshirtImageColorKey = "'.$k.'"</script>';	
+						}	
+						else
+							$v['u'] = $blank_backImagePath;	
+							
+							if($tshirtCustomizerPage == 'yes')
+								$v['u'] = $blank_backImagePath;	
+					 }	
+					 else{
+					 
+					    if($imgFlagSides==1) 
+							echo '<img src="'.$blank_frontImagePath.'" width="75" height="75" class="graPosAbsoulte zindexClass pointerEventsNone" />';
+						else
+							echo '<img src="'.$blank_backImagePath.'" width="75" height="75" class="graPosAbsoulte zindexClass pointerEventsNone" />';
+							 
+					 }
+					 //blank_frontImagePath
+					 
+				?>
+              <img width="75" height="75" class="product-image" src="<?php echo str_replace('for_customizer/','',$v['u']) ?>" data-id="<?php echo $k; ?>" data-image-id="<?php echo $v['id'] ?>" alt="" id="<?php echo $imgFlagSides?>" onclick="varCurrentImg = <?php echo $imgFlagSides?>;/*funSwitchSlide('<?php echo $imgFlagSides;?>');*/objStoreTshirtImageColorKey = '<?php echo $k?>';">
+              </li>
+              <?php /*if($imgFlagSides==$showWhichSide)echo '<script type="text/javascript">jQuery("#exclude_front_img'.$imgFlagSides.'").show();</script>';*/
+				
+				$imgFlagSides++;endforeach ?>
+            </ul>
+            <script type="text/html" class="no-display" id="product-image-template">
+               <li>
+                <img width="75" height="75" class="product-image" src="#{url}" data-id="#{image-id}" data-image-id="#{data-image-id}">
+               </li>
+              </script> 
+          </div>
+        </div>
+      </div>
+      <script type="text/javascript">
+var flag = 1;
+var varCurrentImg = 1;
+var tempvarCurrentImg = 1;
+ 
+
+	 jQuery("#pd_add_design").click(function(){
+		if (jQuery('#closeCustomPreviewId').css('display') != 'none'){
+				closeCustomPreview()
+		}
+	 });
+	 
+	 jQuery("#pd_add_image").click(function(){
+		if (jQuery('#closeCustomPreviewId').css('display') != 'none'){
+				closeCustomPreview()
+		}
+	 });
+	 
+	 jQuery("#pd_add_text").click(function(){
+		if (jQuery('#closeCustomPreviewId').css('display') != 'none'){
+				closeCustomPreview()
+		}
+	 });
+	 
+
+/* jQuery('#pd_container').css('margin','auto 2px');   
+
+Check this line in future may be issue of any problem
+
+this is placed to remove 1 px line on left and right of preview images
+
+this issue is arised after we used the overlay images concept for masking the product images
+
+previouly we did this by placing the balnk images on absolute position on canvas
+
+*/
+function showCustomPreview()
+ { 
+ 
+		if(tshirtColorName != ''){
+		
+		objCallDirectForCanvas.setOverlayImage('<?php echo $folderURL?>/resized320/for_customizer/without-inner-border/'+printAreaFolderName+'/'+tshirtColorName+'/mask.png', objCallDirectForCanvas.renderAll.bind(objCallDirectForCanvas), {
+				overlayImageLeft: 0,
+				overlayImageTop: 0
+		});
+		//objCallDirectForCanvas.controlsAboveOverlay = true;
+
+		//objCallDirectForCanvas.controlsAboveOverlay = true;
+		
+		}
+		
+				objCallDirectForCanvas.renderAll();	
+		
+				objCallDirectForCanvas.on('after:render', function(){
+					objCallDirectForCanvas.calcOffset();
+				});
+		
+  /* jQuery("#canvas-container").click();
+ 
+  jQuery(".upper-canvas").click();
+  jQuery(".lower-canvas").click();
+  */
+  // canvas.bringForward(myObject)
+  //objCallDirectForCanvas.bringForward(objCallDirectForCanvas.getActiveObject());
+  objCallDirectForCanvas.deactivateAll().renderAll();
+	/*objCallDirectForCanvas.getActiveObject().set({
+                     
+					hasControls:false
+                });  */
+  
+  //objCallDirectForCanvas.getActiveObject().get('type').showControls = 0;
+ 
+  
+	if(flag==1)
+	tempvarCurrentImg = varCurrentImg;
+ 
+ //jQuery(".pd-design-area").css("border","none");
+ if(flag==1){
+	jQuery("#designerLoader").show();
+    jQuery("#showCustomPreviewId").hide();
+    jQuery("#closeCustomPreviewId").show();  
+	//document.getElementById("1").click();
+	
+	if(skipPreview_1 == false) 
+	generateClickEvents("1")
+}
+	 
+//jQuery(".canvas-container").click();	
+				//					jQuery(".pd-design-area").click();	
+				//					jQuery("#pd_container").click();	
+
+									
+	 jQuery(".pd-design-area").css("border","none");
+	
+ 
+		  
+			setTimeout(function(){
+					  
+		
+		
+		
+		if(typeof tshirtObj === 'undefined'){
+		 screenShotDiv = 'pd_container';
+		 jQuery('#pd_container').css('margin','auto 2px');
+		} 
+		else
+		 screenShotDiv = 'exclude_front_img_div';	
+		  
+		jQuery('#'+screenShotDiv).html2canvas({
+				onrendered: function (canvas) {
+					//Set hidden field's value to image data (base-64 string)
+					 
+					//Submit the form manually
+					 
+					if(flag==1){
+					//document.getElementById("textStr").value=canvas.toDataURL("image/png")
+					screenShotPng = canvas.toDataURL("image/png");
+					jQuery('#preview_1').attr('src', canvas.toDataURL("image/png"));
+					 
+					flag=2;
+						if(document.getElementById("preview_2") && typeof tshirtObj === 'undefined'){
+								//document.getElementById("2").click(); 
+								 generateClickEvents("2")
+								 jQuery('#'+screenShotDiv).css('margin','0px auto');
+								showCustomPreview()
+							}
+						else{
+						flag=1;
+								//jQuery(".col-sm-4").hide();
+								//jQuery(".col-sm-3").hide();	
+								//jQuery(".col-sm-6").hide();	
+								jQuery(".col-md-6").hide();
+								jQuery("#pd_nav_container").hide();	
+								jQuery(".col-md-3").hide();
+								jQuery("#design_price_container").hide();
+								jQuery("#product-designer").css('margin-top','10px');
+								
+								jQuery("#social_media_img_container").hide(); 
+								jQuery("#preview_zone").show();	
+								jQuery("#designerLoader").hide();
+						}	
+					}
+					else if(flag==2){
+					  flag=1;
+					   
+					  //document.getElementById("textStr2").value=canvas.toDataURL("image/png")
+					  screenShotPng = canvas.toDataURL("image/png");
+					  jQuery('#preview_2').attr('src', canvas.toDataURL("image/png"));
+
+								//jQuery(".col-sm-4").hide();
+								//jQuery(".col-sm-3").hide();	
+								//jQuery(".col-sm-6").hide();	
+								jQuery(".col-md-6").hide();
+								jQuery("#pd_nav_container").hide();	
+								jQuery(".col-md-3").hide();
+								jQuery("#design_price_container").hide();
+								jQuery("#product-designer").css('margin-top','10px');
+								
+								jQuery("#social_media_img_container").hide(); 
+								jQuery("#preview_zone").show();	
+								jQuery("#designerLoader").hide();
+					  
+					}
+					
+					
+				}
+			});	
+		}, 1000);
+	//jQuery(".pd-design-area").css("border","1px dashed #333");
+	return screenShotPng; 
+ }
+
+function closeCustomPreview()
+ {
+		if(tshirtColorName != ''){
+		
+		objCallDirectForCanvas.setOverlayImage('<?php echo $folderURL?>/resized320/for_customizer/'+printAreaFolderName+'/'+tshirtColorName+'/mask.png', objCallDirectForCanvas.renderAll.bind(objCallDirectForCanvas), {
+				overlayImageLeft: 0,
+				overlayImageTop: 0
+		});
+		//objCallDirectForCanvas.controlsAboveOverlay = true;		
+		
+
+		//objCallDirectForCanvas.controlsAboveOverlay = true;		
+		
+		}
+		
+				objCallDirectForCanvas.renderAll();	
+		
+				objCallDirectForCanvas.on('after:render', function(){
+					objCallDirectForCanvas.calcOffset();
+				});		    
+	
+		if(document.getElementById("preview_1")){
+			//document.getElementById("1").click();
+			
+			generateClickEvents("1")
+			//jQuery(".pd-design-area").css("border","1px dashed #333");
+		}
+	   
+		jQuery('#pd_container').css('margin','0px auto');
+
+		if(document.getElementById("preview_2")){
+			//document.getElementById("2").click();
+			generateClickEvents("2")
+			//jQuery(".pd-design-area").css("border","1px dashed #333");
+		}
+		//document.getElementById(tempvarCurrentImg).click();		
+		generateClickEvents(tempvarCurrentImg)
+		jQuery("#designerLoader").hide();
+		jQuery("#showCustomPreviewId").show();
+		jQuery("#social_media_img_container").show();
+		jQuery("#closeCustomPreviewId").hide();
+		
+		
+		//jQuery(".col-sm-4").show();
+		//jQuery(".col-sm-3").show();
+		//jQuery(".col-sm-6").show();
+
+		jQuery(".col-md-6").show();
+		jQuery("#pd_nav_container").show();	
+		jQuery(".col-md-3").show();
+		jQuery("#design_price_container").show();
+		jQuery("#product-designer").css('margin-top','0px');
+		
+		jQuery("#preview_zone").hide();
+ }
+</script>
+     
+  <div class="mobileCustomizer">    <div id="pd_nav_container" class="pd_nav_container mobile">
+        <div class="nav nav-pills nav-stacked mainProduct displayNone">
+          <?php if(in_array(25,$path_to_parent_categories)){
+			if(in_array(25,$path_to_parent_categories) && in_array(75,$path_to_parent_categories)){
+				$show_which_color_mobile_skin[] = "rgbToHex(255, 255, 255)";
+				$show_which_color_mobile_skin[] = "0";
+			}	
+				
+		  ?>
+          <div>
+            <button class="button pd-btn" style="<?php/* echo !$imageEnabled || !$this->isProductSelected()? 'display:none' : ''; */?>" id="pd_add_bck_colour"><span class="glyphicon glyphicon-ice-lolly"></span><span><span><?php echo Mage::helper('gomage_designer')->__('Colour') ?></span></span></button>
+          </div>
+          <?php }?>
+          <div class="clearfix"></div>
+          <?php /*?><div>
+            <button class="button pd-btn" style="<?php echo !$imageEnabled || !$this->isProductSelected()? 'display:none' : ''; ?>" id="pd_add_image"><span class="glyphicon glyphicon-camera"></span><span><span><?php echo Mage::helper('gomage_designer')->__('Upload Photos') ?></span></span></button>
+          </div>
+          <div class="clearfix"></div><?php */?>
+          
+          <div>
+            <button class="button pd-btn" style="<?php echo !$textEnabled || !$this->isProductSelected()? 'display:none' : ''; ?>" id="pd_add_text"><span class="glyphicon glyphicon-font"></span><span><span><?php echo Mage::helper('gomage_designer')->__('Add Text') ?></span></span></button>
+          </div>
+          <div class="clearfix"></div>
+          
+          <div>
+            <button class="button pd-btn" style="<?php echo !$designEnabled || !$this->isProductSelected() ? 'display:none' : '';?>" id="pd_add_design"><span class="glyphicon glyphicon-star"></span><span><span><?php echo Mage::helper('gomage_designer')->__('Add Cliparts') ?></span></span></button>
+          </div> 
+          <div class="clearfix"></div>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      
+      <div class="col-md-3">
+        <div class="product-designer-sidebar">
+          <div id="pd_panels" class="pd_panels pd-box">
+            <div id="pd_tabs" class="pd_tabs">
+      <div class="clearfix"></div>
+      <div class = "panel-group" id = "accordion">
+        <?php /*?><div class = "panel panel-default">
+          <div class = "panel-heading">
+            <h4 class = "panel-title"> <a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseOne"> Color </a> </h4>
+          </div>
+          <div id = "collapseOne" class = "panel-collapse collapse in">
+            <div class = "panel-body"> <?php if(in_array(25,$path_to_parent_categories)){?>
+            <script type="text/javascript">
+function componentToHex(c) {
+		var hex = c.toString(16);
+		return hex.length == 1 ? "0" + hex : hex;}
+		
+		function rgbToHex(r, g, b) {
+			return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+		}
+</script>
+            <div>
+              <?php foreach($arrcolor_options as $arrcolor_options_key=>$arrcolor_options_val){?>
+              <span id="clr_opt_<?php echo $arrcolor_options_key?>" class="colorSpanClass" style="background-color:rgb(<?php echo $arrcolor_options_val?>);" 
+					onclick="<?php if($tshirtCustomizerPage=='yes'){?>checkTshirtInventory(rgbToHex(<?php echo $arrcolor_options_val?>),'<?php echo $arrcolor_options_key?>')<?php }else{?>setBgImage(rgbToHex(<?php echo $arrcolor_options_val?>),'<?php echo $arrcolor_options_key?>')<?php }?>">&nbsp;</span>
+              <?php }?>
+              <div style="clear:both;"></div>
+            </div>
+            <?php }?> </div>
+          </div>
+        </div> 
+        <div class = "panel panel-default">
+          <div class = "panel-heading">
+            <h4 class = "panel-title"> <a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseTwo"> Upload Photos </a> </h4>
+          </div>
+          <div id = "collapseTwo" class = "panel-collapse collapse">
+            <div class = "panel-body"> <?php if ($this->isUploadImageEnabled()): ?>
+              <div>
+                <div>&nbsp;</div>
+                <a href="javascript:void(0)" onclick="javascript:jQuery('.UploadPhotoDivCustomizerInsta').hide();jQuery('.UploadPhotoDivCustomizerFB').hide();jQuery('.UploadPhotoDivCustomizer').show();">
+                <h4 class="pd-header" style="margin-top:5px;"><?php echo $this->__('Upload Photos'); ?></h4>
+                </a>
+                <div class="pop-up-Int UploadPhotoDivCustomizer" style="display:none;">
+                  <div class="well">
+                    <div class="icon-select-cust"> <i class="fa fa-caret-left"></i> </div>
+                    <div style="float:right;"><a href="javascript:void(0)" onclick="javascript:jQuery('.pop-up-Int').hide();">X</a></div>
+                    <h4>Upload new image</h4>
+                    <div class="checkbox">
+                      <label>
+                        <input type="checkbox" id="upload_permission_bhishoom_cutomizer" checked="checked" >
+                        I have the rights to use these images. <a  target="_blank" href="privacy_policy/#terms_of_use_to_upload">More Info</a> </label>
+                    </div>
+                    <button type="button" onclick="if(jQuery('#upload_permission_bhishoom_cutomizer:checked').length > 0){generateClickEvents('filesToUpload');}else{}" id="btnPopUpUploadPhotos" class="btnPopUpChked btn-primary btn-lg">Upload Photo</button>
+                    <script type="text/javascript">
+ jQuery('#upload_permission_bhishoom_cutomizer').change(function() {
+        if(jQuery(this).is(":checked")) {            
+            jQuery("#btnPopUpUploadPhotos").addClass("btnPopUpChked");
+			jQuery("#btnPopUpUploadPhotos").removeClass("btnPopUp");
+        }
+        else{
+            jQuery("#btnPopUpUploadPhotos").removeClass("btnPopUpChked");
+			jQuery("#btnPopUpUploadPhotos").addClass("btnPopUp");		
+		}
+    });
+ 
+ </script>
+                    <div class="list-group"> <a class="list-group-item"> <span class="glyphicon glyphicon-record"></span> Upload JPG/PNG/GIF</span> </a> <a class="list-group-item"> <span class="glyphicon glyphicon-record"></span> Recommended min 1500x1500 pixels</span> </a> <a class="list-group-item"> <span class="glyphicon glyphicon-record"></span> Upload high resolution image</span> </a> </div>
+                  </div>
+                </div>
+                <?php if ($this->isHelpEnabled('upload_image')):?>
+                <span class="tab-help-icon">?</span>
+                <div class="tab-help-content" style="display: none; width: <?php echo $this->getHelpPopupWidth('upload_image')?>px; height: <?php echo $this->getHelpPopupHeight('upload_image')?>px"> <?php echo $this->getHelpText('upload_image');?> </div>
+                <?php endif;?>
+                <div class="pd-content" class="displayNone">
+                <?php echo $this->getChildHtml('uploadImage'); ?> </div>
+             
+              <div class="displayNone">
+                <div id="uploadedImages_fb">
+                  <div class="image-ppc"><img class="clipart-image" src="" data-origin-url="" id="uploadedImages_fb_img"> </div>
+                </div>
+              </div>
+              <div style="display: none;">
+                <div id="show_div" class="choose-stroke" style="width:700px;height:500px;overflow:auto;">
+                  <h2>Gallery</h2>
+                  <div class="sleft">
+                    <ul>
+                      <?php
+						$connection = Mage::helper('function/more')->getDbReadObject();
+						 
+
+						if($tshirtCustomizerPage == 'yes')
+						$file = fopen(Mage::getBaseDir()."/style_images_tshirt/stylename.csv","r");
+						else
+						$file = fopen(Mage::getBaseDir()."/style_images/stylename.csv","r");
+						
+							$styleNameArray = array();
+							while(! feof($file))
+							  {
+								$arr = fgetcsv($file);
+								if(trim($arr[0]) == '')
+									continue;
+								$styleNameArray[] = trim($arr[0]);
+							  }
+
+							fclose($file);
+							
+							
+							
+							sort($styleNameArray);
+							 
+						 
+						foreach($styleNameArray as $styleNameArrayValue){   
+						
+						?>
+                      <li>
+                        <div onclick="jQuery('#filter_loading_image').show();load_img('<?php echo trim($styleNameArrayValue);?>')"> <?php echo ucwords(str_replace('-',' ',trim($styleNameArrayValue)));?> </div>
+                      </li>
+                      <?php	
+						}
+                     ?>
+                    </ul>
+                  </div>
+                  <div class="sright">
+                    <div id="uploadedImages1">
+                      <div><i class="fa fa-arrow-circle-left"></i> Please select the image gallery.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              
+              <br/>
+              <a onclick="javascript:jQuery('.pop-up-Int').hide();jQuery('.UploadPhotoDivCustomizerInsta').hide();jQuery('.UploadPhotoDivCustomizerFB').show();" href="javascript:void(0)"  >
+              <h4 class="pd-header" style="margin-top:5px;"><?php echo $this->__('Choose From Facebook'); ?></h4>
+              </a>
+			   
+			  <a href="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>api_fbk/fb_upload_photo_mobile.php" id="divform2" data-width="300" data-height="400" class="fancybox fancyboxFBPhotos fancybox.iframe displayNone">test</a>
+			   
+			  
+              <div class="pop-up-Int UploadPhotoDivCustomizerFB" style="display:none;">
+                <div class="well">
+                  <div class="icon-select-cust"> <i class="fa fa-caret-left"></i> </div>
+                  <div style="float:right;"><a href="javascript:void(0)" onclick="javascript:jQuery('.UploadPhotoDivCustomizerFB').hide();">X</a></div>
+                  <h4>Upload Photos From Facebook</h4>
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" checked="checked" id="fbupload_permission_bhishoom_cutomizer" >
+                      I respect the rights of others. I ensure that I have the right to use the images that I upload. <a  target="_blank" href="privacy_policy/#terms_of_use_to_upload">More Info</a> </label>
+                  </div>
+                  <button type="button" onclick="if(jQuery('#fbupload_permission_bhishoom_cutomizer:checked').length > 0){doLogin();}else{}" id="btnPopUpUploadPhotosFB" class="btnPopUpChked btn-primary btn-lg">Upload Photos From Facebook</button>
+                  <script type="text/javascript">
+ jQuery('#fbupload_permission_bhishoom_cutomizer').change(function() {
+        if(jQuery(this).is(":checked")) {            
+            jQuery("#btnPopUpUploadPhotosFB").addClass("btnPopUpChked");
+			jQuery("#btnPopUpUploadPhotosFB").removeClass("btnPopUp");
+        }
+        else{
+            jQuery("#btnPopUpUploadPhotosFB").removeClass("btnPopUpChked");
+			jQuery("#btnPopUpUploadPhotosFB").addClass("btnPopUp");		
+		}
+    });
+ 
+ </script> 
+                </div>
+              </div>
+              <div class="pd-content"> </div>
+              <br/>
+              <a   onclick="javascript:jQuery('.UploadPhotoDivCustomizerFB').hide();jQuery('.pop-up-Int').hide();jQuery('.UploadPhotoDivCustomizerInsta').show();" href="javascript:void(0)">
+              <h4 class="pd-header" style="margin-top:5px;"><?php echo $this->__('Choose From Instagram'); ?></h4>
+              </a>
+              <div class="pop-up-Int UploadPhotoDivCustomizerInsta" style="display:none;top:0;">
+                <div class="well">
+                  <div class="icon-select-cust"> <i class="fa fa-caret-left"></i> </div>
+                  <script type="text/javascript">	
+function uploadPhotosFromInstagram(){
+
+  var left = (screen.width/2)-(800/2);
+  var top = (screen.height/2)-(800/2);
+
+  window.open("<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>Instagram_php_api/code/index_mobile.php", 'mywindow', 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=800, height=800, top='+top+', left='+left+"'");
+}
+</script>
+                  <div style="float:right;"><a href="javascript:void(0)" onclick="javascript:jQuery('.UploadPhotoDivCustomizerInsta').hide();">X</a></div>
+                  <h4>Upload Photos From Instagram</h4>
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" checked="checked" id="instaupload_permission_bhishoom_cutomizer" >
+                      I respect the rights of others. I ensure that I have the right to use the images that I upload. <a target="_blank" href="privacy_policy/#terms_of_use_to_upload">More Info</a> </label>
+                  </div>
+                  <button id="btnPopUpUploadPhotosInsta" onclick='if(jQuery("#instaupload_permission_bhishoom_cutomizer:checked").length > 0){}
+				  uploadPhotosFromInstagram();' class="btnPopUpChked btn-primary btn-lg">Upload Photos From Instagram</button>
+                  <script type="text/javascript">
+ jQuery('#instaupload_permission_bhishoom_cutomizer').change(function() {
+        if(jQuery(this).is(":checked")) {            
+            jQuery("#btnPopUpUploadPhotosInsta").addClass("btnPopUpChked");
+			jQuery("#btnPopUpUploadPhotosInsta").removeClass("btnPopUp");
+        }
+        else{
+            jQuery("#btnPopUpUploadPhotosInsta").removeClass("btnPopUpChked");
+			jQuery("#btnPopUpUploadPhotosInsta").addClass("btnPopUp");		
+		}
+    });
+ 
+ </script> 
+                </div>
+              </div>
+              <a  href="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>Instagram_php_api/code/images_mobile.php" id="divform3" data-width="320" data-height="400" class="fancybox fancyboxFBPhotos displayNone fancybox.iframe">test</a>
+              <div id="instafeed"></div>
+              <div class="pd-content"> </div>
+              <script type="text/javascript">
+
+
+    jQuery(document).ready(function() {
+ 
+				jQuery('.fancyboxFBPhotos').fancybox({
+						fitToView: false,
+						autoSize: false,
+						afterLoad: function () {
+							this.width = jQuery(this.element).data("width");
+							this.height = jQuery(this.element).data("height");
+						},
+					
+					
+						onComplete: function(links, index) {
+						//leave this at the bottom
+						jQuery.fancybox.center(true);
+					}					
+				});
+    });
+</script> 
+            </div>
+            <?php endif;?> </div>
+
+          </div>
+        </div>
+       <div class = "panel panel-default">
+          <div class = "panel-heading">
+            <h4 class = "panel-title"> <a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseThree"> Add Text </a> </h4>
+          </div>
+          <div id = "collapseThree" class = "panel-collapse collapse">
+            <div class = "panel-body">  <?php if ($this->isTextEnabled()): ?>
+              <div>
+                <h4 class="pd-header"><?php echo $this->__('Add Text'); ?></h4>
+                <?php if ($this->isHelpEnabled('text')):?>
+                <span class="tab-help-icon">?</span>
+                <div class="tab-help-content" style="display: none; width: <?php echo $this->getHelpPopupWidth('text')?>px; height: <?php echo $this->getHelpPopupHeight('text')?>px"> <?php echo $this->getHelpText('text');?> </div>
+                <?php endif;?>
+                <div class="pd-content"> <?php echo $this->getChildHtml('addText'); ?> </div>
+              </div>
+              <?php endif;?> </div>
+          </div>
+        </div>
+        <div class = "panel panel-default">
+          <div class = "panel-heading">
+            <h4 class = "panel-title"> <a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseFour"> Add Clipart </a> </h4>
+          </div>
+          <div id = "collapseFour" class = "panel-collapse collapse">
+            <div class = "panel-body"> 
+			<?php if ($this->isNavigationEnabled()): ?>
+              <div> 
+                <h4 class="pd-header"><?php echo $this->__('Choose Product'); ?></h4>
+                <?php if ($this->isHelpEnabled('navigation')):?>
+                <span class="tab-help-icon">?</span>
+                <div class="tab-help-content" style="display: none; width: <?php echo $this->getHelpPopupWidth('navigation')?>px; height: <?php echo $this->getHelpPopupHeight('navigation')?>px"> <?php echo $this->getHelpText('navigation');?> </div>
+                <?php endif;?>
+                <div class="pd-content"> <?php echo $this->getChildHtml('productNavigator'); ?> </div>
+              </div>
+              <?php endif;?>
+              <?php if ($this->isDesignEnabled()): ?>
+              <div> 
+			  <a id="cliparts-list" href="#" onclick="load_clipart_img();">
+                <h4 class="pd-header"><?php echo $this->__('Choose Cliparts'); ?></h4>
+                </a>
+                <?php if ($this->isHelpEnabled('design')):?>
+                <span class="tab-help-icon">?</span>
+                <div class="tab-help-content" style="display: none; width: <?php echo $this->getHelpPopupWidth('design')?>px; height: <?php echo $this->getHelpPopupHeight('design')?>px"> <?php echo $this->getHelpText('design');?> </div>
+                <?php endif;?>
+                <div class="pd-content"> <?php echo $this->getChildHtml('addDesign'); ?> </div>
+              </div>
+              <?php endif;?> </div>            
+          </div>
+        </div><?php */?>
+      </div>
+      <div class="clearfix"></div>
+      
+              
+             
+              
+            
+          </div>
+        </div>
+        <div id="additional_panels" style="display: <?php echo !$this->isProductSelected() ? 'none' : 'block'?>">
+          <?php $config = $this->getEditorConfig(); ?>
+          <?php $colors = $this->getProductColors();?>
+          <div id="product-colors" class="product-colors pd-box" style="<?php if (!$colors || empty($colors)) echo "display: none";?>">
+            <h4 class="pd-header"><?php echo $this->__('Choose Color') ?></h4>
+            <?php if ($colors): ?>
+            <?php foreach($colors as $color): ?>
+            <span class="color-btn <?php if ($color['option_id'] == $config['default_color']) echo 'selected'?>" data-color_id="<?php echo $color['option_id']?>" <?php if ($color['image']):?>style="background-image: url(<?php echo $color['image']; ?>); background-position: 50% 50%; background-repeat: no-repeat no-repeat"<?php endif;?>>
+            <?php if (!$color['image']): echo $color['value']; endif;?>
+            </span>
+            <?php endforeach;?>
+            <?php endif;?>
+          </div>
+          <?php if ($this->additionalInstructionsEnabled()): ?>
+          <div id="additional_instructions" class="additional_instructions pd-box"> <?php echo $this->getChildHtml('additionalInstructions');?> </div>
+          <?php endif; ?>
+        </div>
+      </div>
+    </div>
+    
+    <div class="cstzerMainLink pull-right">
+      <div class="btn-group btn-group-justified ">
+        <div class="btn-group" id="showCustomPreviewId">
+          <button class="button pd-btn" onclick="showCustomPreview()"<?php /*?> id="pd_zoom"<?php */?>><i class="fa fa-search"></i><span><span><?php echo Mage::helper('gomage_designer')->__('Preview') ?></span></span></button>
+        </div>
+        <div class="btn-group" style="display:none;" id="closeCustomPreviewId">
+          <button class="button pd-btn" onclick="closeCustomPreview()"<?php /*?> id="pd_zoom"<?php */?>><i class="fa fa-search"></i><span><span style="color:#ff0000"><?php echo Mage::helper('gomage_designer')->__('Close') ?></span></span></button>
+        </div>
+        <?php /*?><div class="btn-group">
+          <button class="button pd-btn disabled" id="pd_save_design"><i class="fa fa-floppy-o"></i><span><span id="pd_save_design_span1"  ><?php echo Mage::helper('gomage_designer')->__('Save  Design') ?><span></span></span> </span></button>
+        </div><?php */?>
+        <div class="btn-group graTextRedColor align-right">
+		  <button class="button pd-btn <?php /*?>disabled<?php */?> displayNone" id="pd_gt_product"><i class="fa fa-shopping-cart"></i> <span><span id="pd_save_design_span2"  ><?php echo Mage::helper('gomage_designer')->__('Add to Cart') ?><span></span></span></span></button>	
+		
+          <button class="button pd-btn" id="pd_gt_product2_2" onclick="showCustomPreview();jQuery('#designerLoader').show();setTimeout(function(){ jQuery('#pd_gt_product').click();	},3000);"><i class="fa fa-shopping-cart"></i> <span><span id="pd_save_design_span2"  ><?php echo Mage::helper('gomage_designer')->__('Add to Cart') ?><span></span></span></span></button>
+		  
+        </div>
+      </div>
+    </div></div>
+    <div class="clearfix"></div>
+    <img src="" id="changeable_img" style="display:none;" /> 
+    <script type="text/javascript">
+
+var accordionLeftCurrentEle;
+ 
+jQuery( document ).ready(function() {
+
+jQuery('.collapseClassBhishoom').click(function(){
+	
+
+		accordionLeftCurrentEle = jQuery(this).attr('href')
+		jQuery( '.collapseClassBhishoom' ).each(function( index ) {
+				//alert(accordionLeftCurrentEle)
+				if(jQuery(this).attr('href') != accordionLeftCurrentEle)
+				{
+					jQuery(this).addClass('collapsed');
+					jQuery(jQuery(this).attr('href')).removeClass('in');
+					jQuery(jQuery(this).attr('href')).addClass('collapsed');
+					jQuery(jQuery(this).attr('href')).attr('style','height: 0px; display: none;');
+				}
+		  
+		  
+		});	
+	
+});
+
+jQuery('#directLinkLft').click(function(){
+	
+	jQuery('.btnBoxRight').removeClass('show');
+	
+});
+jQuery('#directLinkRgt').click(function(){
+	
+	jQuery('.btnBoxLeft').removeClass('show');
+	
+});
+
+jQuery("#<?php echo $showWhichSide?>").click();
+
+ 
+<?php if(in_array(25,$path_to_parent_categories)){?>    
+var bg = jQuery("#pd_container").css('background-image');
+        bg = bg.replace('url(','').replace(')','').replace('"','').replace('"','');
+        //alert(bg); 
+		
+		
+	jQuery('#changeable_img').attr("src",bg);  
+	//document.getElementById("newTextAreaId").value=img.src 
+
+	jQuery("#pd_add_bck_colour").click(function(){	
+	    //jQuery(this).css("background-color","#555555");
+		jQuery("#pd_add_bck_colour-content").css("display","block");
+	});	
+	//jQuery("#pd_add_bck_colour").click();
+	
+	
+                        var evt = document.createEvent("HTMLEvents");
+                        evt.initEvent("click", true, true);
+                        var new_id = ("pd_add_bck_colour");    
+                       document.getElementById(new_id).dispatchEvent(evt);
+	
+	
+<?php }
+else if(!in_array(25,$path_to_parent_categories) && $this->isActiveTab('upload_image')){?>
+//jQuery("#pd_add_image").click(); 
+
+                        var evt = document.createEvent("HTMLEvents");
+                        evt.initEvent("click", true, true);
+                        var new_id = ("pd_add_image");    
+                       document.getElementById(new_id).dispatchEvent(evt);
+
+
+<?php }?>
+jQuery("#designerLoader").hide();
+});
+
+
+</script> 
+    <script type="text/javascript">
+function checkTshirtInventory(colorCode,colorName)
+{
+		jQuery(".colorSpanClass").unbind('click');
+		tshirtColorName = colorName;		
+		selectBoxSelectedText = tshirtColorName.replace('_', ' ');
+		selectBoxSelectedText = toPascalCase(selectBoxSelectedText);		
+		jQuery('select[title="Color"]').val(jQuery('select[title="Color"] option:contains('+selectBoxSelectedText+')').val());
+
+
+			jQuery("#designerLoader").show();
+			jQuery('#outOfStockCreateSectionPopWarning').html('')
+			textSize = jQuery("select[title='Size']  option:selected").text()
+			textColor = jQuery("select[title='Color']  option:selected").text()
+			textColorId = textColor.toLowerCase().replace(" ", "_");
+			
+		 
+					if(jQuery("select[title='Size']").val() != '')
+					  jQuery("select[title='Size']").css("border","1px solid #ccc");
+					else 
+					  jQuery("select[title='Size']").css("border","1px solid #ff0000");			   
+		 
+					if(jQuery("select[title='Color']").val() != '')
+					  jQuery("select[title='Color']").css("border","1px solid #ccc");
+					else 
+					  jQuery("select[title='Color']").css("border","1px solid #ff0000");	
+							
+		 
+			 jQuery("button[title='Customize Now'] > span > span").html('Customize Now...')
+				jQuery.ajax({
+                    method: "POST",
+                    url: "<?php echo $siteBaseUrl?>check_inventory.php",
+                    data: {
+                        skU: '<?php echo $_product->getSku()?>',
+                        siZe: textSize,
+                        colOr: textColor
+                    }
+                })
+                .done(function(response) {
+				
+					jQuery(".colorSpanClass").bind('click');
+				
+					jQuery('#outOfStockCreateSectionPopWarning').html('');
+					jQuery('#outOfStockCreateSectionPopWarning').hide();
+					jQuery("button[title='Customize Now'] > span > span").html('Customize Now');
+					jQuery("clr_opt_grey_melenge")
+					
+					
+					
+					if(response == 'Not Required')
+					{
+						jQuery('#productOptionsDiv').hide();
+						jQuery("#designerLoader").hide();
+					}
+					else if(response > 0)
+					{
+						jQuery('#productOptionsDiv').hide();
+						//alert(orderAthreeAfour)
+						orderAthreeAfour = '';
+						setBgImage(colorCode,colorName);						
+					}
+					else{
+						jQuery('#outOfStockCreateSectionPopWarning').html('Product is out of stock.');
+						jQuery('#outOfStockCreateSectionPopWarning').show();
+						jQuery('#clr_opt_'+textColorId).hide();
+						jQuery('#productOptionsDiv').show();
+						jQuery("#designerLoader").hide();
+					}
+                    //jQuery("#results_ajax1").append(response);
+                    //jQuery("#results_ajax1").show();
+                    //jQuery("#mylist" + leaderUserId).hide();
+                });
+
+}
+var tshirtColorName = '';
+function toPascalCase(str) {
+    var arr = str.split(/\s|_/);
+    for(var i=0,l=arr.length; i<l; i++) {
+        arr[i] = arr[i].substr(0,1).toUpperCase() + 
+                 (arr[i].length > 1 ? arr[i].substr(1).toLowerCase() : "");
+    }
+    return arr.join(" ");
+}
+
+function refreshCanvas(){
+
+		objCallDirectForCanvas.controlsAboveOverlay = true;
+		objCallDirectForCanvas.renderAll();	
+		
+		objCallDirectForCanvas.on('after:render', function(){
+					objCallDirectForCanvas.calcOffset();
+		});	
+}
+function setBgImage(color_bg_img,colorname)
+{ 
+
+   //  alert("alert in setBgImage")
+	jQuery("#pd_container").css( "background","none" );		
+	var newImgData=""; 
+	//var img = document.getElementById('changeable_img');	 
+    		//var canvas = document.createElement("canvas");
+    		//var ctx = canvas.getContext("2d");
+    		//var originalPixels = null;
+    		//var currentPixels = null; 
+            
+            //canvas.width = img.width;
+			//canvas.height = img.height;
+			//ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight, 0, 0, img.width, img.height);
+			//originalPixels = ctx.getImageData(0, 0, img.width, img.height);
+			//currentPixels = ctx.getImageData(0, 0, img.width, img.height);
+			//img.onload = null;
+            
+            //if(!originalPixels) return; // Check if image has loaded
+			var newColor = HexToRGB(color_bg_img);		 
+		 
+		<?php if(in_array(91,$ids) || in_array(4,$ids)){?> 
+		
+			/*
+			objCallDirectForCanvas.setOverlayColor({
+			  source: 'http://fabricjs.com/assets/escheresque_ste.png',
+			  repeat: 'repeat',
+			  offsetX: 200,
+			  offsetY: 100
+			}, objCallDirectForCanvas.renderAll.bind(objCallDirectForCanvas));		*/
+		
+			//chkSelectPrdOptions();
+			/*jQuery(".exclude_front_img").css("background", "rgba("+newColor.R + "," + newColor.G + "," + newColor.B +", 0.7)");
+			jQuery(".exclude_front_img").css("zIndex", "1000");*/
+		printAreaFolderName = '';
+		if(jQuery('#print_area1').is(':checked'))
+		 printAreaFolderName = 'A3';
+		if(jQuery('#print_area2').is(':checked'))
+		 printAreaFolderName = 'A4';
+		
+		colorNameTshirt = colorname
+		
+		 chkKey = objStoreTshirtImageColorKeyArr.indexOf(objStoreTshirtImageColorKey)
+		 
+		 if(chkKey == -1){
+			objStoreTshirtImageColorKeyArr.push(objStoreTshirtImageColorKey)
+			objStoreTshirtImageColor.push(newColor.R + ','+ newColor.G + ',' + newColor.B);
+		 }else{
+			objStoreTshirtImageColorKeyArr[chkKey] = objStoreTshirtImageColorKey
+			objStoreTshirtImageColor[chkKey] = newColor.R + ','+ newColor.G + ',' + newColor.B;
+		 }
+		// alert(baseUrl+'overLayImage.php?src_url='+showWhichSlideJsVar[varCurrentImg]+"&bgcolor="+newColor.R + "," + newColor.G + "," + newColor.B )
+		//alert(showWhichSlideJsVar[varCurrentImg])
+			
+		if(jQuery('#print_area1').is(':checked')){ 
+		objCallDirectForCanvas.setOverlayImage('<?php echo $folderURL?>/resized320/for_customizer/'+printAreaFolderName+'/'+colorname+'/mask.png', objCallDirectForCanvas.renderAll.bind(objCallDirectForCanvas), {
+				overlayImageLeft: 0,
+				overlayImageTop: 0
+		});
+		//objCallDirectForCanvas.controlsAboveOverlay = true;		
+		}
+		
+		if(jQuery('#print_area2').is(':checked')){ 
+		objCallDirectForCanvas.setOverlayImage('<?php echo $folderURL?>/resized320/for_customizer/'+printAreaFolderName+'/'+colorname+'/mask.png', objCallDirectForCanvas.renderAll.bind(objCallDirectForCanvas), {
+				overlayImageLeft: 0,
+				overlayImageTop: 0
+		});
+		//objCallDirectForCanvas.controlsAboveOverlay = true;		
+		} 
+
+		if(checkClickEventBindOrNotTshirt == 'no'){ 
+		jQuery('#print_area1').click(function(){
+		
+		while(orderAthreeAfour != 'adjustCanvasObject' || orderAthreeAfour == 'adjustCanvasObject')
+		{
+		  if(orderAthreeAfour == 'adjustCanvasObject'){	
+			jQuery("#designerLoader").show();
+			printAreaFolderName = '';
+			if(jQuery('#print_area1').is(':checked'))
+			 printAreaFolderName = 'A3';
+			if(jQuery('#print_area2').is(':checked'))
+			 printAreaFolderName = 'A4';
+			
+		
+			objCallDirectForCanvas.setOverlayImage('<?php echo $folderURL?>/resized320/for_customizer/'+printAreaFolderName+'/'+colorNameTshirt+'/mask.png', objCallDirectForCanvas.renderAll.bind(objCallDirectForCanvas), {
+					overlayImageLeft: 0,
+					overlayImageTop: 0
+			})
+		
+			objCallDirectForCanvas.renderAll();
+		
+			objCallDirectForCanvas.on('after:render', function(){
+					objCallDirectForCanvas.calcOffset();
+					 
+				});		
+		
+					var imageOverLay = new Image();
+					imageOverLay.onload = function() {
+						 setTimeout(function(){ jQuery("#designerLoader").hide(); }, 3000);
+					};
+					imageOverLay.src = '<?php echo $folderURL?>/resized320/for_customizer/'+printAreaFolderName+'/'+colorNameTshirt+'/mask.png';
+				break;
+			}
+			else{
+			//alert(printAreaFolderName+'/'+colorNameTshirt)
+			alert(orderAthreeAfour)
+			}
+		}
+
+			orderAthreeAfour = '';
+		});
+		
+		jQuery('#print_area2').click(function(){
+		
+			while(orderAthreeAfour != 'adjustCanvasObject' || orderAthreeAfour == 'adjustCanvasObject')
+			{
+			  if(orderAthreeAfour == 'adjustCanvasObject'){	
+				jQuery("#designerLoader").show();
+				printAreaFolderName = '';
+				if(jQuery('#print_area1').is(':checked'))
+				 printAreaFolderName = 'A3';
+				if(jQuery('#print_area2').is(':checked'))
+				 printAreaFolderName = 'A4';
+			
+			
+			objCallDirectForCanvas.setOverlayImage('<?php echo $folderURL?>/resized320/for_customizer/'+printAreaFolderName+'/'+colorNameTshirt+'/mask.png', objCallDirectForCanvas.renderAll.bind(objCallDirectForCanvas), {
+					overlayImageLeft: 0,
+					overlayImageTop: 0
+			});
+			//objCallDirectForCanvas.controlsAboveOverlay = true;	
+			
+							objCallDirectForCanvas.renderAll();			
+							objCallDirectForCanvas.on('after:render', function(){
+								objCallDirectForCanvas.calcOffset();										
+							});		
+
+							var imageOverLay = new Image();
+							imageOverLay.onload = function(){								 
+								 setTimeout(function(){ jQuery("#designerLoader").hide(); }, 3000);
+							};
+							imageOverLay.src = '<?php echo $folderURL?>/resized320/for_customizer/'+printAreaFolderName+'/'+colorNameTshirt+'/mask.png';
+					break;
+				}
+				else{
+				//alert(printAreaFolderName+'/'+colorNameTshirt)
+				alert(orderAthreeAfour)
+				}
+			}
+		orderAthreeAfour = '';		
+	}); 
+	checkClickEventBindOrNotTshirt = 'yes';
+	}	
+		
+				objCallDirectForCanvas.forEachObject(function(obj1){
+					 if(obj1.type == 'customObjGra')
+						objCallDirectForCanvas.remove(obj1);
+				});			
+		
+		
+		imgName = newColor.R+'-'+newColor.G+'-'+newColor.B+'.png';
+		objCallDirectDesignerImage.observeImageSelect5(baseUrl + 'media/color-images/'+imgName, newColor.R + ','+ newColor.G + ',' + newColor.B);	
+		
+	
+		objCallDirectForCanvas.renderAll();
+		
+		objCallDirectForCanvas.on('after:render', function(){
+					objCallDirectForCanvas.calcOffset();
+		});
+				
+		jQuery('.btnBoxLeft').removeClass('show');	
+	<?php }else{?>
+		/*
+                for(var I = 0, L = originalPixels.data.length; I < L; I += 4)
+    			{
+    				 
+								currentPixels.data[I] =  newColor.R;
+								currentPixels.data[I + 1] = newColor.G;
+								currentPixels.data[I + 2] = newColor.B;
+						 
+    			}*/
+		 
+		 imgName = newColor.R+'-'+newColor.G+'-'+newColor.B+'.png'		 
+		 objCallDirectDesignerImage.observeImageSelect4(baseUrl + 'media/color-images/'+imgName);
+		<?php }?> 
+}
+
+function HexToRGB(Hex)
+	{
+			var Long = parseInt(Hex.replace(/^#/, ""), 16);
+			return {
+				R: (Long >>> 16) & 0xff,
+				G: (Long >>> 8) & 0xff,
+				B: Long & 0xff
+			};
+	}
+	
+function generateClickEvents(eleId)
+ { 
+                      // var evt = document.createEvent("HTMLEvents");
+                        //evt.initEvent("click", true, true);
+                        var new_id = eleId  
+						
+						document.getElementById(new_id).click(); 
+                      // document.getElementById(new_id).dispatchEvent(evt);   
+ }
+	
+</script> 
+    <script type="text/javascript">
+function onClickUserInstImages2(imgSrc,data_origin_url)
+{
+
+if(data_origin_url == '')
+ data_origin_url = imgSrc;
+ str = '<li><img class="clipart-image" src="'+imgSrc+'" data-origin-url="'+data_origin_url+'"><span onclick="jQuery(this).parent().remove();">X</span></li>';
+jQuery('#social_media_img_container').append(str);
+
+}
+ 
+</script> 
+  </div>
+  <div class="whiteBg marTOP20pxCss" id="preview_zone" style="text-align:center;display:none;">
+    <?php 
+if($imgFlagSides == 3 && $tshirtCustomizerPage != 'yes')
+$width="50%";
+else
+$width="100%";
+
+
+?>
+    <div id="preview_1_div" style="float:left;width:<?php echo $width?>"> <img src="" id="preview_1" style="margin:0 auto" /> </div>
+    <?php if($imgFlagSides == 3 && $tshirtCustomizerPage != 'yes'){?>
+    <div id="preview_2_div" style="float:left;width:<?php echo $width?>"> <img src="" id="preview_2" style="margin:0 auto" /> </div>
+    <?php }?>
+  </div>
+  <div class="product-designer-price">
+    <ul id="social_media_img_container">
+    </ul>
+    <div style="clear:both;"></div>
+  </div>
+</div>
+</div>
+<?php if (!$this->getCustomerId()): ?>
+<?php echo $this->getChildHtml('customer.login');?> <?php echo $this->getChildHtml('customer.register');?>
+<?php endif;?>
+<div id="product-zoom-container" style="width: <?php echo $productImageMinSize['width'] + 5 ?>px; height: <?php echo $productImageMinSize['height']+5 ?>px;">
+  <canvas id="product-zoom-canvas"></canvas>
+</div>
+<?php if($_SERVER['HTTP_HOST'] != ' dev.gravitainfotech.com:8282'){?>
+<script type="text/javascript">
+    //call this on user interaction (click)
+
+
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId      : '729062020517600',
+            xfbml      : true,
+            version    : 'v2.2',
+			status: false,  
+	        cookie: true,
+	        oauth: true						
+        });
+		
+		
+/*
+        FB.getLoginStatus(function (response) {
+            if (response.status === 'connected') {
+                // the user is logged in and has authenticated your
+                // app, and response.authResponse supplies
+                // the user's ID, a valid access token, a signed
+                // request, and the time the access token 
+                // and signed request each expire
+                var uid = response.authResponse.userID;
+                var accessToken = response.authResponse.accessToken;
+				
+				 jQuery(".fancybox-iframe").attr("src", "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>api_fbk/index.php");
+				
+				 jQuery('.fancybox-iframe').contentWindow.location.reload(true);
+				
+            } else if (response.status === 'not_authorized') {
+                // the user is logged in to Facebook, 
+                // but has not authenticated your app
+            } else {
+                // the user isn't logged in to Facebook.
+            }
+        });*/
+    };
+	
+	    function doLogin() {
+		loginByFbDesingerTab = 'yes'
+		
+		
+        FB.login(function(response) {
+
+            if (response.authResponse) {
+
+			
+			
+				  jQuery("#show_div_fb").removeClass("displayNone");
+				  jQuery(window).scrollTop();
+				  window.scrollTo(0,0);
+				  getFaceBookAlbum();
+				  jQuery('.UploadPhotoDivCustomizerFB').hide();
+				 
+				 //jQuery.fancybox.close();
+				 //jQuery(".fancybox-iframe").attr("src", "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>api_fbk/index_mobile.php");
+				 //jQuery('.fancybox-iframe').contentWindow.location.reload(true);
+				 
+				
+            } else {
+				
+				//jQuery.fancybox.close();
+                console.log('User cancelled login or did not fully authorize.');
+            }
+        }, {scope: 'email,user_photos'});
+		
+		
+    }
+	
+var mytestVar = new Array();
+ii = 0;
+style = '';
+function getFaceBookAlbum()
+{
+show = '';
+
+
+					FB.api('/me/albums?fields=id,name', function(response) {
+  for (var i=0; i<response.data.length; i++) {
+    var album = response.data[i];
+	
+ 
+ 
+		
+
+			mytestVar[ii] = album.id;
+			ii++;
+			 
+		
+		//document.getElementById('fbAlbumNameLeft').innerHTML = document.getElementById('fbAlbumNameLeft').innerHTML + ('<li><div onclick="showHideDiv('+album.id+')">'+album.name+'</div></li>');
+		
+		
+		
+		document.getElementById('fbAlbumNameLeft').innerHTML = document.getElementById('fbAlbumNameLeft').innerHTML + ('<option value="'+album.id+'">'+album.name+'</option>');
+		
+		// document.getElementById('fbAlbumPhotosRight').appendChild('<div id="'+album.id+'" style="'+style+'">');
+		 
+		fetFaceBookPhotos(album.id)
+
+       
+  }
+});
+
+
+}
+
+
+
+function fetFaceBookPhotos(albumid)
+ {
+ 
+ 
+      FB.api('/'+albumid+'/photos', function(photos){
+	  
+	//document.getElementById('fbAlbumPhotosRight').innerHTML = document.getElementById('fbAlbumPhotosRight').innerHTML + document.getElementById('fbAlbumPhotosRight').innerHTML + ('<div id="'+album.id+'" style="'+style+'">');  
+	   
+        if (photos && photos.data && photos.data.length){
+          for (var j=0; j<photos.data.length; j++){
+		  
+		  if(style == '')
+		  style=albumid
+		  
+		  
+		  
+		  
+	 if(style != albumid)
+		style2='display:none';
+	 else 
+	    style2='';
+		  
+		  
+		  
+            var photo = photos.data[j];
+            // photo.picture contain the link to picture
+            var image = document.createElement('img');
+            image.src = photo.picture;
+            //document.body.appendChild(image);
+			data_origin_url = photo.source;
+			//document.getElementById('fbAlbumPhotosRight').appendChild;
+			
+			document.getElementById('fbAlbumPhotosRight').innerHTML = document.getElementById('fbAlbumPhotosRight').innerHTML +  ('<div class="image-ppc '+albumid+'" style="'+style2+'"><img class="clipart-image" src="'+image.src+'" alt="<?php echo Mage::getStoreConfig(Mage_Core_Model_Url::XML_PATH_SECURE_URL);?>api_fbk/read_image.php?bhishoom_img_url='+data_origin_url+'" data-origin-url="<?php echo Mage::getStoreConfig(Mage_Core_Model_Url::XML_PATH_SECURE_URL);?>api_fbk/read_image.php?bhishoom_img_url='+data_origin_url+'" onclick="onClickUserInstImagesFacebook(this.src,this.alt)"></div>');
+			
+			<?php /*?>
+			document.getElementById('fbAlbumPhotosRight').innerHTML = document.getElementById('fbAlbumPhotosRight').innerHTML +  ('<div class="image-ppc '+albumid+'" style="'+style2+'"><img class="clipart-image" src="'+image.src+'" alt="'+data_origin_url+'" data-origin-url="'+data_origin_url+'" onclick="onClickUserInstImages(this.src,this.alt)"></div>');
+			<?php */?>
+          }
+        }
+		// document.getElementById('fbAlbumPhotosRight').innerHTML = document.getElementById('fbAlbumPhotosRight').innerHTML + ('</div>');
+      }); 
+ 
+ }	
+
+	function onClickUserInstImagesFacebook(imgSrc,data_origin_url)
+	{
+		jQuery('#uploadedImages_fb_img').attr('src',imgSrc);
+		jQuery('#uploadedImages_fb_img').attr('data-origin-url',data_origin_url);
+		jQuery('#uploadedImages_fb_img').click();
+		jQuery('#social_media_img_container').append('<li><img class="clipart-image" src="'+imgSrc+'" data-origin-url="'+data_origin_url+'"><span onclick="jQuery(this).parent().remove();">X</span></li>')
+	}
+ 
+	function showHideDiv(divid)
+     {  
+	   for(ii=0;ii<mytestVar.length;ii++)
+	   {  
+	      if(mytestVar[ii]==divid){					
+					var y = document.getElementsByClassName(mytestVar[ii]);
+					var i;
+					for (i = 0; i < y.length; i++) {
+					  y[i].style.display = '';
+					}				
+		   }
+		  else {    
+					var y = document.getElementsByClassName(mytestVar[ii]); 					
+					var i;
+					for (i = 0; i < y.length; i++) {
+					  y[i].style.display = 'none';
+					}
+		   }		   
+	   }	 
+	 }	
+	
+    (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+	
+function instaFeedFunction(){
+	window.scrollTo(0,0);
+//jQuery("#divform3").click();
+ /*jQuery("#instafeed").html('');
+    var feed = new Instafeed({
+        get: 'tagged',
+        tagName: 'bhishoom',
+        clientId: '36f371f423a545eba474a641dca534ec',
+		resolution:'standard_resolution',
+		sortBy:'most-recent',
+		template: '<div class="image-ppc"><img src="{{image}}" data-origin-url="{{image}}" class="clipart-image" onclick="onClickUserInstImages(\'{{image}}\')" /></div>',
+		success: function(jsonDaata){		
+			jQuery("#divform3").click();
+		}
+    });
+    feed.run();*/
+  jQuery("#show_div_instagram").removeClass("displayNone");	
+  //var dataString='cat_id='+id+'&cat_name='+name;
+  //var dataString='cat_id='+id;
+  jQuery('#filter_loading_image').show();
+  jQuery.ajax({
+	  type: "GET",
+	  url: '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>Instagram_php_api/code/images_mobile.php',
+	  success: function(data){
+		  if(data)
+		  {
+			  jQuery("#show_div_instagram").append(data);
+			  jQuery('#filter_loading_image').hide();
+		  }
+	  }
+  });	
+	
+	
+	
+	
+	
+	
+	
+	
+}	
+
+
+function onClickUserInstImages22(imgSrc)
+{
+jQuery('#uploadedImages_fb_img').attr('src',imgSrc);
+jQuery('#uploadedImages_fb_img').attr('data-origin-url',imgSrc);
+jQuery('#uploadedImages_fb_img').click();
+jQuery('#social_media_img_container').append('<li><img class="clipart-image" src="'+imgSrc+'" data-origin-url="'+imgSrc+'"><span onclick="jQuery(this).parent().remove();">X</span></li>');
+jQuery("#show_div_instagram").addClass("displayNone");	
+}
+
+function onClickUserInstImages(imgSrc)
+{
+	parent.jQuery('#uploadedImages_fb_img').attr('src',imgSrc);
+	parent.jQuery('#uploadedImages_fb_img').attr('data-origin-url',imgSrc);
+	parent.jQuery('#uploadedImages_fb_img').click();
+	parent.jQuery.fancybox.close();
+	parent.jQuery('#social_media_img_container').append('<li><img class="clipart-image" src="'+imgSrc+'" data-origin-url="'+imgSrc+'"><span onclick="jQuery(this).parent().remove();">X</span></li>')
+}
+
+<?php /*if(count($show_which_color_mobile_skin) > 0){?>
+flagSlideWiseClick = new Array();
+jQuery(".product-image").click(function(){
+		 		 
+		 if(flagSlideWiseClick[jQuery(this).attr("id")] != true){
+			objCallDirectDesignerImage.observeImageSelect5(baseUrl + 'media/color-images/255-255-255.png','255,255,255');
+			flagSlideWiseClick[jQuery(this).attr("id")] = true;
+		 }	
+					 
+});
+<?php }*/?>
+	
+</script>
+<?php }?>
+
+              
+                <div id="show_div_clp_art" class="choose-stroke show_popup_mobile displayNone">
+				<a href="javascript:void(0)" class="floatRightCss show_popup_mobile_close fontSize20pxImp">X</a>
+                  <h2 id="clip_art_heading" class="a-center">Gallery</h2>
+                  <div class="a-center">
+                    
+					<select onchange="jQuery('#filter_loading_image').show();load_clipart_img(this.value);">
+                      <?php
+						 $category = Mage::getSingleton('gomage_designer/clipart_category');
+						 $defaultCategoryId = $category->getDefaultCategoryId();
+				$categories = $category->getCollection()->addVisibleFilter()->addFieldToFilter('parent_id', $defaultCategoryId)->addClipartCountFilter();	
+                    foreach($categories as $_category): ?>
+                      <option value="<?php echo $_category->getId()?>"><?php echo $_category->getName();?></option>
+                      <?php endforeach; ?>
+                    </select>
+                  </div>
+                  <div class="sright_mobile a-center clear marTOP20pxCss" id="clip_art_images_res">
+                    <div><i class="fa fa-arrow-circle-left"></i> Please select the image gallery.</div>
+                  </div>
+                </div>
+
+                <div id="show_div_fb" class="choose-stroke show_popup_mobile displayNone">				
+					<a href="javascript:void(0)" class="floatRightCss show_popup_mobile_close fontSize20pxImp">X</a>
+
+						<h2>Gallery</h2>
+						<div class="a-center">
+							<select id="fbAlbumNameLeft" onchange="showHideDiv(this.value)">
+								
+							</select>
+							<br/><br/>
+						</div>
+					<div id="fbAlbumPhotosRight" class="sright_mobile a-center clear marTOP20pxCss">
+					</div>				
+                </div>
+				
+				
+				
+                <div id="show_div_instagram" class="choose-stroke show_popup_mobile displayNone">
+					<a href="javascript:void(0)" class="floatRightCss show_popup_mobile_close fontSize20pxImp">X</a>
+								
+                </div>				
+				
+		<div id="show_bhishoom_font_seleteor_div"class="choose-stroke show_popup_mobile displayNone">
+					<a href="javascript:void(0)" class="floatRightCss show_popup_mobile_close fontSize20pxImp">X</a>
+					<h2 id="show_bhishoom_font_heading">Choose Fonts</h2>
+					<div class="sright" id="choose_fonts">
+					</div>
+					
+		</div>
+						
+				
+				

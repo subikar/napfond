@@ -1,0 +1,44 @@
+userid : bhishoom
+
+password : Gravita@123
+
+Secret question : place of birth : jaipur
+
+Email : lokesh.yadav@gravitainfotech.com
+
+nick name : ntalsera
+
+
+
+
+
+==========================================
+
+Required for All Web Services
+Developer Test Key:	 A90P0Srwa2Kvrjip
+Required for FedEx Web Services for Intra Country Shipping in India
+Test Account Number:	 604501202
+Test Meter Number:	 118687670
+
+Password : LmZoygozQlwaerCYzGIdkNOYc
+
+
+==========================================
+
+Production Details
+
+Supported Web Services:	 FedEx Web Services for Shipping
+
+Meter Number:	 108351549
+
+
+
+
+
+FedEx Account Number : 675894329
+
+Production Meter Number : 108351549
+
+Authentication Key:	 rARm1JsT3kL1pX2S
+
+Production Password: C2bZZvUSIDmpuZKk9EeU2qejq

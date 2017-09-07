@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * iKantam
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade InstagramConnect to newer
+ * versions in the future.
+ *
+ * @category    Ikantam
+ * @package     Ikantam_InstagramConnect
+ * @copyright   Copyright (c) 2012 iKantam LLC (http://www.ikantam.com)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+-->
+<layout version="0.1.0">
+  
+  
+<instagramconnect_adminhtml_instagramconnect_new>
+	<reference name="content">
+		<block type="instagramconnect/adminhtml_new" name="new" template="ikantam/instagram_connect/new.phtml"/>
+    </reference>
+</instagramconnect_adminhtml_instagramconnect_new>
+  
+<instagramconnect_adminhtml_instagramconnect_approved>
+	<reference name="content">
+		<block type="instagramconnect/adminhtml_approved" name="approved" template="ikantam/instagram_connect/approved.phtml"/>
+    </reference>
+</instagramconnect_adminhtml_instagramconnect_approved>
+
+</layout>

@@ -1,0 +1,465 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Customer onepage checkout login form template
+ *
+ * @see app/design/frontend/base/default/template/checkout/onepage/login.phtml
+ */
+/** @var $this Mage_Checkout_Block_Onepage_Login */
+?>
+<?php echo $this->getChildHtml('login_before') ?>
+<?php /*?>
+<div class="col2-set"<?php if (!$this->helper('customer')->isRegistrationAllowed() && !$this->getQuote()->isAllowedGuestCheckout()) echo ' login-only' ?>>
+    <div class="col-1">
+
+        <?php if( $this->getQuote()->isAllowedGuestCheckout() ): ?>
+            <ul class="form-list">
+                
+                <?php if( $this->helper('customer')->isRegistrationAllowed() ): ?>
+                <li class="control">
+                    <input type="radio" name="checkout_method" id="login:register" value="register" checked="checked" class="radio" onclick="hide_login()" />
+                    <label for="login:register"><?php echo $this->__('Checkout as Guest') ?></label>
+                </li>
+                <?php endif; ?>
+                <li class="control">
+                    <input type="radio" name="checkout_method" id="login-account" value="login" class="radio" onclick="show_login()" /><label for="login"><?php echo $this->__('I have a Bhishoom account') ?></label>
+                </li>
+            </ul>
+        <?php else: ?>
+            <input type="hidden" name="checkout_method" id="login:register" value="register" checked="checked" />
+        <?php endif; ?>          
+    </div>
+    <div class="col-2" id="guest-login-form-div">  
+     <ul>
+      <li class="fields">
+       <div class="guest-email-mobi">
+        <div class="guest-detail">
+          <label>Your Email</label><br />
+          <input id="email_address"  name="email" placeholder="Example : john@appleseed.com" class="input-text" type="email">
+          <div id="advice-required-entry-login-email" class="validation-advice"></div>
+        </div>
+        <div class="guest-detail">
+          <label>Your Mobile No.</label><br />
+          <input id="mobile_no" class="input-text" type="tel" name="mobile_no">
+          <div id="advice-required-entry-login-mobile_no" class="validation-advice"></div>
+        </div>
+       </div>
+      </li>    
+     </ul> 
+     <div class="buttons-set">
+      <p class="required">&nbsp;</p>
+              <?php if ($this->getQuote()->isAllowedGuestCheckout()): ?>
+                <input id="onepage-guest-register-button" type="button" class="button" onclick="return chk_guest_email();" value="<?php echo $this->__('Continue') ?>">
+              <?php elseif ($this->helper('checkout')->isCustomerMustBeLogged()): ?>
+                  <button id="onepage-guest-register-button" type="button" class="button" onclick="window.location='<?php echo $this->helper('checkout/url')->getRegistrationUrl();?>'"><span><span><?php echo $this->__('Register') ?></span></span></button>
+              <?php else: ?>
+                  <form action="<?php echo $this->getUrl('persistent/index/saveMethod'); ?>">
+                      <button id="onepage-guest-register-button" type="submit" class="button"><span><span><?php echo $this->__('Register') ?></span></span></button>
+                  </form>
+              <?php endif; ?>
+          </div>
+        </div>
+    <div class="col-2" style="display:none;" id="login-form-div">
+       
+        <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+        <form id="login-form" action="<?php echo $this->getPostAction() ?>" method="post">
+        <div class="fieldset">
+            <?php echo $this->getBlockHtml('formkey'); ?>
+            
+            <ul class="form-list">
+                <li>
+                    <label for="login-email" class="required"><em>*</em><?php echo $this->__('Email Address') ?></label>
+                    <div class="input-box">
+                        <input type="email" autocapitalize="off" autocorrect="off" spellcheck="false" class="input-text required-entry validate-email" id="login-email" name="login[username]" value="<?php echo $this->escapeHtml($this->getUsername()) ?>" />
+                    </div>
+                </li>
+                <li>
+                    <label for="login-password" class="required"><em>*</em><?php echo $this->__('Password') ?></label>
+                    <div class="input-box">
+                        <input type="password" class="input-text validate-password required-entry" id="login-password" name="login[password]" />
+                    </div>
+                </li>
+                <li>
+                    <a href="<?php echo $this->getUrl('customer/account/forgotpassword') ?>" class="f-left"><?php echo $this->__('Forgot your password?') ?></a>
+                </li>
+                <?php echo $this->getChildHtml('form.additional.info'); ?>
+                <?php echo $this->getChildHtml('persistent.remember.me'); ?>
+            </ul>
+            <?php echo $this->getChildHtml('persistent.remember.me.tooltip'); ?>
+            <input name="context" type="hidden" value="checkout" />
+        </div>
+        </form>
+        <div class="buttons-set" style="margin-top:10px;">
+            <button type="submit" class="button" onclick="onepageLogin(this)"><span><span><?php echo $this->__('Login') ?></span></span></button>
+               
+        <?php $services = Mage::helper('gomage_social')->getServices('login');	?>
+		<?php if (count($services)): ?> 
+          <ul class="gs-login <?php if(Mage::getConfig()->getModuleConfig('Enterprise_Enterprise' )): ?>gs-login-ee<?php endif; ?> gs-login-<?php echo $this->getPlace() ?>">
+                <?php 
+                    end($services);
+                    $last_key = key($services);
+                ?>
+		<?php foreach ($services as $key => $value): ?>
+		
+<?php switch ($key): ?>
+<?php case (GoMage_Social_Model_Type::FACEBOOK): ?>
+ <li <?php if ($key == $last_key): ?>class="last"<?php endif; ?>>
+  <?php if ($this->getLoginType('facebook') == GoMage_Social_Model_Adminhtml_System_Config_Source_Login_Type::BUTTON): ?>			
+	<fb:login-button scope="email" onlogin="gomageSocialFBCheckLogin()" v="2"></fb:login-button>
+  <?php else: ?>
+	<a href="#" onclick="gomageSocialFBLogin();return false;" title="<?php echo $this->getText('facebook') ?>">
+     <?php if (($image = $this->getImage('facebook')) && ($this->getLoginType('facebook') == GoMage_Social_Model_Adminhtml_System_Config_Source_Login_Type::IMAGE)): ?>
+	 <img src="<?php echo $image ?>" alt="<?php echo $this->getText('facebook') ?>" />
+    <?php else: ?>
+	 
+     <div class="social_login">You can also sign-in with
+      <i class="fa fa-facebook-square fa-2x"></i>
+     </div>
+    <?php endif; ?>
+   </a>
+  <?php endif; ?>
+ </li>
+<?php break; ?>
+<?php case (GoMage_Social_Model_Type::GOOGLE): ?>
+	<li <?php if ($key == $last_key): ?>class="last"<?php endif; ?>>
+		<?php if ($this->getLoginType('google') == GoMage_Social_Model_Adminhtml_System_Config_Source_Login_Type::BUTTON): ?>
+			<button class="g-signin"
+		        data-scope="https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email"
+		        data-requestvisibleactions="http://schemas.google.com/AddActivity"
+		        data-clientId="<?php echo Mage::getStoreConfig('gomage_social/google/id') ?>"
+		        data-accesstype="offline"
+		        data-callback="gomageSocialGSigninCallback"        
+				data-approvalprompt="force"		
+		        data-cookiepolicy="single_host_origin"
+		        data-height="short">
+		    </button>
+		<?php else: ?>
+			<a href="<?php echo $this->getUrl('gomage_social/google/login', array('_secure' => true, 'gs_url' => Mage::helper('core')->urlEncode(Mage::helper('core/url')->getCurrentUrl())));  ?>" title="<?php echo $this->getText('google') ?>">
+				<?php if (($image = $this->getImage('google')) && ($this->getLoginType('google') == GoMage_Social_Model_Adminhtml_System_Config_Source_Login_Type::IMAGE)): ?>
+					<img src="<?php echo $image ?>" alt="<?php echo $this->getText('google') ?>" />
+				<?php else: ?>
+					<?php echo $this->getText('google') ?>
+				<?php endif; ?>
+			</a>
+		<?php endif; ?>
+	</li>	
+<?php break; ?>
+<?php case (GoMage_Social_Model_Type::LINKEDIN): ?>	
+	<li <?php if ($key == $last_key): ?>class="last"<?php endif; ?>>
+		<a href="<?php echo $this->getUrl('gomage_social/linkedin/login', array('_secure' => true, 'gs_url' => Mage::helper('core')->urlEncode(Mage::helper('core/url')->getCurrentUrl())));  ?>" title="<?php echo $this->getText('linkedin') ?>">
+			<?php if (($image = $this->getImage('linkedin')) && ($this->getLoginType('linkedin') == GoMage_Social_Model_Adminhtml_System_Config_Source_Login_Type::IMAGE)): ?>
+				<img src="<?php echo $image ?>" alt="<?php echo $this->getText('linkedin') ?>" />
+			<?php else: ?>
+				<?php echo $this->getText('linkedin') ?>
+			<?php endif; ?>
+		</a>
+	</li>
+<?php break; ?>
+<?php endswitch; ?>
+				
+		<?php endforeach; ?>
+	</ul>	 
+<?php endif; ?>
+        
+        
+      </div>   
+    </div>
+        
+</div>
+<?php */?>
+
+<div class="col2-set"<?php if (!$this->helper('customer')->isRegistrationAllowed() && !$this->getQuote()->isAllowedGuestCheckout()) echo ' login-only' ?>>
+        <div class="row-xs">
+		
+		<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+          <div class="col-md-6 login_by_guest">
+            <h3>Guest Checkout / Login</h3>
+            <div class="fieldset_login">
+              <p>Enter Your Email Address</p>
+              <input id="email_address"  name="email" placeholder="Example : john@appleseed.com" type="text" class="form-control">
+			  <div id="advice-required-entry-login-email" class="validation-advice"></div>
+            </div>
+			
+			
+            <div class="fieldset_login clear radio_btn_vb">
+              <!--<input type="radio" class="">-->
+			  <input type="radio" name="checkout_method" id="login-account" value="login" class="" onclick="show_login()" />
+              <label>Continue with Baba Cover password</label>
+              <p>(Sign in to your account for a faster checkout)</p>
+			  
+			  <div id="login-form-div" class="displayNone">
+			   <form id="login-form" action="<?php echo $this->getPostAction() ?>" method="post">
+					<?php echo $this->getBlockHtml('formkey'); ?>
+				Password<br/>
+				<input type="password" class="validate-password required-entry" id="login-password" name="login[password]" />
+				<p class="clear">
+				<a class="forgotpass_login" href="<?php echo $this->getUrl('customer/account/forgotpassword') ?>" class="f-left"><?php echo $this->__('Forgot your password?') ?></a></p>
+				<input type="hidden" autocapitalize="off" autocorrect="off" spellcheck="false" class="input-text required-entry validate-email" id="login-email" name="login[username]" value="<?php echo $this->escapeHtml($this->getUsername()) ?>" />
+				
+				<input name="context" type="hidden" value="checkout" />
+				<input type="hidden" name="randchk" value="<?php echo rand(10,100000000)?>" />
+				<button id="checkOutLoginBtn" type="submit" class="button displayNone" onclick="onepageLogin(this)"><span><span><?php echo $this->__('Login') ?></span></span></button>
+				
+			   </form>
+			  </div>
+			  
+			  
+            </div>
+            <div class="fieldset_login clear radio_btn_vb">
+              <!--<input type="radio" class="">-->
+			  <input type="radio" name="checkout_method" id="login:register" value="register" checked="checked" class="" onclick="hide_login()" />
+              <label>Continue as a guest</label>
+              <p>(No password or registration required)</p>
+            </div>
+            <div class="fieldset_login">			
+				<input id="onepage-guest-register-button" type="button" class="button" onclick="if(chk_guest_email2()){if(jQuery('#login-account').is(':checked')){ jQuery('#login-email').val(jQuery('#email_address').val()); jQuery('#checkOutLoginBtn').click();  }  else return chk_guest_email();}" 
+				value="<?php echo $this->__('Continue') ?>">
+			</div>
+          </div>
+          
+		  
+		  
+		  <div class="col-md-6 login_by_facebook">
+		  
+		  
+		  
+
+
+        <?php $services = Mage::helper('gomage_social')->getServices('login');	?>
+		<?php if (count($services)): ?> 
+          <ul class="gs-login <?php if(Mage::getConfig()->getModuleConfig('Enterprise_Enterprise' )): ?>gs-login-ee<?php endif; ?> gs-login-<?php echo $this->getPlace() ?>">
+                <?php 
+                    end($services);
+                    $last_key = key($services);
+                ?>
+		<?php foreach ($services as $key => $value): ?>
+		
+<?php switch ($key): ?>
+<?php case (GoMage_Social_Model_Type::FACEBOOK): ?>
+ <!--<li <?php if ($key == $last_key): ?>class="last"<?php endif; ?>>-->
+  <?php if ($this->getLoginType('facebook') == GoMage_Social_Model_Adminhtml_System_Config_Source_Login_Type::BUTTON): ?>
+  
+  
+	<fb:login-button scope="email" onlogin="gomageSocialFBCheckLogin()" v="2"></fb:login-button>
+  <?php else: ?>
+	<li><a href="#" class="facebok_login_btn" onclick="gomageSocialFBLogin();return false;" title="<?php echo $this->getText('facebook') ?>">
+     <?php if (($image = $this->getImage('facebook')) && ($this->getLoginType('facebook') == GoMage_Social_Model_Adminhtml_System_Config_Source_Login_Type::IMAGE)): ?>
+	 <img src="<?php echo $image ?>" alt="<?php echo $this->getText('facebook') ?>" />
+    <?php else: ?>
+	 
+     <i class="fa fa-facebook fa-2x"></i>Sign in with your<br>
+		Facebook Account
+    <?php endif; ?>
+   </a></li>
+  <?php endif; ?>
+ <!--</li>-->
+<?php break; ?>
+<?php case (GoMage_Social_Model_Type::GOOGLE): ?>
+	<li <?php if ($key == $last_key): ?>class="last"<?php endif; ?>>
+		<?php if ($this->getLoginType('google') == GoMage_Social_Model_Adminhtml_System_Config_Source_Login_Type::BUTTON): ?>
+			<button class="g-signin"
+		        data-scope="https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email"
+		        data-requestvisibleactions="http://schemas.google.com/AddActivity"
+		        data-clientId="<?php echo Mage::getStoreConfig('gomage_social/google/id') ?>"
+		        data-accesstype="offline"
+		        data-callback="gomageSocialGSigninCallback"        
+				data-approvalprompt="force"		
+		        data-cookiepolicy="single_host_origin"
+		        data-height="short">
+		    </button>
+		<?php else: ?>
+			<li><a href="<?php echo $this->getUrl('gomage_social/google/login', array('_secure' => true, 'gs_url' => Mage::helper('core')->urlEncode(Mage::helper('core/url')->getCurrentUrl())));  ?>" title="<?php echo $this->getText('google') ?>">
+				<?php if (($image = $this->getImage('google')) && ($this->getLoginType('google') == GoMage_Social_Model_Adminhtml_System_Config_Source_Login_Type::IMAGE)): ?>
+					<img src="<?php echo $image ?>" alt="<?php echo $this->getText('google') ?>" />
+				<?php else: ?>
+					<?php echo $this->getText('google') ?>
+				<?php endif; ?>
+			</a></li>
+		<?php endif; ?>
+	</li>	
+<?php break; ?>
+<?php case (GoMage_Social_Model_Type::LINKEDIN): ?>	
+	<li <?php if ($key == $last_key): ?>class="last"<?php endif; ?>>
+		<a href="<?php echo $this->getUrl('gomage_social/linkedin/login', array('_secure' => true, 'gs_url' => Mage::helper('core')->urlEncode(Mage::helper('core/url')->getCurrentUrl())));  ?>" title="<?php echo $this->getText('linkedin') ?>">
+			<?php if (($image = $this->getImage('linkedin')) && ($this->getLoginType('linkedin') == GoMage_Social_Model_Adminhtml_System_Config_Source_Login_Type::IMAGE)): ?>
+				<img src="<?php echo $image ?>" alt="<?php echo $this->getText('linkedin') ?>" />
+			<?php else: ?>
+				<?php echo $this->getText('linkedin') ?>
+			<?php endif; ?>
+		</a>
+	</li>
+<?php break; ?>
+<?php endswitch; ?>
+				
+		<?php endforeach; ?>
+	</ul>	 
+<?php endif; ?>
+
+
+
+
+</div>
+        </div>
+      </div>
+<script type="text/javascript">
+//<![CDATA[
+    var loginForm = new VarienForm('login-form', true);
+    $('login-email').observe('keypress', bindLoginPost);
+    $('login-password').observe('keypress', bindLoginPost);
+    function bindLoginPost(evt){
+        if (evt.keyCode == Event.KEY_RETURN) {
+            loginForm.submit();
+        }
+    }
+    function onepageLogin(button)
+    {
+        if(loginForm.validator && loginForm.validator.validate()){
+            button.disabled = true;
+            loginForm.submit();
+        }
+    }
+	function show_login()
+	{
+		if(document.getElementById("login-account").checked == true)
+		{
+			document.getElementById("login-form-div").style.display = 'block';
+			//document.getElementById("guest-login-form-div").style.display = 'none';	
+		}
+	}
+	function hide_login()
+	{
+		if(document.getElementById("login:register").checked == true)
+		{
+			document.getElementById("login-form-div").style.display = 'none';
+			//document.getElementById("guest-login-form-div").style.display = 'block';			
+		}
+	}
+	function chk_guest_email()
+	{	
+		var phoneno = /^\d{10}$/; 
+		var Email = document.getElementById("email_address").value;
+		//var mobile = document.getElementById("mobile_no").value;
+		//alert(mobile);
+		
+		
+		if(Email == '')
+		{
+			document.getElementById("advice-required-entry-login-email").innerHTML = 'This is a required field.';
+			return false;
+		}
+		else
+		{
+			if(validateEmail(Email) == false)
+			{
+				document.getElementById("advice-required-entry-login-email").innerHTML = 'Please enter a valid email address. For example johndoe@domain.com.';
+				return false;
+			}
+			else
+			{				
+				document.getElementById("advice-required-entry-login-email").innerHTML = '';
+				document.getElementById("billing:email").value = Email;
+			}
+		}
+		/*if(mobile == '')
+		{
+			document.getElementById("advice-required-entry-login-mobile_no").innerHTML = 'This is a required field.';
+			return false;
+		}
+		 else if(!mobile.match(phoneno)){
+			document.getElementById("advice-required-entry-login-mobile_no").innerHTML = 'Not a valid number.';
+			return false;		
+		}
+		else
+		{
+			document.getElementById("advice-required-entry-login-email").innerHTML = '';
+			document.getElementById("billing:telephone").value = mobile;
+		}*/
+		
+		/*jQuery.ajax({
+			type : 'POST',
+			url   : '<?php echo Mage::getBaseUrl().'admin_cat.php'?>',
+			data : {'userEmail' : Email,
+					'userMobile' : mobile},
+			success : function(responseData) {
+				//alert(responseData);				 
+			 if(responseData){
+				 
+				alert(responseData); 
+			 }
+			
+			},
+		});*/
+		
+		
+		
+		checkout.setMethod();
+	}
+	
+	
+	function chk_guest_email2()
+	{	
+		var phoneno = /^\d{10}$/; 
+		var Email = document.getElementById("email_address").value;
+		//var mobile = document.getElementById("mobile_no").value;
+		//alert(mobile);
+		if(Email == '')
+		{
+			document.getElementById("advice-required-entry-login-email").innerHTML = 'This is a required field.';
+			return false;
+		}
+		else
+		{
+			if(validateEmail(Email) == false)
+			{
+				document.getElementById("advice-required-entry-login-email").innerHTML = 'Please enter a valid email address. For example johndoe@domain.com.';
+				return false;
+			}
+        }
+		return true;	
+	}
+	function validateEmail(email) { 
+		var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		return re.test(email);
+	} 
+//]]>
+</script>
+<?php
+    $registerParam = $this->getRequest()->getParam('register');
+    if ($registerParam || $registerParam === ''):
+?>
+<script type="text/javascript">
+    //<![CDATA[
+        document.observe("dom:loaded", function() {
+            if($('login:register')) {
+                $('login:register').checked = true;
+                checkout.setMethod();
+            }
+        })
+    //]]>
+</script>
+<?php endif; ?>

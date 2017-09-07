@@ -1,0 +1,248 @@
+<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('quicklogin/quicklogin.css');?>" media="all" />
+<div id="quicklogin">
+  <div class="quickbg" >
+    <div class="row" > 
+      <!-- <div class="page-title">
+	    <h2><?php //echo $this->__('Login or Create an Account') ?></h2>
+	</div> --> 
+      <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+      <div class="col-sm-6 rightBorderLoginBox">
+        <fieldset class="col2-set login-page">
+          <?php /*?><legend><?php echo $this->__('Login or Create an Account') ?></legend><?php */?>
+          <div class="col-2 registered-users" id="old_user">
+            <form action="#" method="post" id="login-form" class="frm-login">
+              <div class="content">
+                <h3><?php echo $this->__('Sign-in') ?></h3>
+                <p>
+                  <?php // echo $this->__(', please log in.') ?>
+                </p>
+                <ul class="form-list">
+                  <li>
+                    <label for="email"><?php echo $this->__('Email Address') ?> <span class="required">*</span></label>
+                    <br />
+                    <input name="login[username]" value="<?php echo $this->htmlEscape($this->getUsername()) ?>" id="email" type="text" class="input-text required-entry" title="<?php echo $this->__('Email Address') ?>" />
+                  </li>
+                  <div class="clear"></div>
+                  <li>
+                    <label for="pass"><?php echo $this->__('Password') ?> <span class="required">*</span></label>
+                    <br />
+                    <input name="login[password]" type="password" class="input-text required-entry validate-password" id="pass" title="<?php echo $this->__('Password') ?>" />
+                  </li>
+                </ul>
+                <p class="required"><?php echo $this->__('* Required Fields') ?></p>
+                <div class="clearfix"></div>
+              </div>
+              <div class="buttons-set">
+                <div class="fpasscheck">
+                  <div class="log-but">
+                    <button class="action-btn" type="button" name="send" id="send2" onclick="loginAjax();"><?php echo $this->__('Login') ?></button>
+                  </div>
+                </div>
+              </div>
+              <div class="new_user_text">New around here? <a onclick='show_reg()'>Register </a> now.</div>
+              <div class="clearfix"></div>
+            </form>
+            <div class="for_pass">
+              <input type="checkbox" name="modtype" value="value1" onclick="showForgotSection('fpass', this)" />
+              <span><?php echo $this->__('Forgot Your Password?') ?></span></div>
+            <div style="display:none;position: absolute;bottom:40px;" id="fpass">
+            <hr>
+              <form class="for-pass" id="forgot-form" method="post" action="<?php echo $this->getUrl('customer/account/ajaxForgotPassword/') ?>">
+                <?php /*?><p><?php echo $this->__('Please enter your email to get the password') ?></p><?php */?>
+                <ul class="form-list">
+                  <li>
+                    <?php /*?><label class="required" for="email"><em>*</em><?php echo $this->__('Email Address') ?></label><?php */?>
+                    <div class="input-box">
+                      <input type="text" title="Email Address" class="input-text required-entry validate-email" id="forgot_email" value="" placeholder="Please enter your email to get the password" name="forgotemail">
+                      <div style="display:none;" id="advice-required-entry-forgetemail" class="validation-advice"></div>
+                    </div>
+                  </li>
+                </ul>
+                <div style="border:0px;" class="col-2 registered-users">
+                  <div class="buttons-set">
+                    <button type="button" id="send3" name="send3" class="action-btn" onclick="return forgetpass();"><span><?php echo $this->__('Submit') ?></span></button>
+                    <p style="display:none;" id="loading"></p>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="col-1 new-users" id="new_register" style="display:none;">
+            <form action="#" method="post" id="regis-form" class="frm-regis">
+			
+				<input type="hidden" name="fromFrontRegisterForm" value="yes" />
+			
+              <div class="content">
+                <h3><?php echo $this->__('Sign-up') ?></h3>
+                <div class="clearfix"></div>
+                <div class="content">
+                  <ul class="form-list">
+                    <li class="sdfdsf">
+                      <div class="field-input1 fdgfd name-prefix">
+                        <label for="prefix"><?php echo $this->__('Prefix') ?> <span class="required">*</span></label>
+                        <br />
+                        <div class="input-box">
+                          <select class="required-entry form-control" title="Prefix" name="prefix" id="prefix">
+                            <option value="Mr.">Mr.</option>
+                            <option value="Mrs.">Mrs.</option>
+                            <option value="Miss.">Miss.</option>
+                          </select>
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <label for="email"><?php echo $this->__('First Name') ?> <span class="required">*</span></label>
+                      <br />
+                      <input id="firstname" class="input-text required-entry" type="text" title="First Name" value="" name="firstname" />
+                    </li>
+                    <div class="clear"></div>
+					<li>
+                      <label for="pass"><?php echo $this->__('Last Name') ?> <span class="required">*</span></label>
+                      <br />
+                      <input id="lastname" class="input-text required-entry" type="text" title="Last Name" value="" name="lastname" />
+                    </li>
+                    <div class="clear"></div>
+                    <li>
+                      <label for="pass"><?php echo $this->__('Email Address') ?> <span class="required">*</span></label>
+                      <br />
+                      <input id="email_address" class="input-text validate-email required-entry" type="text" title="Email Address" value="" name="email" />
+                    </li>
+                    <div class="clear"></div>
+                    <li>
+                      <label for="pass"><?php echo $this->__('Password') ?> <span class="required">*</span></label>
+                      <br />
+                      <input id="password" class="input-text required-entry validate-password" type="password" title="Password" name="password"/>
+                    </li>
+                    <div class="clear"></div>
+                    <li>
+                      <label for="pass"><?php echo $this->__('Confirm Password') ?> <span class="required">*</span></label>
+                      <br />
+                      <input id="confirmation" class="input-text required-entry validate-password" type="password" title="Password" name="confirmation"/>
+                    </li>
+                    <li class="control displayNone">
+                      <div class="input-box">
+                        <input type="checkbox" checked="checked" name="is_subscribed" title="<?php echo $this->__('Sign Up for Newsletter') ?>" value="1" id="is_subscribed" />
+                      </div>
+                      <label for="is_subscribed"><?php echo $this->__('Sign Up for Newsletter') ?></label>
+                      <p class="required"><?php echo $this->__('* Required Fields') ?></p>
+                    </li>
+                    <div class="clear"></div>
+                    <li class="control">
+                      <div class="input-box">
+                        <input type="checkbox"  class="validate-registeration-terms" name="is_read_agree_terms"  title="<?php echo $this->__('I have read and agree to the Babacover terms of use , offer for sale and privacy policy .') ?>" value="1" id="is_read_agree_terms" checked="checked" />
+                      </div>
+                      <label for="is_read_agree_terms" id="is_read_agree_terms_lbl">I have read and agree to the<a href="<?php echo $this->getUrl('privacy_policy');?>" target="_blank"><strong> Babacover terms</strong></a> of use , offer for sale and privacy policy</label>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="buttons-set">
+                <button type="button" id="submitReg" class="action-btn myClass" onclick="return registerAjax();"><span><?php echo $this->__('Create an Account') ?></span></button>
+              </div>
+              <div class="new_user_text">Already Registered? <a onclick="show_login();" style="cursor:pointer; text-decoration:underline;">Sign In </a>.</div>
+            </form>
+            <script type="text/javascript">
+/*
+function enableSubmitRegButton(event) { alert("")
+    var checked = event.findElement().checked
+	alert(checked)
+	
+    // copied functionality to show it 
+}
+
+$('is_read_agree_terms').observe('change', enableSubmitRegButton);
+$('is_read_agree_terms').observe('keydown', enableSubmitRegButton);
+$('is_read_agree_terms').observe('paste', enableSubmitRegButton);
+$('is_read_agree_terms').observe('input', enableSubmitRegButton);
+$('is_read_agree_terms').observe('click', enableSubmitRegButton);
+*/
+</script> 
+          </div>
+        </fieldset>
+      </div>
+      <?php 
+/**
+ * GoMage Social Connector Extension 
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use
+ * @version      Release: 1.0
+ * @since        Class available since Release 1.0
+ */ 
+?>
+      <?php 	$services = Mage::helper('gomage_social')->getServices('login');	?>
+      <?php if (count($services)): ?>
+      <ul class="col-sm-6 gs-login <?php if(Mage::getConfig()->getModuleConfig('Enterprise_Enterprise' )): ?>gs-login-ee<?php endif; ?> gs-login-<?php echo $this->getPlace() ?>">
+        <?php 
+			end($services);
+			$last_key = key($services);
+		?>
+        <?php foreach ($services as $key => $value): ?> 
+        <?php switch ($key): ?><?php case (GoMage_Social_Model_Type::FACEBOOK): ?>
+        <li <?php if ($key == $last_key): ?>class="last"<?php endif; ?>>
+          <?php if ($this->getLoginType('facebook') == GoMage_Social_Model_Adminhtml_System_Config_Source_Login_Type::BUTTON): ?>
+          <fb:login-button scope="email" onlogin="gomageSocialFBCheckLogin()" v="2"></fb:login-button>
+          <?php else: ?>
+          <a href="#" onclick="gomageSocialFBLogin();return false;" title="<?php echo $this->getText('facebook') ?>">
+          <?php if (($image = $this->getImage('facebook')) && ($this->getLoginType('facebook') == GoMage_Social_Model_Adminhtml_System_Config_Source_Login_Type::IMAGE)): ?>
+          <img src="<?php echo $image ?>" alt="<?php echo $this->getText('facebook') ?>" />
+          <?php else: ?>
+          <?php /*?><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>/fb_login.png" alt="Login with facebook" title="Login with facebook" /><?php */?>
+          <div class="social_login"><i class="fa fa-facebook"></i><span>You can login with facebook</span> </div>
+          <?php endif; ?>
+          </a>
+          <?php endif; ?>
+        </li>
+        <?php break; ?>
+        <?php case (GoMage_Social_Model_Type::GOOGLE): ?>
+        <li <?php if ($key == $last_key): ?>class="last"<?php endif; ?>>
+          <?php if ($this->getLoginType('google') == GoMage_Social_Model_Adminhtml_System_Config_Source_Login_Type::BUTTON): ?>
+          <button class="g-signin"
+		        data-scope="https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email"
+		        data-requestvisibleactions="http://schemas.google.com/AddActivity"
+		        data-clientId="<?php echo Mage::getStoreConfig('gomage_social/google/id') ?>"
+		        data-accesstype="offline"
+		        data-callback="gomageSocialGSigninCallback"        
+				data-approvalprompt="force"		
+		        data-cookiepolicy="single_host_origin"
+		        data-height="short"> </button>
+          <?php else: ?>
+          <a href="<?php echo $this->getUrl('gomage_social/google/login', array('_secure' => true, 'gs_url' => Mage::helper('core')->urlEncode(Mage::helper('core/url')->getCurrentUrl())));  ?>" title="<?php echo $this->getText('google') ?>">
+          <?php if (($image = $this->getImage('google')) && ($this->getLoginType('google') == GoMage_Social_Model_Adminhtml_System_Config_Source_Login_Type::IMAGE)): ?>
+          <img src="<?php echo $image ?>" alt="<?php echo $this->getText('google') ?>" />
+          <?php else: ?>
+          <?php echo $this->getText('google') ?>
+          <?php endif; ?>
+          </a>
+          <?php endif; ?>
+        </li>
+        <?php break; ?>
+        <?php case (GoMage_Social_Model_Type::LINKEDIN): ?>
+        <li <?php if ($key == $last_key): ?>class="last"<?php endif; ?>> <a href="<?php echo $this->getUrl('gomage_social/linkedin/login', array('_secure' => true, 'gs_url' => Mage::helper('core')->urlEncode(Mage::helper('core/url')->getCurrentUrl())));  ?>" title="<?php echo $this->getText('linkedin') ?>">
+          <?php if (($image = $this->getImage('linkedin')) && ($this->getLoginType('linkedin') == GoMage_Social_Model_Adminhtml_System_Config_Source_Login_Type::IMAGE)): ?>
+          <img src="<?php echo $image ?>" alt="<?php echo $this->getText('linkedin') ?>" />
+          <?php else: ?>
+          <?php echo $this->getText('linkedin') ?>
+          <?php endif; ?>
+          </a> </li>
+        <?php break; ?>
+        <?php endswitch; ?>
+        <?php endforeach; ?>
+      </ul>
+      <?php endif; ?>
+      <script type="text/javascript">
+	//<![CDATA[
+	     // var dataForm = new VarienForm('login-form', true);
+	      //var dataForm1 = new VarienForm('regis-form', true);
+	//]]>	
+
+	
+	</script>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+</div>

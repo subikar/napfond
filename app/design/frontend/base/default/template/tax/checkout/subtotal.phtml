@@ -1,0 +1,94 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/**
+ * @var $this Mage_Tax_Block_Checkout_Subtotal
+ * @see Mage_Tax_Block_Checkout_Subtotal
+ */
+?>
+<?php if ($this->displayBoth()):?>
+<tr>
+    <td style="<?php echo $this->getStyle() ?>" class="a-right" colspan="<?php echo $this->getColspan(); ?>">
+        <?php echo $this->helper('tax')->__('Subtotal (Excl. Tax)') ?>
+    </td>
+    <td style="<?php echo $this->getStyle() ?>" class="a-right">
+        <?php echo $this->helper('checkout')->formatPrice($this->getTotal()->getValueExclTax()) ?>
+    </td>
+</tr>
+<tr>
+    <td style="<?php echo $this->getStyle() ?>" class="a-right" colspan="<?php echo $this->getColspan(); ?>">
+        <?php echo $this->helper('tax')->__('Subtotal (Incl. Tax)') ?>
+    </td>
+    <td style="<?php echo $this->getStyle() ?>" class="a-right">
+        <?php echo $this->helper('checkout')->formatPrice($this->getTotal()->getValueInclTax()) ?>
+    </td>
+</tr>
+<?php else : 
+$totals = Mage::helper('function')->getCartItemsTotals();
+$subtotal = $totals["subtotal"]->getValue(); //Subtotal value
+
+$getCartItemTotalMainPrice = Mage::helper('function')->getCartItemTotalMainPrice();
+
+$grandtotal = $totals["grand_total"]->getValue(); //Grandtotal value
+if(isset($totals['discount']) && $totals['discount']->getValue()) {
+	$discount = $totals['discount']->getValue(); //Discount value if applied
+} else {
+	$discount = '';
+}
+$quote = Mage::getModel('checkout/cart')->getQuote();
+	//	echo '<pre>';
+//print_r($quote->getData());
+
+$subtotal = $subtotal - $discount;
+?>
+<tr>
+    <td style="<?php echo $this->getStyle() ?>" valign="top" class="text-left" colspan="<?php echo $this->getColspan(); ?>">
+    <span class="price redBhishoom" style="visibility:hidden"><span class="price">.</span></span><br>
+        <?php echo $this->getTotal()->getTitle() ?>
+		
+		<?php /*if(($discount * +1) > 0){?>
+		<div class="fontSize11px redBhishoom cartDiscountDesc">
+		(<?php echo $this->helper('checkout')->formatPrice($discount * +1)?>)
+		</div>
+		<?php }*/?>
+		
+    </td>
+    <td style="<?php echo $this->getStyle() ?>" class="a-right" valign="top">
+	
+        <?php
+		if($getCartItemTotalMainPrice == $subtotal)
+			echo $this->helper('checkout')->formatPrice($this->getTotal()->getValue());
+		else
+		{
+?>	
+<span class="price redBhishoom"><?php echo $this->helper('checkout')->formatPrice($getCartItemTotalMainPrice); ?></span>
+<br/>	
+<span class="price"><?php echo $this->helper('checkout')->formatPrice($quote->getSubtotalWithDiscount()); ?></span>	
+<?php			
+		}
+		?>
+    </td>
+</tr>
+<?php endif;?>

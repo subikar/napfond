@@ -1,0 +1,13 @@
+<?xml version="1.0"?>   
+<layout version="8.1.1">   
+  <responsivebannerslider_index_index>   
+    <reference name="root">   
+      <action method="setTemplate"><template>page/1column.phtml</template></action>   
+    </reference>   
+    <reference name="content">   
+      <block type="responsivebannerslider/index" name="responsivebannerslider_index" template="responsivebannerslider/index.phtml"/>   
+	  <block type="responsivebannerslider/index_responsive" name="responsivebannerslider_index1" template="responsivebannerslider/index_responsive.phtml"/>
+    </reference>   
+  </responsivebannerslider_index_index>   
+</layout>   
+	

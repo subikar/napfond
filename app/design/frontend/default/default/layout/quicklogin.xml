@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+        <reference name="top.links">
+            <action method="setTemplate">
+                <template>quicklogin/top.links.phtml</template>
+            </action>
+			
+        </reference>
+	
+    </default>
+   <customer_account_signupformpopup>
+        <remove name="right"/>
+        <remove name="left"/>
+        <block type="core/template"  name="root" output="toHtml" template="quicklogin/quicklogin.phtml"/>
+   </customer_account_signupformpopup>
+   	 
+	
+</layout>

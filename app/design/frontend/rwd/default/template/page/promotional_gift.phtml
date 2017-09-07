@@ -1,0 +1,495 @@
+<?php
+$login = Mage::getSingleton('customer/session')->isLoggedIn();
+
+$siteBaseUrl = Mage::helper('function/more')->getBhishoomSiteBaseUrl();
+?>
+<!DOCTYPE html>
+<!--[if lt IE 7 ]> <html lang="en" id="top" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" id="top" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" id="top" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" id="top" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html lang="en" id="top" class="no-js">
+<!--<![endif]-->
+
+<head>
+<?php echo $this->getChildHtml('head') ?>
+</head>
+<body<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?>>
+<?php echo $this->getChildHtml('after_body_start') ?>
+<div class="wrapper"> <?php echo $this->getChildHtml('global_notices') ?>
+  <div class="page"> <?php echo $this->getChildHtml('header'); ?> <?php echo $this->getChildHtml('global_messages'); ?>
+    <div class="container">
+      <div class="main-container col1-layout">
+        <div class="main" style="min-height:400px;"> <?php echo $this->getChildHtml('breadcrumbs'); ?>
+          <?php /*?>
+    <form name="sitePromotionPOPupNlFrm" id="sitePromotionPOPupNlFrm" method="post" action="<?php echo $this->getUrl('sform/index/promodetail');?>"  enctype="multipart/form-data" onsubmit="return generatePromotionalCouponThroghPopUp();">     
+	<div style="position:absolute;top:0;z-index:10000;left:25%" id="sitePopUpPromotion">		
+    <div class="sitePopup_black"></div>
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <button type="button" class="close"  onclick="jQuery('#sitePopUpPromotion').hide();"><span>&times;</span></button>
+			
+            <div class="modal-body">
+				
+              <div class="popup-heading text-center">
+                <h4 class="heading"><?php echo Mage::getStoreConfig('newsletter/general2/firsttitle');?> <span class="subtitle"><?php echo Mage::getStoreConfig('newsletter/general2/secondtitle');?></span></h4>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="description text-center"><span><?php echo Mage::getStoreConfig('newsletter/general2/message');?> </span><br/><?php echo Mage::getStoreConfig('newsletter/general2/message2');?></div>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="membership-description text-center"> Never miss an offer or giveaway. Get club bhishoom membership! </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+				<div id="popPromotionUpMsgValidation" class="validation-advice"></div>
+                  <div class="input-group clear">
+                   <input type="text" placeholder="Your Name" class="form-control popupPromotionNLFname" name="fname" id="fname" value="" style="width: 225px;" autocomplete="off" />
+                   <input type="text" placeholder="Your Email" class="form-control popupPromotionNLEmail required-entry validate-email" name="email" id="email" value="" style="width: 225px;" autocomplete="off" />
+                    <!-- <input type="text" placeholder="Your Name" name="username" id="username" size="10" class="form-control" title="Username" style="width: 225px;" autocomplete="off"> -->
+                    <!-- <input type="password" placeholder="Your Email" name="password" id="password" size="10" class="form-control" title="Password" style="width: 225px;" autocomplete="off"> -->
+                    <span class="input-group-btn" style="width: 0px;">
+                    <input type="submit" name="submit" value="sign up " class="btn btn-primary get-code" data-original-title="" title="" data-style="zoom-in" />
+                    <!-- <input type="submit" name="login" value="Get Code" class="btn btn-primary get-code" data-original-title="" title="" data-style="zoom-in"> -->
+					
+                    </input>
+                    </span> </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="coupon-head text-center"><!-- Your coupon code will appear here --></div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4 col-sm-offset-4">
+                  <!--<div class="coupon-code">
+                    <div class="ccode text-center"> BHI34 </div>
+                  </div>-->
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="connect"><span>Connect</span> with us</div>
+                </div>
+                <div class="col-sm-8">
+                  <div class="links social-media">
+                    <ul>
+                      <li><a href="#"><i class="fa fa-facebook fa-2x"></i></a></li>
+                      <li><a href="https://twitter.com/GoBhishoom"><i class="fa fa-twitter fa-2x"></i></a></li>
+                      <li><a href="#"><i class="fa fa-youtube fa-2x "></i></a></li>
+                      <li><a href="https://instagram.com/gobhishoom/"><i class="fa fa-instagram fa-2x"></i></a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+		</div>
+	</div>
+	</form>	
+<?php */?>
+          <div class="col-main">
+            <div id="after-cr-design">
+              <div class="col-sm-12">
+                <h1 class="pick_device">BHISHOOM SPECIAL OFFERS AND COUPONS</h1>
+                <h4>We want you to love our products as much as we do . we constantly announce special offers and coupons as a toke of our appreciation for your love . you can redeem the coupons at check out. </h4>
+                <h4>Never miss a offer or giveaway.Get club bhishoom membership !</h4>
+                <form name="sitePromotionPOPupNlFrm" id="sitePromotionPOPupNlFrm" method="post" action="<?php echo $this->getUrl('sform/index/promodetail');?>"  enctype="multipart/form-data" onsubmit="return generatePromotionalCouponThroghPopUp();">
+                  <div class="row">
+                    <div class="col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0 ">
+                      <div id="popPromotionUpMsgValidation" class="red a-center"></div>
+                      <div class="input-group-1x clear promo_gift">
+                        <div class="form_control_outer row row-xs" >
+                          <div class="col-sm-5">
+                            <input type="text" placeholder="Your Name" class="form-control popupPromotionNLFname" name="fname" id="fname" size="10" value="" autocomplete="off" />
+                          </div>
+                          <div class="col-sm-5">
+                            <input type="text" placeholder="Your Email" class="form-control popupPromotionNLEmail required-entry validate-email" name="email" id="email" size="10" value="" autocomplete="off" />
+                          </div>
+                          <div class="col-sm-2">
+                            <input type="submit" name="submit" value="Sign Me Up" class="btn btn-primary btn-block get-code" data-original-title="" title="" data-style="zoom-in" />
+                            </div>
+                          <div class="clearfix"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <?php
+
+function is_decimal( $val )
+{
+    return is_numeric( $val ) && floor( $val ) != $val;
+}
+?>
+            <div class="offer_title">
+              <h2>Current offers</h2>
+            </div>
+            
+            <!-- Modal -->
+            
+            <div class="shop-section er" id="shop_pg_cate">
+              <div class="row">
+                <?php
+/*$oCoupon = Mage::getModel('salesrule/coupon')->load($couponCode, 'code');*/
+$oRule = Mage::getModel('salesrule/rule')->load(13);
+//var_dump($oRule->getData());
+
+$couponCode = $oRule->getCouponCode();
+$couponCodeTitle = $oRule->getName();
+$couponCodeDescr = $oRule->getDescription();
+$couponDiscountPercentage = $oRule->getDiscountAmount();
+if(is_decimal($couponDiscountPercentage))
+$couponDiscountPercentage = number_format($oRule->getDiscountAmount(),2);
+else
+$couponDiscountPercentage = number_format($oRule->getDiscountAmount(),0);
+?>
+                <div class="modal fade" id="myModalx_1" role="dialog">
+                  <div class="modal-dialog"> 
+                    
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <div class="modal-body">
+                        <h1 class="modal-title">Details</h1>
+                        <p><?php echo $couponCodeDescr ?></p>
+                      </div>
+                      <?php /*?> <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div><?php */?>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="skin-toggle promotional_gift">
+                    <div id="mobileSkin" class="img-skin"> <a title="Mobile Skin" href="<?php echo $siteBaseUrl;?>shop/mobile-skin.html"> 
+                    <img src="<?php echo $siteBaseUrl;?>skin/frontend/rwd/default/images/mobile-skin-promo.jpg" alt="Mobile Skin"> </a>
+                      <h2 class="skin-name"><a target="_blank" href="<?php echo $siteBaseUrl;?>shop/mobile-skin.html"><?php echo $couponCodeTitle;?></a></h2>
+                    </div>
+                    <div class="munu-categories text-center" id="mobile-menu">
+                      <ul>
+                        <li>USE CODE : <strong><?php echo $couponCode?></strong> </li>
+                        <li ><a class="btn btn-default" id="myModalx_1" data-toggle="modal" data-target="#myModalx_1">See Details</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <?php
+/*$oCoupon = Mage::getModel('salesrule/coupon')->load($couponCode, 'code');*/
+$oRule = Mage::getModel('salesrule/rule')->load(3);
+//var_dump($oRule->getData());
+
+$couponCode = $oRule->getCouponCode();
+$couponCodeTitle = $oRule->getName();
+$couponCodeDescr = $oRule->getDescription();
+$couponDiscountPercentage = $oRule->getDiscountAmount();
+if(is_decimal($couponDiscountPercentage))
+$couponDiscountPercentage = number_format($oRule->getDiscountAmount(),2);
+else
+$couponDiscountPercentage = number_format($oRule->getDiscountAmount(),0);
+?>
+                <div class="modal fade" id="myModalx_2" role="dialog">
+                  <div class="modal-dialog"> 
+                    
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <div class="modal-body">
+                        <h1 class="modal-title">Details</h1>
+                        <p><?php echo $couponCodeDescr ?></p>
+                      </div>
+                      <?php /*?> <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div><?php */?>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="skin-toggle promotional_gift">
+                    <div id="mobileSkin" class="img-skin"> <a title="Mobile Case" href="<?php echo $siteBaseUrl;?>shop/mobile-case.html"> 
+                    <img src="<?php echo $siteBaseUrl;?>skin/frontend/rwd/default/images/mobile-case-promo.jpg" alt="Mobile Case"> </a>
+                      <h2 class="skin-name"><a target="_blank" href="<?php echo $siteBaseUrl;?>shop/mobile-case.html"><?php echo $couponCodeTitle;?></a></h2>
+                    </div>
+                    <div class="munu-categories text-center" id="mobile-menu">
+                      <ul>
+                        <li>USE CODE : <strong><?php echo $couponCode?></strong> </li>
+                        <li ><a class="btn btn-default" id="myModalx_2" data-toggle="modal" data-target="#myModalx_2">See Details</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <?php
+/*$oCoupon = Mage::getModel('salesrule/coupon')->load($couponCode, 'code');*/
+$oRule = Mage::getModel('salesrule/rule')->load(4);
+//var_dump($oRule->getData());
+
+$couponCode = $oRule->getCouponCode();
+$couponCodeTitle = $oRule->getName();
+$couponCodeDescr = $oRule->getDescription();
+$couponDiscountPercentage = $oRule->getDiscountAmount();
+if(is_decimal($couponDiscountPercentage))
+$couponDiscountPercentage = number_format($oRule->getDiscountAmount(),2);
+else
+$couponDiscountPercentage = number_format($oRule->getDiscountAmount(),0);
+?>
+                <div class="modal fade" id="myModalx_3" role="dialog">
+                  <div class="modal-dialog"> 
+                    
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                      <?php /* ?>  <div class="modal-header">
+          
+          <h1 class="modal-title">Details</h1>
+        </div><?php */ ?>
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <div class="modal-body">
+                        <h1 class="modal-title">Details</h1>
+                        <p><?php echo $couponCodeDescr ?></p>
+                      </div>
+                      <?php /*?> <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div><?php */?>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="skin-toggle promotional_gift">
+                    <div id="mobileSkin" class="img-skin"> <a title="T-Shirt" href="<?php echo $siteBaseUrl;?>shop/t-shirt/him.html"> 
+                    <img src="<?php echo $siteBaseUrl;?>skin/frontend/rwd/default/images/tshirt-promo.jpg" alt="T-Shirt"> </a>
+                      <h2 class="skin-name"><a target="_blank" href="<?php echo $siteBaseUrl;?>shop/t-shirt.html"><?php echo $couponCodeTitle;?></a></h2>
+                    </div>
+                    <div class="munu-categories text-center" id="mobile-menu">
+                      <ul>
+                        <li>USE CODE : <strong><?php echo $couponCode?></strong> </li>
+                        <li ><a class="btn btn-default" id="myModalx_3" data-toggle="modal" data-target="#myModalx_3">See Details</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <?php
+/*$oCoupon = Mage::getModel('salesrule/coupon')->load($couponCode, 'code');*/
+$oRule = Mage::getModel('salesrule/rule')->load(5);
+//var_dump($oRule->getData());
+
+$couponCode = $oRule->getCouponCode();
+$couponCodeTitle = $oRule->getName();
+$couponCodeDescr = $oRule->getDescription();
+$couponDiscountPercentage = $oRule->getDiscountAmount();
+if(is_decimal($couponDiscountPercentage))
+$couponDiscountPercentage = number_format($oRule->getDiscountAmount(),2);
+else
+$couponDiscountPercentage = number_format($oRule->getDiscountAmount(),0);
+?>
+                <div class="modal fade" id="myModalx_4" role="dialog">
+                  <div class="modal-dialog"> 
+                    
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                      <?php /*?><div class="modal-header">
+         
+          
+        </div><?php */?>
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <div class="modal-body">
+                        <h1 class="modal-title">Details</h1>
+                        <p><?php echo $couponCodeDescr ?></p>
+                      </div>
+                      <?php /*?> <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div><?php */?>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="skin-toggle promotional_gift">
+                    <div id="mobileSkin" class="img-skin"> <a title="Laptop Skin" href="<?php echo $siteBaseUrl;?>shop/laptop-skin.html">
+                     <img src="<?php echo $siteBaseUrl;?>skin/frontend/rwd/default/images/laptop-promo.jpg" alt="Laptop Skin"> </a>
+                      <h2 class="skin-name"><a target="_blank" href="<?php echo $siteBaseUrl;?>shop/laptop-skin.html"><?php echo $couponCodeTitle;?></a></h2>
+                    </div>
+                    <div class="munu-categories text-center" id="mobile-menu">
+                      <ul>
+                        <li>USE CODE : <strong><?php echo $couponCode?></strong> </li>
+                        <li ><a class="btn btn-default" id="myModalx_4" data-toggle="modal" data-target="#myModalx_4">See Details</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <script type="text/javascript">
+var sitepopupnlvalidate = new VarienForm('sitePromotionPOPupNlFrm');
+
+function generatePromotionalCouponThroghPopUp(){
+
+var name = jQuery.trim(jQuery(".popupPromotionNLFname").val());
+var email = jQuery.trim(jQuery(".popupPromotionNLEmail").val()); 
+
+var emailReg = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+	var valid = emailReg.test(email);
+
+if(name=='' || !valid)	
+	return false;
+
+var dataString = 'firstname='+ name + '&email=' + email ;
+  
+  jQuery("#popPromotionUpMsgValidation").html("Please wait...");
+  
+  jQuery.ajax({
+    type: "POST",
+    url: "<?php echo $siteBaseUrl;?>newsletter/subscriber/newajaxpromotion/",
+    data: dataString,
+    success: function(resp) {
+     
+            if (resp.errorMsg) {
+					jQuery("#popPromotionUpMsgValidation").html('');
+					jQuery("#popPromotionUpMsgValidation").html(resp.errorMsg); 				
+            } else {                
+				if(resp.successMsg.indexOf("Coupon Code:") > -1){
+					//jQuery(".use-code").html('USE CODE : '+resp.successMsg.replace("Coupon Code:", ""));
+					jQuery("#popPromotionUpMsgValidation").html(resp.successMsg); 
+					jQuery(".popupPromotionNLFname").val('')	
+					jQuery(".popupPromotionNLEmail").val('');
+					//jQuery("#popPromotionUpMsgValidation").html("");
+					//jQuery('#sitePopUpPromotion').hide();
+				}
+				else{
+					jQuery("#popPromotionUpMsgValidation").html('');
+					jQuery("#popPromotionUpMsgValidation").html(resp.successMsg); 
+				}
+            }
+	 
+    }
+  });
+  return false;
+}
+
+</script>
+          <?php  /*?> 
+      <div class="col-main">                    
+       <div id="after-cr-design"><h1 class="pick_device">Promotional Gift</h1>
+       <h4>Sign up for latest exclusive offers.</h4></div>
+        <div  id="gift_pg_cate" class="shop-section">
+         <div class="row">         
+          <div class="col-md-3">          
+           <div class="skin-toggle">
+            <div class="img-skin">  
+             <a href="" title="<?php echo $catName;?>"><img alt="" src="<?php echo $this->getSkinUrl('images/mobile_case.png');?>"></a> 
+             <div class="skin-tab"> <div class="skin-title">20% OFF ON MOBILE CASE</div> </div>
+            </div>
+           </div> 
+          </div>          
+          <div class="col-md-3">          
+           <div class="skin-toggle-text">
+            <div class="toggle-text-skin">
+             <div class="use-code">USE CODE : 1234</div> 
+             <div class="see-details">SEE DETAILS
+             <div class="detail">20% of the mobile case net sale price will be deducted when  purchased. The coupon code XYZ  must be entered at checkout to receive this offer. Offer is valid till OCTOBER 23, 2015 at 11:59 PM . For most products, the net sale price is the price of the product (excluding shipping and taxes).This offer may not be combined with any other promotional or volume discount offers and may not be applied to past purchases. If a volume discount applies to your order, you will receive either the discount set forth in this offer or the standard volume discount, whichever is greater. Offer valid on BHISHOOM.COM only</div></div>
+            </div>
+           </div> 
+          </div>          
+          <div class="col-md-3">          
+           <div class="skin-toggle">
+            <div class="img-skin">  
+             <a href="" title="<?php echo $catName;?>"><img alt="" src="<?php echo $this->getSkinUrl('images/mobile_skin.png');?>"></a> 
+             <div class="skin-tab"> <div class="skin-title">15% OFF ON MOBILE SKIN</div> </div>
+            </div>
+           </div> 
+          </div>
+          <div class="col-md-3">          
+           <div class="skin-toggle-text">
+            <div class="toggle-text-skin">  
+             <div class="use-code">USE CODE : 1234</div> 
+             <div class="see-details">SEE DETAILS
+             <div class="detail">15% of the mobile skin net sale price will be deducted when  purchased. The coupon code XYZ  must be entered at checkout to receive this offer. Offer is valid till OCTOBER 23, 2015 at 11:59 PM . For most products, the net sale price is the price of the product (excluding shipping and taxes).This offer may not be combined with any other promotional or volume discount offers and may not be applied to past purchases. If a volume discount applies to your order, you will receive either the discount set forth in this offer or the standard volume discount, whichever is greater. Offer valid on BHISHOOM.COM only</div></div>
+            </div>
+           </div> 
+          </div>
+          <div class="col-md-3">          
+           <div class="skin-toggle">
+            <div class="img-skin">  
+             <a href="" title="<?php echo $catName;?>"><img alt="" src="<?php echo $this->getSkinUrl('images/laptop.png');?>"></a> 
+             <div class="skin-tab"> <div class="skin-title">15% OFF ON LAPTOP SKIN</div> </div>
+            </div>
+           </div> 
+          </div>
+          <div class="col-md-3">          
+           <div class="skin-toggle-text">
+            <div class="toggle-text-skin">  
+             <div class="use-code">USE CODE : 1234</div> 
+             <div class="see-details">SEE DETAILS 
+             <div class="detail">15% of the laptop skin net sale price will be deducted when  purchased. The coupon code XYZ  must be entered at checkout to receive this offer. Offer is valid till OCTOBER 23, 2015 at 11:59 PM . For most products, the net sale price is the price of the product (excluding shipping and taxes).This offer may not be combined with any other promotional or volume discount offers and may not be applied to past purchases. If a volume discount applies to your order, you will receive either the discount set forth in this offer or the standard volume discount, whichever is greater. Offer valid on BHISHOOM.COM only</div></div>
+            </div>
+           </div> 
+          </div>
+          <div class="col-md-3">          
+           <div class="skin-toggle">
+            <div class="img-skin">  
+             <a href="" title="<?php echo $catName;?>"><img alt="" src="<?php echo $this->getSkinUrl('images/tshirt.png');?>"></a> 
+             <div class="skin-tab"> <div class="skin-title">20% OFF ON T-SHIRT</div> </div>
+            </div>
+           </div> 
+          </div>            
+          <div class="skin-toggle-text">
+           <div class="toggle-text-skin">  
+            <div class="use-code">USE CODE : 1234</div> 
+            <div class="see-details">SEE DETAILS
+            <div class="detail">20% of the tshirt net sale price will be deducted when  purchased. The coupon code XYZ  must be entered at checkout to receive this offer. Offer is valid till OCTOBER 23, 2015 at 11:59 PM . For most products, the net sale price is the price of the product (excluding shipping and taxes).This offer may not be combined with any other promotional or volume discount offers and may not be applied to past purchases. If a volume discount applies to your order, you will receive either the discount set forth in this offer or the standard volume discount, whichever is greater. Offer valid on BHISHOOM.COM only</div></div>
+           </div>
+          </div> 
+         </div>                 
+        </div>
+       </div>  
+      
+	  <?php */?>
+        </div>
+      </div>
+    </div>
+  </div>
+  <?php echo $this->getChildHtml('footer_before') ?> <?php echo $this->getChildHtml('footer') ?> <?php echo $this->getChildHtml('global_cookie_notice') ?> <?php echo $this->getChildHtml('before_body_end') ?> </div>
+</div>
+<?php echo $this->getAbsoluteFooter() ?>
+</body>
+</html>
+<script type="text/javascript">
+jQuery('.detail').hide();
+jQuery(document).ready(function () {  
+  jQuery('.see-details').click(function () {
+    var text = jQuery(this).children('.detail');
+    if (text.is(':hidden')) {
+      text.slideDown('200');   
+    } else {
+      text.slideUp('200');
+    }   
+  });
+});
+</script>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+    function alignModal(){
+        var modalDialog = jQuery(this).find(".modal-dialog");
+        
+        // Applying the top margin on modal dialog to align it vertically center
+        modalDialog.css("margin-top", Math.max(0, (jQuery(window).height() - modalDialog.height()) / 2));
+    }
+    // Align modal when it is displayed
+    jQuery(".modal").on("shown.bs.modal", alignModal);
+    
+    // Align modal when user resize the window
+    jQuery(window).on("resize", function(){
+        jQuery(".modal:visible").each(alignModal);
+    });   
+});
+</script>

@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<config>
+    <tabs>
+        <myconf translate="label">
+            <label>Vsourz Success Page</label>
+            <sort_order>150</sort_order>
+        </myconf>
+    </tabs>
+    <sections>
+        <tab1 translate="label" module="adminhtml">
+            <label>Order Success Page</label>
+            <tab>myconf</tab>
+            <sort_order>10</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <general translate="label comment">
+                    <label>General</label>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>                   
+                    <fields>
+						<enable_extension translate="label comment">
+                            <label>Enable Extension</label>                            
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable_extension>                        
+                    </fields>
+                </general>
+            </groups>
+			<groups>
+                <order_information_system translate="label comment">
+                    <label>Order Information Section</label>
+                    <sort_order>20</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>                   
+                    <fields>
+						<display_order_table translate="label comment">
+                            <label>Display Order Table</label>                            
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </display_order_table>
+					
+						<display_product_image translate="label comment">
+                            <label>Display Product Image</label>                            
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<depends>
+                                <display_order_table>1</display_order_table>
+                            </depends>
+                        </display_product_image>						
+						<display_discount translate="label comment">
+                            <label>Display Discount</label>                            
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<depends>
+                                <display_order_table>1</display_order_table>
+                            </depends>
+                        </display_discount>						
+						<display_shipping_rates translate="label comment">
+                            <label>Display Shipping Rates</label>                            
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<depends>
+                                <display_order_table>1</display_order_table>
+                            </depends>
+                        </display_shipping_rates>    
+						
+						<display_tax translate="label comment">
+                            <label>Display Tax</label>                            
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<depends>
+                                <display_order_table>1</display_order_table>
+                            </depends>
+                        </display_tax>
+                    </fields>
+                </order_information_system>
+            </groups>
+			<groups>
+                <cms_block_section translate="label comment">
+                    <label>CMS Block Section</label>
+                    <sort_order>30</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>                   
+                    <fields>
+						<cms_block_above translate="label comment">
+                            <label>CMS Block Above Order Information</label>                            
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>							
+                        </cms_block_above>
+						<cms_block_id_above translate="label comment">
+                            <label>CMS Block Id</label> 
+							<comment>Enter the CMS block id for displaying block at above the order information section <![CDATA[ <br />]]>e.g "order_success_top_block"</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<depends>
+                                <cms_block_above>1</cms_block_above>
+                            </depends>
+                        </cms_block_id_above>
+						<cms_block_below translate="label comment">
+                            <label>CMS Block Below Order Information</label>                            
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </cms_block_below>
+						<cms_block_id_below translate="label comment">
+                            <label>CMS Block Id</label>    
+							<comment>Enter the CMS block id for displaying block at below the order information section <![CDATA[ <br />]]> e.g "order_success_bottom_block"</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<depends>
+                                <cms_block_below>1</cms_block_below>
+                            </depends>
+                        </cms_block_id_below>						
+                    </fields>
+                </cms_block_section>
+            </groups>	
+			<groups>
+                <newsletter_subscription_section translate="label comment">
+                    <label>Newsletter Subscription Section</label>
+                    <sort_order>50</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>                   
+                    <fields>
+						<display_section translate="label comment">
+                            <label>Display Newsletter</label>                            
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </display_section>						
+                    </fields>
+                </newsletter_subscription_section>
+            </groups>
+        </tab1>
+    </sections>
+</config>

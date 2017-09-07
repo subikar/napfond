@@ -1,0 +1,178 @@
+<?php 
+$mode = Mage::getStoreConfig('featuredproduct/general/show_type');
+$delay_time = Mage::getStoreConfig('featuredproduct/general/delay_time') * 1000;
+?>
+<?php if (($products = $this->getProductCollection())): ?>
+	<div id="fp" class="fp"  <?php if($mode != 'static'){?>style ="height:200px;"<?php }?>>
+		<div id="slider" <?php if($mode == 'slider'){?>style ="margin-left:25px;"<?php }?>>
+			<a name="sliderbutton" onclick="prevSlider()"class="slider-button left" href="#" <?php if($mode == 'slider2'){?>style ="display:block;"<?php }?>>&#139;</a>
+			<div id="main-slider">
+				<div id="frame">
+					<?php $i = 0; foreach ($products->getItems() as $product): ?>
+					<div  <?php if($mode != 'static'){?>style="width:410px; text-align:left; position:absolute; <?php if($i != 0){?>opacity:0; filter: alpha(opacity = 0); display:none;<?php }else{?> opacity:1; filter: alpha(opacity = 100); <?php } }?>" class="product-block" id="slider-<?php echo $i ?>" <?php if($mode == 'static'){?>onmouseover="showDes(<?php echo $i ?>, event)" onmouseout="hideDes()"<?php }?>>
+						<h4><?php echo $this->htmlEscape($product->getName()) ?></h4>
+						<a href="<?php echo $product->getProductUrl() ?>">
+							<img class="product-image" src="<?php echo $this->helper('catalog/image')->init($product, 'small_image')->resize(120, 120); ?>" <?php if($mode != 'static'){?>style ="float:left;"<?php }?>/>
+						</a>
+						
+						<span class="product-info">
+							<span class="product-des" id="des-<?php echo $i ?>" <?php if($mode != 'static'){?>style="display:inline;"<?php }?>>
+								<?php echo substr($product->getShortDescription(), 0, 220); if(strlen($product->getShortDescription()) > 220) echo '...';?>
+							</span>
+							<?php echo $this->getPriceHtml($product, true) ?>
+						</span>
+					</div>
+					<?php $i++; endforeach;?>
+				</div>
+			</div>
+			<a name="sliderbutton" onclick="nextSlider()" class="slider-button right" href="#" <?php if($mode == 'slider2'){?>style ="display:block;"<?php }?>>&#155;</a>
+		</div>
+		<div id="popup-des"></div>
+	</div>
+<?php endif; ?> 
+
+<script type="text/javascript">
+var total = getBlocks().length;
+var curIndex = 0;
+var nextIndex;
+var IE = document.all?true:false;
+
+function nextSlider(){
+	var blocks = getBlocks();
+	for(var i = 0; i < blocks.length; i++){
+		if(blocks[i].style.opacity == 1 || (IE && blocks[i].filters.alpha.opacity == 100)){
+			//blocks[i].style.opacity = 0;
+			if(i < blocks.length -1 )
+				j = i + 1;
+				//blocks[i+1].style.opacity = 1;
+			else 
+				j = 0;
+				//blocks[0].style.opacity = 1;
+			showSlider(i,j);
+			break;
+		}
+	}
+}
+function prevSlider(){
+	var blocks = getBlocks();
+	for(var i = 0; i < blocks.length; i++){
+		if(blocks[i].style.opacity == 1 || (IE && blocks[i].filters.alpha.opacity == 100)){
+			//blocks[i].style.opacity = 0;
+			if(i > 0)
+				//blocks[--i].style.opacity = 1;
+				j = i-1;
+			else 
+				//blocks[blocks.length-1].style.opacity = 1;
+				j = blocks.length-1;
+			showSlider(i,j);
+			break;
+		}
+	}
+}
+
+function getBlocks(){
+	var tempBlocks = document.getElementById('frame').getElementsByTagName('div');
+	var blocks = new Array();
+	var j = 0;
+	for(var i = 0; i < tempBlocks.length; i++){
+		if(tempBlocks[i].parentNode == document.getElementById('frame')){
+			blocks[j] = tempBlocks[i];
+			j++;
+		}
+	}
+	return blocks;
+}
+<?php if($mode == 'slider'){ ?>
+	var frame = document.getElementById('frame');
+	var stopSlider;
+	frame.onmouseover = function(){
+		stopSlider = 1;
+	}
+	frame.onmouseout = function(){
+		stopSlider = 0;
+	}
+	
+	setInterval(function (){
+		if(stopSlider)
+			return;
+		if(curIndex < total - 1)
+			nextIndex = curIndex + 1;
+		if(curIndex == total - 1)
+			nextIndex = 0;
+		showSlider(curIndex, nextIndex);
+		
+		setTimeout(function(){
+			curIndex = nextIndex;
+		}, 3000);
+		
+	}, <?php echo($delay_time); ?> )
+<?php }?>
+	//nextSlider(curIndex, nextIndex);
+	function showSlider(curIndex,nextIndex){
+		var curSlider = document.getElementById('slider-' + curIndex);
+		var nextSlider = document.getElementById('slider-' + nextIndex);
+		var i = 1000, j = 100;
+
+		var curThread, nextThread;
+		var IE = document.all?true:false;
+		curThread = setInterval(function(){
+			if(i >= 0){
+				curSlider.style.opacity = i/1000;
+				if(IE)
+					curSlider.filters.alpha.opacity = i/10
+				i -= 100;
+				if(i == 0)
+					curSlider.style.display = 'none';
+			}
+			else{
+				if(j <= 1000){
+					
+					nextSlider.style.display = 'block';
+					nextSlider.style.opacity = j/1000;
+					if(IE)
+						nextSlider.filters.alpha.opacity = j/10;
+					j += 100;
+					
+				}
+				else{
+					clearInterval(curThread)
+				}
+			}
+			
+		}, 100)
+
+	}
+	
+	function showDes(index, e){
+		var popup = document.getElementById('popup-des');
+		var des = document.getElementById('des-'+index);
+		var content = des.innerHTML;
+		popup.innerHTML = content;
+		popup.style.display = 'block';
+		
+		var IE = document.all?true:false;
+		if (!IE) document.captureEvents(Event.MOUSEMOVE)
+	
+		if (IE) { // grab the x-y pos.s if browser is IE
+			tempX = event.clientX + document.body.scrollLeft;
+			tempY = event.clientY + document.body.scrollTop;
+		}
+		else {  // grab the x-y pos.s if browser is NS
+			tempX = e.pageX;
+			tempY = e.pageY;
+		}  
+		if (tempX < 0){tempX = 0;}
+		if (tempY < 0){tempY = 0;}  
+		moveTo(popup, tempX, tempY);	
+	}
+	
+	function moveTo(popup, tempX, tempY){
+		popup.style.top = tempY+5+'px'
+		popup.style.left = tempX +5+'px'
+	}
+	
+	function hideDes(){
+		var popup = document.getElementById('popup-des');
+		popup.style.display = 'none';
+	}
+</script>

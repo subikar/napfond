@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]> <html lang="en" id="top" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" id="top" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" id="top" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" id="top" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html lang="en" id="top" class="no-js">
+<!--<![endif]-->
+<head>
+ <?php echo $this->getChildHtml('head') ?>
+</head>
+<body<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?>>
+ <?php echo $this->getChildHtml('after_body_start') ?>
+ <div class="wrapper"> 
+  <?php echo $this->getChildHtml('global_notices') ?>
+  <div class="page"> 
+   <?php echo $this->getChildHtml('header'); ?>
+   <?php echo $this->getChildHtml('global_messages') ?>
+   <?php echo $this->getChildHtml('responsivebannerslider_index'); ?>
+   <div class="container">
+    <div class="main-container col1-layout">
+     <div class="main"> 
+	  <?php echo $this->getChildHtml('breadcrumbs') ?>
+      <div class="col-main">  
+	   <?php echo $this->getChildHtml('content') ?>
+       <?php echo $this->getChildHtml('featuredproduct') ?>        
+      <div class="row" id="home-cat-2">
+       <div id="index-today-picks">
+        <div class="mid-line">
+         <h2>Trending</h2>
+         <div><a class="btn btn-default nVyq-Small" id="" href="">Best Sellers</a></div>
+        </div>  
+        <?php echo $this->getChildHtml('home.catalog.product.new') ?> 
+       </div>
+      </div>          
+      <div class="row">
+       <div class="col-sm-12">
+        <div id="create-own">
+		<div class="link-footerbanner"><a href="create.html"><img src="<?php echo $this->getSkinUrl('images/start-customizer.png');?>"></a></div>
+		<a href="create.html"><img src="<?php echo $this->getSkinUrl('images/footerbanner.jpg');?>"></a></div>
+       </div>
+      </div> 
+      <div class="shopbyintrest"> 
+       <div class="mid-line">       
+        <h2>Shop By Interest</h2>
+       </div>          
+       <div class="row">		  
+		<?php 
+        $mEdia_Base_Dir = Mage::getBaseDir('media');
+        $mEdia_Base_URL = Mage::getBaseUrl('media');        
+        $read = Mage::getSingleton( 'core/resource' )->getConnection( 'core_read' ); // To read from the database         
+        $attribute = Mage::getSingleton('eav/config')->getAttribute('catalog_product', 'case_style');
+        if ($attribute->usesSource()) {
+            $options = $attribute->getSource()->getAllOptions(false); 
+        }
+        foreach($options as $optionsValue)
+		{        
+            $result = $read->query( "select * from case_style_images where attr_id='137' and attr_val_id='".$optionsValue['value']."' and active = 1" );
+            $row = $result->fetch();
+        	if(is_file($mEdia_Base_Dir.'/case_style_home/'.$row['img_name'])){
+				$style_name = $optionsValue['label'];
+				$style_name1 = substr(strip_tags($style_name), 0, 20);
+				//$style_name1 = substr(strip_tags($style_name),0,20);
+				$marker = strrpos($style_name1, ' ');
+				if($marker != '')
+				{
+					$style_name2 = substr($style_name1, 0, $marker);
+					$style_name2 = str_replace('&', '', $style_name2);
+					$style_name2 = str_replace('and', '', $style_name2);
+				}
+				else
+				{
+					$style_name2 = $style_name1;
+				}
+        ?>		  
+            <div class="col-md-3">
+             <div class="shop-box">
+              <div class="shop-img">
+			  <?php /*?>
+			  <img src="timthumb.php?src=<?php echo $mEdia_Base_URL?>case_style_home/<?php echo $row['img_name'];?>&h=175&w=211"><?php */?>			  
+			  <img src="<?php echo $mEdia_Base_URL?>case_style_home/<?php echo $row['img_name'];?>" width="211" height="175">			  
+			  </div>
+               <a class="skin-name" href="<?php echo Mage::getBaseUrl()?>shop.html/?case_style=<?php echo $row['attr_val_id'];?>&p=1"><?php echo $style_name2;?></a>               
+              </div>
+             </div>
+        <?php }}?>	           
+            </div>
+           </div>
+      <!--bhishoom history-->
+          <!--<div id="zStory" class="row page-homeRowMargin">
+           <div class="row">
+            <div class="col-md-12">
+             <div class="mid-line">
+              <h2>The Bhishoom Story</h2>
+             </div>  
+            </div>
+            <div class="col-md-4">
+             <h5>About Us</h5>
+             <p>
+			 At Bhishoom our philosophy is “<strong>MORE POWER TO THE CUSTOMER</strong>”. Bhishoom is a brand that is conceptualised by  Founder and CEO <strong>Nitin Talesara</strong> , a multifaceted entrepreneur ,  to give its customers power to customize , express their personality and flaunt their style  through thousands of stylish products across various lifestyle categories like t-shirts , mobile skins , mobile cases , laptop skins , mugs , posters  and many other cool accessories manufactured with cutting edge software and state of the art manufacturing system. Bhishoom also provides platform to  national and international designers to showcase their artwork on various products and monetize it.<br>
+			 </p>
+			 
+ With our <strong>Gobhishoom customizer</strong> option  , our trendy customers  can bespoke their selected products  right from scratch or customize on thousands of our premade designs under various categories . So get your unique style and attitude....Go Bhishoom .
+
+ </p>
+            </div>
+            <div class="col-md-4">
+             <h5>Why Bhishoom </h5>
+             <p>At Bhishoom we always strive to provide you a la mode and cutting edge products to give you a unique and never seen before shopping experience.   <br>  
+Bhishoom feature : <br>  
+•	Choose from 300+ merchandise options. <br>
+•	10 lac+ trendy , modish and premium quality products to choose from.<br> 
+•	Thousands of awesome designs for every product in 50+ Genres to give you unlimited options.<br> 
+•	Designs by many national and international designers to provide quality & variety.<br>
+•	Power to Customize any product to suit your style , attitude and personality.<br>
+•	Capture your favourite moments on world class merchandise. <br>
+•	Create a memorable personalized gift for your special ones. <br>
+•	Fully  Secured payment gateway. 
+•	Free shipping and cash on delivery option.
+ 
+             </p>
+            </div>
+            <div class="col-md-4">
+             <h5>Our Mission</h5>
+             <p>OUR mission is very simple , to make Bhishoom the best market place where unique and  premium world class products are available across various product segments with designs from many international and national artists to suit each shopper’s individual style and personality . Bhishoom team is always on its toes to add new trend-setting products and designs from across the globe to fulfil the needs of our stylish and swanky customers who loves to reflect their personality by their trendy outfits , modish gadgets and cool accessories and justify our philosophy behind our tagline – Style ka punch.</p><br>
+Simple mission but hard to achieve . But the good news is that we are getting close to it each day with your love and the sincere efforts and hard work of Bhishoom team.
+
+</p>
+            </div>            
+           </div>
+          </div>-->
+      <!-- end here-->             
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+ <?php echo $this->getChildHtml('footer_before') ?> 
+ <?php echo $this->getChildHtml('footer') ?> 
+ <?php echo $this->getChildHtml('global_cookie_notice') ?> 
+ <?php echo $this->getChildHtml('before_body_end') ?> </div>
+</div>
+<?php echo $this->getAbsoluteFooter() ?>
+</body>
+</html>

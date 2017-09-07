@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<config>
+	  <tabs>
+		<rotateproducttab translate="label" module="rotateproduct">
+            <label>MKS 360 Degree Rotate</label>
+            <sort_order>0</sort_order>
+        </rotateproducttab>
+	  </tabs>
+	  <sections>
+		<rotateproductsection  translate="label" module="rotateproduct">                    
+		<label>Genaral Setting</label>
+		<tab>rotateproducttab</tab>
+		<frontend_type>text</frontend_type>
+		<sort_order>0</sort_order>
+		<show_in_default>1</show_in_default>
+		<show_in_website>1</show_in_website>
+		<show_in_store>1</show_in_store>            
+					<groups>
+				      <rotateproductgroup translate="label"> 
+					  <label>Configuration Setting</label>
+					  <frontend_type>text</frontend_type>
+					  <sort_order>0</sort_order>
+					  <show_in_default>1</show_in_default>
+					  <show_in_website>1</show_in_website>
+					  <show_in_store>1</show_in_store>
+				       <fields>
+                          <viewerwidth translate="label">
+                            <label>Viewer Width (px)</label>
+							<frontend_type>text</frontend_type>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<comment>Example :- 280</comment>
+                          </viewerwidth>
+                          <viewerheight translate="label">
+                            <label>Viewer Height (px)</label>
+							<frontend_type>text</frontend_type>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<comment>Example :- 280</comment>
+                          </viewerheight>
+                          <licensekey translate="label">
+                            <label>License key</label>
+							<frontend_type>text</frontend_type>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<comment>mks16464df44%445664*4444%4445#566+58</comment>
+                          </licensekey>
+					   </fields>
+					   </rotateproductgroup>
+				      <rotateproductgroupstatus translate="label"> 
+					  <label>Configuration Status</label>
+					  <frontend_type>text</frontend_type>
+					  <sort_order>0</sort_order>
+					  <show_in_default>1</show_in_default>
+					  <show_in_website>1</show_in_website>
+					  <show_in_store>1</show_in_store>
+				       <fields>
+                          <status translate="label">
+                            <label>Status</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                          </status>
+					   </fields>
+					   </rotateproductgroupstatus>
+					</groups>
+		</rotateproductsection>
+	  </sections>
+</config>

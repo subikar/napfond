@@ -1,0 +1,1078 @@
+<link rel="stylesheet" href="<?php echo $this->getSkinUrl('css/acc/demo2.css');?>" type="text/css" />
+<?php
+$cat_id = '';
+$params = $this->getRequest()->getParams();
+if(isset($params['cat']) && $params['cat'] != '')
+{
+	$cat_id = $params['cat'];
+}
+//$collection = Mage::getModel('catalog/product')->getCollection();
+$layer = Mage::getSingleton('catalog/layer');
+$_category = $layer->getCurrentCategory();
+$path = $_category->getPath();
+$path_id = explode("/", $path);
+$currentCategoryId = $_category->getId();
+$parent_catid = $_category->getParentId();
+$upper_category = Mage::getModel('catalog/category')->load($parent_catid);
+$upper_catname = $upper_category->getName();
+$giftCatName = $_category->getParentCategory()->getParentCategory()->getName();
+$connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+$write = Mage::getSingleton('core/resource')->getConnection('core_write');
+$currentUrl = Mage::helper('core/url')->getCurrentUrl();
+$base_url = Mage::getBaseUrl();
+// condition for model for case , skin and shop page
+$model_id = '';
+if(in_array(3, $path_id))
+{
+	$model_id = 3;
+}
+else if(in_array(34, $path_id))
+{
+	$model_id = 34;
+}
+else if(in_array(478, $path_id))
+{
+	$model_id = 478;
+}
+
+$laptabtexturedskin = Mage::app()->getRequest()->getParam('laptabtexturedskin');
+if($laptabtexturedskin == FALSE){
+
+if(strpos(Mage::helper('function')->getCurrentUrl() , 'laptop-tablet-skin.html') == 0){ // For handling laptop skin category conditon on mana filters
+// if page is style / shop page
+if(isset($params['p']) && $params['p'] != '')
+{
+  $case_style = $params['case_style'];
+  if($cat_id != '')
+  { 
+  	/*if(($cat_id == 3) || ($cat_id == 34) || ($cat_id == 478))
+	{
+		$model_id = $cat_id;
+	}*/
+	if($this->getName() == 'Style')
+	{
+	  if($model_id != '')
+	  {?>
+		  <div class="panel panel-default">
+		   <div class="panel-heading">
+			<h4 class="panel-title"><a href="#<?php echo 'Model';?>" data-toggle="collapse" data-parent="#accordion" id="filter-panel"><?php echo 'Model';?>
+			 <i class="fa fa-caret-down"></i></a>
+			</h4>
+		   </div>
+		   
+		   
+		   <div id="<?php echo 'Model';?>" class="panel-collapse collapse">
+			<?php          
+			 $children = Mage::getModel('catalog/category')->getCategories($model_id);
+			 foreach ($children as $category) 
+			 { ?>
+			   <div id="section<?php echo $i;?>" class="accordion">
+				<?php echo $category->getName();?><span></span>
+			   </div>
+			   <div class="container">
+				<div class="content">
+				 <?php				  
+				  if($category->hasChildren()) 
+				  {
+					$cat = Mage::getModel('catalog/category')->load($category->getId());
+					$sub_children = $cat->getChildren();
+					//$sub_children = Mage::getModel('catalog/category')->getCategories($category->getId());
+					$sub_children = explode(',', $sub_children);
+					sort($sub_children);
+                    echo '<ul>';
+                    foreach ($sub_children as $sub_cat_child) 
+                    { 
+						$sub_cats = Mage::getModel('catalog/category')->load($sub_cat_child);
+						//print_r($sub_cats);
+						if(isset($params['texturedPrdStr']) && $params['texturedPrdStr'] != '')
+						{
+							$str = '?texturedPrdStr='.$params['texturedPrdStr'];
+						}
+                        echo '<li><a href="'.$base_url.$sub_cats['url_path'].$str.'">'.$sub_cats->getName().'</a></li>';
+                    }				
+                    echo '</ul>';
+				  } ?>
+				 </div>
+				</div>
+			   <?php $i++;
+			 }?> 
+			</div>
+		   </div>	
+	  <?php
+	  }
+	  if(($cat_id == 8) || ($cat_id == 21) || ($cat_id == 42) || ($cat_id == 44) || ($cat_id == 972))
+  	  { ?>
+	   <div class="panel panel-default" <?php /*?><?php if(in_array($_category->getLevel(),array(1,2,3)) && $this->getName() == "Model"){?> style="display:none !important;"<?php }?><?php */?>>
+    	 <div class="panel-heading">
+          <h4 class="panel-title"><a href="#<?php echo 'Size';?>" data-toggle="collapse" data-parent="#accordion" id="filter-panel"><?php echo 'Size';?>
+           <i class="fa fa-caret-down"></i></a>
+          </h4>
+	     </div>
+	 	 <div id="Size" class="panel-collapse collapse">
+          <ul>
+		   <div class="panel-body">
+			<li id="11-12" class="filter_lbl">
+			 <a onclick="jQuery('#filter_loading_image').show();" href = "<?php echo Mage::getBaseUrl().'shop.html?case_style='.$case_style.'&cat=21&p=1';?>"><span class="count">11 Inch - 12 Inch</span></a>
+			</li>
+			<li id="13-14" class="filter_lbl">
+
+			 <a onclick="jQuery('#filter_loading_image').show();" href = "<?php echo Mage::getBaseUrl().'shop.html?case_style='.$case_style.'&cat=42&p=1';?>"><span class="count">13 Inch - 14 Inch</span> </a>      
+			</li>
+			<li  id="15-16" class="filter_lbl">
+			 <a onclick="jQuery('#filter_loading_image').show();" href = "<?php echo Mage::getBaseUrl().'shop.html?case_style='.$case_style.'&cat=44&p=1';?>"><span class="count">15 Inch - 16 Inch</span>  </a>								            </li>
+            <li  id="17-18" class="filter_lbl">
+			 <a onclick="jQuery('#filter_loading_image').show();" href = "<?php echo Mage::getBaseUrl().'shop.html?case_style='.$case_style.'&cat=972&p=1';?>"><span class="count">17 Inch - 18 Inch</span>  </a>     
+			</li>
+		   </div>
+          </ul>	
+         </div>
+		</div>	
+    <?php 
+  }
+	} 
+	if($this->getName() == 'Color')
+  	{ ?>
+	   <div class="panel panel-default" <?php /*?><?php if(in_array($_category->getLevel(),array(1,2,3)) && $this->getName() == "Model"){?> style="display:none !important;"<?php }?><?php */?>>
+    	<div class="panel-heading">
+         <h4 class="panel-title"><a href="#<?php echo 'Gender';?>" data-toggle="collapse" data-parent="#accordion" id="filter-panel"><?php echo 'Gender';?>
+          <i class="fa fa-caret-down"></i></a>
+         </h4>
+	    </div>
+	 	<div id="Gender" class="panel-collapse collapse">
+         <ul>
+		  <div class="panel-body">
+		   <li id="AksharPathak" class="filter_lbl">
+			<a onclick="jQuery('#filter_loading_image').show();" href = "<?php echo Mage::getBaseUrl().'shop.html?case_style='.$case_style.'&cat=39&p=1';?>"><span class="count">For Him</span></a>
+		   </li>
+		   <li id="AksharPathak" class="filter_lbl">
+			<a onclick="jQuery('#filter_loading_image').show();" href = "<?php echo Mage::getBaseUrl().'shop.html?case_style='.$case_style.'&cat=292&p=1';?>"><span class="count">For Her</span> </a>    
+		   </li>
+		   <!--<li  id="AksharPathak" class="filter_lbl">
+			<a onclick="jQuery('#filter_loading_image').show();" href = "<?php echo Mage::getBaseUrl().'shop.html?case_style='.$case_style.'&cat=295&p=1';?>"><span class="count">For Kids</span>  </a>
+		   </li>-->
+		  </div>
+         </ul>	
+        </div>
+	   </div>	
+    <?php 
+  	}?>
+	<div class="panel panel-default">
+     <?php 
+	  if($parent_catid == 4 || $currentCategoryId == 4)
+      {?>
+        <div class="panel-heading">
+            <h4 class="panel-title"><a href="#<?php echo $this->getName();?>" data-toggle="collapse" data-parent="#accordion" id="filter-panel"><?php echo $this->getName();?>
+                <i class="fa fa-caret-down"></i></a>
+            </h4>
+        </div>        
+    <?php 
+     }
+      else if($this->getName() == 'Color')
+      { 
+      }   
+      else
+	  {?>
+          <div class="panel-heading">
+           <h4 class="panel-title"><a href="#<?php echo $this->getName();?>" data-toggle="collapse" data-parent="#accordion" id="filter-panel"><?php echo $this->getName();?>
+            <i class="fa fa-caret-down"></i></a>
+           </h4>
+          </div>
+      <?php 
+	  } ?>       
+     <div id="<?php echo $this->getName();?>" class="panel-collapse collapse">
+      <ul>
+       <div class="panel-body">
+        <?php foreach ($this->getItems() as $_item):  
+         $str_lbl = strtolower(str_replace(" ", "-", $_item->getLabel()));
+		 $str_lbl = str_replace("&", "and", $str_lbl); 
+        ?>
+         <li class="<?php if ($_item->getMShowSelected()): ?>m-selected-ln-item <?php endif; ?>filter_lbl" id="<?php echo $str_lbl;?>">
+         <?php if ($_item->getMSelected()): ?>
+          <a href="<?php echo $this->urlEscape($_item->getUrl()) ?>" title="<?php echo $this->escapeHtml($_item->getLabel()) ?>" onclick="var checkbox = jQuery(this).find('input');checkbox.attr('checked', !checkbox.attr('checked'));jQuery('#filter_loading_image').show();">
+           <input type="checkbox" checked="checked">&nbsp;<?php echo $this->escapeHtml($_item->getLabel()) ?>
+         <?php else : ?>
+         <?php if (!$this->getFilterOptions()->getDisableNoResultOptions() || $_item->getCount() > 0 || $_item->getMSelected()): ?>
+          <a href="<?php echo $this->urlEscape($_item->getUrl()) ?>" title="<?php echo $this->escapeHtml($_item->getLabel()) ?>" onclick="var checkbox = jQuery(this).find('input');checkbox.attr('checked', !checkbox.attr('checked'));jQuery('#filter_loading_image').show();">
+           <input type="checkbox">&nbsp;<?php echo $this->escapeHtml($_item->getLabel()) ?>
+         <?php else:  ?>
+          <span><?php echo $this->escapeHtml($_item->getLabel()) ?>
+         <?php endif; ?>
+        <?php endif; ?>
+        <?php // MANA END ?>
+        <?php if (Mage::getStoreConfigFlag('mana_filters/display/count')) : ?>
+         <span class="count">(<?php echo $_item->getCount() ?>)</span>
+        <?php endif; ?>
+        <?php if ($_item->getMSelected()): ?>
+         </a>
+        <?php else : ?>
+         <?php if (!$this->getFilterOptions()->getDisableNoResultOptions() || $_item->getCount() > 0 || $_item->getMSelected()): ?>
+          </a>
+         <?php else: ?>
+         <?php /*?></span><?php */?>
+          </span>
+         <?php endif; ?>
+        <?php endif; ?>
+       </li>
+        <?php endforeach ?>
+       </div>
+      </ul>	
+      <?php 
+		 $type = '';$model = '';$brand = '';
+		 if($path_id[3] != '')
+		 {
+		   $type = Mage::getModel('catalog/category')->load($path_id[3])->getUrl_key();
+		 }
+		 if($path_id[4] != '')
+		 {
+		   $model = Mage::getModel('catalog/category')->load($path_id[4])->getUrl_key();
+		 }
+		 if($path_id[5] != '')
+		 {
+		   $brand = Mage::getModel('catalog/category')->load($path_id[5])->getUrl_key();
+		 }			
+		 $attr = strtolower($this->getName());
+		 foreach ($this->getItems() as $_item)
+		 {
+		   $str_lbl = strtolower(str_replace(" ", "-", $_item->getLabel()));
+		   $str_lbl = str_replace("&", "and", $str_lbl); 
+		   $img = $str_lbl.'.png';
+		   if(in_array(8, $path_id))
+		   {
+		   	 $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$attr.'/'.$img;
+		   }
+		   else if(in_array(478, $path_id))
+		   {
+			 $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$attr.'/'.$img;
+		   }
+		   else if(in_array(4, $path_id))
+		   {
+			   if(in_array(39, $path_id) || in_array(292, $path_id) || in_array(295, $path_id))
+			   {
+				   $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$model.'/'.$attr.'/'.$img;
+			   }
+			   else
+			   {
+				   $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$attr.'/'.$img;
+			   }
+		   }
+		   else
+		   {
+			 $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$brand.'/'.$attr.'/'.$img;
+		   }
+		   if(getimagesize($url)) 
+		   {?>
+			 <div class="filter_div" id="<?php echo $str_lbl.'content';?>"><img src="<?php echo $url;?>"></div>
+			 <?php 
+		   }
+		  }?> 
+     </div>
+    </div>
+	<?php		
+  }
+}
+else
+{
+  if($parent_catid == 4 || $currentCategoryId == 4)
+  { 
+  	$gen = '';
+  	$gen = Mage::getSingleton('core/session')->getGen();
+  	if($gen != 1)
+  	{?>
+		<div class="panel panel-default" <?php /*?><?php if(in_array($_category->getLevel(),array(1,2,3)) && $this->getName() == "Model"){?> style="display:none !important;"<?php }?><?php */?>>
+    	 <div class="panel-heading">
+          <h4 class="panel-title"><a href="#<?php echo 'Gender';?>" data-toggle="collapse" data-parent="#accordion" id="filter-panel"><?php echo 'Gender';?>
+           <i class="fa fa-caret-down"></i></a>
+          </h4>
+	     </div>
+	 	 <div id="Gender" class="panel-collapse collapse">
+          <ul>
+		   <div class="panel-body">
+			<li id="for-her" class="filter_lbl">
+			 <a onclick="jQuery('#filter_loading_image').show();" href = "<?php echo Mage::getBaseUrl();?>shop/t-shirt/for-her.html"><span class="count">For Her</span></a>
+			</li>
+			<li id="for-him" class="filter_lbl">
+			 <a onclick="jQuery('#filter_loading_image').show();" href = "<?php echo Mage::getBaseUrl();?>shop/t-shirt/for-him.html"><span class="count">For Him</span> </a>              
+			</li>
+			<!--<li  id="for-kids" class="filter_lbl">
+			 <a onclick="jQuery('#filter_loading_image').show();" href = "<?php echo Mage::getBaseUrl();?>shop/t-shirt/for-kids-teens.html"><span class="count">For Kids</span>  </a>             
+			</li>-->
+		   </div>
+          </ul>	
+         </div>
+		</div>	
+    <?php 
+    	$gen1 = 1;
+    	Mage::getSingleton('core/session')->setGen($gen1);
+    }
+  }  
+  if($this->getName() == 'Style')
+  {
+	  if($model_id != '')
+	  {?>
+          <div class="panel panel-default">
+           <div class="panel-heading">
+            <h4 class="panel-title"><a href="#<?php echo 'Model';?>" data-toggle="collapse" data-parent="#accordion" id="filter-panel"><?php echo 'Model';?>
+             <i class="fa fa-caret-down"></i></a>
+            </h4>
+           </div>
+           <div id="<?php echo 'Model';?>" class="panel-collapse collapse">
+            <?php  
+             $children = Mage::getModel('catalog/category')->getCategories($model_id);
+             foreach ($children as $category) 
+             {
+			 ?>
+               <div id="section<?php echo $i;?>" class="accordion">
+                <?php echo $category->getName();?><span></span>
+               </div>
+               <div class="container">
+                <div class="content">
+                 <?php
+				  if($category->hasChildren()) 
+                  {
+					$cat = Mage::getModel('catalog/category')->load($category->getId());
+					$sub_children = $cat->getChildren();
+					//$sub_children = Mage::getModel('catalog/category')->getCategories($category->getId());
+					$sub_children = explode(',', $sub_children);
+					sort($sub_children);
+                    echo '<ul>';
+                    foreach ($sub_children as $sub_cat_child) 
+                    { 
+						$sub_cats = Mage::getModel('catalog/category')->load($sub_cat_child);
+						//print_r($sub_cats);
+						if(isset($params['texturedPrdStr']) && $params['texturedPrdStr'] != '')
+						{
+							$str = '?texturedPrdStr='.$params['texturedPrdStr'];
+						}
+                        echo '<li><a href="'.$base_url.$sub_cats['url_path'].$str.'">'.$sub_cats->getName().'</a></li>';
+                    }				
+                    echo '</ul>';
+                  }
+				  else{
+				  
+				  //print_r($category);exit;
+				  
+				  
+				   $cat = Mage::getModel('catalog/category')->load($category->getId());
+                    echo '<ul>';
+                     
+						//$sub_cats = Mage::getModel('catalog/category')->load($sub_cat_child);
+						//print_r($sub_cats);
+                        echo '<li><a href="'.$cat->getUrl($cat).'">'.$category->getName().'</a></li>';
+                    		
+                    echo '</ul>';
+				  
+				  }	
+
+				  ?>
+                 </div>
+                </div>
+               <?php $i++;
+             }?> 
+           </div>
+          </div>	
+      <?php
+      }
+	  
+	  //print_r($path_id);
+	  
+	  if(in_array(3, $path_id)){
+?>
+	   <div class="panel panel-default displayNone" <?php /*?><?php if(in_array($_category->getLevel(),array(1,2,3)) && $this->getName() == "Model"){?> style="display:none !important;"<?php }?><?php */?>>
+    	 <div class="panel-heading">
+          <h4 class="panel-title"><a href="#<?php echo 'By_Type';?>" data-toggle="collapse" data-parent="#accordion" id="filter-panel"><?php echo 'By Type';?>
+           <i class="fa fa-caret-down"></i></a>
+          </h4>
+	     </div>
+	 	 <div id="By_Type" class="panel-collapse collapse">
+          <ul>
+		   <div class="panel-body">
+		   
+			<li id="Type_1" class="filter_lbl">
+			 <a onclick="jQuery('#filter_loading_image').show();" href="#"><span class="count">Type 1</span></a>
+			</li>
+			<li id="Type_2" class="filter_lbl">
+			 <a onclick="jQuery('#filter_loading_image').show();" href="#"><span class="count">Type 2</span> </a>      
+			</li>
+
+		   </div>
+          </ul>	
+         </div>
+		</div>
+<?php
+	  }
+	  if((in_array(8, $path_id)) || (in_array(21, $path_id)) || (in_array(42, $path_id)) || (in_array(44, $path_id)) || (in_array(972, $path_id)))
+  	  { ?>
+	   <div class="panel panel-default" <?php /*?><?php if(in_array($_category->getLevel(),array(1,2,3)) && $this->getName() == "Model"){?> style="display:none !important;"<?php }?><?php */?>>
+    	 <div class="panel-heading">
+          <h4 class="panel-title"><a href="#<?php echo 'Size';?>" data-toggle="collapse" data-parent="#accordion" id="filter-panel"><?php echo 'Size';?>
+           <i class="fa fa-caret-down"></i></a>
+          </h4>
+	     </div>
+	 	 <div id="Size" class="panel-collapse collapse">
+          <ul>
+		   <div class="panel-body">
+			<li id="11-12" class="filter_lbl">
+			 <a onclick="jQuery('#filter_loading_image').show();" href="<?php echo Mage::getBaseUrl();?>shop/laptop-skin/11inch-12inch.html"><span class="count">11 Inch - 12 Inch</span></a>
+			</li>
+			<li id="13-14" class="filter_lbl">
+			 <a onclick="jQuery('#filter_loading_image').show();" href="<?php echo Mage::getBaseUrl();?>shop/laptop-skin/13inch-14inch.html"><span class="count">13 Inch - 14 Inch</span> </a>      
+			</li>
+			<li  id="15-16" class="filter_lbl">
+			 <a onclick="jQuery('#filter_loading_image').show();" href="<?php echo Mage::getBaseUrl();?>shop/laptop-skin/15inch-16inch.html"><span class="count">15 Inch - 16 Inch</span>  </a>								            </li>
+            <li  id="17-18" class="filter_lbl">
+			 <a onclick="jQuery('#filter_loading_image').show();" href="<?php echo Mage::getBaseUrl();?>shop/laptop-skin/17inch-18inch.html"><span class="count">17 Inch - 18 Inch</span>  </a>     
+			</li>
+            <li  id="17-18" class="filter_lbl">
+			 <a onclick="jQuery('#filter_loading_image').show();" href="<?php echo Mage::getBaseUrl();?>shop/laptop-skin/custom-size.html"><span class="count">Custom Size</span>  </a>     
+			</li>
+		   </div>
+          </ul>	
+         </div>
+		</div>	
+    <?php 
+  }
+  }?>
+	  <div class="panel panel-default">
+       <?php 
+       if($parent_catid == 4 || $currentCategoryId == 4)
+       {?>
+         <div class="panel-heading">
+          <h4 class="panel-title"><a href="#<?php echo $this->getName();?>" data-toggle="collapse" data-parent="#accordion" id="filter-panel"><?php echo $this->getName();?>
+           <i class="fa fa-caret-down"></i></a>
+          </h4>
+    	 </div>
+         <?php 
+       }
+       else if($this->getName() == 'Color')
+       { 
+       }   
+      else if($this->getName() == 'Style' && ((in_array(34, $path_id)) || (in_array(8, $path_id)) || (in_array(478, $path_id))))
+       { 
+?>
+   	 <div class="panel-heading">
+          <h4 class="panel-title"><a href="#<?php echo $this->getName();?>" data-toggle="collapse" data-parent="#accordion" id="filter-panel"><?php echo $this->getName();?><i class="fa fa-caret-down"></i></a>
+          </h4>
+    	 </div>
+		 <div id="<?php echo $this->getName();?>" class="panel-collapse collapse">
+		<h2>SKINS BY GENRE</h2> 
+		<h4 style="clear:both"  onclick="changeIconPlusMinus('Style_Custom')"><span id="Style_Custom_Span" class="glyphicon glyphicon-plus" aria-hidden="true"></span>Designer Skins by Genre</h4> 
+       <div  style="display:none;clear:both" id="Style_Custom" <?php /*?>class="panel-collapse collapse"<?php */?>>
+         <ul>
+          <div class="panel-body">
+          <?php 
+		  foreach ($this->getItems() as $_item):  
+		  
+		  
+		  
+		  if($_item->getLabel()=='Textured Skins')
+		   continue;
+         	 $str_lbl = strtolower(str_replace(" ", "-", $_item->getLabel()));
+        	 $str_lbl = str_replace("&", "and", $str_lbl); 
+			 
+       		?>
+       		<li class="<?php if ($_item->getMShowSelected()): ?>m-selected-ln-item <?php endif; ?>filter_lbl" id="<?php echo $str_lbl;?>">
+             <?php if ($_item->getMSelected()): 
+			 
+			 
+			 
+			$redirectURL = Mage::helper('function/more')->removeManaFilter($_item->getData('value'),$this->urlEscape($_item->getUrl()));
+			
+			 ?>
+              <a href="<?php echo $redirectURL ?>" title="<?php echo $this->escapeHtml($_item->getLabel()) ?>" onclick="var checkbox = jQuery(this).find('input');checkbox.attr('checked', !checkbox.attr('checked'));jQuery('#filter_loading_image').show();">
+               <input type="checkbox" checked="checked" onclick="location.href='<?php echo $redirectURL ?>'">&nbsp;<?php echo $this->escapeHtml($_item->getLabel()) ?>
+             <?php else : ?>
+              <?php if (!$this->getFilterOptions()->getDisableNoResultOptions() || $_item->getCount() > 0 || $_item->getMSelected()): ?>
+               <a href="<?php echo $this->urlEscape($_item->getUrl()) ?>" title="<?php echo $this->escapeHtml($_item->getLabel()) ?>" onclick="var checkbox = jQuery(this).find('input');checkbox.attr('checked', !checkbox.attr('checked'));jQuery('#filter_loading_image').show();">
+                <input type="checkbox" onclick="location.href='<?php echo $this->urlEscape($_item->getUrl()) ?>'">&nbsp;<?php echo $this->escapeHtml($_item->getLabel()) ?>
+              <?php else:  ?>
+               <span><?php echo $this->escapeHtml($_item->getLabel()) ?>
+              <?php endif; ?>
+             <?php endif; ?>
+             <?php if (Mage::getStoreConfigFlag('mana_filters/display/count')) : ?>
+              <span class="count">(<?php echo $_item->getCount() ?>)</span>
+             <?php endif; ?>
+             <?php if ($_item->getMSelected()): ?>
+              </a>
+             <?php else : ?>
+              <?php if (!$this->getFilterOptions()->getDisableNoResultOptions() || $_item->getCount() > 0 || $_item->getMSelected()): ?>
+               </a></label>
+              <?php else: ?>
+               </span>
+              <?php endif; ?>
+             <?php endif; ?>
+            </li>
+           <?php endforeach ?>
+          </div>
+         </ul>	
+       	 <?php 
+		 $type = '';$model = '';$brand = '';
+		 if($path_id[3] != '')
+		 {
+		   $type = Mage::getModel('catalog/category')->load($path_id[3])->getUrl_key();
+		 }
+		 if($path_id[4] != '')
+		 {
+		   $model = Mage::getModel('catalog/category')->load($path_id[4])->getUrl_key();
+		 }
+		 if($path_id[5] != '')
+		 {
+		   $brand = Mage::getModel('catalog/category')->load($path_id[5])->getUrl_key();
+		 }			
+		 $attr = strtolower($this->getName());
+		 foreach ($this->getItems() as $_item)
+		 {
+		   $str_lbl = strtolower(str_replace(" ", "-", $_item->getLabel()));
+		   $str_lbl = str_replace("&", "and", $str_lbl); 
+		   $img = $str_lbl.'.png';
+		   if(in_array(8, $path_id))
+		   {
+		   	 $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$attr.'/'.$img;
+		   }
+		   else if(in_array(478, $path_id))
+		   {
+			 $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$attr.'/'.$img;
+		   }
+		   else if(in_array(4, $path_id))
+		   {
+			   if(in_array(39, $path_id) || in_array(292, $path_id) || in_array(295, $path_id))
+			   {
+				   $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$model.'/'.$attr.'/'.$img;
+			   }
+			   else
+			   {
+				   $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$attr.'/'.$img;
+			   }
+		   }
+		   else
+		   {
+			 $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$brand.'/'.$attr.'/'.$img;
+		   }
+		   if(getimagesize($url)) 
+		   {?>
+			 <div class="filter_div" id="<?php echo $str_lbl.'content';?>"><img src="<?php echo $url;?>"></div>
+			 <?php 
+		   }
+		  }
+		  
+		  $texturedPrdStr = explode(',',$_GET['texturedPrdStr']);
+		  
+		  ?> 
+	    </div>  
+      
+
+		<h2 style="clear:both">TEXTURED SKINS</h2> 
+		<h4 style="clear:both"  onclick="changeIconPlusMinus('Metallic_Skins')"><span id="Metallic_Skins_Span" class="glyphicon glyphicon-plus" aria-hidden="true"></span>Metallic Skins</h4> 
+       <div  style="display:none;" id="Metallic_Skins">
+         <ul>
+          <div class="panel-body">
+		  
+				<li id="Shiny_Golden" class="filter_lbl"><a title="Animals" href="#" class="texturedSkinHrefClass" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201460)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201612)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201653)<?php }?>"><input type="checkbox" <?php if(in_array(201460,$texturedPrdStr) || in_array(201612,$texturedPrdStr) || in_array(201653,$texturedPrdStr)) echo 'checked';?>>&nbsp;Shiny Golden</a></li>
+			 
+				
+				
+				<li id="Shiny_Silver" class="filter_lbl"><a title="Animals" href="#" class="texturedSkinHrefClass" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201461)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201613)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201654)<?php }?>"><input type="checkbox" <?php if(in_array(201461,$texturedPrdStr) || in_array(201613,$texturedPrdStr) || in_array(201654,$texturedPrdStr)) echo 'checked';?>>&nbsp;Shiny Silver</a></li>
+				
+				
+				
+				<li id="Silver_wire_drawing" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201462)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201614)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201655)<?php }?>"><input type="checkbox" <?php if(in_array(201462,$texturedPrdStr) || in_array(201614,$texturedPrdStr) || in_array(201655,$texturedPrdStr)) echo 'checked';?>>&nbsp;Silver wire drawing</a></li>
+				
+				
+				
+				<li id="Golden_wire_drawing" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201459)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201611)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201652)<?php }?>"><input type="checkbox" <?php if(in_array(201459,$texturedPrdStr) || in_array(201611,$texturedPrdStr) || in_array(201652,$texturedPrdStr)) echo 'checked';?>>&nbsp;Golden wire drawing</a></li>
+				
+				
+				
+				<li id="Black_wire_drawing" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201458)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201610)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201651)<?php }?>"><input type="checkbox" <?php if(in_array(201458,$texturedPrdStr) || in_array(201610,$texturedPrdStr) || in_array(201651,$texturedPrdStr)) echo 'checked';?>>&nbsp;Dark grey wire drawing</a></li>
+          </div>
+         </ul>	
+		 
+		 
+		 
+       	 <?php /*
+			//////////////////////////Code for fetchin filter images//////////////////////////////////////////////	
+		   foreach(codotion var placed here) 
+		   {?>
+			 <div class="filter_div" id="<?php echo $str_lbl.'content';?>"><img src="<?php echo $url;?>"></div>
+			 <?php 
+		   }
+		 */?> 
+	    </div>  
+      
+		<h4 style="clear:both"  onclick="changeIconPlusMinus('Carbon_Fiber_Skin')"><span id="Carbon_Fiber_Skin_Span" class="glyphicon glyphicon-plus" aria-hidden="true"></span>Carbon Fiber Skin</h4> 
+       <div  style="display:none;" id="Carbon_Fiber_Skin">
+         <ul>
+          <div class="panel-body">
+				
+				 
+				
+				<li id="Carbon_Fiber_Green" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201443)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201595)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201636)<?php }?>"><input type="checkbox" <?php if(in_array(201443,$texturedPrdStr) || in_array(201595,$texturedPrdStr) || in_array(201636,$texturedPrdStr)) echo 'checked';?>>&nbsp;Green carbon fiber</a></li>
+				
+				<li id="Carbon_Fiber_Green" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201445)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201597)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201638)<?php }?>"><input type="checkbox" <?php if(in_array(201445,$texturedPrdStr) || in_array(201597,$texturedPrdStr) || in_array(201638,$texturedPrdStr)) echo 'checked';?>>&nbsp;Pink carbon fiber</a></li>
+				
+				 
+				
+				<li id="Carbon_Fiber_Purple" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201446)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201598)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201639)<?php }?>"><input type="checkbox" <?php if(in_array(201446,$texturedPrdStr) || in_array(201598,$texturedPrdStr) || in_array(201639,$texturedPrdStr)) echo 'checked';?>>&nbsp;Purple carbon fiber</a></li>
+				
+				<li id="Carbon_Fiber_Black" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201440)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201592)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201633)<?php }?>"><input type="checkbox" <?php if(in_array(201440,$texturedPrdStr) || in_array(201592,$texturedPrdStr) || in_array(201633,$texturedPrdStr)) echo 'checked';?>>&nbsp;Black carbon fiber</a></li>
+				
+				 
+				
+				<li id="Carbon_Fiber_Silver" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201448)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201600)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201641)<?php }?>"><input type="checkbox" <?php if(in_array(201448,$texturedPrdStr) || in_array(201600,$texturedPrdStr) || in_array(201641,$texturedPrdStr)) echo 'checked';?>>&nbsp;Silver carbon fiber</a></li>
+				
+				 
+				
+				<li id="Carbon_Fiber_Copper" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201441)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201593)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201634)<?php }?>"><input type="checkbox" <?php if(in_array(201441,$texturedPrdStr) || in_array(201593,$texturedPrdStr) || in_array(201634,$texturedPrdStr)) echo 'checked';?>>&nbsp;Copper carbon fiber</a></li>
+				
+				 
+				
+				<li id="Carbon_Fiber_Golden" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201442)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201594)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201635)<?php }?>"><input type="checkbox" <?php if(in_array(201442,$texturedPrdStr) || in_array(201594,$texturedPrdStr) || in_array(201635,$texturedPrdStr)) echo 'checked';?>>&nbsp;Golden carbon fiber<span class="count"></span></a></li>
+				
+				
+				
+				
+				
+				<li id="Carbon_Fiber_Pink" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;Silver carbon fiber<span class="count"></span></a></li>
+				
+				
+				 
+				
+				<li id="Carbon_Fiber_White" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201449)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201601)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201642)<?php }?>"><input type="checkbox" <?php if(in_array(201449,$texturedPrdStr) || in_array(201601,$texturedPrdStr) || in_array(201642,$texturedPrdStr)) echo 'checked';?>>&nbsp;White carbon fiber</a></li>
+				
+				 
+				
+				<li id="Carbon_Fiber_Red" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201447)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201599)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201640)<?php }?>"><input type="checkbox" <?php if(in_array(201447,$texturedPrdStr) || in_array(201599,$texturedPrdStr) || in_array(201640,$texturedPrdStr)) echo 'checked';?>>&nbsp;Red carbon fiber<span class="count">(81)</span></a></li>
+          </div>
+         </ul>	
+       	 <?php /*
+			//////////////////////////Code for fetchin filter images//////////////////////////////////////////////	
+		   foreach(codotion var placed here) 
+		   {?>
+			 <div class="filter_div" id="<?php echo $str_lbl.'content';?>"><img src="<?php echo $url;?>"></div>
+			 <?php 
+		   }
+		 */?> 
+	    </div>  
+      
+		<h4 style="clear:both" onclick="changeIconPlusMinus('Super_Shining_Skins')"><span id="Super_Shining_Skins_Span" class="glyphicon glyphicon-plus" aria-hidden="true"></span>Super Shining Skins</h4> 
+       <div  style="display:none;" id="Super_Shining_Skins">
+         <ul>
+          <div class="panel-body">
+		  
+				 
+		  
+				<li id="Super_Shining_Skins_Red" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201473)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201625)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201666)<?php }?>"><input type="checkbox" <?php if(in_array(201473,$texturedPrdStr) || in_array(201625,$texturedPrdStr) || in_array(201666,$texturedPrdStr)) echo 'checked';?>>&nbsp;Red color shining</a></li>
+				
+				 
+				
+				<li id="Super_Shining_Skins_Orange" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201471)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201623)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201664)<?php }?>"><input type="checkbox" <?php if(in_array(201471,$texturedPrdStr) || in_array(201623,$texturedPrdStr) || in_array(201664,$texturedPrdStr)) echo 'checked';?>>&nbsp;Orange color shining</a></li>
+				
+				 
+				
+				<li id="Super_Shining_Skins_Light_Blue" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201468)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201620)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201661)<?php }?>"><input type="checkbox" <?php if(in_array(201468,$texturedPrdStr) || in_array(201620,$texturedPrdStr) || in_array(201661,$texturedPrdStr)) echo 'checked';?>>&nbsp;Light blue color shining</a></li>
+				
+				 
+				
+				<li id="Super_Shining_Skins_Green" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201470)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201622)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201663)<?php }?>"><input type="checkbox" <?php if(in_array(201470,$texturedPrdStr) || in_array(201622,$texturedPrdStr) || in_array(201663,$texturedPrdStr)) echo 'checked';?>>&nbsp;Green color shining</a></li>
+				
+				<li id="Super_Shining_Skins_Green" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201470)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201622)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201663)<?php }?>"><input type="checkbox" <?php if(in_array(201470,$texturedPrdStr) || in_array(201622,$texturedPrdStr) || in_array(201663,$texturedPrdStr)) echo 'checked';?>>&nbsp;Green color shining</a></li>
+				
+				 
+				
+				<li id="Super_Shining_Skins_White" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201474)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201626)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201667)<?php }?>"><input type="checkbox" <?php if(in_array(201474,$texturedPrdStr) || in_array(201626,$texturedPrdStr) || in_array(201667,$texturedPrdStr)) echo 'checked';?>>&nbsp;White color shining</a></li>
+				
+				 
+				
+				<li id="Super_Shining_Skins_Light_Pink" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201472)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201624)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201665)<?php }?>"><input type="checkbox" <?php if(in_array(201472,$texturedPrdStr) || in_array(201624,$texturedPrdStr) || in_array(201665,$texturedPrdStr)) echo 'checked';?>>&nbsp;Light pink color shining</a></li>
+				
+				 
+				
+				<li id="Super_Shining_Skins_Black" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201463)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201615)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201656)<?php }?>"><input type="checkbox" <?php if(in_array(201463,$texturedPrdStr) || in_array(201615,$texturedPrdStr) || in_array(201656,$texturedPrdStr)) echo 'checked';?>>&nbsp;Black color shining</a></li>
+				
+				 
+				
+				<li id="small_polygon_black " class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201467)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201619)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201660)<?php }?>"><input type="checkbox" <?php if(in_array(201467,$texturedPrdStr) || in_array(201619,$texturedPrdStr) || in_array(201660,$texturedPrdStr)) echo 'checked';?>>&nbsp;black small polygon shining</a></li>
+				
+				 
+				
+				<li id="abstract_shining_black" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201464)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201616)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201657)<?php }?>"><input type="checkbox" <?php if(in_array(201464,$texturedPrdStr) || in_array(201616,$texturedPrdStr) || in_array(201657,$texturedPrdStr)) echo 'checked';?>>&nbsp;black abstract shining</a></li>
+				
+				 
+				
+				<li id="floral_shining_black" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201466)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201618)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201659)<?php }?>"><input type="checkbox" <?php if(in_array(201466,$texturedPrdStr) || in_array(201618,$texturedPrdStr) || in_array(201659,$texturedPrdStr)) echo 'checked';?>>&nbsp;black floral shining</a></li>
+				
+				<li id="floral_shining_big_black" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201465)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201617)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201658)<?php }?>"><input type="checkbox" <?php if(in_array(201465,$texturedPrdStr) || in_array(201617,$texturedPrdStr) || in_array(201658,$texturedPrdStr)) echo 'checked';?>>&nbsp;black big polygon shining</a></li>
+				
+				<li id="super_shining_black" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201463)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201615)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201656)<?php }?>"><input type="checkbox" <?php if(in_array(201463,$texturedPrdStr) || in_array(201615,$texturedPrdStr) || in_array(201656,$texturedPrdStr)) echo 'checked';?>>&nbsp;super shining black</a></li>
+				
+				<li id="super_shining_black" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201471)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201596)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201637)<?php }?>"><input type="checkbox" <?php if(in_array(201471,$texturedPrdStr) || in_array(201596,$texturedPrdStr) || in_array(201637,$texturedPrdStr)) echo 'checked';?>>&nbsp;super shining Orange</a></li>
+	      </div>
+         </ul>	
+       	 <?php /*
+			//////////////////////////Code for fetchin filter images//////////////////////////////////////////////	
+		   foreach(codotion var placed here) 
+		   {?>
+			 <div class="filter_div" id="<?php echo $str_lbl.'content';?>"><img src="<?php echo $url;?>"></div>
+			 <?php 
+		   }
+		 */?> 
+	    </div>  
+      
+
+		<h4 style="clear:both" onclick="changeIconPlusMinus('3D_Water_Drop_Skins')"><span id="3D_Water_Drop_Skins_Span" class="glyphicon glyphicon-plus" aria-hidden="true"></span>3D Water Drop Skins</h4> 
+       <div  style="display:none;" id="3D_Water_Drop_Skins">
+         <ul>
+          <div class="panel-body">
+		  
+				 
+		  
+				<li id="3D_Water_Drop_Skins_Black" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201434)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201586)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201627)<?php }?>"><input type="checkbox" <?php if(in_array(201434,$texturedPrdStr) || in_array(201586,$texturedPrdStr) || in_array(201627,$texturedPrdStr)) echo 'checked';?>>&nbsp;Black water drops<span class="count"></span></a></li>
+				
+				 
+				
+				<li id="3D_Water_Drop_Skins_Pink" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201437)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201589)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201630)<?php }?>"><input type="checkbox" <?php if(in_array(201437,$texturedPrdStr) || in_array(201589,$texturedPrdStr) || in_array(201630,$texturedPrdStr)) echo 'checked';?>>&nbsp;Pink water drops</a></li>
+				
+								
+				
+				<li id="3D_Water_Drop_Skins_Purple" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201438)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201590)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201631)<?php }?>"><input type="checkbox" <?php if(in_array(201438,$texturedPrdStr) || in_array(201590,$texturedPrdStr) || in_array(201631,$texturedPrdStr)) echo 'checked';?>>&nbsp;Purple water drops</a></li>
+				
+				 
+				
+				<li id="3D_Water_Drop_Skins_White" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201439)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201591)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201632)<?php }?>"><input type="checkbox" <?php if(in_array(201439,$texturedPrdStr) || in_array(201591,$texturedPrdStr) || in_array(201632,$texturedPrdStr)) echo 'checked';?>>&nbsp;White water drops</a></li>
+				
+				 
+				
+				<li id="3D_Water_Drop_Skins_Green" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201435)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201587)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201628)<?php }?>"><input type="checkbox" <?php if(in_array(201435,$texturedPrdStr) || in_array(201587,$texturedPrdStr) || in_array(201628,$texturedPrdStr)) echo 'checked';?>>&nbsp;Green water drops</a></li>
+				
+				
+				
+				<li id="3D_Water_Drop_Skins_Orange" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201436)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201588)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201629)<?php }?>"><input type="checkbox" <?php if(in_array(201436,$texturedPrdStr) || in_array(201588,$texturedPrdStr) || in_array(201629,$texturedPrdStr)) echo 'checked';?>>&nbsp;Orange water drops</a></li>
+				
+          </div>
+         </ul>	
+       	 <?php /*
+			//////////////////////////Code for fetchin filter images//////////////////////////////////////////////	
+		   foreach(codotion var placed here) 
+		   {?>
+			 <div class="filter_div" id="<?php echo $str_lbl.'content';?>"><img src="<?php echo $url;?>"></div>
+			 <?php 
+		   }
+		 */?> 
+	    </div>  
+      
+
+
+		<h4 style="clear:both" onclick="changeIconPlusMinus('Faux_Leather_Skins')"><span id="Faux_Leather_Skins_Span" class="glyphicon glyphicon-plus" aria-hidden="true"></span>Faux Leather Skins</h4> 
+       <div  style="display:none;" id="Faux_Leather_Skins">
+         <ul>
+          <div class="panel-body">
+		  
+		   
+		  
+				<li id="Faux_Leather_Skins_Black_Leather" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201451)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201603)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201644)<?php }?>"><input type="checkbox" <?php if(in_array(201451,$texturedPrdStr) || in_array(201603,$texturedPrdStr) || in_array(201644,$texturedPrdStr)) echo 'checked';?>>&nbsp;Black Leather</a></li>
+				
+				 
+				
+				<li id="Faux_Leather_Skins_Black_Snake_Skin" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201452)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201604)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201645)<?php }?>"><input type="checkbox" <?php if(in_array(201452,$texturedPrdStr) || in_array(201604,$texturedPrdStr) || in_array(201645,$texturedPrdStr)) echo 'checked';?>>&nbsp;Black snake texture</a></li>				
+				 
+				
+				<li id="Faux_Leather_Skins_Grey_Snake_Skin" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201455)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201607)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201648)<?php }?>"><input type="checkbox" <?php if(in_array(201455,$texturedPrdStr) || in_array(201607,$texturedPrdStr) || in_array(201648,$texturedPrdStr)) echo 'checked';?>>&nbsp;Grey snake texture</a></li>
+				
+				 
+				
+				<li id="Faux_Leather_Skins_Brown_Snake_Skin" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201453)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201605)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201646)<?php }?>"><input type="checkbox" <?php if(in_array(201453,$texturedPrdStr) || in_array(201605,$texturedPrdStr) || in_array(201646,$texturedPrdStr)) echo 'checked';?>>&nbsp;Brown snake texture</a></li>
+				
+				 
+				
+				<li id="Faux_Leather_Skins_White_Snake_Skin" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201457)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201609)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201650)<?php }?>"><input type="checkbox" <?php if(in_array(201457,$texturedPrdStr) || in_array(201609,$texturedPrdStr) || in_array(201650,$texturedPrdStr)) echo 'checked';?>>&nbsp;White snake texture</a></li>
+				
+				 
+				
+				<li id="Faux_Leather_Skins_Black_Snake_Skin" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201450)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201602)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201643)<?php }?>"><input type="checkbox" <?php if(in_array(201450,$texturedPrdStr) || in_array(201602,$texturedPrdStr) || in_array(201643,$texturedPrdStr)) echo 'checked';?>>&nbsp;Black crocodile texture</a></li>
+				
+				
+				
+				<li id="Faux_Leather_Skins_White_Crocodile_Skin" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201456)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201608)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201649)<?php }?>"><input type="checkbox" <?php if(in_array(201456,$texturedPrdStr) || in_array(201608,$texturedPrdStr) || in_array(201649,$texturedPrdStr)) echo 'checked';?>>&nbsp;White crocodile texture</a></li>
+				
+				 
+				
+				<li id="Faux_Leather_Skins_Golden_Crocodile_Skin" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201454)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201606)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201647)<?php }?>"><input type="checkbox" <?php if(in_array(201454,$texturedPrdStr) || in_array(201606,$texturedPrdStr) || in_array(201647,$texturedPrdStr)) echo 'checked';?>>&nbsp;Golden crocodile texture</a></li>
+          </div>
+         </ul>	
+        </div>  
+      <?php /*?>
+
+		<?php /*?><h4 style="clear:both" onclick="changeIconPlusMinus('Wooden_Skin')"><span id="Wooden_Skin_Span" class="glyphicon glyphicon-plus" aria-hidden="true"></span>Wooden Skin</h4> 
+       <div  style="display:none;" id="Wooden_Skin">
+         <ul>
+          <div class="panel-body">
+				<li id="Wooden_Skin_Mohogany_Texture" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;Mohogany Texture<span class="count">(81)</span></a></li>
+				<li id="Wooden_Skin_Rose_Wood_Texture" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;Rose Wood Texture<span class="count">(81)</span></a></li>
+				<li id="Wooden_Skin_Padauk_Texture" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;Padauk Texture<span class="count">(81)</span></a></li>
+				<li id="Wooden_Skin_Eagle_Wood_Texture" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;Eagle Wood Texture<span class="count">(81)</span></a></li>
+          </div>
+         </ul>
+	    </div> 
+      
+
+		<h4 style="clear:both" onclick="changeIconPlusMinus('Pop_Colour_Skins')"><span id="Pop_Colour_Skins_Span" class="glyphicon glyphicon-plus" aria-hidden="true"></span>Pop Colour Skins</h4> 
+       <div  style="display:none;" id="Pop_Colour_Skins">
+         <ul>
+          <div class="panel-body">
+				<li id="Pop_Colour_Skins_Red" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;Red<span class="count">(81)</span></a></li>
+				<li id="Pop_Colour_Skins_Orange" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;Orange<span class="count">(81)</span></a></li>
+				<li id="Pop_Colour_Skins_Green" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;Green<span class="count">(81)</span></a></li>
+				<li id="Pop_Colour_Skins_Yellow" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;Yellow<span class="count">(81)</span></a></li>
+				<li id="Pop_Colour_Skins_White" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;White<span class="count">(81)</span></a></li>
+				<li id="Pop_Colour_Skins_Pink" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;Pink<span class="count">(81)</span></a></li>
+				<li id="Pop_Colour_Skins_Purple" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;Purple<span class="count">(81)</span></a></li>
+				<li id="Pop_Colour_Skins_Black" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;Black<span class="count">(81)</span></a></li>
+				<li id="Pop_Colour_Skins_Blue" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;Blue<span class="count">(81)</span></a></li>
+         </div>
+         </ul>
+       	  
+	    </div>  
+      	<?php */?> 
+</div>
+ 
+<?php	   
+       }   
+       else
+	   {?>
+    	 <div class="panel-heading">
+          <h4 class="panel-title"><a href="#<?php echo $this->getName();?>" data-toggle="collapse" data-parent="#accordion" id="filter-panel"><?php echo $this->getName();?>
+           <i class="fa fa-caret-down"></i></a>
+          </h4>
+    	 </div>
+    	<?php }?>
+	   
+       <div id="<?php echo $this->getName();?>" class="panel-collapse collapse">
+         <ul>
+          <div class="panel-body">
+          <?php 
+		  foreach ($this->getItems() as $_item):  
+         	$str_lbl = strtolower(str_replace(" ", "-", $_item->getLabel()));
+        	 $str_lbl = str_replace("&", "and", $str_lbl); 
+       		?>
+       		<li class="<?php if ($_item->getMShowSelected()): ?>m-selected-ln-item <?php endif; ?>filter_lbl" id="<?php echo $str_lbl;?>">
+             <?php if ($_item->getMSelected()): 
+			 
+			 $redirectURL = Mage::helper('function/more')->removeManaFilter($_item->getData('value'),$this->urlEscape($_item->getUrl()));
+			 
+			 
+			 ?>
+              <a href="<?php echo $redirectURL ?>" title="<?php echo $this->escapeHtml($_item->getLabel()) ?>" onclick="var checkbox = jQuery(this).find('input');checkbox.attr('checked', !checkbox.attr('checked'));jQuery('#filter_loading_image').show();">
+               <input type="checkbox" checked="checked" onclick="location.href='<?php echo $redirectURL ?>'">&nbsp;<?php echo $this->escapeHtml($_item->getLabel()) ?>
+             <?php else : ?>
+              <?php if (!$this->getFilterOptions()->getDisableNoResultOptions() || $_item->getCount() > 0 || $_item->getMSelected()): ?>
+               <a href="<?php echo $this->urlEscape($_item->getUrl()) ?>" title="<?php echo $this->escapeHtml($_item->getLabel()) ?>" onclick="var checkbox = jQuery(this).find('input');checkbox.attr('checked', !checkbox.attr('checked'));jQuery('#filter_loading_image').show();">
+                <input type="checkbox" onclick="location.href='<?php echo $this->urlEscape($_item->getUrl()) ?>'">&nbsp;<?php echo $this->escapeHtml($_item->getLabel()) ?>
+              <?php else:  ?>
+               <span><?php echo $this->escapeHtml($_item->getLabel()) ?>
+              <?php endif; ?>
+             <?php endif; ?>
+             <?php if (Mage::getStoreConfigFlag('mana_filters/display/count')) : ?>
+				<?php if(strtolower($this->getName()) != 'size'){?> <?php /* <span class="count">(<?php echo $_item->getCount() ?>)</span> */ ?> <?php }?>
+             <?php endif; ?>
+             <?php if ($_item->getMSelected()): ?>
+              </a>
+             <?php else : ?>
+              <?php if (!$this->getFilterOptions()->getDisableNoResultOptions() || $_item->getCount() > 0 || $_item->getMSelected()): ?>
+               </a>
+              <?php else: ?>
+               </span>
+              <?php endif; ?>
+             <?php endif; ?>
+            </li>
+           <?php endforeach ?>
+          </div>
+         </ul>	
+       	 <?php 
+		 $type = '';$model = '';$brand = '';
+		 if($path_id[3] != '')
+		 {
+		   $type = Mage::getModel('catalog/category')->load($path_id[3])->getUrl_key();
+		 }
+		 if($path_id[4] != '')
+		 {
+		   $model = Mage::getModel('catalog/category')->load($path_id[4])->getUrl_key();
+		 }
+		 if($path_id[5] != '')
+		 {
+		   $brand = Mage::getModel('catalog/category')->load($path_id[5])->getUrl_key();
+		 }			
+		 $attr = strtolower($this->getName());
+		 
+		 ////////////////////////////Code for filter images/////////////////////////////////////////////
+		 
+		 if(!in_array(4, $path_id)){
+		 foreach ($this->getItems() as $_item)
+		 {
+		   $str_lbl = strtolower(str_replace(" ", "-", $_item->getLabel()));
+		   $str_lbl = str_replace("&", "and", $str_lbl); 
+		   $img = $str_lbl.'.png';
+		   if(in_array(8, $path_id))
+		   {
+		   	 $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$attr.'/'.$img;
+		   }
+		   else if(in_array(478, $path_id))
+		   {
+			 $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$attr.'/'.$img;
+		   }
+		   else if(in_array(4, $path_id))
+		   {
+			   if(in_array(39, $path_id) || in_array(292, $path_id) || in_array(295, $path_id))
+			   {
+				   $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$model.'/'.$attr.'/'.$img;
+			   }
+			   else
+			   {
+				   $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$attr.'/'.$img;
+			   }
+		   }
+		   else
+		   {
+			 $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$brand.'/'.$attr.'/'.$img;
+		   }
+		   if(getimagesize($url)) 
+		   {?>
+			 <div class="filter_div" id="<?php echo $str_lbl.'content';?>"><img src="<?php echo $url;?>"></div>
+			 <?php 
+		   }
+		  }
+			}
+		  ///////////////////////////////////////////////End code for filter images//////////////////////////
+		  ?> 
+	    </div>  
+      
+	  
+	   
+	  
+	  </div>
+   <?php
+ }
+ 
+ }
+ ?>
+
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/highlight.pack.js');?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery.cookie.js');?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery.accordion.js');?>"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+      hljs.tabReplace = '    ';
+      hljs.initHighlightingOnLoad();
+      jQuery.fn.slideFadeToggle = function(speed, easing, callback) {
+        return this.animate({opacity: 'toggle', height: 'toggle'}, speed, easing, callback);
+      };
+            //accordion
+      jQuery('.accordion').accordion({
+       //defaultOpen: 'section1',
+       cookieName: 'accordion_nav',
+       speed: 'slow',
+       animateOpen: function (elem, opts) { //replace the standard slideUp with custom function
+        elem.next().stop(true, true).slideFadeToggle(opts.speed);
+       },
+       animateClose: function (elem, opts) { //replace the standard slideDown with custom function
+        elem.next().stop(true, true).slideFadeToggle(opts.speed);
+       }
+      });
+	  
+			jQuery( ".panel-collapse" ).mouseleave(function() {
+			  jQuery(this).removeClass("in")
+			  jQuery(this).addClass("collapse")
+			  
+			});
+  
+    });
+    
+    jQuery("body").click(function(e)
+    {
+    	if(e.target.id != "filter-panel")
+    	{
+    		// debugger;
+    		var elementModal = "";
+    		
+    		if((jQuery(e.target).prop("tagName") == "DIV") || (jQuery(e.target).prop("tagName") == "SPAN"))
+    		{
+    			elementModal = jQuery(e.target).closest("#Model");
+    		}
+    		// Check for not hiding particular div with id="Model"
+    		if(elementModal.length > 0)
+    		{
+    			return false;
+    		}
+    		//jQuery(".panel-title a").addClass("collapsed");
+    		//jQuery(".panel div.panel-collapse").removeClass("in");
+    		//jQuery(".panel div.panel-collapse in").addClass("panel-collapse collapse");
+    		//jQuery(".panel div.panel-collapse").css("height","0px");
+    		//jQuery(".panel div.panel-collapse").css("display","none");
+    	}
+    });
+    
+        function magejump(targ,selObj,restore){
+         eval(targ+".location='"+selObj.options[selObj.selectedIndex].value+"'");
+         if (restore) selObj.selectedIndex=0;
+        }
+        
+        jQuery('.filter_div').hide();
+        //jquery('div').hide();
+        jQuery('.filter_lbl').bind('mouseover', function() {
+        	jQuery('.filter_div').hide();
+        	jQuery('#'+jQuery(this).attr('id')+'content').show();
+        });         
+
+function changeIconPlusMinus(id)
+ { 
+      if(jQuery( '#'+id ).css( 'display' ) == 'none') {
+	    jQuery( '#'+id+'' ).slideDown('slow');	  
+	    jQuery( '#'+id+'_Span' ).removeClass('glyphicon-plus');
+	    jQuery( '#'+id+'_Span' ).addClass('glyphicon-minus');
+		}	
+	  else {
+	    jQuery( '#'+id+'' ).slideUp('slow');
+	    jQuery( '#'+id+'_Span' ).removeClass('glyphicon-minus');
+	    jQuery( '#'+id+'_Span' ).addClass('glyphicon-plus');
+		}
+ }
+
+function goToUrl(ele,prdId)
+{
+
+	var checkbox = jQuery(ele).find('input');
+	checkbox.attr('checked', !checkbox.attr('checked'));
+	jQuery('#filter_loading_image').show();
+
+  texturedPrdStr = '<?php echo trim($_GET['texturedPrdStr'])?>';
+  if(texturedPrdStr != ''){
+	
+	texturedPrdStrArray = texturedPrdStr.split(",");
+	prdIdIndex = texturedPrdStrArray.indexOf(prdId)
+	
+	if(prdIdIndex > -1){
+		texturedPrdStrArray.splice(prdIdIndex, 1);
+		texturedPrdStr = texturedPrdStrArray.join(",");
+	}
+	else
+	{
+		texturedPrdStr = texturedPrdStr+','+prdId;	
+	}
+	
+  }	
+  else
+	texturedPrdStr = prdId;
+	
+   currentUrl = window.location.href.split('#')[0];
+   currentUrl = currentUrl.split('&texturedPrdStr')[0];
+   currentUrl = currentUrl.split('?texturedPrdStr')[0];
+   //currentUrl = window.location.href.split('?')[0];
+   //currentUrl = currentUrl.split('#')[0];
+   if(currentUrl.indexOf("?") > 0)
+    window.location.href = currentUrl+'&texturedPrdStr='+texturedPrdStr		
+   else
+    window.location.href = currentUrl+'?texturedPrdStr='+texturedPrdStr
+	
+}
+
+</script>	
+
+<?php }?>	

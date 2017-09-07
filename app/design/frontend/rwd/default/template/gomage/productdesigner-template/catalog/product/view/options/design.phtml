@@ -1,0 +1,51 @@
+<?php
+/**
+ * GoMage Product Designer Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use/
+ * @version      Release: 1.0.0
+ * @since        Available since Release 1.0.0
+ */
+?>
+<?php if ($this->hasOption()): ?>
+    <?php $_option = $this->getOption() ?>
+    <dd<?php if ($_option->decoratedIsLast){?> class="last"<?php }?>>
+        <div class="input-box">
+            <ul id="options-design-list" class="options-list">
+                <li>
+                    <input type="checkbox" class="checkbox  product-custom-option"
+                        onclick="reloadPrice()"
+                        name="design"
+                        id="design_option"
+                        value="<?php echo $_option->getValue(); ?>"
+                        price="<?php echo $_option->getPrice(); ?>"
+                        <?php if ($_option->getValue()): ?>checked="checked"<?php endif;?>/>
+                    <span class="label">
+                        <label for="design_option"><?php echo $this->__('Design');?> <span class="price-notice">+<?php echo $this->helper('core')->currencyByStore($_option->getPrice(), null, true);?></span></label>
+                    </span>
+                </li>
+            </ul>
+        </div>
+        <script type="text/javascript">
+            function reloadPrice()
+            {
+                var elm = $('design_option');
+                var priceConfig = <?php echo $_option->getPriceConfig();?>;
+                if (elm.checked) {
+                    var curConfig = priceConfig;
+                } else {
+                    var curConfig = {price: 0};
+                }
+                if (optionsPrice != 'undefined') {
+                    optionsPrice.addCustomPrices('design', curConfig);
+                    optionsPrice.reload();
+                }
+            }
+            document.observe("dom:loaded", reloadPrice);
+        </script>
+    </dd>
+<?php endif;?>

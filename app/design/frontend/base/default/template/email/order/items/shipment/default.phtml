@@ -1,0 +1,63 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php 
+$_item = $this->getItem(); 
+// echo $_item->getdate();
+// exit;
+//$_order = $this->getItem()->getOrder();
+?>
+
+ <tr style="border-width:1px;border-style:solid;border-color:#A6A6A6;border-top-width:0px;border-left-width:0px;" >
+  <td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;border-width:1px;border-style:solid;border-color:#A6A6A6;border-right-width:0px;border-bottom-width:0px;" ><div class="tableData center" style="Margin:0;color:#000;line-height:1.5;padding-top:5px;padding-bottom:5px;padding-right:5px;padding-left:5px;font-size:12px;text-align:center;" ><?php echo $_item->getData("serial_number_bhishoom") ?></div></td>
+   <td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;border-width:1px;border-style:solid;border-color:#A6A6A6;border-right-width:0px;border-bottom-width:0px;" ><div class="tableData" style="Margin:0;color:#000;text-align:left;line-height:1.5;padding-top:5px;padding-bottom:5px;padding-right:5px;padding-left:5px;font-size:12px;" >
+        
+             
+            <?php echo $this->htmlEscape($_item->getName()) ?>
+            <?php if ($this->getItemOptions()): ?></br>
+            <dl style="margin:0; padding:0;">
+                <?php foreach ($this->getItemOptions() as $option): ?>
+				<?php if($option['label'] == 'Product Detail'){continue;} ?>
+                <strong><em><?php echo $option['label'].":" ?></em></strong>
+				<?php echo nl2br($option['value']) ?>
+				&nbsp;&nbsp;
+                <?php endforeach; ?>
+            </dl>
+            <?php endif; ?>
+            <?php $addInfoBlock = $this->getProductAdditionalInformationBlock(); ?>
+            <?php if ($addInfoBlock) :?>
+                <?php echo $addInfoBlock->setItem($_item->getOrderItem())->toHtml(); ?>
+            <?php endif; ?>
+            <?php echo $this->escapeHtml($_item->getDescription()) ?>
+        </div>
+ 
+    </td>
+	 <td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;border-width:1px;border-style:solid;border-color:#A6A6A6;border-right-width:0px;border-bottom-width:0px;" ><div class="tableData center" style="Margin:0;color:#000;line-height:1.5;padding-top:5px;padding-bottom:5px;padding-right:5px;padding-left:5px;font-size:12px;text-align:center;" ><?php echo $_item->getQty()*1 ?></div></td>
+  
+   
+</tr>
+
+		

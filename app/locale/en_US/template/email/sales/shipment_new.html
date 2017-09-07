@@ -1,0 +1,288 @@
+<!--@subject Your Bhishoom.com order (#{{var order.increment_id}}) shipment confirmation @-->
+<!--@vars
+{"store url=\"\"":"Store Url",
+"var logo_url":"Email Logo Image Url",
+"var logo_alt":"Email Logo Image Alt",
+"htmlescape var=$order.getCustomerName()":"Customer Name",
+"var store.getFrontendName()":"Store Name",
+"store url=\"customer/account/\"":"Customer Account Url",
+"var shipment.increment_id":"Shipment Id",
+"var order.increment_id":"Order Id",
+"var order.billing_address.format('html')":"Billing Address",
+"var payment_html":"Payment Details",
+"var order.shipping_address.format('html')":"Shipping Address",
+"var order.shipping_description":"Shipping Description",
+"layout handle=\"sales_email_order_shipment_items\" shipment=$shipment order=$order":"Shipment Items Grid",
+"block type='core/template' area='frontend' template='email/order/shipment/track.phtml' shipment=$shipment order=$order":"Shipment Track Details",
+"var comment":"Shipment Comment"}
+@-->
+<!--@styles
+body,td { color:#2f2f2f; font:11px/1.35em Verdana, Arial, Helvetica, sans-serif; }
+@-->
+<style type="text/css">
+
+
+
+
+
+
+body { Margin: 0; padding: 0; min-width: 100%; background-color: #ffffff; }
+table { border-spacing: 0; font-family: sans-serif; color: #333333; }
+td { padding: 0; }
+img { border: 0; }
+.wrapper { width: 100%; table-layout: fixed; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+.webkit { max-width: 600px; }
+.outer { Margin: 0 auto; width: 100%; max-width: 600px; }
+.full-width-image img { width: 100%; max-width: 600px; height: auto; }
+.headerImg img{ width:100%; height:auto}
+.headerImg .firstHeader td{ background:#302e2f}
+.headerImg .secondHeader td{ background:#c71b1b}
+.inner { padding: 10px; }
+p { Margin: 0; color: #000; font-size: 12px; text-align: left; line-height:1.5 }
+a { color: #c71b1b; text-decoration: underline; }
+.h1 { font-size: 18px; font-weight: bold; Margin-bottom: 10px; }
+.h2 { font-size: 15px; font-weight: bold; Margin-bottom: 5px; }
+/* One column layout */
+.one-column .contents { text-align: left; }
+.one-column p { font-size: 12px; Margin-bottom: 10px; }
+/*Two column layout*/
+.two-column { text-align: center; font-size: 0; }
+.two-column .column { width: 100%; max-width: 300px; display: inline-block; vertical-align: top; }
+.contents { width: 100%; }
+.two-column .contents { font-size: 12px; text-align: left; }
+.two-column img { width: 100%; max-width: 280px; height: auto; }
+.two-column .text { padding-top: 10px; }
+.tagText { padding: 5px; font-weight: bold; text-align: center; position: relative; color: #fff; font-size: 14px }
+.main-box table tbody tr td .wrapper .webkit table tbody tr td .tagLine { font-size: 16px; color: #000; }
+.titleAddress { font-weight: bold; padding: 5px; font-size: 12px; color: #fff; background: #c71b1b; text-align: center; }
+.tableHead { font-weight: bold; padding: 5px; font-size: 12px; color: #fff; background: #c71b1b; text-align: center }
+.tableData { padding: 5px; font-size: 12px; }
+.center { text-align: center }
+.right { text-align: right }
+.titleAddress.bgBlack { background: #000 }
+.trackNumber { background-color: #e90003; border: 3px solid #d40003; border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 10px; color: #fff; display: inline-block; font-size: 20px; font-weight: bold; line-height: 1; margin: 10px 0; padding: 5px 15px; text-align: center; display:inline-block; }
+.socialLink { padding: 5px 5px; display: inline-block }
+.socialIcon { width: 25px; height: 25px }
+.footerMsz { font-size: 10px; text-align: center; padding: 0 5px; color: #666; }
+.footerTitle { text-align: center; font-size: 12px; padding: 0px; color: #999; line-height:35px; vertical-align:top }
+.full-width-image img { width: 100%; max-width: 600px; height: auto; }
+.midHr { height: 1px; background: #999; margin: 10px 0px; width: 100%; border: none }
+.tableborder { border: 1px solid #A6A6A6; border-top: 0px; border-left: 0px; }
+.tableborder tr td { border: 1px solid #A6A6A6; border-right: 0px; border-bottom: 0px; }
+.tableborder tr { border: 1px solid #A6A6A6; border-top: 0px; border-left: 0px; }
+.orderNumber { margin-left: 30px; display: inline-block; font-weight: normal; }
+.footerMsz a { color: #666; text-decoration: none }
+.footerMsz a span{ color: #666; text-decoration: none }
+.linkfooter{ color: #666; text-decoration: none }
+.divider10{ height:10px; width:100%; display:block; clear:both}
+.divider20{ height:20px; width:100%; display:block; clear:both}
+.divider40{ height:40px; width:100%; display:block; clear:both}
+.linkNormal{ color:#000; text-decoration:none;}
+.linkNormal span{ color:#000; text-decoration:none;}
+.linkNormal:hover{ color:rgba(180,0,3,1.00); text-decoration:underline}
+.linkNormal:hover span{ color:rgba(180,0,3,1.00); text-decoration:underline}
+.linkBlue{ color:rgba(0,47,231,1.00); text-decoration:underline}
+.linkBlue span{ color:rgba(0,47,231,1.00); text-decoration:underline}
+.oneWord{ white-space:nowrap}
+.ulPointer{ margin:0;}
+.ulPointer li{ padding-bottom:5px; }
+.bgGray{ background:rgba(233,233,233,1.00); color:#000}
+.tableDataSpace tr td{ padding:5px; vertical-align:top}
+.addressTable{}
+.addressTable .inner{}
+.addressTable .divider5{ width:5px}
+.addressTable tr td{ vertical-align:top}
+/*Media Queries*/
+@media screen and (min-width: 401px) and (max-width: 620px) {
+}
+
+@media screen and (max-width: 400px) {
+.tagText { font-size: 10px; text-transform: capitalize }
+p { font-size: 12px }
+.tableData { font-size: 12px }
+.h2 { font-size: 12px; margin-bottom: 5px }
+.titleAddress { padding: 5px }
+.footerTitle { font-size: 14px }
+.socialIcon { width: 25px; height: 25px }
+.tableHead { font-size: 12px }
+.inner { padding: 5px }
+}
+
+</style>
+<!--[if (gte mso 9)|(IE)]>
+    <style type="text/css">
+        table {border-collapse: collapse !important;}
+    </style>
+    <![endif]-->
+
+<body style="margin: 0;padding-top: 0;padding-bottom: 0;padding-right: 0;padding-left: 0;min-width: 100%;background-color: #ffffff;padding: 0;">
+<center class="wrapper" style="width:100%;table-layout:fixed;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
+  <div class="webkit" style="max-width:600px;"> 
+    
+    <!--[if (gte mso 9)|(IE)]>
+<table width="600" align="center" style="border-spacing:0;font-family:sans-serif;color:#333333;" >
+<tr>
+<td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;" >
+<![endif]-->
+    <table class="outer" align="center" style="border-spacing: 0;font-family: sans-serif;color: #333333;margin: 0 auto;width: 100%;max-width: 600px;">
+      <tr>
+        <td style="padding: 0;"><table width="100%" class="headerImg" align="center" style="border-spacing: 0;font-family: sans-serif;color: #333333;">
+            <tr class="firstHeader">
+              <td width="22%" style="padding: 0;background: #302e2f;"><a href="http://www.bhishoom.com" style="color: #c71b1b;text-decoration: underline;"><img src="{{skin url="images/headerOrderConfirmation_01.jpg"}}" alt="Bhishoom" style="border: 0;width: 100%;height: auto;"></a></td>
+              <td width="78%" colspan="4" style="padding: 0;background: #302e2f;"><img src="{{skin url="images/headerOrderShipped_02.jpg"}}" alt="Shipping Confirmation Tracking code and details" style="border: 0;width: 100%;height: auto;"></td>
+            </tr>
+            <tr class="secondHeader">
+              <td width="22%" style="padding: 0;background: #c71b1b;"><a href="http://www.bhishoom.com/shop/mobile-case.html" style="color: #c71b1b;text-decoration: underline;"><img src="{{skin url="images/headerMobileCase.jpg"}}" alt="Mobile Case" style="border: 0;width: 100%;height: auto;"></a></td>
+              <td width="21.33%" style="padding: 0;background: #c71b1b;"><a href="http://www.bhishoom.com/shop/mobile-skin.html" target="_blank" style="color: #c71b1b;text-decoration: underline;"><img src="{{skin url="images/headerMobileSkin.jpg"}}" alt="Mobile Skin" style="border: 0;width: 100%;height: auto;"></a></td>
+              <td width="13.83%" style="padding: 0;background: #c71b1b;"><a href="http://www.bhishoom.com/shop/t-shirt/him.html" target="_blank" style="color: #c71b1b;text-decoration: underline;"><img src="{{skin url="images/headerTShirt.jpg"}}" alt="T shirt" style="border: 0;width: 100%;height: auto;"></a></td>
+              <td width="21.84%" style="padding: 0;background: #c71b1b;"><a href="http://www.bhishoom.com/shop/laptop-skin/custom-size.html" target="_blank" style="color: #c71b1b;text-decoration: underline;"><img src="{{skin url="images/headerLaptopSkin.jpg"}}" alt="Laptop Skin" style="border: 0;width: 100%;height: auto;"></a></td>
+              <td width="21%" style="padding: 0;background: #c71b1b;"><a href="http://www.bhishoom.com/shop/tablet-skin/all-tabs.html" target="_blank" style="color: #c71b1b;text-decoration: underline;"><img src="{{skin url="images/headerTabletSkin.jpg"}}" alt="Tablet Skin" style="border: 0;width: 100%;height: auto;"></a></td>
+            </tr>
+          </table></td>
+      </tr>
+      <tr>
+        <td style="padding-top: 0;padding-bottom: 0;padding-right: 0;padding-left: 0;padding: 0;"><table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-spacing: 0;font-family: sans-serif;color: #333333;">
+            <tbody>
+              <tr>
+                <td class="inner" style="padding-top:10px;padding-bottom:10px;padding-right:10px;padding-left:10px;" ><p style="Margin:0;color:#000;font-size:12px;text-align:left;line-height:1.5;text-transform: capitalize;">Hey <strong>{{htmlescape var=$order.getCustomerFirstname()}}</strong>, </p>
+                  <p style="Margin:0;color:#000;font-size:12px;text-align:left;line-height:1.5;" >We have shipped following item(s) for order #{{var order.increment_id}} on {{var dateAndTime}}</p></td>
+              </tr>
+            </tbody>
+          </table></td>
+      </tr>
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+      <tr>
+        <td class="inner" style="padding-top:10px;padding-bottom:10px;padding-right:10px;padding-left:10px;" ><table width="100%" border="0" class="addressTable" cellspacing="0" cellpadding="0" style="border-spacing:0;font-family:sans-serif;color:#333333;" >
+            <tbody>
+              <tr>
+			     <td width="49%" style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;vertical-align:top;" ><div class="column">
+                    <table width="100%" style="border-spacing:0;font-family:sans-serif;color:#333333;" >
+                      <tr>
+                        <td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;vertical-align:top;" ><p  class="titleAddress" style="Margin:0;line-height:1.5;font-weight:bold;padding-top:5px;padding-bottom:5px;padding-right:5px;padding-left:5px;font-size:12px;color:#fff;background-color:#c71b1b;background-image:none;background-repeat:repeat;background-position:top left;background-attachment:scroll;text-align:center;" >DELIVERY ADDRESS</p></td>
+                      </tr>
+                      <tr>
+                        <td class=" contents" style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;width:100%;vertical-align:top;" ><p class="divider10" style="Margin:0;color:#000;font-size:12px;text-align:left;line-height:1.5;height:10px;width:100%;display:block;clear:both;" ></p>
+                         
+                         <p style="Margin:0;color:#000;font-size:12px;text-align:left;line-height:1.5;" >
+						   {{var order.shipping_address.format('html')}}
+						   </p></td>
+                      </tr>
+                    </table>
+                  </div>
+				</td>
+			   <td class="divider5" style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;vertical-align:top;width:5px;" ></td>
+               
+				   <td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;vertical-align:top;" ><div class="column">
+                    <table width="100%" style="border-spacing:0;font-family:sans-serif;color:#333333;" >
+                      <tr>
+                        <td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;vertical-align:top;" ><p  class="titleAddress bgBlack" style="Margin:0;line-height:1.5;font-weight:bold;padding-top:5px;padding-bottom:5px;padding-right:5px;padding-left:5px;font-size:12px;color:#fff;background-color:#c71b1b;background-image:none;background-repeat:repeat;background-position:top left;background-attachment:scroll;text-align:center;" >TRACKING DETAILS</p></td>
+                      </tr>
+                      <tr>
+                        <td class="inner contents" style="padding-top:10px;padding-bottom:10px;padding-right:10px;padding-left:10px;width:100%;vertical-align:top;" ><p class="divider10" style="Margin:0;color:#000;font-size:12px;text-align:left;line-height:1.5;height:10px;width:100%;display:block;clear:both;" ></p>
+                          <p class="center" style="Margin:0;color:#000;font-size:12px;line-height:1.5;text-align:center;" >Click on the below tracking no. to check status </p>
+                          <p class="center" style="Margin:0;color:#000;font-size:12px;line-height:1.5;text-align:center;" > <span class="trackNumber" style="background-color:#e90003;border-width:3px;border-style:solid;border-color:#d40003;border-radius:10px;-moz-border-radius:10px;-webkit-border-radius:5px;color:#fff;display:inline-block;font-size:12px;font-weight:bold;line-height:1;margin-top:10px;margin-bottom:10px;margin-right:0;margin-left:0;padding-top:5px;padding-bottom:5px;padding-right:10px;padding-left:10px;text-align:center;" >{{block type='core/template' area='frontend' template='email/order/shipment/track.phtml' shipment=$shipment order=$order}}</span></p></td>
+                      </tr>
+                    </table>
+                  </div>
+				 </td>
+				 
+				  </tr>
+            </tbody>
+          </table>
+          <hr class="midHr" style="height:1px;background-color:#999;background-image:none;background-repeat:repeat;background-position:top left;background-attachment:scroll;margin-top:10px;margin-bottom:10px;margin-right:0px;margin-left:0px;width:100%;border-style:none;" /></td>
+      </tr>	  
+	  
+	  
+	      
+      <tr>
+       {{layout handle="sales_email_order_shipment_items" shipment=$shipment order=$order}}
+      </tr>
+       
+	  
+	  
+      <tr>
+        <td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;" ><table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-spacing:0;font-family:sans-serif;color:#333333;" >
+            <tbody>
+              <tr>
+                <td class="inner" style="padding-top:10px;padding-bottom:10px;padding-right:10px;padding-left:10px;" ><p style="Margin:0;color:#000;font-size:12px;text-align:left;line-height:1.5;" > <strong>YOUR ESTIMATED DELIVERY DATE:</strong> {{var expected_delivery_date}}<br />
+                    <br />
+                  </p>
+                  <p style="Margin:0;color:#000;font-size:12px;text-align:left;line-height:1.5;" >We request you to kindly track your order and in case you are not available at your shipping address please assign someone to receive it on your behalf. </p></td>
+              </tr>
+            </tbody>
+          </table></td>
+      </tr>	  
+	  
+	  
+	  
+	  
+	  
+	  
+      <tr>
+        <td style="padding-top: 0;padding-bottom: 0;padding-right: 0;padding-left: 0;padding: 0;"><table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-spacing: 0;font-family: sans-serif;color: #333333;">
+            <tbody>
+               <tr>
+                <td class="inner" style="padding: 10px;"><img src="{{skin url="images/All-Logo1.jpg"}}" style="display: block;max-width: 840px;max-height: 187px;width: 100%;border: 0;" alt="bhisboom logo"></td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="height:1px;margin-top:20px;margin-bottom:20px;margin-right:0;margin-left:0;width:100%;"></div></td>
+      </tr>
+     
+     
+     <tr>
+        <td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;" ><table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-spacing:0;font-family:sans-serif;color:#333333;" >
+            <tbody>
+              <tr>
+                <td class="inner" style="padding-top:10px;padding-bottom:10px;padding-right:10px;padding-left:10px;" ><p style="Margin:0;color:#000;font-size:12px;text-align:left;line-height:1.5;" >For any query & assistance, feel free to contact us at <a href="mailto:support@bhishoom.com" target="_blank" class="linkBlue" style="color:rgba(0,47,231,1.00);text-decoration:underline;" >support@bhishoom.com</a> or call <span class="oneWord" style="white-space:nowrap;" >+91 96100 55577</span></p>
+                  <p style="Margin:0;color:#000;font-size:12px;text-align:left;line-height:1.5;" > Thank you for shopping with <a class="linkBlue" href="http://bhishoom.com/" target="_blank" style="color:rgba(0,47,231,1.00);text-decoration:underline;" >Bhishoom.com</a> & hope to see you soon.</p>
+                  <p style="Margin:0;color:#000;font-size:12px;text-align:left;line-height:1.5;" ><strong>Bhishoom Team</strong></p></td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="height:45px;width:100%;" ></div>
+          <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" bgcolor="#302e2f" style="border-spacing:0;font-family:sans-serif;color:#333333;" >
+            <tbody>
+              <tr>
+                <td height="5px" style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;" ></td>
+              </tr>
+              <tr>
+                <td align="center" style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;" ><p class="center" style="Margin:0;color:#000;font-size:12px;line-height:1.5;text-align:center;" ><span class="footerTitle " style="text-align:center;font-size:12px;padding-top:0px;padding-bottom:0px;padding-right:0px;padding-left:0px;color:#999;line-height:35px;vertical-align:top;" >Stay Connected :</span><a  class="socialLink" href="https://www.facebook.com/bhishoom/" target="_blank" style="color:#c71b1b;text-decoration:underline;padding-top:5px;padding-bottom:5px;padding-right:5px;padding-left:5px;display:inline-block;" ><img src="{{skin url="images/facebook.jpg"}}" class="socialIcon"  alt="Bhishoom" style="border-width:0;width:25px;height:25px;" /></a> <a class="socialLink" href="https://twitter.com/GoBhishoom" target="_blank" style="color:#c71b1b;text-decoration:underline;padding-top:5px;padding-bottom:5px;padding-right:5px;padding-left:5px;display:inline-block;" ><img class="socialIcon" src="{{skin url="images/twitter.jpg"}}"  alt="Bhishoom" style="border-width:0;width:25px;height:25px;" /></a> <a class="socialLink" href="https://www.instagram.com/bhishoom/" target="_blank" style="color:#c71b1b;text-decoration:underline;padding-top:5px;padding-bottom:5px;padding-right:5px;padding-left:5px;display:inline-block;" ><img class="socialIcon" src="{{skin url="images/instagram.jpg"}}"  alt="Bhishoom" style="border-width:0;width:25px;height:25px;" /></a> <a class="socialLink" href="https://plus.google.com/103185033650068301501" target="_blank" style="color:#c71b1b;text-decoration:underline;padding-top:5px;padding-bottom:5px;padding-right:5px;padding-left:5px;display:inline-block;" ><img class="socialIcon" src="{{skin url="images/google_plus.jpg"}}"  alt="Bhishoom" style="border-width:0;width:25px;height:25px;" /></a></p></td>
+              </tr>
+              <tr>
+                <td height="5px" style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;" ></td>
+              </tr>
+            </tbody>
+          </table>
+          <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000" style="border-spacing:0;font-family:sans-serif;color:#333333;" >
+            <tbody>
+              <tr>
+                <td height="5px" style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;" ></td>
+              </tr>
+              <tr>
+                <td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;" ><div class="footerMsz" style="font-size:10px;text-align:center;padding-top:0;padding-bottom:0;padding-right:5px;padding-left:5px;color:#666;" > This is an auto generated message, please do not reply to this e-mail. </div></td>
+              </tr>
+              <tr>
+                <td height="5px" style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;" ></td>
+              </tr>
+            </tbody>
+          </table></td>
+      </tr>
+    </table>
+    <!--[if (gte mso 9)|(IE)]>
+</td>
+</tr>
+</table>
+<![endif]--> 
+    
+  </div>
+</center>
+</body>

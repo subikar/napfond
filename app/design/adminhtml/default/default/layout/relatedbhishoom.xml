@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<layout>
+    <relatedbhishoom_adminhtml_relatedbhishoomform_index>
+        <update handle="relatedbhishoom_relatedbhishoomform_index"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="relatedbhishoomform" template="relatedbhishoom/relatedbhishoomform.phtml"/>
+        </reference>
+    </relatedbhishoom_adminhtml_relatedbhishoomform_index>
+</layout>

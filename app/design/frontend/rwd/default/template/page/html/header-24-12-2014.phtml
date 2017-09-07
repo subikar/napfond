@@ -1,0 +1,381 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/**
+ * @var Mage_Page_Block_Html_Header $this
+ */
+
+ 
+?>
+<?php /* ?>
+<div class="header-language-background">
+    <div class="header-language-container">
+        <div class="store-language-container">
+            <?php echo $this->getChildHtml('store_language') ?>
+        </div>
+
+        <?php echo $this->getChildHtml('currency_switcher') ?>
+
+        <p class="welcome-msg"><?php echo $this->getChildHtml('welcome') ?> <?php echo $this->getAdditionalHtml() ?></p>
+    </div>
+</div>
+<?php */ ?>
+<script type="text/javascript">
+var redirectUrl = '<?php echo $this->helper('core/url')->getCurrentUrl();?>';
+var URL = '<?php echo $this->getUrl(); ?>';
+</script>
+
+<script type="text/javascript">
+function show_reg()
+{
+	if(document.getElementById("old_user").style.display == "block" || document.getElementById("old_user").style.display == "")
+	{	
+		document.getElementById("old_user").style.display = "none";
+		document.getElementById("new_register").style.display = "block";
+	}
+}
+function show_login()
+{
+	if(document.getElementById("new_register").style.display == "block" || document.getElementById("new_register").style.display == "")
+	{	
+		document.getElementById("new_register").style.display = "none";
+		document.getElementById("old_user").style.display = "block";
+	}
+}
+</script>
+<header id="header">
+ <div class="container"> 
+  <div  class="page-header">
+   <div class="page-header-container">
+    <div class="row">
+     <div class="col-md-2">
+      <a class="logo" href="<?php echo $this->getUrl('') ?>"> 
+       <img src="<?php echo $this->getLogoSrc() ?>" alt="<?php echo $this->getLogoAlt() ?>" class="large" /> 
+       <img src="<?php echo $this->getLogoSrcSmall() ?>" alt="<?php echo $this->getLogoAlt() ?>" class="small" /> 
+      </a>
+     </div>
+     <?php echo $this->getChildHtml('topLinks') ?>     
+     <!-- Search -->
+     <div class="col-md-4 pull-right">
+      <div id="header-search" class="skip-content"> <?php echo $this->getChildHtml('topSearch') ?> </div>      
+      <!-- Skip Links -->      
+      <div class="skip-links"> 
+       <a href="#header-nav" class="skip-link skip-nav"> <span class="icon"></span> <span class="label"><?php echo $this->__('Menu'); ?></span> </a> 
+       <a href="#header-search" class="skip-link skip-search"> <span class="icon"></span> <span class="label"><?php echo $this->__('Search'); ?></span> </a> 
+       <!--<a href="#header-account" class="skip-link skip-account"> <i class="fa fa-user fa-lg"></i> -->
+		<?php if(Mage::getSingleton('customer/session')->isLoggedIn()):    ?>
+       	 <a title="Log Out" class="login-link skip-account" href="<?php echo $this->getUrl('').'customer/account/logout/';?>"><i class="fa fa-sign-out fa-lg"></i></a>
+         <a title="My Account" class="login-link skip-account myHead" href="<?php echo $this->getUrl('').'customer/account/';?>"><i class="fa fa-user fa-lg"></i></a>
+        <?php else: ?>
+         <a title="Log In" class="login-link skip-account" id="alogin" href="javascript:void(0)"><i class="fa fa-sign-in fa-lg"></i></a>             
+      	<?php endif; ?>
+		<?php /* ?><span class="label"><?php echo $this->__('Account'); ?></span> <?php */ ?></a> 
+        <!-- Cart -->
+       <div class="header-minicart"> <?php echo $this->getChildHtml('minicart_head'); ?> </div>
+       <div class="store-language-container"></div>
+      </div>
+     </div>
+    </div>
+   </div> 
+  </div>
+ </div>   
+</header>
+
+<div class="nav-section">
+ <div class="container">
+  <div class="page-header">     
+   <!-- Navigation -->  
+   <div id="header-nav" class="skip-content nav-collapse collapse">    
+    <?php //echo $this->getChildHtml('topMenu') ?>   
+    <?php
+	$rootcatId= '24';
+	$categories = Mage::getModel('catalog/category')->getCategories($rootcatId);	
+	echo  get_categories($categories); ?>
+   </div>    
+   <!-- Account -->
+    <?php /*?><div id="header-account1" class="skip-content"><!--<i class="fa fa-user fa-lg"></i>--> <?php //echo $this->getChildHtml('topLinks') ?> 
+    <div class="links">
+     <ul>      
+      <?php if(Mage::getSingleton('customer/session')->isLoggedIn()):    ?>
+        <li class="first"><a title="Log Out" href="<?php echo $this->getUrl('customer/account/logout/');?>"><i class="fa fa-user fa-lg"></i></a></li>
+      <?php else: ?>
+        <li class="first"><a title="Log In" href="<?php echo $this->getUrl('customer/account/login/');?>"><i class="fa fa-user fa-lg"></i></a></li>
+      <?php endif; ?>
+     </ul>
+    </div>   
+   </div><?php */?>
+    
+    <!-- Cart --> 
+    
+    <!-- <div id="header-cart" class="skip-content">
+            <div class="mini-cart">
+                <div class="menu-wrapper">
+                    <div class="menu cart-menu">
+                        <div class="empty">Your cart is empty.</div>
+                    </div>
+                </div>
+            </div>
+        </div> --> 
+  </div>
+ </div>
+</div>
+<?php echo $this->getChildHtml('topContainer'); ?> 
+
+<?php
+$j=0;
+function  get_categories($categories) {
+  $array= '<ul class="nav">';
+  $i=0;	
+  foreach($categories as $category) {
+	  if($i>5){break;}
+	$cat = Mage::getModel('catalog/category')->load($category->getId());
+	$count = $cat->getProductCount();
+	$array .= '<li class="dropdown">'.
+	'<a href="' . Mage::getUrl($cat->getUrlPath()). '">
+	  <span>' .$category->getName() . "</span>
+	 </a>\n";
+	 if($category->getName() == 'Laptop Skin')
+	 {
+		 $array .= get_dropdown($category->getName());
+		 $i++;
+		 continue;
+	 }
+	 else if($category->getName() == 'T-Shirt')
+	 {
+		 $array .= get_dropdown1($category->getName());
+		 $i++;
+		 continue;
+	 }
+	 else if($category->hasChildren()) {
+		 $children = Mage::getModel('catalog/category')->getCategories($category->getId());
+	  	 $array .= get_subcategories($children, $category->getName());
+	 }	
+	 $array .= '</li>';
+	 $i++;
+  }
+  return  $array . '</ul>';
+}
+
+function get_subcategories($sub_categories, $parent) {	
+  $array= '<ul class="dropdown-menu mega-menu">';
+  foreach($sub_categories as $sub_category) {
+	$sub_cat = Mage::getModel('catalog/category')->load($sub_category->getId());
+	$array .= '<li class="mega-menu-column">'.
+	 '<a href="' . Mage::getUrl($sub_cat->getUrlPath()). '"><span>' .$sub_category->getName() . "</span></a>\n";
+	 
+	 if($sub_category->hasChildren()) {
+		 $children1 = Mage::getModel('catalog/category')->getCategories($sub_category->getId());
+	  	 $array .= get_sub_categories($children1);
+	 }	  
+    $array .= '</li>';
+  }
+  return  $array . '</ul>';
+}
+
+function get_sub_categories($sub_categories1) {
+  $array= '<ul class="sub-cat mega-menu">';
+  foreach($sub_categories1 as $sub_category1) {
+	$sub_cat1 = Mage::getModel('catalog/category')->load($sub_category1->getId());
+	$array .= '<li class="mega-menu-column">'.
+	 '<a href="' . $sub_cat1->getUrl(). '"><span>' .$sub_category1->getName() . "</span></a>\n";
+	 
+	 if($sub_category1->hasChildren()) {
+		 $children2 = Mage::getModel('catalog/category')->getCategories($sub_category1->getId());
+	  	 $array .= get_sub_categories($children2);
+	 }		 
+    $array .= '</li>';
+  }
+  return  $array . '</ul>';
+}
+
+function get_dropdown($drop_cat_name) {	 	
+  $array= '<ul class="dropdown-menu mega-menu lapi">';
+  $array .= '<li class="mega-menu-column lapi-brand">';
+  $array .= '<div class="chooseBrand">
+   <h2 class="more_case">
+    <span>Narrow down your search by adding your device detail.
+   </h2>';
+	 $qry = "select dt.id, dt.type_id, dt.brand_name, dd.select1, dd.select2 FROM drop_device as dd, drop_data as dt where dd.id = dt.type_id and dd.device_name = '".$drop_cat_name."' and dt.active = 1 Group BY dt.brand_name";
+	 $connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+     $rowsArray = $connection->fetchAll($qry); 
+	 $rowArray = $connection->fetchRow($qry);	 
+	 $array .= '<div class="bselect">
+      <select name="bselect" id="bselects" onchange="get_device(this.value, '.$rowArray['type_id'].', \''.$rowArray['select2'].'\')">
+       <option value="0">'.$rowArray['select1'].'</option>';
+	   foreach($rowsArray as $rowsArray1)
+   	   { 
+         $array .= '<option value="'.$rowsArray1['brand_name'].'">'.$rowsArray1['brand_name'].'</option>';       
+	   }
+      $array .= '</select>
+     </div>     
+     <div class="bvalues">
+      <select name="bvalues" id="bvalues">
+       <option value="0">'.$rowArray['select2'].'</option>
+      </select>
+     </div>
+     <div class="brandBtn" style="display:none;">
+      <input class="button" type="button" name="view_cases" id="view_cases" value="View Cases" onclick="chk_validate();" />
+     </div>';   
+    $array .= '</li>';
+ 
+ // return  $array . '</ul>';
+  
+  return '  <ul class="dropdown-menu mega-menu lapi lapi-tab" style=""><li class="mega-menu-column lapi-brand">
+  <div class="chooseBrand">
+   <div class="bselect">
+   <h2 class="more_case"> Laptop Size</h2>
+      <ul class="inch-size">
+        <li><a href=""><img src="'.Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN).'frontend/rwd/default/images/outline-laptop.png"> <span>11"</span></a></li>
+        <li><a href=""><img src="'.Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN).'frontend/rwd/default/images/outline-laptop.png"> <span>13"</span></a></li>
+        <li><a href=""><img src="'.Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN).'frontend/rwd/default/images/outline-laptop.png"> <span>15"</span></a></li>
+        <li><a href=""><img src="'.Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN).'frontend/rwd/default/images/outline-laptop.png"> <span>17"</span></a></li>
+       
+      </ul>
+     </div>
+     <div class="bselect">
+   <h2 class="more_case"> Tablet Size</h2>
+      <ul class="inch-size tab-size">
+        <li><a href=""><img src="'.Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN).'frontend/rwd/default/images/outline-tab.png"> <span>7"</span></a></li>
+        <li><a href=""><img src="'.Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN).'frontend/rwd/default/images/outline-tab.png"> <span>8"</span></a></li>
+        <li><a href=""><img src="'.Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN).'frontend/rwd/default/images/outline-tab.png"> <span>9"</span></a></li>
+        <li><a href=""><img src="'.Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN).'frontend/rwd/default/images/outline-tab.png"> <span>10"</span></a></li>
+       
+      </ul>
+     </div>
+     <div style="display:none;" class="brandBtn">
+      <input type="button" onclick="chk_validate();" value="View Cases" id="view_cases" name="view_cases" class="button">
+     </div>
+
+     </div>
+     </li>
+     </ul>';
+  
+}
+function get_dropdown1($drop_cat_name) {	 	
+  $array= '<ul class="dropdown-menu mega-menu lapi">';
+  $array .= '<li class="mega-menu-column lapi-brand">';
+  $array .= '<div class="chooseBrand">
+   <h2 class="more_case">
+    <span>Narrow down your search by adding your device detail.
+   </h2>';
+	 $qry = "select dt.id, dt.type_id, dt.brand_name, dd.select1, dd.select2, dd.select3 FROM drop_device as dd, drop_data as dt where dd.id = dt.type_id and dd.device_name = '".$drop_cat_name."' and dt.active = 1 Group BY dt.brand_name";
+	 $connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+     $rowsArray = $connection->fetchAll($qry); 
+	 $rowArray = $connection->fetchRow($qry);	 
+	 $array .= '<div class="bselect">
+      <select name="bselect" id="bselects" onchange="get_device(this.value, '.$rowArray['type_id'].', \''.$rowArray['select2'].'\')">
+       <option value="0">'.$rowArray['select1'].'</option>';
+	   foreach($rowsArray as $rowsArray1)
+   	   { 
+         $array .= '<option value="'.$rowsArray1['brand_name'].'">'.$rowsArray1['brand_name'].'</option>';       
+	   }
+      $array .= '</select>
+     </div>     
+     <div class="bvalues">
+      <select name="bvalues" id="bvalues" onchange="get_device1(this.value, '.$rowArray['type_id'].', \''.$rowArray['select3'].'\')">
+       <option value="0">'.$rowArray['select2'].'</option>
+      </select>
+     </div>
+	  <div class="bvalues">
+      <select name="bvalues1" id="bvalues1">
+       <option value="0">'.$rowArray['select3'].'</option>
+      </select>
+     </div>
+     <div class="brandBtn" style="display:none;">
+      <input class="button" type="button" name="view_cases" id="view_cases" value="View Cases" onclick="chk_validate();" />
+     </div>';   
+    $array .= '</li>';
+ 
+  return  $array . '</ul>';
+}
+?>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('quicklogin/tinybox.js') ?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('quicklogin/quicklogin.js') ?>"></script>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+    jQuery(".dropdown").hover(
+        function() { jQuery('.dropdown-menu', this).fadeIn("fast");
+        },
+        function() { jQuery('.dropdown-menu', this).fadeOut("fast");
+    });
+});
+
+function get_device(val, type_id, select2)
+{
+   var dataString = "get_device="+val+"&type_id="+type_id+"&select="+select2;
+   var reloadurl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'admin_cat.php'?>';
+	//Element.show('loadingmask');
+	new Ajax.Request(reloadurl, {
+	method: 'post',
+	parameters: dataString,
+	onComplete: function(transport) {
+	//Element.hide('loadingmask');
+	document.getElementById("bvalues").innerHTML = transport.responseText;
+	}
+	});
+}
+function get_device1(val, type_id, select3)
+{
+   var dataString = "get_device="+val+"&type_id="+type_id+"&select="+select3;
+   var reloadurl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'admin_cat.php'?>';
+	//Element.show('loadingmask');
+	new Ajax.Request(reloadurl, {
+	method: 'post',
+	parameters: dataString,
+	onComplete: function(transport) {
+	//Element.hide('loadingmask');
+	document.getElementById("bvalues1").innerHTML = transport.responseText;
+	}
+	});
+}
+function chk_validate()
+{
+	var bselect = document.getElementById("bselects").value;
+	var bvalue = document.getElementById("bvalues").value;
+	
+	if(bselect == 0)
+	{
+		alert("Please Select First Value");
+		return false;
+	}
+	if(bvalue == 0)
+	{
+		alert("Please Select Second Value");
+		return false;
+	}
+	
+	var dataString = "get_bselect="+bselect+"&get_bvalue="+bvalue;
+    var reloadurl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'admin_cat.php'?>';
+	//Element.show('loadingmask');
+	new Ajax.Request(reloadurl, {
+	method: 'post',
+	parameters: dataString,
+	onComplete: function(transport) {
+	window.location.href = transport.responseText;
+	}
+	});
+}
+</script>
+

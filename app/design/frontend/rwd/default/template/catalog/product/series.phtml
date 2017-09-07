@@ -1,0 +1,258 @@
+<div id="categories">
+
+
+
+  <?php $_category  = $this->getCurrentCategory()?>
+  <?php //print_r($_maincategorylisting); ?>
+  <?php 
+ 
+ 
+   $params = Mage::app()->getRequest()->getParams();
+ 	
+    $laptabtexturedskin = $params['laptabtexturedskin'];
+    $texturedPrdStr = $params['texturedPrdStr'];
+	if($texturedPrdStr!='' && $laptabtexturedskin!='')
+	$textureQueryString = '?texturedPrdStr='.$texturedPrdStr.'&laptabtexturedskin='.$laptabtexturedskin;
+
+
+		$query_string = $_SERVER['QUERY_STRING'];
+		$case_style = Mage::app()->getRequest()->getParam('case_style');
+		
+		if($case_style!=''){
+
+			$attributeDetails = Mage::getSingleton("eav/config")->getAttribute("catalog_product", 'case_style');
+			$caseStyleoptionValue = $attributeDetails->getSource()->getOptionText($case_style);		
+			$caseStyleHeadingtext = " For ".$caseStyleoptionValue;
+			if($textureQueryString!=''){
+			$queryStringParaString = $textureQueryString."&".$query_string;
+			$textureQueryString = '';
+			}
+			else
+			$queryStringParaString = "?".$query_string;
+		}
+
+
+ 
+ $catName1 = $this->getCurrentCategory()->getName();
+ 
+ $currentCatPath = $this->getCurrentCategory()->getPath();
+ $currentCatId = $this->getCurrentCategory()->getId();
+ 
+ $currentCatPathArr = explode('/',$currentCatPath);
+ 
+ $mediaDir = Mage::getBaseDir('media');
+ 
+if(in_array(24,$currentCatPathArr))
+$chkIndx = 0;
+elseif(in_array(25,$currentCatPathArr))
+$chkIndx = 1;	
+ 
+ 
+ if(in_array(3,$currentCatPathArr) || in_array(66,$currentCatPathArr))//For mobile case series order
+ {
+		$file = fopen($mediaDir."/series-order/mobile-case-series.csv","r");
+
+		while(! feof($file))
+		  {		
+				$seriesOrder = fgetcsv($file);
+				if($seriesOrder[$chkIndx] == $currentCatId)
+					break;	
+		  }
+
+		fclose($file);	  
+ }
+ elseif(in_array(34,$currentCatPathArr) || in_array(75,$currentCatPathArr))//For mobile case series order
+ {
+		$file = fopen($mediaDir."/series-order/mobile-skin-series.csv","r");
+
+		while(! feof($file))
+		  {		
+				$seriesOrder = fgetcsv($file);
+				if($seriesOrder[$chkIndx] == $currentCatId)
+					break;	
+		  }
+
+		fclose($file);	  
+ }
+ elseif(in_array(532,$currentCatPathArr) || in_array(478,$currentCatPathArr))//For mobile case series order
+ {  
+		$file = fopen($mediaDir."/series-order/tablet-skin-series.csv","r");
+
+		while(! feof($file))
+		  {		
+				$seriesOrder = fgetcsv($file);
+				if($seriesOrder[$chkIndx] == $currentCatId)
+					break;	
+		  }
+
+		fclose($file);	  
+ }
+ 
+ $seriesOrderArr = explode('|',$seriesOrder[3]);
+
+ 
+ $device = ' device';
+ if($catName1 == 'T-Shirt'){$device = '';}		
+ $subcategories = Mage::getModel('catalog/category')->getCategories($_category->getId(), 0, false, false,false);
+ $series_value = array();$series_val_id = array();$series_entity = array();
+ $connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+ foreach ($subcategories as $subcategory){
+	 
+	 
+    $subcat_id = $subcategory->getEntityId();	
+    $select = $connection->query("SELECT `value`, `value_id` FROM `catalog_category_entity_varchar` WHERE `entity_id` = '".$subcat_id."' AND `attribute_id` = 139 AND  `entity_type_id` = 3");
+	$rowsArray = $select->fetch(); 
+	$series_value = trim(strtolower($rowsArray['value']));
+	$series_val_id[] = $rowsArray['value_id'];
+	$series_entity[$series_value] .= $subcat_id;
+	$series_entity[$series_value] .= ',';
+ }
+ $s_count = count($series_entity);
+
+?>
+  <div class="bs-example">
+    <div id="after-cr-design">
+      <h1>Which <?php echo $catName1.$device;?> you possess?</h1>
+    </div>
+    <div id="accordion1" class="panel-group"> 
+      <?php
+  $j=0;
+  
+  
+  foreach($seriesOrderArr as $key1 => $value1)
+  {
+	
+	  $key = trim(strtolower($value1));
+	  $value = $series_entity[$key];
+	  if($value != ''){
+	  $vals = explode(",",$value);	
+ 	  
+    ?>
+      <div class="panel panel-default">
+        <?php if($key != ''){?>
+        <div class="panel-heading">
+          <h4 class="panel-title"> <a data-target="#panel<?php echo $j;?>" data-toggle="modal" href="javascript:void(0);"><?php echo $key;?></a><span class="arrow"></span> </h4>
+        </div>
+        <?php }?>
+        <div class="modal fade" id="panel<?php echo $j;?>">
+          <div class="panel-body modal-dialog modal-lg"> 
+            <ul class="large-block-grid-6 medium-block-grid-3 small-block-grid-1 row row-xs text-center">
+              <?php
+		   for($i=0;$i<count($vals);$i++)
+		   {
+		      $cat_id = $vals[$i];		   
+              $s_cat = Mage::getModel('catalog/category')->load($cat_id);			  
+			  $top_cat_id = Mage::getModel('catalog/layer')->getCurrentCategory()->getParentCategory()->getParentCategory()->getId();	
+			  
+			  if(trim($s_cat->getName()) == '')
+			    continue;
+			  if($top_cat_id == 24)
+			  {		  
+			  ?>
+              <li class="col-xs-6 col-sm-4 col-md-3 "> <a href="<?php echo $s_cat->getUrl();?><?php echo $textureQueryString;?><?php echo $queryStringParaString;?>" title="<?php echo $s_cat->getName();?>"> <img src="<?php  echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>series/<?php echo $s_cat->getUrlKey();?>/cover.png" alt="<?php echo $s_cat->getName();?>"> <span><?php echo $s_cat->getName();?></span> </a> </li>
+              <?php } 
+			  else
+			  { ?>
+              <li class="col-xs-6 col-sm-4 col-md-3 "> <a href="<?php echo Mage::helper('cms/page')->getPageUrl(12)?>?catid=<?php echo $cat_id?>" title="<?php echo $s_cat->getName();?>"> <img src="<?php  echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>series/<?php echo $s_cat->getUrlKey();?>/cover.png" alt="<?php echo $s_cat->getName();?>"> <span><?php echo $s_cat->getName();?></span> </a> </li>
+              <?php    }
+	 		}
+		   ?>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <?php 
+   $j++; }
+   }?>
+    </div>
+  </div>
+  <div class="chooseBrand">
+    <h2 class="more_case"> Unable to Find Your Device? <br class="hidden-xs" />
+	Search Mobile Skins From Over 200 Models </h2>
+    <?php $first_top_cat = $this->getCurrentCategory()->getParentCategory()->getName();
+ 
+	 $qry = "select dd.select1, dd.select2 FROM drop_device as dd where dd.device_name = 'Mobile Case'";
+     $rowsArray = $connection->fetchAll($qry); 
+	 $rowArray = $connection->fetchRow($qry);
+	 $categories = Mage::getModel('catalog/category')->load(34);
+ 	 $categories = $categories->getChildren();
+ 	 $categories = explode(',',$categories);
+  ?>
+    <div class="row">
+      <div class="col-xs-10 col-xs-offset-1 col-md-8 col-md-offset-2 ">
+        <div class="row row-xs">
+          <div class="bselect col-sm-5">
+            <select class="form-control" name="bselect" id="bselect" onchange="get_device(this.value, '<?php echo $rowArray['select2'];?>')">
+              <option value="0"><?php echo $rowArray['select1'];?></option>
+              <?php
+	foreach($categories as $category)
+   	{ 
+		$_category = Mage::getModel('catalog/category')->load($category);
+	
+	?>
+              <option value="<?php echo $_category->getId();?>"><?php echo $_category->getName();?></option>
+              <?php
+	}?>
+            </select>
+          </div>
+          <div class="dividerSm20 hidden-sm hidden-md hidden-lg"></div>
+          <div class="bvalue col-sm-5">
+            <select class="form-control"  name="bvalue" id="bvalue">
+              <option value="0"><?php echo $rowArray['select2'];?></option>
+            </select>
+          </div>
+          <div class="dividerSm20 hidden-sm hidden-md hidden-lg"></div>
+          <div class="brandBtn col-sm-2">
+            <input class="button btn btn-block" type="button" name="view_cases" id="view_cases" value="Go" onclick="chk_validate();" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="device-load1" id="device-load1" style="display:none;"><img src="<?php echo $this->getSkinUrl('images/ajax-loader.gif');?>"/></div>
+  </div>
+</div>
+<script type="text/javascript">
+function get_device(val, select2)
+{
+	document.getElementById("device-load1").style.display = 'block';
+   var dataString = "get_device="+val+"&select="+select2;
+   var reloadurl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'admin_cat.php'?>';
+	//Element.show('loadingmask');
+	new Ajax.Request(reloadurl, {
+	method: 'post',
+	parameters: dataString,
+	onComplete: function(transport) {
+	//Element.hide('loadingmask');
+	document.getElementById("device-load1").style.display = 'none';
+	document.getElementById("bvalue").innerHTML = transport.responseText;
+	}
+	});
+}
+function chk_validate()
+{
+	var bselect = document.getElementById("bselect").value;
+	var bvalue = document.getElementById("bvalue").value;
+	
+	if(bselect == 0)
+	{
+		alert("Please Select First Value");
+		return false;
+	}
+	if(bvalue == 0)
+	{
+		alert("Please Select Second Value");
+		return false;
+	}
+	
+	var dataString = "get_bselect="+bselect+"&get_bvalue="+bvalue;
+    var reloadurl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'admin_cat.php'?>';
+	//Element.show('loadingmask');
+	new Ajax.Request(reloadurl, {
+	method: 'post',
+	parameters: dataString,
+	onComplete: function(transport) {
+	window.location.href = transport.responseText;
+	}
+	});
+}
+</script>

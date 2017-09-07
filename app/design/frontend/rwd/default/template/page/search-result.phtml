@@ -1,0 +1,70 @@
+<?php $cat_id = Mage::getModel('catalog/layer')->getCurrentCategory()->getId();
+if($cat_id == 358){$style = "style=\"max-width:970px !important;\"";}else{$style = "style=\"max-width:1200px !important;\"";}
+?>
+<!DOCTYPE html>
+
+<!--[if lt IE 7 ]> <html lang="en" id="top" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" id="top" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" id="top" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" id="top" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" id="top" class="no-js"> <!--<![endif]-->
+
+<head>
+<?php echo $this->getChildHtml('head') ?>
+
+<script type="text/javascript">
+styleArray = new Array();
+styleLinkArray = new Array();
+skinByGenere = 'no';
+</script>
+
+<style type="text/css">
+#filter-bar-1{	
+display:none;
+}
+</style>
+</head>
+<body<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?>>
+<?php echo $this->getChildHtml('after_body_start') ?>
+<div class="wrapper">
+    <?php echo $this->getChildHtml('global_notices') ?>
+    <div class="page">
+        <?php echo $this->getChildHtml('header') ?>
+        <?php echo $this->getChildHtml('global_messages') ?>
+        <div class="container" id="prod-list"  <?php echo $style;?> >
+        <div class="main-container col1-layout">
+            <div class="main">
+                <?php echo $this->getChildHtml('breadcrumbs') ?>
+				
+				<div id="filter_loading_image" style="background-color: #ffffff;height: 100%;left: 0;opacity: 0.5;position: absolute;width: 100%;z-index: 13555;display:none;padding-top: 1%;"><img src="<?php echo $this->getSkinURL("images/opc-ajax-loader.gif")?>" style="margin:0 auto"/></div>	
+				
+<div class="col-main">   				
+<div class="designerdesc">
+    <div class="designer-title">
+        <span>Bhishoom</span>  <strong>search</strong> results  for "<?php echo $this->getRequest()->getParam('search_query_text')?>"</div>
+		
+		
+     
+    
+ </div>		 </div>				
+				
+				
+				<?php if ($_leftContent = $this->getChildHtml('left_first')): ?>
+					 <?php echo $_leftContent;   ?>  
+                <?php endif; ?>				
+				
+                <div class="col-main">                    
+                    <?php echo $this->getChildHtml('content') ?>
+                </div>
+            </div>
+        </div>
+        </div>
+        <?php echo $this->getChildHtml('footer_before') ?>
+        <?php echo $this->getChildHtml('footer') ?>
+        <?php echo $this->getChildHtml('global_cookie_notice') ?>
+        <?php echo $this->getChildHtml('before_body_end') ?>
+    </div>
+</div>
+<?php echo $this->getAbsoluteFooter() ?>
+</body>
+</html>

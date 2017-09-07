@@ -1,0 +1,118 @@
+<?php
+/**
+ * iKantam
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade InstagramConnect to newer
+ * versions in the future.
+ *
+ * @category    Ikantam
+ * @package     Ikantam_InstagramConnect
+ * @copyright   Copyright (c) 2012 iKantam LLC (http://www.ikantam.com)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+?>
+<div class="content-header">
+<table cellspacing="0">
+    <tr>
+        <td style="width:50%;"><h3 class="icon-head head-products"><?php echo Mage::helper('catalog')->__('New Instagram Images') ?></h3></td>
+        <td class="a-right">
+            <?php echo $this->getButtonsHtml() ?>
+        </td>
+    </tr>
+</table>
+</div>
+
+<div>
+	<?php foreach ($this->getImages() as $image) : ?>
+		<div class="item" id="<?php echo $image->getImageId(); ?>" style="width:150px;margin:10px; text-align:center; float:left;">
+			<p><?php echo $this->htmlEscape($image->getTag()); ?></p>
+			<img src="<?php echo $image->getThumbnailUrl(); ?>" />
+			<br>
+			<a style="float:left;" onclick="return approveImage('<?php echo $image->getImageId(); ?>');" href="javascript:void(0);">Approve</a>
+			<a style="float:right;" onclick="return deleteImage('<?php echo $image->getImageId(); ?>');" href="javascript:void(0);">Delete</a>	
+		</div>
+	<?php endforeach; ?>
+	<div style="clear:both;"></div>
+</div>
+
+<script>
+
+ function approveImage(id) {
+ 	new Ajax.Request("<?php echo $this->getUrl('instagramconnect/adminhtml_instagramconnect/approve'); ?>", {
+                parameters: {isAjax: 1, method: 'POST', id: id},
+                onSuccess: function(transport) {
+                    try{
+                        response = eval('(' + transport.responseText + ')');
+                    } catch (e) {
+                        response = {};
+                    }
+                    if (response.success) {
+						$(id).remove();
+                    } else {
+                        var msg = response.error_messages;
+                        if (typeof(msg)=='object') {
+                            msg = msg.join("\n");
+                        }
+                        if (msg) {
+                            $('review-please-wait').hide();
+                            alert(msg);
+                            return;
+                        }
+                    }
+                    $('review-please-wait').hide();
+                    alert('<?php echo $this->jsQuoteEscape($this->__('Unknown Error. Please try again later.')); ?>');
+                    return;
+                },
+                onFailure: function(){
+                    alert('<?php echo $this->jsQuoteEscape($this->__('Server Error. Please try again.')) ?>');
+                    $('review-please-wait').hide();
+                }
+            });
+            return false;
+        }
+
+
+function deleteImage(id) {
+ 	new Ajax.Request("<?php echo $this->getUrl('instagramconnect/adminhtml_instagramconnect/delete'); ?>", {
+                parameters: {isAjax: 1, method: 'POST', id: id},
+                onSuccess: function(transport) {
+                    try{
+                        response = eval('(' + transport.responseText + ')');
+                    } catch (e) {
+                        response = {};
+                    }
+                    if (response.success) {
+						$(id).remove();
+                    } else {
+                        var msg = response.error_messages;
+                        if (typeof(msg)=='object') {
+                            msg = msg.join("\n");
+                        }
+                        if (msg) {
+                            $('review-please-wait').hide();
+                            alert(msg);
+                            return;
+                        }
+                    }
+                    $('review-please-wait').hide();
+                    alert('<?php echo $this->jsQuoteEscape($this->__('Unknown Error. Please try again later.')); ?>');
+                    return;
+                },
+                onFailure: function(){
+                    alert('<?php echo $this->jsQuoteEscape($this->__('Server Error. Please try again.')) ?>');
+                    $('review-please-wait').hide();
+                }
+            });
+            return false;
+        }
+        
+</script>

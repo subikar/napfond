@@ -1,0 +1,82 @@
+<?php 
+/**
+ * GoMage Social Connector Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use
+ * @version      Release: 1.0
+ * @since        Class available since Release 1.0
+ */ 
+?>
+<?php 	
+	$services = Mage::helper('gomage_social')->getServices($this->getPlace());	 
+?>
+<?php if (count($services)): ?>
+	<?php if ($this->getUsedList()): ?><li class="last gs-list"><?php endif; ?>
+	<ul class="gs-login <?php if(Mage::getConfig()->getModuleConfig('Enterprise_Enterprise' )): ?>gs-login-ee<?php endif; ?> gs-login-<?php echo $this->getPlace() ?>">
+		<?php 
+			end($services);
+			$last_key = key($services);
+		?>
+		<?php foreach ($services as $key => $value): ?>
+		
+<?php switch ($key): ?>
+<?php case (GoMage_Social_Model_Type::FACEBOOK): ?>
+	<li <?php if ($key == $last_key): ?>class="last"<?php endif; ?>>
+		<?php if ($this->getLoginType('facebook') == GoMage_Social_Model_Adminhtml_System_Config_Source_Login_Type::BUTTON): ?>			
+			<fb:login-button scope="email" onlogin="gomageSocialFBCheckLogin()" v="2"></fb:login-button>
+		<?php else: ?>
+			<a href="#" onclick="gomageSocialFBLogin();return false;" title="<?php echo $this->getText('facebook') ?>">
+				<?php if (($image = $this->getImage('facebook')) && ($this->getLoginType('facebook') == GoMage_Social_Model_Adminhtml_System_Config_Source_Login_Type::IMAGE)): ?>
+					<img src="<?php echo $image ?>" alt="<?php echo $this->getText('facebook') ?>" />
+				<?php else: ?>
+					<?php echo $this->getText('facebook') ?>
+				<?php endif; ?>
+			</a>
+		<?php endif; ?>
+	</li>
+<?php break; ?>
+<?php case (GoMage_Social_Model_Type::GOOGLE): ?>
+	<li <?php if ($key == $last_key): ?>class="last"<?php endif; ?>>
+		<?php if ($this->getLoginType('google') == GoMage_Social_Model_Adminhtml_System_Config_Source_Login_Type::BUTTON): ?>
+			<button class="g-signin"
+		        data-scope="https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email"
+		        data-requestvisibleactions="http://schemas.google.com/AddActivity"
+		        data-clientId="<?php echo Mage::getStoreConfig('gomage_social/google/id') ?>"
+		        data-accesstype="offline"
+		        data-callback="gomageSocialGSigninCallback"        
+				data-approvalprompt="force"		
+		        data-cookiepolicy="single_host_origin"
+		        data-height="short">
+		    </button>
+		<?php else: ?>
+			<a href="<?php echo $this->getUrl('gomage_social/google/login', array('_secure' => true, 'gs_url' => Mage::helper('core')->urlEncode(Mage::helper('core/url')->getCurrentUrl())));  ?>" title="<?php echo $this->getText('google') ?>">
+				<?php if (($image = $this->getImage('google')) && ($this->getLoginType('google') == GoMage_Social_Model_Adminhtml_System_Config_Source_Login_Type::IMAGE)): ?>
+					<img src="<?php echo $image ?>" alt="<?php echo $this->getText('google') ?>" />
+				<?php else: ?>
+					<?php echo $this->getText('google') ?>
+				<?php endif; ?>
+			</a>
+		<?php endif; ?>
+	</li>	
+<?php break; ?>
+<?php case (GoMage_Social_Model_Type::LINKEDIN): ?>	
+	<li <?php if ($key == $last_key): ?>class="last"<?php endif; ?>>
+		<a href="<?php echo $this->getUrl('gomage_social/linkedin/login', array('_secure' => true, 'gs_url' => Mage::helper('core')->urlEncode(Mage::helper('core/url')->getCurrentUrl())));  ?>" title="<?php echo $this->getText('linkedin') ?>">
+			<?php if (($image = $this->getImage('linkedin')) && ($this->getLoginType('linkedin') == GoMage_Social_Model_Adminhtml_System_Config_Source_Login_Type::IMAGE)): ?>
+				<img src="<?php echo $image ?>" alt="<?php echo $this->getText('linkedin') ?>" />
+			<?php else: ?>
+				<?php echo $this->getText('linkedin') ?>
+			<?php endif; ?>
+		</a>
+	</li>
+<?php break; ?>
+<?php endswitch; ?>
+				
+		<?php endforeach; ?>
+	</ul>
+	<?php if ($this->getUsedList()): ?></li><?php endif; ?>
+<?php endif; ?>

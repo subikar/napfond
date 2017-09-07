@@ -1,0 +1,167 @@
+<?php
+/**
+ * GoMage Product Designer Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use/
+ * @version      Release: 1.0.0
+ * @since        Available since Release 1.0.0
+ */
+?>
+<?php $image = $this->getImage(); ?>
+<?php if($image && $image->getId()): ?>
+    <?php $settings = $this->getSettings();?>
+    <div id="textsize" style="width:<?php echo $this->getImageWidth(); ?>px; height: 20px; padding: 5px 0;">
+        <strong><?php echo $this->__('Width'); ?>:</strong> <input type="text" name="areaWidth" id="areaWidth" value="0" class="input-text" /> <?php echo $this->__('px'); ?>&nbsp;&nbsp;&nbsp;
+        <strong><?php echo $this->__('Height'); ?>:</strong> <input type="text" name="areaHeight" id="areaHeight" class="input-text" value="0" /> <?php echo $this->__('px'); ?>
+    </div>
+    <div id="image_wrapper" style="width:<?php echo $this->getImageWidth(); ?>px;height:<?php echo $this->getImageHeight(); ?>px;background: url(<?php echo $this->getImage()->getUrl(); ?>) no-repeat center;border:1px solid #ccc">
+        <canvas id="image" width="<?php echo $this->getImageWidth(); ?>" height="<?php echo $this->getImageHeight(); ?>"></canvas>
+    </div>
+
+    <div id="controls" style="width:<?php echo $this->getImageWidth(); ?>px; height: 20px; padding: 5px 0;">
+        <strong><?php echo $this->__('Design Area used initial Cost'); ?>:</strong>
+        <input type="text" id="initialPrice" name="initialPrice" value="<?php echo $settings['ip'] ? $settings['ip'] : 0; ?>" class="input-text" />
+        <button class="pd-btn" type="button" id="save_settings"><?php echo Mage::helper('gomage_designer')->__('Save settings') ?></button>
+    </div>
+
+    <script type="text/javascript">
+        setTimeout(function(){
+            var imgW = '<?php echo $this->getImageWidth(); ?>';
+            var imgH = '<?php echo $this->getImageHeight(); ?>'
+
+            var canvas = new fabric.Canvas('image');
+            window.w = canvas;
+            canvas.selection = false;
+
+            var area = new fabric.Rect({
+                top:    <?php echo $settings["t"]; ?>,
+                left:   <?php echo $settings["l"]; ?>,
+                width:  <?php echo $settings["w"]; ?>,
+                height: <?php echo $settings["h"]; ?>,
+                fill: '#C0C0C0',
+                opacity: 0.7
+            });
+
+            $('areaWidth').value = <?php echo $settings["w"] ?>;
+            $('areaHeight').value = <?php echo $settings["h"] ?>;
+
+            canvas.add(area);
+            area.lockRotation = true;
+            area.hasRotatingPoint = false;
+            canvas.setActiveObject(area);
+            canvas.renderAll();
+
+            canvas.observe('object:moving', function(e) {
+                var obj = e.target;
+                var l = obj.get('left');
+                var t = obj.get('top');
+                var w = Math.round(obj.getWidth() / 2);
+                var h = Math.round(obj.getHeight() / 2);
+
+                if (l < w) {
+                    obj.set({left : w});
+                }
+
+                if (t < h) {
+                    obj.set({top : h});
+                }
+
+                if (l > canvas.getWidth() - w) {
+                    obj.set({left : canvas.getWidth() - w});
+                }
+
+                if (t > canvas.getHeight() - h) {
+                    obj.set({top : canvas.getHeight() - h});
+                }
+            });
+
+            canvas.observe('object:scaling', function(e){
+                setTimeout(function(){
+                    var obj = e.target;
+                    var w = Math.round(obj.getWidth());
+                    var h = Math.round(obj.getHeight());
+                    $('areaWidth').value = w;
+                    $('areaHeight').value = h;
+                }, 100)
+            });
+
+
+
+            var onTextChangeSize = function(element){
+                element.observe('keyup', function() {
+                    setTimeout(function(){
+                        var widthOrHeight = false;
+                        var validateValue = false;
+                        switch(element.id) {
+                            case 'areaWidth' : {
+                                widthOrHeight = 'width';
+                                validateValue = parseInt(imgW);
+                                break;
+                            }
+                            case 'areaHeight' : {
+                                widthOrHeight = 'height';
+                                validateValue = parseInt(imgH);
+                                break;
+                            }
+                            default: {
+                                widthOrHeight = false;
+                                break;
+                            }
+                        }
+                        if(typeof widthOrHeight === 'string') {
+                            var value = parseInt(element.value);
+                            if (value > validateValue) {
+                                element.value = validateValue;
+                                value = validateValue;
+                            }
+                            area.set(widthOrHeight, value);
+                            canvas.renderAll();
+                        }
+                    }, 1000);
+                });
+            };
+            $$('#areaWidth, #areaHeight').each(onTextChangeSize);
+
+            $('save_settings').observe('click', function() {
+                var data = {};
+                data['t'] = Math.round(area.getTop());
+                data['l'] = Math.round(area.getLeft());
+                data['w'] = Math.round(area.getWidth());
+                data['h'] = Math.round(area.getHeight());
+                data['image_id'] = '<?php echo $this->getImageId(); ?>';
+                data['ip'] = $('initialPrice').value;
+
+                new Ajax.Request('<?php echo $this->getSaveUrl() ?>', {
+                    method:'post',
+                    parameters: data,
+                    onSuccess: function(transport) {
+                        var response = transport.responseText.evalJSON();
+                        if (response.status == 'success') {
+                            if (window.designAreaPopup.galleryObject && window.designAreaPopup.updateImageFile) {
+                                window.designAreaPopup.galleryObject.updateImageDesignArea(
+                                    window.designAreaPopup.updateImageFile, Object.toJSON(data)
+                                );
+                            }
+                            if (window.designAreaPopup.target != undefined) {
+                                var state = window.designAreaPopup.target.previous();
+                                if (state != undefined && state.type == 'checkbox') {
+                                    state.checked = true;
+                                }
+                            }
+                            window.parent.Windows.closeAll();
+                        } else if (response.status == 'error') {
+                            console.log(response.message);
+                        }
+                    },
+                    onFailure: function() {
+                        alert('Something went wrong...');
+                    }
+                });
+            });
+        }, 100);
+    </script>
+<?php endif; ?>

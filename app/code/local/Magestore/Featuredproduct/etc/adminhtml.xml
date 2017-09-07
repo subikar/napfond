@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<config>
+	<menu>
+		<featuredproduct module="featuredproduct">
+			<title>Featured Product</title>
+			<sort_order>71</sort_order>               
+			<children>
+				<managefeaturedproduct module="featuredproduct">
+					<title>Manage Featured Product</title>
+					<sort_order>0</sort_order>
+					<action>featuredproduct/adminhtml_featuredproduct</action>
+				</managefeaturedproduct>
+			</children>
+		</featuredproduct>
+	</menu>
+	<acl>
+		<resources>
+			<all>
+				<title>Allow Everything</title>
+			</all>
+			<admin>
+				<children>
+					<system>
+						<children>
+							<config>
+								<children>
+									<featuredproduct translate="title">
+										<title>Featured Product</title>
+										<sort_order>50</sort_order>
+									</featuredproduct>									
+								</children>
+							</config>
+						</children>
+					</system>
+					<Magestore_Featuredproduct>
+						<title>Featuredproduct Module</title>
+						<sort_order>10</sort_order>
+					</Magestore_Featuredproduct>
+				</children>
+			</admin>
+		</resources>
+	</acl>
+</config>

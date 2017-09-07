@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * iKantam
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade InstagramConnect to newer
+ * versions in the future.
+ *
+ * @category    Ikantam
+ * @package     Ikantam_InstagramConnect
+ * @copyright   Copyright (c) 2012 iKantam LLC (http://www.ikantam.com)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+-->
+<config>
+	<modules>
+		<Ikantam_InstagramConnect>
+			<version>1.0.0.2</version>
+		</Ikantam_InstagramConnect>
+	</modules>
+  
+	<frontend>
+		<layout>
+			<updates>
+				<instagramconnect>
+		  			<file>ikantam/instagram_connect.xml</file>
+				</instagramconnect>
+	  		</updates>
+		</layout>
+	</frontend>
+  
+	<global>
+		<helpers>
+	  		<instagramconnect>
+				<class>Ikantam_InstagramConnect_Helper</class>
+	  		</instagramconnect>
+		</helpers>
+	
+		<blocks>
+			<catalog>
+				<rewrite>
+					<product_gallery>Ikantam_InstagramConnect_Block_Catalog_Product_Gallery</product_gallery>
+					<product_view_media>Ikantam_InstagramConnect_Block_Catalog_Product_View_Media</product_view_media>
+				</rewrite>
+			</catalog>
+	
+			<instagramconnect>
+				<class>Ikantam_InstagramConnect_Block</class>
+	  		</instagramconnect>
+		</blocks>
+	
+		<models>
+			<instagramconnect>
+				<class>Ikantam_InstagramConnect_Model</class>
+				<resourceModel>instagramconnect_resource</resourceModel>
+	 		 </instagramconnect>
+
+			<instagramconnect_resource>
+				<class>Ikantam_InstagramConnect_Model_Resource</class>
+				<entities>
+		  			<instagramimage>
+						<table>ikantam_instagramconnect_image</table>
+		  			</instagramimage>
+				</entities>
+	  		</instagramconnect_resource>
+		</models>
+	
+		<resources>
+	  		<instagramconnect_setup>
+				<setup>
+		  			<module>Ikantam_InstagramConnect</module>
+		  			<class>Ikantam_InstagramConnect_Model_Resource_Setup</class>
+				</setup>
+	  		</instagramconnect_setup>
+		</resources>
+	
+	</global>
+	
+  	<admin>
+		<routers>
+	  		<instagramconnect>
+				<use>admin</use>
+				<args>
+		  			<module>Ikantam_InstagramConnect</module>
+		  			<frontName>instagramconnect</frontName>
+				</args>
+	  		</instagramconnect>
+		</routers>
+  	</admin>
+  	
+  	<adminhtml>
+		<menu>
+	  		<instagramconnect module="instagramconnect">
+				<title>Instagram</title>
+				<sort_order>100</sort_order>
+				<children>
+		  			<instagramconnectbackend module="instagramconnect">
+						<title>New Images</title>
+						<sort_order>10</sort_order>
+						<action>instagramconnect/adminhtml_instagramconnect/new</action>
+		  			</instagramconnectbackend>
+		  
+		  			<instagramconnectbackend2 module="instagramconnect">
+						<title>Approved Images</title>
+						<sort_order>20</sort_order>
+						<action>instagramconnect/adminhtml_instagramconnect/approved</action>
+		  			</instagramconnectbackend2>
+
+				</children>
+	  		</instagramconnect>
+		</menu>
+		
+		<acl>
+	  		<resources>
+				<all>
+		  			<title>Allow Everything</title>
+				</all>
+				
+				<admin>
+		 			<children>
+						<instagramconnect translate="title" module="instagramconnect">
+					  		<title>Instagram</title>
+					  		<sort_order>1000</sort_order>
+					  		<children>
+				  				<instagramconnectbackend translate="title">
+									<title>Manage Instagram Images</title>
+				  				</instagramconnectbackend>
+					  		</children>
+						</instagramconnect>
+		  			</children>
+				</admin>
+	  		</resources>
+		</acl>
+		
+		<layout>
+	  		<updates>
+				<instagramconnect>
+		  			<file>ikantam/instagram_connect.xml</file>
+				</instagramconnect>
+	  		</updates>
+		</layout>
+  	</adminhtml>
+</config> 

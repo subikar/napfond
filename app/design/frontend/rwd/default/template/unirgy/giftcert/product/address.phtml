@@ -1,0 +1,207 @@
+<?php
+/**
+ * Unirgy_Giftcert extension
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @category   Unirgy
+ * @package    Unirgy_Giftcert
+ * @copyright  Copyright (c) 2008 Unirgy LLC
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+
+/**
+ * @category   Unirgy
+ * @package    Unirgy_Giftcert
+ * @author     Boris (Moshe) Gurevich <moshe@unirgy.com>
+ */
+?>
+<?php
+/* @var $this Unirgy_Giftcert_Block_Product_Type */
+$_amountConfig = $this->getAmountConfig('ugiftcert_amount_config');
+$hideForm = false;
+$physical = $this->getAllowPhysical();
+$recipientAddressOptions = $this->getRecipientOptions();
+$virtual = $this->getAllowVirtual() || ($physical == false); // we make virtual delivery the default
+$senderAddressOptions = $this->getSenderOptions();
+
+$showRecipForm = ($recipientAddressOptions[0] == Unirgy_Giftcert_Model_Source_Address::CUSTOM);
+$showSenderForm = ($senderAddressOptions[0] == Unirgy_Giftcert_Model_Source_Address::CUSTOM);
+
+$both = $physical && $virtual;
+
+$addressOptions = $this->getAddressOptions();
+
+?>
+<div class="ugc-form-data" id="ugc-form-data">
+    <?php if ($both): // both email and mail are allowed, display toggles ?>
+        <?php $hideForm = true; ?>
+        <div id="ugc-select-delivery-type" class="ugc-form-data-part ugc-delivery-type">
+            <?php
+            $checked = isset($_amountConfig['delivery_type']) ? $_amountConfig['delivery_type'] : null;
+            ?>
+            <div class="delivery_type_cont">
+                <label for="delivery_type_virtual">
+                    <input type="radio" name="delivery_type" id="delivery_type_virtual" value="virtual"
+                           class="delivery_type validate-one-required-by-name"<?php echo ($checked == 'virtual') ? 'checked="checked"' : ''; ?>>&nbsp;<?php echo $this->__("Send gift certificate electronically"); ?>
+                </label>
+            </div>
+            <div class="delivery_type_cont">
+                <label for="delivery_type_physical">
+                    <input type="radio" name="delivery_type" id="delivery_type_physical" value="physical"
+                           class="delivery_type validate-one-required-by-name"<?php echo ($checked == 'physical') ? 'checked="checked"' : ''; ?>>&nbsp;<?php echo $this->__("Mail to physical address"); ?>
+                </label>
+            </div>
+        </div>
+    <?php elseif ($physical): ?>
+        <input type="hidden" name="delivery_type" value="physical">
+    <?php else : ?>
+        <input type="hidden" name="delivery_type" value="virtual">
+    <?php endif; ?>
+    <div id="ugc-address-form" style="<?php echo $hideForm ? 'display : none;' : ''; ?>"
+         class="ugc-form-data-part ugc-address-form">
+        <ul class="form-list ugc-form-list validate-recipient-address">
+            <?php if(count($recipientAddressOptions) > 1):?>
+                <li class="ugc-form-item virtual physical">
+                    <label for="recipient_use_address"><?php echo $this->__("Send to:");?></label><br>
+                    <select id="recipient_use_address" name="recipient_use_address">
+                        <?php foreach ($recipientAddressOptions as $v): ?>
+                            <option value="<?php echo $v; ?>"><?php echo $this->htmlEscape($addressOptions[$v]); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </li>
+            <?php elseif($recipientAddressOptions[0] != Unirgy_Giftcert_Model_Source_Address::CUSTOM): ?>
+                <input class="always-on" type="hidden" name="recipient_use_address" value="<?php echo $recipientAddressOptions[0];?>"/>
+            <?php endif;?>
+            <?php if ($showRecipForm): ?>
+                <li class="ugc-form-item virtual physical">
+                    <label for="recipient_name" class="required"><em>*</em><?php echo $this->__("Recipient's Name:"); ?></label><br>
+                    <input type="text" id="recipient_name" name="recipient_name" class="recipient input-text required-entry"
+                           style="width:100%"
+                        <?php echo isset($_amountConfig['recName']) ? 'value="' . $_amountConfig['recName'] . '"' : ''; ?>/>
+                </li>
+
+                <?php if ($virtual): ?>
+                    <li class="ugc-form-item virtual">
+                        <label for="recipient_email"
+                               class="required"><em>*</em><?php echo $this->__("Recipient's Email Address:") ?>
+                        </label><br>
+                        <input type="text" id="recipient_email" name="recipient_email"
+                               class="input-text validate-email required recipient_email recipient required-entry"
+                               style="width:100%"
+                            <?php echo isset($_amountConfig['recEmail']) ? 'value="' . $_amountConfig['recEmail'] . '"'
+                                : ''; ?>/>
+                    </li>
+                <?php endif; ?>
+
+                <?php if ($physical): ?>
+                    <li class="ugc-form-item physical">
+                        <label for="recipient_address"
+                               class="required"><em>*</em><?php echo $this->__("Recipient's Mailing Address:") ?>
+                        </label><br>
+                        <textarea cols="10" rows="3" id="recipient_address" name="recipient_address"
+                                  class="textarea required recipient_address recipient required-entry"
+                                  style="width:100%"><?php echo isset($_amountConfig['recAddr']) ? $_amountConfig['recAddr']
+                                : ''; ?></textarea>
+                    </li>
+                <?php endif; ?>
+            <?php endif; ?>
+            <?php if (count($senderAddressOptions) > 1): ?>
+                <li class="ugc-form-item virtual physical">
+                    <label for="sender_use_address"><?php echo $this->__("Send from:");?></label><br>
+                    <select id="sender_use_address" name="sender_use_address">
+                        <?php foreach ($senderAddressOptions as $k => $v): ?>
+                            <option value="<?php echo $v; ?>"><?php echo $this->htmlEscape($addressOptions[$v]); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </li>
+            <?php elseif ($senderAddressOptions[0] != Unirgy_Giftcert_Model_Source_Address::CUSTOM): ?>
+                <input class="always-on" type="hidden" name="sender_use_address" value="<?php echo $senderAddressOptions[0]; ?>"/>
+            <?php endif; ?>
+            <?php if ($showSenderForm): ?>
+                <li class="ugc-form-item virtual physical">
+                    <label for="sender_name"><?php echo $this->__("Your Name:"); ?></label><br>
+                    <input type="text" id="sender_name" name="sender_name" class="input-text sender_name sender"
+                           style="width:100%"
+                        <?php echo isset($_amountConfig['sender_name']) ? 'value="' . $_amountConfig['sender_name'] . '"'
+                            : ''; ?>/>
+                </li>
+
+                <?php if ($virtual): ?>
+                    <li class="ugc-form-item virtual">
+                        <label for="sender_email"><?php echo $this->__("Your Email Address:") ?></label><br>
+                        <input type="text" id="sender_email" name="sender_email"
+                               class="input-text validate-email sender_email sender"
+                               style="width:100%"
+                            <?php echo isset($_amountConfig['sender_email']) ? 'value="' . $_amountConfig['sender_email'] . '"'
+                                : ''; ?>/>
+                    </li>
+                <?php endif; ?>
+
+                <?php if ($physical): ?>
+                    <li class="ugc-form-item physical">
+                        <label for="sender_address"><?php echo $this->__("Sender's Mailing Address:") ?></label><br>
+                        <textarea cols="10" rows="3" id="sender_address" name="sender_address"
+                                  class="textarea sender_address sender"
+                                  style="width:100%"><?php echo isset($_amountConfig['sender_address'])
+                                ? $_amountConfig['sender_address'] : ''; ?></textarea>
+                    </li>
+                <?php endif; ?>
+            <?php endif; ?>
+            <?php if ($this->getAllowMessage()): ?>
+                <li class="ugc-form-item virtual physical">
+                    <label for="recipient_message"><?php echo $this->__("Add Message:") ?></label><br/>
+                    <textarea class="recipient_message form-control" id="recipient_message" name="recipient_message"
+                              onkeyup="processMessage(this)"
+                              class="textarea" style="width:100%"><?php echo isset($_amountConfig['recMsg'])
+                            ? $_amountConfig['recMsg'] : ''; ?></textarea><br/>
+                    <?php if ($this->getMessageMaxLength()): ?>
+                        <small class="accent-gray counter"><?php echo $this->__('Characters Remaining:') ?> <span
+                                class="gift-card-message-length"><?php echo $this->getMessageMaxLength() ?></span>
+                        </small>
+                    <?php endif; ?>
+                </li>
+            <?php endif; ?>
+        </ul>
+    </div>
+    <script type="text/javascript">
+        Event.observe(window, 'load', function(){
+            var ugAddressOptionCustom = '<?php echo Unirgy_Giftcert_Model_Source_Address::CUSTOM; ?>';
+            var $recipientAddressOption = $('recipient_use_address');
+            if($recipientAddressOption){
+                $recipientAddressOption.observe('change', function(){
+                    var self = $(this);
+                    var selected = self.getValue();
+                    var $container = $("ugc-address-form");
+                    $container.select(".recipient").each(function (el) {
+                        addressOptionsToggle(el, selected);
+                    });
+                });
+            }
+            var $senderAddressOption = $('sender_use_address');
+            if($senderAddressOption){
+                $senderAddressOption.observe('change', function(){
+                    var self = $(this);
+                    var selected = self.getValue();
+                    var $container = $("ugc-address-form");
+                    $container.select(".sender").each(function(el){
+                        addressOptionsToggle(el, selected);
+                    });
+                });
+            }
+
+            function addressOptionsToggle(el, selected) {
+                if (selected == ugAddressOptionCustom) {
+                    $(el).enable().removeClassName("disabled");
+                } else {
+                    $(el).disable().addClassName("disabled");
+                }
+            }
+        });
+    </script>
+</div>

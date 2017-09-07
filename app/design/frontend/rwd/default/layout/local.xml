@@ -1,0 +1,77 @@
+<?xml version="1.0" ?>
+<layout>
+    <!--<catalog_category_layered>
+        <reference name="left">
+            <action method="unsetChild">
+                <child>catalog.leftnav</child>
+            </action>
+        </reference>
+      
+        <reference name="product_list">
+            <action method="insert">
+                <child>catalog.leftnav</child>
+            </action>
+        </reference>
+    </catalog_category_layered>-->
+	
+	 
+	 <CATEGORY_116>
+        <reference name="product_list">
+            <action method="setTemplate"><template>czettner_ajax/list-gift.phtml</template></action>
+        </reference>
+        <reference name="head">
+            <action method="addItem"><type>skin_js</type><name>js/productInfo.js</name></action>
+            <action method="addCss"><stylesheet>css/czettner_ajax.css</stylesheet></action>
+        </reference>
+	</CATEGORY_116>
+	
+	<CATEGORY_117>
+        <reference name="product_list">
+            <action method="setTemplate"><template>czettner_ajax/list-gift.phtml</template></action>
+        </reference>
+        <reference name="head">
+            <action method="addItem"><type>skin_js</type><name>js/productInfo.js</name></action>
+            <action method="addCss"><stylesheet>css/czettner_ajax.css</stylesheet></action>
+        </reference>
+	</CATEGORY_117>
+	
+	<CATEGORY_119>
+        <reference name="product_list">
+            <action method="setTemplate"><template>czettner_ajax/list-gift.phtml</template></action>
+        </reference>
+        <reference name="head">
+            <action method="addItem"><type>skin_js</type><name>js/productInfo.js</name></action>
+            <action method="addCss"><stylesheet>css/czettner_ajax.css</stylesheet></action>
+        </reference>
+	</CATEGORY_119>
+	
+	<CATEGORY_120>
+        <reference name="product_list">
+            <action method="setTemplate"><template>czettner_ajax/list-gift.phtml</template></action>
+        </reference>
+        <reference name="head">
+            <action method="addItem"><type>skin_js</type><name>js/productInfo.js</name></action>
+            <action method="addCss"><stylesheet>css/czettner_ajax.css</stylesheet></action>
+        </reference>
+	</CATEGORY_120>
+	
+	<CATEGORY_509>
+        <reference name="product_list">
+            <action method="setTemplate"><template>czettner_ajax/list-gift.phtml</template></action>
+        </reference>
+        <reference name="head">
+            <action method="addItem"><type>skin_js</type><name>js/productInfo.js</name></action>
+            <action method="addCss"><stylesheet>css/czettner_ajax.css</stylesheet></action>
+        </reference>
+	</CATEGORY_509>
+	
+	<CATEGORY_510>
+        <reference name="product_list">
+            <action method="setTemplate"><template>czettner_ajax/list-gift.phtml</template></action>
+        </reference>
+        <reference name="head">
+            <action method="addItem"><type>skin_js</type><name>js/productInfo.js</name></action>
+            <action method="addCss"><stylesheet>css/czettner_ajax.css</stylesheet></action>
+        </reference>
+	</CATEGORY_510>
+</layout>

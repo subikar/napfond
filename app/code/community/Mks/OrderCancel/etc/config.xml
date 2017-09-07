@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * Mks Soft
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * It is available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @category   Mks
+ * @package    Mks_OrderCancel
+ * @copyright  Copyright (c) 2011 Mks Soft (mks.soft@gmail.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+ --> 
+<config>
+    <modules>
+        <Mks_OrderCancel>
+            <version>0.1.0</version>
+        </Mks_OrderCancel>
+    </modules>
+    <frontend>
+        <routers>
+            <ordercancel>
+                <use>standard</use>
+                <args>
+                    <module>Mks_OrderCancel</module>
+                    <frontName>ordercancel</frontName>
+                </args>
+            </ordercancel>
+        </routers>
+		<layout>
+		    <updates>
+		        <ordercancel>
+		            <file>ordercancel.xml</file>
+		        </ordercancel>
+		    </updates>
+		</layout>
+    </frontend>
+    <global>
+        <blocks>
+            <ordercancel>
+                <class>Mks_OrderCancel_Block</class>
+            </ordercancel>
+            <sales>
+                <rewrite>
+                    <order_history>Mks_OrderCancel_Block_Order_History</order_history>
+                </rewrite>
+            </sales>
+        </blocks>
+        <rewrite>
+            <mks_ordercancel>
+				<!-- be sure to have only # at the end or the source -->
+				<from><![CDATA[#^/sales/order/cancel/(.*)#]]></from>
+				<to><![CDATA[/ordercancel/order/cancel/$1]]></to>
+            </mks_ordercancel>
+        </rewrite>
+    </global>
+</config>

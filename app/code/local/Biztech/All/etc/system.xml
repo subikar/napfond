@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+    <tabs>
+        <biztech translate="label" module="all">
+            <label>Biztech Extensions</label>
+            <sort_order>400</sort_order>
+        </biztech>
+    </tabs>
+    <sections>
+        <all translate="label" module="all">
+            <label>Info</label>
+            <tab>biztech</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>10</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+
+                <all_general translate="label">
+                    <label>General</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+
+                        <interests translate="label">
+                            <label>I'd like to be informed by Biztech about:</label>
+                            <comment></comment>
+                            <frontend_type>multiselect</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <can_be_empty>1</can_be_empty>
+                            <source_model>all/source_updates_type</source_model>
+                        </interests>
+
+                    </fields> 
+                </all_general>
+            </groups>
+        </all>
+    </sections>
+</config>

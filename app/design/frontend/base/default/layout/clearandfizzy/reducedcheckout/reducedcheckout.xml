@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * Clearandfizzy
+ *
+ * NOTICE OF LICENSE
+ *
+ *
+ * THE WORK (AS DEFINED BELOW) IS PROVIDED UNDER THE TERMS OF THIS CREATIVE
+ * COMMONS PUBLIC LICENSE ("CCPL" OR "LICENSE"). THE WORK IS PROTECTED BY
+ * COPYRIGHT AND/OR OTHER APPLICABLE LAW. ANY USE OF THE WORK OTHER THAN AS
+ * AUTHORIZED UNDER THIS LICENSE OR COPYRIGHT LAW IS PROHIBITED.
+
+ * BY EXERCISING ANY RIGHTS TO THE WORK PROVIDED HERE, YOU ACCEPT AND AGREE
+ * TO BE BOUND BY THE TERMS OF THIS LICENSE. TO THE EXTENT THIS LICENSE MAY
+ * BE CONSIDERED TO BE A CONTRACT, THE LICENSOR GRANTS YOU THE RIGHTS
+ * CONTAINED HERE IN CONSIDERATION OF YOUR ACCEPTANCE OF SUCH TERMS AND
+ * CONDITIONS.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * versions in the future. If you wish to customize this extension for your
+ * needs please refer to http://www.clearandfizzy.com for more information.
+ *
+ * @category    Community
+ * @package     Clearandfizzy_Reducedcheckout
+ * @copyright   Copyright (c) 2014 Clearandfizzy Ltd. (http://www.clearandfizzy.com)
+ * @license     http://creativecommons.org/licenses/by-nd/3.0/ Creative Commons (CC BY-ND 3.0) 
+ * @author		Gareth Price <gareth@clearandfizzy.com>
+ * 
+ */
+ -->
+<layout version="0.1.0">
+
+	<clearandfizzy_checkout_reduced> 
+        <reference name="content">
+			<block type="checkout/onepage" name="checkout.onepage.reduced.setup" template="clearandfizzy/reducedcheckout/onepage.phtml" />
+		</reference>	
+	</clearandfizzy_checkout_reduced>	
+	
+	<clearandfizzy_checkout_reduced_forceguestonly> 
+
+        <reference name="content">
+			<reference name="checkout.onepage">
+				<remove name="checkout.onepage.login" />
+			</reference>
+		</reference>
+		
+	</clearandfizzy_checkout_reduced_forceguestonly> 
+
+	<clearandfizzy_checkout_reduced_skip_paymentmethod> 
+
+        <reference name="content">
+			<reference name="checkout.onepage">
+				<remove name="checkout.onepage.payment" />
+			</reference>
+		</reference>
+		
+	</clearandfizzy_checkout_reduced_skip_paymentmethod> 
+
+	<clearandfizzy_checkout_reduced_skip_shippingmethod> 
+
+        <reference name="content">
+			<reference name="checkout.onepage">
+				<remove name="checkout.onepage.shipping_method" />
+			</reference>
+		</reference>
+		
+	</clearandfizzy_checkout_reduced_skip_shippingmethod> 
+    
+   <clearandfizzy_checkout_reduced_hide_telephonefax>
+ 		<reference name="head">
+			<action method="addJs"><stylesheet>clearandfizzy/reducedcheckout/hidetelephonefax.js</stylesheet></action>
+		</reference>  
+   </clearandfizzy_checkout_reduced_hide_telephonefax>    
+
+</layout>

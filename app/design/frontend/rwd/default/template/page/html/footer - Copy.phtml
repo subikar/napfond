@@ -1,0 +1,100 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php /* ?><div class="footer-container">
+    <div class="footer">
+        <?php echo $this->getChildHtml() ?>
+        <address class="copyright"><?php echo $this->getCopyright() ?></address>
+    </div>
+</div>
+<?php */ ?>
+</div>
+
+<div id="footer-cover">
+  <div class="footer-container">
+    <div class="footer">
+      <?php // echo $this->getChildHtml() ?>
+      <div class="footer-title">
+        <h3>Stay Connected</h3>
+        <p>Whether it's joining us on the social side or signing up to our newsletter, stay in the <br>
+          loop with the latest news, features and gooodies from Posterista.</p>
+      </div>
+      <div class="footer-sec-2">
+        <div class="row">
+          <div class="col-md-12">
+            <?php  echo $this->getChildHtml('newsletter') ?>
+          </div>
+          <!--<div class="col-md-12"><div class="tiwtter_2">
+<img src="<?php echo $this->getSkinUrl('images/twitter.jpg');?>">
+
+</div>--></div>
+      </div>
+    </div>
+  </div>
+  <div class="links social-media">
+    <div class="container">
+    
+      <ul>
+        <li><a href="#"><i class="fa fa-facebook fa-lg"></i></a></li>
+        <li><a href="#"><i class="fa fa-linkedin fa-lg"></i></a></li>
+        <li><a href="#"><i class="fa fa-youtube-play fa-lg "></i></a></li>
+        <li><a href="#"><i class="fa fa-pinterest fa-lg"></i></a></li>
+      </ul>
+    </div>
+  </div>
+  <div id="footer-cover1" class="footer-sec">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <div class="do-features">
+          <h3 class="ft-blue-4 ">ABOUT DAILYOBJECTS</h3>
+          <p>DailyObjects works with avant-garde designers from around the world, to bring discerning Indian consumers
+the most original cellphone cases. We use advanced printing technologies to ensure that your cases look fantastic for a long time. We back up our products with great service and industry leading warranties. Know more</p>
+                <ul class="deliver-toogle">
+        <li><a href="#"><i class="fa fa-cube fa-lg"></i>Quick Delivery</a></li>
+        <li><a href="#"><i class="fa fa-credit-card fa-lg"></i>Cash on Delivery</a></li>
+        <li><a href="#"><i class="fa fa-magic fa-lg "></i>Easy Returns</a></li>
+        <li><a href="#"><i class="fa fa-hand-o-up fa-lg"></i>Quality Assured</a></li>
+   		<!-- <li><a href="#"><i class="fa fa-tty fa-lg"></i>FAQ</a></li>-->
+      </ul> 
+      <div class="sub-footer-menu">
+      	  <ul class="sub-toogle">
+        <li><a href="<?php echo $this->getUrl("about-us");?>"></i>About Us</a></li>
+        <li><a href="<?php echo $this->getUrl("payment-method");?>"></i>Payment Methods</a></li>
+        <li><a href="#"></i>Shipping Policy</a></li>
+        <li><a href="#">Privacy & Security Policy</a></li>
+   		<li><a href="#">FAQ</a></li>
+      </ul> 
+      </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <address class="copyright">
+  <?php echo $this->getCopyright() ?>
+  </address>
+</div>

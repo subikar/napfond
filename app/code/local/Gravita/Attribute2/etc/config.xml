@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Gravita_Attribute2>
+            <version>1.0.0</version>
+        </Gravita_Attribute2>
+    </modules>
+ 
+    <global>
+        <resources>
+            <gravita_attribute2_setup>
+                <setup>
+                    <module>Gravita_Attribute2</module>
+                    <class>Mage_Catalog_Model_Resource_Eav_Mysql4_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </gravita_attribute2_setup>
+            <gravita_attribute2_setup_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </gravita_attribute2_setup_write>
+            <gravita_attribute2_setup_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </gravita_attribute2_setup_read>
+        </resources>
+    </global>
+</config>

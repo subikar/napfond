@@ -1,0 +1,304 @@
+<?php
+function getOptionText($attrId,$attrVal) 
+{
+   $productModel = Mage::getModel('catalog/product');
+   $str_attr_label = "color";  //or "size", etc...
+   $int_attr_id = $attrId; // or any given id.
+   $int_attr_value = $attrVal; // or any given attribute value id.
+   $attr = Mage::getModel('catalog/resource_eav_attribute')->load($int_attr_id); 
+   if ($attr->usesSource()) {
+	  return  $color_label = $attr->getSource()->getOptionText($int_attr_value);
+   }  
+}
+    
+function getTrendingProductsCollection($pCatId,$styleId)
+{	 
+	$products = Mage::getModel('catalog/category')->load($pCatId); //put your category id here
+    $productslist = $products->getProductCollection()->addAttributeToSelect('*')->addAttributeToSelect('case_style', $styleId)->setCurPage(1)->setPageSize(5); 
+	$productslist->getSelect()->order(new Zend_Db_Expr('RAND()'));
+	return $productslist;
+}
+		$read = Mage::getSingleton('core/resource')->getConnection('core_read');
+		$write = Mage::getSingleton('core/resource')->getConnection('core_write');	
+	
+?>	
+<div class="products-grid products-grid--max-3-col">
+ <div class="col-md-4 new">
+  <div class="cat-pro-outer carousel slide pick-slider bgBack1" id="pick-slider1" data-interval="false" data-ride="carousel">
+   <div class="carousel-inner"> 
+	<?php 	
+	 $media = Mage::getModel('catalog/product_media_config');
+     $products = getTrendingProductsCollection(3,58);
+     $OptionText = getOptionText(137,58);
+     $i=1;
+	 
+		   $sql = "Select * from amenu_update_tracking where up_flag_type = 'mobile_case'";
+		   $rows = $read->fetchRow($sql); //fetchRow($sql), fetchOne($sql),...	
+		   $mobile_case_cat_arr_url_key = explode(',',$rows['menu_cnt_top']);
+		   $mobile_case_cat_arr_id = explode(',',$rows['menu_cnt_pop']);
+		   $mobile_case_cat_arr_length = (count($mobile_case_cat_arr_url_key)-1);
+		   
+		   
+		   $sql = "Select * from amenu_update_tracking where up_flag_type = 'mobile_skin'";
+		   $rows = $read->fetchRow($sql); //fetchRow($sql), fetchOne($sql),...	
+		   $mobile_skin_cat_arr_url_key = explode(',',$rows['menu_cnt_top']);
+		   $mobile_skin_cat_arr_id = explode(',',$rows['menu_cnt_pop']);
+		   $mobile_skin_cat_arr_length = (count($mobile_skin_cat_arr_url_key)-1);		 
+		   
+		   $arr = array('mobile_case','mobile_skin');	 
+	 
+     foreach($products as $product)
+     {
+	 
+		        $rand_type_prd = rand(0,1);
+				
+				if($rand_type_prd == 0)
+				  {
+					$get_random_cat = rand(0,$mobile_case_cat_arr_length);
+					
+					while(!is_file(Mage::getBaseDir('media').'/blank_images/mobile-case/'.$mobile_case_cat_arr_url_key[$get_random_cat].'/mask.png'))
+						{
+							$get_random_cat = rand(0,$mobile_case_cat_arr_length);		
+						}
+					
+					$blank_backImagePath = Mage::helper('function')->getRandomMobileCaseBlankImage($mobile_case_cat_arr_url_key[$get_random_cat]);
+					$categoryObjForUrl = Mage::getModel('catalog/category')->load($mobile_case_cat_arr_id[$get_random_cat]);
+				  }		
+				if($rand_type_prd == 1)
+				  {
+					$get_random_cat = rand(0,$mobile_skin_cat_arr_length);		
+				 
+						while(!is_file(Mage::getBaseDir('media').'/blank_images/mobile-skin/'.$mobile_skin_cat_arr_url_key[$get_random_cat].'/mask-back.png'))
+							{
+								$get_random_cat = rand(0,$mobile_skin_cat_arr_length);		
+							}				
+					$blank_backImagePath = Mage::helper('function')->getRandomMobileSkinBlankImage($mobile_skin_cat_arr_url_key[$get_random_cat]); 
+					$categoryObjForUrl = Mage::getModel('catalog/category')->load($mobile_skin_cat_arr_id[$get_random_cat]);
+				  }	 
+	 
+	 
+	 ?>
+       <div class="item <?php if($i == 1){ echo 'active';}?>">
+        
+		<a href="<?php echo Mage::helper('function')->getUrlPath($product,$categoryObjForUrl);?>">
+			  <img src="<?php echo $blank_backImagePath;?>" width="245" height="245" style="position:absolute;left:24px;">
+		<img src="<?php echo Mage::helper('catalog/image')->init($product, 'small_image')->resize(245);?>"></a>
+        <div class="carousel-caption">
+         <h3><a href="<?php echo $product->getProductUrl();?>"><?php echo $product->getName();?></a></h3>                  
+        </div> 
+       </div><?php 
+      $i++;
+     }
+     ?>            
+    </div>
+	<a class="carousel-control left" href="#pick-slider1" data-slide="prev">
+ 	 <i class="fa fa-angle-left fa-lg"></i>
+	</a>
+	<a class="carousel-control right" href="#pick-slider1" data-slide="next">
+ 	 <i class="fa fa-angle-right fa-lg"></i>
+	</a>
+	<h2 class="skin-name"><?php echo $OptionText?></h2>
+   </div>
+  </div>
+  
+ <div class="col-md-4">
+   <div class="cat-pro-outer carousel slide pick-slider bgBack1" id="pick-slider2" data-interval="false" data-ride="carousel">
+    <div class="carousel-inner">  
+	<?php 
+	 $products = getTrendingProductsCollection(34,38);
+	 $OptionText = getOptionText(137,38);	 
+	 $i=1;
+	 foreach($products as $product)
+	 { 
+	 
+		        $rand_type_prd = rand(0,1);
+				
+				if($rand_type_prd == 0)
+				  {
+					$get_random_cat = rand(0,$mobile_case_cat_arr_length);
+					
+					while(!is_file(Mage::getBaseDir('media').'/blank_images/mobile-case/'.$mobile_case_cat_arr_url_key[$get_random_cat].'/mask.png'))
+						{
+							$get_random_cat = rand(0,$mobile_case_cat_arr_length);		
+						}
+					
+					$blank_backImagePath = Mage::helper('function')->getRandomMobileCaseBlankImage($mobile_case_cat_arr_url_key[$get_random_cat]);
+					$categoryObjForUrl = Mage::getModel('catalog/category')->load($mobile_case_cat_arr_id[$get_random_cat]);
+				  }		
+				if($rand_type_prd == 1)
+				  {
+					$get_random_cat = rand(0,$mobile_skin_cat_arr_length);		
+				 
+						while(!is_file(Mage::getBaseDir('media').'/blank_images/mobile-skin/'.$mobile_skin_cat_arr_url_key[$get_random_cat].'/mask-back.png'))
+							{
+								$get_random_cat = rand(0,$mobile_skin_cat_arr_length);		
+							}				
+					$blank_backImagePath = Mage::helper('function')->getRandomMobileSkinBlankImage($mobile_skin_cat_arr_url_key[$get_random_cat]); 
+					$categoryObjForUrl = Mage::getModel('catalog/category')->load($mobile_skin_cat_arr_id[$get_random_cat]);
+				  }
+	 
+	 ?>
+      <div class="item <?php if($i == 1){ echo 'active';}?>">
+           <a href="<?php echo Mage::helper('function')->getUrlPath($product,$categoryObjForUrl);?>">
+			  <img src="<?php echo $blank_backImagePath;?>" width="245" height="245" style="position:absolute;left:24px;">
+			  <img src="<?php echo Mage::helper('catalog/image')->init($product, 'small_image')->resize(245);?>"></a>
+       <div class="carousel-caption">
+        <h3><a href="<?php echo $product->getProductUrl();?>"><?php echo $product->getName();?></a></h3>                  
+       </div> 
+      </div><?php 
+	  $i++;
+	 }
+	?>  
+    </div>
+    <a class="carousel-control left" href="#pick-slider2" data-slide="prev">
+     <i class="fa fa-angle-left fa-lg"></i>
+    </a>
+    <a class="carousel-control right" href="#pick-slider2" data-slide="next">
+     <i class="fa fa-angle-right fa-lg"></i>
+    </a>
+    <h2 class="skin-name"><?php echo $OptionText?></h2>
+   </div>
+  </div>
+  
+  <div class="col-md-4">
+   <div class="cat-pro-outer carousel slide pick-slider bgBack1" id="pick-slider3" data-interval="false" data-ride="carousel">
+    <div class="carousel-inner">        
+     <?php		
+	 $products = getTrendingProductsCollection(4,38);
+	 $OptionText = getOptionText(137,38);	 	 
+	 $i=1;
+	 foreach($products as $product)
+	 {?>
+       <div class="item <?php if($i == 1){ echo 'active';}?>">
+        <a href="<?php echo $product->getProductUrl();?>"><img src="<?php echo Mage::helper('catalog/image')->init($product, 'small_image')->resize(245);?>"></a>
+        <div class="carousel-caption">
+		  <h3><a href="<?php echo $product->getProductUrl();?>"><?php echo $product->getName();?></a></h3>                  
+      	</div>               
+       </div>
+      <?php 
+      $i++;
+	 }?>	 
+    </div>
+    <a class="carousel-control left" href="#pick-slider3" data-slide="prev">
+     <i class="fa fa-angle-left fa-lg"></i>
+    </a>
+    <a class="carousel-control right" href="#pick-slider3" data-slide="next">
+     <i class="fa fa-angle-right fa-lg"></i>
+    </a>
+    <h2 class="skin-name">T-shirt</h2>
+   </div>   
+  </div>
+  
+  <div class="col-md-4">
+   <div class="cat-pro-outer carousel slide pick-slider bgBack1" id="pick-slider4" data-interval="false" data-ride="carousel">
+    <div class="carousel-inner">        
+     <?php 		
+ 	 $products = getTrendingProductsCollection(34,226);
+	 $OptionText = getOptionText(137,226);	 	 
+	 $i=1;
+	 foreach($products as $product)
+	 {
+
+	 
+		        $rand_type_prd = rand(0,1);
+				
+				if($rand_type_prd == 0)
+				  {
+					$get_random_cat = rand(0,$mobile_case_cat_arr_length);
+					
+					while(!is_file(Mage::getBaseDir('media').'/blank_images/mobile-case/'.$mobile_case_cat_arr_url_key[$get_random_cat].'/mask.png'))
+						{
+							$get_random_cat = rand(0,$mobile_case_cat_arr_length);		
+						}
+					
+					$blank_backImagePath = Mage::helper('function')->getRandomMobileCaseBlankImage($mobile_case_cat_arr_url_key[$get_random_cat]);
+					$categoryObjForUrl = Mage::getModel('catalog/category')->load($mobile_case_cat_arr_id[$get_random_cat]);
+				  }		
+				if($rand_type_prd == 1)
+				  {
+					$get_random_cat = rand(0,$mobile_skin_cat_arr_length);		
+				 
+						while(!is_file(Mage::getBaseDir('media').'/blank_images/mobile-skin/'.$mobile_skin_cat_arr_url_key[$get_random_cat].'/mask-back.png'))
+							{
+								$get_random_cat = rand(0,$mobile_skin_cat_arr_length);		
+							}				
+					$blank_backImagePath = Mage::helper('function')->getRandomMobileSkinBlankImage($mobile_skin_cat_arr_url_key[$get_random_cat]); 
+					$categoryObjForUrl = Mage::getModel('catalog/category')->load($mobile_skin_cat_arr_id[$get_random_cat]);
+				  }
+
+
+	 ?>
+       <div class="item <?php if($i == 1){ echo 'active';}?>">
+       	<a href="<?php echo Mage::helper('function')->getUrlPath($product,$categoryObjForUrl);?>">
+			  <img src="<?php echo $blank_backImagePath;?>" width="245" height="245" style="position:absolute;left:24px;"><img src="<?php echo Mage::helper('catalog/image')->init($product, 'small_image')->resize(245);?>"></a>  
+		<div class="carousel-caption"><h3><a href="<?php echo $product->getProductUrl();?>"><?php echo $product->getName();?></a></h3></div>
+       </div><?php 
+	  $i++;
+	 }
+	?>	 
+    </div>
+    <a class="carousel-control left" href="#pick-slider4" data-slide="prev">
+     <i class="fa fa-angle-left fa-lg"></i>
+    </a>
+    <a class="carousel-control right" href="#pick-slider4" data-slide="next">
+     <i class="fa fa-angle-right fa-lg"></i>
+    </a>
+    <h2 class="skin-name"><?php echo $OptionText?></h2>
+   </div>
+  </div>
+  
+  <div class="col-md-4">
+   <div class="cat-pro-outer carousel slide pick-slider bgBack1" id="pick-slider5" data-interval="false" data-ride="carousel">
+    <div class="carousel-inner">        
+     <?php		
+	 $products = getTrendingProductsCollection(4,38);
+	 $OptionText = getOptionText(137,38);	 	 
+	 $i=1;
+	 foreach($products as $product)
+	 {?>
+       <div class="item <?php if($i == 1){ echo 'active';}?>">
+        <a href="<?php echo $product->getProductUrl();?>"><img src="<?php echo Mage::helper('catalog/image')->init($product, 'small_image')->resize(245);?>"></a>
+        <div class="carousel-caption">
+		  <h3><a href="<?php echo $product->getProductUrl();?>"><?php echo $product->getName();?></a></h3>                  
+      	</div>               
+       </div>
+      <?php 
+      $i++;
+	 }?>	     
+    </div>
+    <a class="carousel-control left" href="#pick-slider5" data-slide="prev">
+     <i class="fa fa-angle-left fa-lg"></i>
+    </a>
+    <a class="carousel-control right" href="#pick-slider5" data-slide="next">
+     <i class="fa fa-angle-right fa-lg"></i>
+    </a>
+     <h2 class="skin-name">Tshirt</h2>
+   </div>  
+  </div>
+  
+  <div class="col-md-4">
+   <div class="cat-pro-outer carousel slide pick-slider bgBack1" id="pick-slider6" data-interval="false" data-ride="carousel">
+    <div class="carousel-inner">        
+     <div class="item active">
+      <img src="<?php echo $this->getSkinUrl('images/cool4.png');?>">                
+      <div class="carousel-caption">
+       <h3>Second slide label</h3>                  
+      </div>
+     </div>   
+     <div class="item">
+      <img src="<?php echo $this->getSkinUrl('images/cool1.png');?>">                
+      <div class="carousel-caption">
+       <h3>Second slide label</h3>                  
+      </div>
+     </div>
+    </div>
+    <a class="carousel-control left" href="#pick-slider6" data-slide="prev">
+     <i class="fa fa-angle-left fa-lg"></i>
+    </a>
+    <a class="carousel-control right" href="#pick-slider6" data-slide="next">
+     <i class="fa fa-angle-right fa-lg"></i>
+    </a>
+    <h2 class="skin-name">Cool Stuff</h2>
+   </div>   
+  </div>
+</div>  

@@ -1,0 +1,226 @@
+<div class="content-header">
+ <table cellspacing="0" class="grid-header">
+  <tr>
+   <td><h3><?php echo $this->__('Filter Images')?></h3></td>
+   <td class="a-right">
+    <button onclick="cat_hide_div()" class="scalable back" id="back" type="button" style="display:none; float:right;"><span>Back</span></button>
+    <button onclick="img_show_div()" class="scalable add" id="add_img" type="button" style="float:right;"><span>Add Images</span></button>
+    <button onclick="cat_show_div()" class="scalable add" id="add_cat" type="button" style="float:right;"><span>Add Category</span></button>
+   </td>
+  </tr>
+ </table>
+</div>
+<?php
+$connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+$select = $connection->select()
+    ->from('stock_cat', array('*'));         
+$rowsArray = $connection->fetchAll($select);
+?>
+<div class="grid" id="display-cat">
+ <form id="edit_form" name="edit_form" method="post" action="<?php echo $this->getUrl('*/*/edit')?>" onsubmit="return cat_validate()">
+  <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+  <input type="hidden" value="<?php echo $rowsArray[$i]['cat_id'];?>" name="edit_cat_id" id="edit_cat_id" />
+  <input type="hidden" value="<?php echo $rowsArray[$i]['cat_id'];?>" name="edit_cat_name" id="edit_cat_name" />
+  <input type="hidden" value="" name="del_cat" id="del_cat" />
+  <table cellspacing="0" class="form-list">
+   <thead>
+    <tr class="headings">
+     <th width="5%">Id</th>
+     <th>Category Name</th>
+     <th>Action</th>
+    </tr>
+   </thead>
+   <tbody>
+   <?php   
+	for($i=0; $i<count($rowsArray);$i++)
+	{
+   ?>
+    <tr>
+     <td><?php echo $rowsArray[$i]['cat_id'];?></td>
+     <td width="40%">
+	  <div>
+		<div style="float:left;"><?php echo ucfirst($rowsArray[$i]['cat_name']);?></div>
+     	<div id="cng_div_<?php echo $rowsArray[$i]['cat_id'];?>" style="display:none; text-align:center;">     
+         
+         <input type="text" name="cat_name" id="cat_name<?php echo $rowsArray[$i]['cat_id'];?>" value="<?php echo ucfirst($rowsArray[$i]['cat_name']);?>" />
+         <input type="button" name="edit_cat_submit" id="edit_cat_submit" value="Update" onclick="updateCate('<?php echo $rowsArray[$i]['cat_id'];?>',document.getElementById('cat_name<?php echo $rowsArray[$i]['cat_id'];?>').value)" />
+        </div>
+      </div>         
+     </td>
+     <td><img src="<?php echo $this->getSkinUrl('images/edit.gif');?>" title="Edit Category" style="cursor:pointer;" onclick="show_cng_div(<?php echo $rowsArray[$i]['cat_id'];?>)" /> &nbsp;&nbsp;&nbsp; <img src="<?php echo $this->getSkinUrl('images/icon_btn_delete.gif');?>" title="Delete Category" style="cursor:pointer;" onclick="del_cat('<?php echo $rowsArray[$i]['cat_id'];?>',document.getElementById('cat_name<?php echo $rowsArray[$i]['cat_id'];?>').value)" /></td>
+    </tr> 
+    <?php } ?>
+   </tbody> 
+  </table> 
+ </form>
+</div>
+
+<div class="grid" id="add-cat" style="display:none;">
+ <form id="add_form" name="add_form" method="post" action="<?php echo $this->getUrl('*/*/post')?>" enctype="multipart/form-data" onsubmit="return validate()">
+  <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+   <div class="entry-edit">
+    <div class="entry-edit-head">
+	 <h4 class="icon-head head-edit-form fieldset-legend">Item information</h4>
+    </div> 
+	<div id="responsivebannerslider_form" class="fieldset ">
+     <table cellspacing="0" class="form-list">
+      <tbody>
+       <tr>
+        <td class="label">Enter Category Name</td>
+        <td class="value"><input type="text" name="cat_name" id="cat_name" value="" style="width:200px;" /></td>     
+       </tr> 
+       <tr>
+        <td class="label"></td>
+        <td class="value"><input type="submit" name="cat_submit" id="cat_submit" value="Submit" /></td>     
+       </tr> 
+      </tbody> 
+     </table> 
+	</div>
+   </div> 
+ </form>
+</div>
+
+<div class="grid" id="add-img" style="display:none;">
+ <form id="add_form" name="add_form" method="post" action="<?php echo $this->getUrl('*/*/img_post')?>" enctype="multipart/form-data" onsubmit="return img_validate()">
+  <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+   <div class="entry-edit">
+    <div class="entry-edit-head">
+	 <h4 class="icon-head head-edit-form fieldset-legend">Item information</h4>
+    </div> 
+	<div id="responsivebannerslider_form" class="fieldset ">
+     <table cellspacing="0" class="form-list">
+      <tbody>
+       <tr>
+        <td class="label">Select Category</td>
+        <td class="value">
+         <select name="img_cat" id="img_cat">
+	       	<option value="0">Please Select Category</option>
+            <?php   
+			for($i=0; $i<count($rowsArray);$i++)
+			{  ?>
+           		<option value="<?php echo $rowsArray[$i]['cat_id'];?>"><?php echo ucfirst($rowsArray[$i]['cat_name']);?></option>
+           <?php } ?>
+         </select> 
+        </td>     
+       </tr> 
+       <tr>
+        <td class="label">Uploade Image</td>
+        <td class="value">
+          <input type="file" name="simage[]" multiple="multiple" id="simage" />
+        </td>     
+       </tr> 
+       <tr>
+        <td class="label"></td>
+        <td class="value"><input type="submit" value="Upload" class="pure-button pure-button-primary"></td>     
+       </tr> 
+      </tbody> 
+     </table> 
+	</div>
+   </div> 
+ </form>
+ <!--<div class="progress">
+  <div class="bar"></div >
+  <div class="percent">0%</div >
+ </div>-->
+</div>
+
+<script type="text/javascript">
+function cat_show_div()
+{
+	if(document.getElementById("add-cat").style.display == 'none')
+	{
+		document.getElementById("add-cat").style.display = 'block';
+		document.getElementById("back").style.display = 'block';
+		document.getElementById("display-cat").style.display = 'none';
+		document.getElementById("add_cat").style.display = 'none';
+		document.getElementById("add_img").style.display = 'none';
+	}
+}
+function img_show_div()
+{
+	if(document.getElementById("add-img").style.display == 'none')
+	{
+		document.getElementById("add-img").style.display = 'block';
+		document.getElementById("back").style.display = 'block';		
+		document.getElementById("add_cat").style.display = 'none';
+		document.getElementById("display-cat").style.display = 'none';
+		document.getElementById("add_img").style.display = 'none';
+	}
+}
+function cat_hide_div()
+{
+	if(document.getElementById("display-cat").style.display == 'none')
+	{
+		document.getElementById("display-cat").style.display = 'block';
+		document.getElementById("add_cat").style.display = 'block';
+		document.getElementById("add_img").style.display = 'block';
+		document.getElementById("back").style.display = 'none';
+		document.getElementById("add-cat").style.display = 'none';		
+		document.getElementById("add-img").style.display = 'none';		
+	}
+}
+function validate()
+{
+	if(document.getElementById("cat_name").value == '')
+	{
+		alert("Please Enter Category Name");
+		document.getElementById("cat_name").focus();
+		return false;		
+	}
+}
+function img_validate()
+{
+	if(document.getElementById("img_cat").value == '')
+	{
+		alert("Please Enter Category Name");
+		document.getElementById("img_cat").focus();
+		return false;		
+	}
+	if(document.getElementById("simage").value == '')
+	{
+		alert("Please Select Image");
+		document.getElementById("simage").focus();
+		return false;		
+	}
+}
+function cat_validate()
+{
+	if(document.getElementById("cat_name").value == '')
+	{
+		alert("Please Enter Category Name");
+		document.getElementById("cat_name").focus();
+		return false;		
+	}
+	return true;
+}
+function show_cng_div(val)
+{
+	if(document.getElementById("cng_div_"+val).style.display == 'none')
+	{
+		document.getElementById("cng_div_"+val).style.display = 'block'
+	}
+	else
+	{
+		document.getElementById("cng_div_"+val).style.display = 'none'
+	}
+}
+function updateCate(id, name)
+{
+	document.getElementById("edit_cat_id").value = id;
+	document.getElementById("edit_cat_name").value = name;
+	document.getElementById("del_cat").value = '0';
+	document.getElementById("edit_form").submit();
+}
+function del_cat(id, name)
+{
+	document.getElementById("edit_cat_id").value = id;
+	document.getElementById("edit_cat_name").value = name;
+	document.getElementById("del_cat").value = '1';
+	document.getElementById("edit_form").submit();
+}
+</script>
+
+
+<script type="text/javascript">
+    var editForm = new varienForm('edit_form');
+</script>

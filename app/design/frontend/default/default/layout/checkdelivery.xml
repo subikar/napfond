@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+  
+	<catalog_product_view>
+        <reference name="right" > 
+			<block type="checkdelivery/checkdelivery" before="-" name="checkdelivery"> 
+				<action method="setTemplate" ifconfig="checkdelivery/general/active">
+					<template>checkdelivery/checkdelivery.phtml</template>
+				</action>
+			</block>
+		</reference> 
+    </catalog_product_view>
+	<catalog_product_view>
+        <block type="checkdelivery/checkdelivery" before="-" name="checkdelivery"> 
+			<action method="setTemplate" ifconfig="checkdelivery/general/active">
+				<template>checkdelivery/checkdelivery.phtml</template>
+			</action> 
+		</block>
+    </catalog_product_view>
+	
+</layout> 

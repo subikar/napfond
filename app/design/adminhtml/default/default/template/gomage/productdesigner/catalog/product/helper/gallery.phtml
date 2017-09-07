@@ -1,0 +1,407 @@
+<?php
+/**
+ * GoMage Product Designer Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use/
+ * @version      Release: 1.0.0
+ * @since        Available since Release 1.0.0
+ */
+?>
+<?php
+$_block = $this;
+$settings = $this->getProductDesignAreas();
+$productDesignerEnabled = $this->isProductDesignerEnabled();
+$product = $this->getProduct();
+$colors = $this->getProductColors();
+
+/* @var $_block GoMage_ProductDesigner_Block_Adminhtml_Catalog_Product_Helper_Form_Gallery_Content */
+?>
+<div id="<?php echo $_block->getHtmlId() ?>" >
+<ul class="messages">
+    <li class="notice-msg">
+        <ul>
+            <li>
+              <?php echo Mage::helper('catalog')->__('Image type and information need to be specified for each store view.'); ?>
+            </li>
+        </ul>
+    </li>
+</ul>
+<div class="grid">
+<table cellspacing="0" class="data border" id="<?php echo $_block->getHtmlId() ?>_grid" width="100%">
+    <col width="1" />
+    <col />
+    <col width="70" />
+    <?php foreach ($_block->getImageTypes() as $typeId=>$type): ?>
+    <col />
+    <?php endforeach; ?>
+    <col width="70" />
+    <col width="70" />
+    <col width="1" />
+    <col width="1" />
+    <thead>
+        <tr class="headings">
+            <th><?php echo Mage::helper('catalog')->__('Image') ?></th>
+            <th><?php echo Mage::helper('catalog')->__('Label') ?></th>
+            <th><?php echo Mage::helper('catalog')->__('Sort Order') ?></th>
+            <?php foreach ($_block->getImageTypes() as $typeId=>$type): ?>
+            <th><?php echo $type['label'] ?></th>
+            <?php endforeach; ?>
+            <th><?php echo Mage::helper('catalog')->__('Exclude') ?></th>
+            <th <?php if (!$productDesignerEnabled): ?>class="last"<?php endif ?>><?php echo Mage::helper('catalog')->__('Remove') ?></th>
+            <?php if ($colors):?>
+                <th id="color-heading" <?php if (!$productDesignerEnabled): ?>style="display: none"<?php endif;?>>
+                    <?php echo Mage::helper('gomage_designer')->__('Color'); ?>
+                </th>
+            <?php endif;?>
+            <th id="design-area-heading" class="last" <?php if (!$productDesignerEnabled): ?>style="display: none"<?php endif;?>>
+                <?php echo Mage::helper('gomage_designer')->__('Choose design area') ?>
+            </th>
+        </tr>
+    </thead>
+    <tbody id="<?php echo $_block->getHtmlId() ?>_list">
+        <tr id="<?php echo $_block->getHtmlId() ?>_template" class="template no-display">
+            <td class="cell-image"><div class="place-holder" onmouseover="<?php echo $_block->getJsObjectName(); ?>.loadImage('__file__')"><span><?php echo Mage::helper('catalog')->__('Roll Over for preview') ?></span></div><img src="<?php echo $this->getSkinUrl('images/spacer.gif')?>" width="100" style="display:none;" alt="" /></td>
+            <td class="cell-label"><input type="text" <?php if($_block->getElement()->getReadonly()):?> disabled="disabled"<?php endif;?> class="input-text" onkeyup="<?php echo $_block->getJsObjectName(); ?>.updateImage('__file__')" onchange="<?php echo $_block->getJsObjectName(); ?>.updateImage('__file__')" /></td>
+            <td class="cell-position"><input type="text" <?php if($_block->getElement()->getReadonly()):?> disabled="disabled"<?php endif;?> class="input-text validate-number" onkeyup="<?php echo $_block->getJsObjectName(); ?>.updateImage('__file__')" onchange="<?php echo $_block->getJsObjectName(); ?>.updateImage('__file__')" /></td>
+            <?php foreach ($_block->getImageTypes() as $typeId=>$type): ?>
+            <td class="cell-<?php echo $typeId ?> a-center"><input <?php if($_block->getElement()->getAttributeReadonly($typeId)) :?> disabled="disabled" <?php endif;?> type="radio" name="<?php echo $type['field'] ?>" onclick="<?php echo $_block->getJsObjectName(); ?>.setProductImages('__file__')" value="__file__" /></td>
+            <?php endforeach; ?>
+            <td class="cell-disable a-center"><input type="checkbox" <?php if($_block->getElement()->getReadonly()):?> disabled="disabled"<?php endif;?> onclick="<?php echo $_block->getJsObjectName(); ?>.updateImage('__file__')" /></td>
+            <td class="cell-remove a-center<?php if (!$productDesignerEnabled): ?> last<?php endif; ?>"><input type="checkbox" <?php if($_block->getElement()->getReadonly()):?> disabled="disabled"<?php endif;?> onclick="<?php echo $_block->getJsObjectName(); ?>.updateImage('__file__')" /></td>
+            <?php if ($colors): ?>
+            <td class="cell-color" <?php if (!$productDesignerEnabled): ?>style="display: none"<?php endif;?>>
+                <select <?php if($_block->getElement()->getReadonly()):?> disabled="disabled"<?php endif;?> onchange="<?php echo $_block->getJsObjectName(); ?>.updateImage('__file__')" style="width: 100px;" class="validate-color-select">
+                    <?php foreach($colors as $color):?>
+                        <option value="<?php echo $color['option_id']?>"><?php echo $color['value']?></option>
+                    <?php endforeach;?>
+                </select>
+            </td>
+            <?php endif;?>
+            <td class="cell-choose-design-area a-center last" <?php if (!$productDesignerEnabled): ?>style="display: none"<?php endif;?>>
+                <input type="checkbox" class="validate-one-design-area-required" name="design_area_for[]" value="" onclick="switchDesignArea('__file__', this)" />
+                [ <a href="javascript:void(0)" onclick="openDesignAreaEditor('__file__', this)"><?php echo Mage::helper('gomage_designer')->__('Edit') ?></a> ]
+            </td>
+        </tr>
+        <?php if($_block->hasUseDefault()): ?>
+        <tr id="<?php echo $_block->getHtmlId() ?>_default">
+            <td><?php echo Mage::helper('catalog')->__('Use Default Value') ?></td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <?php foreach ($_block->getMediaAttributes() as $_attribute): ?>
+            <td class="a-center">
+            <?php if($_block->getElement()->canDisplayUseDefault($_attribute)): ?>
+            <input class="default-checkbox" name="use_default[]" type="checkbox" <?php if($_block->getElement()->getAttributeReadonly($_attribute->getAttributeCode())):?> disabled="disabled" <?php endif;?>  onclick="<?php echo $_block->getJsObjectName(); ?>.updateUseDefault()"
+            <?php if($_block->getElement()->usedDefault($_attribute)): ?>checked<?php endif; ?> value="<?php echo $_attribute->getAttributeCode() ?>" />
+            <?php endif ?>
+            </td>
+            <?php endforeach; ?>
+            <td>&nbsp;</td>
+            <td <?php if (!$productDesignerEnabled): ?>class="last"<?php endif ?>>&nbsp;</td>
+            <?php if ($colors): ?>
+                <td <?php if (!$productDesignerEnabled): ?>style="display: none"<?php endif;?>>&nbsp;</td>
+            <?php endif;?>
+            <td class="last" <?php if (!$productDesignerEnabled): ?>style="display: none"<?php endif;?>>&nbsp;</td>
+        </tr>
+        <?php endif ?>
+        <tr id="<?php echo $_block->getHtmlId() ?>-image-0">
+            <td class="cell-image"><?php echo Mage::helper('catalog')->__('No image') ?></td>
+            <td class="cell-label"><input type="hidden" />&nbsp;</td>
+            <td class="cell-position"><input type="hidden" />&nbsp;</td>
+            <?php foreach ($_block->getImageTypes() as $typeId=>$type): ?>
+            <td class="cell-<?php echo $typeId ?> a-center"><input type="radio" <?php if($_block->getElement()->getAttributeReadonly($typeId)) :?> disabled="disabled" <?php endif;?> name="<?php echo $type['field'] ?>" onclick="<?php echo $_block->getJsObjectName(); ?>.setProductImages('no_selection')" value="no_selection" /></td>
+            <?php endforeach; ?>
+            <td class="cell-disable"><input type="hidden" />&nbsp;</td>
+            <td class="cell-remove<?php if (!$productDesignerEnabled): ?> last<?php endif; ?>"><input type="hidden" />&nbsp;</td>
+            <?php if ($colors): ?>
+                <td class="cell-color" <?php if (!$productDesignerEnabled): ?>style="display: none" <?php endif;?>><input type="hidden" />&nbsp;</td>
+            <?php endif;?>
+            <td class="cell-choose-design-area last" <?php if (!$productDesignerEnabled): ?>style="display: none" <?php endif;?>>&nbsp;</td>
+        </tr>
+    </tbody>
+    <?php if (!$_block->getElement()->getReadonly()):?>
+    <tfoot>
+        <tr>
+            <td colspan="100" class="last" style="padding:8px">
+                <?php echo $_block->getUploaderHtml() ?>
+            </td>
+        </tr>
+    </tfoot>
+    <?php endif;?>
+</table>
+</div>
+</div>
+<input type="hidden" id="<?php echo $_block->getHtmlId() ?>_save" name="<?php echo $_block->getElement()->getName() ?>[images]" value="<?php echo $_block->htmlEscape($_block->getImagesJson()) ?>" />
+<input type="hidden" id="<?php echo $_block->getHtmlId() ?>_save_image" name="<?php echo $_block->getElement()->getName() ?>[values]" value="<?php echo $_block->htmlEscape($_block->getImagesValuesJson()) ?>" />
+<div id="design-area-popup" style="width: <?php echo $this->getDesignAreaPopupWidth()+20; ?>px;"></div>
+<script type="text/javascript">
+    Product.Gallery.prototype.updateImage = function(file) {
+        var index = this.getIndexByFile(file);
+        this.images[index].label = this
+            .getFileElement(file, 'cell-label input').value;
+        this.images[index].position = this.getFileElement(file,
+            'cell-position input').value;
+        this.images[index].removed = (this.getFileElement(file,
+            'cell-remove input').checked ? 1 : 0);
+        this.images[index].disabled = (this.getFileElement(file,
+            'cell-disable input').checked ? 1 : 0);
+        <?php if ($colors): ?>
+            this.images[index].color = this.getFileElement(file,
+                'cell-color select').value;
+        <?php endif; ?>
+        this.getElement('save').value = Object.toJSON(this.images);
+        this.updateState(file);
+        this.container.setHasChanges();
+    }
+
+    Product.Gallery.prototype.updateImageDesignArea = function(file, value) {
+        var index = this.getIndexByFile(file);
+        this.images[index].design_area = value;
+        this.getElement('save').value = Object.toJSON(this.images);
+        this.updateState(file);
+        this.container.setHasChanges();
+    }
+
+    Product.Gallery.prototype.updateVisualisation = function(file) {
+        var image = this.getImageByFile(file);
+        this.getFileElement(file, 'cell-label input').value = image.label;
+        <?php if ($colors): ?>
+            this.getFileElement(file, 'cell-color select').value = image.color;
+        <?php endif;?>
+        this.getFileElement(file, 'cell-position input').value = image.position;
+        this.getFileElement(file, 'cell-remove input').checked = (image.removed == 1);
+        this.getFileElement(file, 'cell-disable input').checked = (image.disabled == 1);
+        $H(this.imageTypes)
+            .each(
+                function(pair) {
+                    if (this.imagesValues[pair.key] == file) {
+                        this.getFileElement(file,
+                            'cell-' + pair.key + ' input').checked = true;
+                    }
+                }.bind(this));
+        this.updateState(file);
+    }
+
+    Product.Gallery.prototype.handleUploadComplete = function(files) {
+        files.each( function(item) {
+            if (!item.response.isJSON()) {
+                try {
+                    console.log(item.response);
+                } catch (e2) {
+                    alert(item.response);
+                }
+                return;
+            }
+            var response = item.response.evalJSON();
+            if (response.error) {
+                return;
+            }
+            var newImage = {};
+            newImage.url = response.url;
+            newImage.file = response.file;
+            newImage.label = '';
+            <?php if ($colors): ?>
+                newImage.color = '';
+            <?php endif;?>
+            newImage.position = this.getNextPosition();
+            newImage.disabled = 0;
+            newImage.removed = 0;
+            this.images.push(newImage);
+            this.uploader.removeFile(item.id);
+        }.bind(this));
+        this.container.setHasChanges();
+        this.updateImages();
+    }
+//<![CDATA[
+    var <?php echo $_block->getJsObjectName(); ?> = new Product.Gallery('<?php echo $_block->getHtmlId() ?>', <?php if ($_block->getElement()->getReadonly()):?>null<?php else:?><?php echo $_block->getUploader()->getJsObjectName() ?><?php endif;?>, <?php echo $_block->getImageTypesJson() ?>);
+//]]>
+</script>
+
+<script type="text/javascript">
+function switchDesignArea(f, self)
+{
+    var url = '<?php echo $this->getUpdateStateUrl(); ?>'
+    //<![CDATA[
+    var imageIndex = <?php echo $_block->getJsObjectName(); ?>.getIndexByFile(f);
+    var imageId = <?php echo $_block->getJsObjectName(); ?>.images[imageIndex].value_id;
+    //]]>
+
+    if (!imageId) {
+        return false;
+    }
+
+    if (self.checked == false) {
+        new Ajax.Request(url, {
+            method:'post',
+            parameters: {'state' : 0, 'image_id' : imageId},
+            onSuccess: function(transport) {
+                var response = transport.responseText.evalJSON();
+                if (response.status == 'error') {
+                    console.log(response.message);
+                } else if (response.status == "success") {
+                    <?php echo $_block->getJsObjectName(); ?>.updateImageDesignArea(f, "");
+                }
+            }
+        });
+    } else {
+        openDesignAreaEditor(f);
+    }
+}
+
+function openDesignAreaEditor(file, target)
+{
+    //<![CDATA[
+    var imageIndex = <?php echo $_block->getJsObjectName(); ?>.getIndexByFile(file);
+    var imageId = <?php echo $_block->getJsObjectName(); ?>.images[imageIndex].value_id;
+    //]]>
+    if (!imageId) {
+        return false;
+    }
+    new Ajax.Request('<?php echo $this->getEditDesignAreaUrl()?>', {
+        method: 'post',
+        parameters: { img: imageId },
+        onSuccess: function(transport){
+            var response = transport.responseText.evalJSON();
+            if (response.status == 'success') {
+                if ($('design-area-popup').innerHTML == '') {
+                    $('design-area-popup').update(response.design_area);
+                    window.designAreaPopup.setContent('design-area-popup', true, false);
+                } else {
+                    $('design-area-popup').update(response.design_area);
+                }
+                window.designAreaPopup.showCenter(true, true);
+                setTimeout(function(){
+                    var $designAreaPopupWrap = $('design-area-popup');
+                    var wH = window.innerHeight;
+                    $designAreaPopupWrap.setStyle({
+                        width: 'auto'
+                    });
+
+                    if(0.9 * wH < window.designAreaPopup.height) {
+                        $designAreaPopupWrap.setStyle({
+                            'height': 0.9 * wH + 'px',
+                            'overflow': 'auto'
+                        });
+                    }
+                    window.designAreaPopup.setSize(window.designAreaPopup.width, $designAreaPopupWrap.getHeight(), true);
+                }.bind(this), 300);
+                if (target != undefined) {
+                    window.designAreaPopup.target = target;
+                }
+                window.designAreaPopup.updateImageFile = file;
+                window.designAreaPopup.galleryObject = <?php echo $_block->getJsObjectName(); ?>;
+            } else if(response.status == 'error') {
+                $('design-area-popup').update('');
+                alert(response.message);
+            }
+        }
+    });
+}
+
+$(function() {
+    var settings = <?php echo $settings ? $settings : '{}'; ?>;
+    var object = <?php echo $_block->getJsObjectName(); ?>;
+    object._createImageRow = object.createImageRow;
+    object.createImageRow = function(img) {
+        this._createImageRow(img);
+        var id = this.prepareId(img.file);
+        $(id).select('td:last-child').each(function(el) {  el.update(""); });
+    };
+
+    if (typeof settings !== 'undefined') {
+        object.images.each(function(row) {
+            var id = object.prepareId(row.file);
+            $(id).select('td:last-child > input').each(function(el) {
+                el.value = row.value_id;
+                if(settings[row.value_id] != null) {
+                    el.checked = true;
+                }
+            });
+        });
+    }
+
+    window.designAreaPopup = new Window({
+        className: 'magento',
+        title: '<?php echo Mage::helper('gomage_designer')->__('Choose design area') ?>',
+        maximizable:false,
+        minimizable:false,
+        resizable:false,
+        draggable:false,
+        recenterAuto: false,
+        showEffectOptions: {duration:0.1},
+        hideEffectOptions: {duration:0.1}
+    });
+    window.designAreaPopup.setZIndex(2000);
+    Event.observe(window, "resize", function () {
+        window.designAreaPopup.setLocation(
+            window.designAreaPopup.getLocation().top,
+            ($(document).viewport.getWidth() - window.designAreaPopup.width) / 2
+        );
+    }.bind(this));
+})();
+Validation.add('validate-one-design-area-required','<?php echo $this->__("Please set a design area") ?>', function (v,elm) {
+    var inputs = $$('input[name="' + elm.name.replace(/([\\"])/g, '\\$1') + '"]');
+    var error = 1;
+    if (!$('enable_product_designer') || parseInt($('enable_product_designer').value) === 0) {
+        return true;
+    }
+    for(var i=0;i<inputs.length;i++) {
+        if((inputs[i].type == 'checkbox' || inputs[i].type == 'radio') && inputs[i].checked == true) {
+            error = 0;
+        }
+        if(Validation.isOnChange && (inputs[i].type == 'checkbox' || inputs[i].type == 'radio')) {
+            Validation.reset(inputs[i]);
+        }
+    }
+    if( error == 0 ) {
+        return true;
+    } else {
+        return false;
+    }
+});
+
+Validation.add('validate-color-select','<?php echo $this->__("Please select color option") ?>', function (v,elm) {
+    if (!$('enable_product_designer') || parseInt($('enable_product_designer').value) === 0) {
+        return true;
+    }
+    return ((v != "none") && (v != null) && (v.length != 0));
+});
+
+$(function(){
+   if ($('enable_product_designer')) {
+       $('enable_product_designer').observe('change', function(e){
+           var elm = e.target || e.srcElement;
+           var columns = [];
+           if ($('design-area-heading')) {
+               columns.push($('design-area-heading'));
+           }
+           if ($('color-heading')) {
+               columns.push($('color-heading'));
+           }
+
+           columns = columns.concat($$('.cell-choose-design-area'));
+           columns = columns.concat($$('.cell-color'));
+           if (parseInt(elm.value) === 0) {
+               toggleDesignareaColumns(columns, 'hide')
+           } else if (parseInt(elm.value) === 1) {
+               toggleDesignareaColumns(columns, 'show')
+           }
+       });
+
+   }
+
+    function toggleDesignareaColumns(columns, action) {
+        columns.invoke(action);
+        columns.each(function(elm){
+            if (action == 'show' && elm.previous().hasClassName('last')) {
+                elm.previous().removeClassName('last');
+            } else if (action == 'hide' && !elm.previous().hasClassName('last')) {
+                elm.previous().addClassName('last');
+            }
+        });
+    }
+})();
+</script>

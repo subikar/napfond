@@ -1,0 +1,243 @@
+<?php
+/**
+ * GoMage Product Designer Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use/
+ * @version      Release: 1.0.0
+ * @since        Available since Release 1.0.0
+ */
+?>
+<div class="content-header">
+    <table cellspacing="0">
+        <tbody>
+            <tr>
+                <td style="width:50%;"><h3 class="icon-head"><?php echo $this->__($this->getHeader());?></h3></td>
+                <td class="form-buttons"><?php echo $this->getButtonsHtml() ?></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<?php
+    $_imagesCollection = $this->getImagesCollection();
+      $_collectionSize = $this->getImagesCollection()->getSize();
+	  
+    $_columnCount = $this->getColumnCount();
+	
+	$gravitaSessionId = '';
+	$connection = Mage::helper('function/more')->getDbReadObject();
+?>
+<?php if (!$_collectionSize): ?>
+    <div class="message"><?php echo $this->__('You have no designed products') ?></div>
+<?php else: ?>
+    <div class="design-grid-wrap">
+        <?php $i=0; foreach ($_imagesCollection as $_image): ?>
+            <?php
+
+			$savedCanvasobjectDetails = $connection->fetchOne('select save_canvas_object from gomage_saved_canvas_object where imageid="'.$_image->getImageId().'"');
+			$savedCanvasobjectDetails = json_decode(stripslashes($savedCanvasobjectDetails));
+
+
+			if ($i++%$_columnCount==0): 
+			
+			if($gravitaSessionId == '')
+				$gravitaSessionId = $_image->getGravitaCustomSessionId();
+			//echo 'select save_canvas_object from gomage_saved_canvas_object where imageid="'.$_image->getImageId().'"';
+			
+			//echo '<pre>';
+			//print_r($savedCanvasobjectDetails);
+			?>
+              <ul class="design-products-grid">
+            <?php endif ?>
+              <li class="item<?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif; ?>">
+                <div class="design-product">
+                  <img src="<?php echo $this->getImage($_image->getImage(), 400); ?>" width="400" height="400" alt="" title=""/>
+                  <div class="actions">
+                      <button title="<?php echo $this->__('Download Image');?>" type="button" onclick="downloadImage('<?php echo $this->getDownloadUrl($_image->getId(), 'image')?>')">
+                          <span><span><span><?php echo $this->__('Download Image');?></span></span></span>
+                      </button>
+                  </div>                
+                </div>
+				
+				
+                <div class="design-product">
+                   <img src="<?php echo $this->getImage($_image->getSkinImage(), 400); ?>" width="400" height="400" alt="" title=""/>
+                  <div class="actions">
+                  <div class="actions">
+                      <button title="<?php echo $this->__('Download Image');?>" type="button" onclick="downloadImage('<?php echo $this->getDownloadUrl($_image->getId(), 'skin_image')?>')">
+                          <span><span><span><?php echo $this->__('Download Image');?></span></span></span>
+                      </button>
+                  </div>                
+                </div></div>
+				
+				
+                
+                <?php /*if ($_image->getLayer()): ?>
+                <div class="design-product">
+                  <img src="<?php echo $this->getImage($_image->getLayer(), 400); ?>" width="400" height="400" alt="" title=""/>
+                  <div class="actions">
+                      <button title="<?php echo $this->__('Download Image');?>" type="button" onclick="downloadImage('<?php echo $this->getDownloadUrl($_image->getId(), 'layer')?>')">
+                          <span><span><span><?php echo $this->__('Download Image');?></span></span></span>
+                      </button>
+                  </div>
+                </div>
+                <?php endif;*/?>
+
+                  
+                <div class="design-product">
+                  <h4>Element Details</h4>
+				  
+				  <div style="width:400px;height:auto;"><?php 
+				  
+				  
+				  foreach($savedCanvasobjectDetails as $savedCanvasobjectDetails_val){
+					  
+					  foreach($savedCanvasobjectDetails_val as $canvasObject){
+						if($canvasObject->type == 'image') { 
+							echo '<strong>'.($canvasObject->type).'</strong><br/>';
+							echo '<span style="margin-left:20px">SRC:&nbsp;'.$canvasObject->src.'&nbsp;&nbsp;<a href="'.$canvasObject->src.'" target="_blank">Download Image</a></span><br/>';
+						}	
+						if($canvasObject->type == 'text') { 
+							echo '<strong>'.($canvasObject->type).'</strong><br/>';
+							echo '<span style="margin-left:20px">TEXT:&nbsp;'.$canvasObject->text.'</span><br/>';
+							echo '<span style="margin-left:20px">FONT FAMILY:&nbsp;'.$canvasObject->fontFamily.'</span><br/>';
+						}	
+					  }
+					  
+				  }
+				  
+				  
+				  ?></div>
+				  <?php /*?>
+                  <div class="actions">
+                      <button title="<?php echo $this->__('Click Here');?>" type="button" onclick="downloadImage('<?php echo $this->getDownloadUrl($_image->getId(), 'layer')?>')">
+                          <span><span><span><?php echo $this->__('Click Here');?></span></span></span>
+                      </button>
+                  </div>
+				  <?php */?>
+				  
+                </div>
+
+                  
+              </li>
+            <?php if ($i%$_columnCount==0 || $i==$_collectionSize): ?>
+              </ul>
+            <?php endif ?>
+        <?php endforeach ?>
+    </div>
+    <?php if ($this->getDesign() && ($comment = $this->getDesign()->getComment())): ?>
+        <div class="entry-edit">
+            <div class="entry-edit-head">
+                <h4 class="icon-head head-edit-form fieldset-legend"><?php echo $this->__('Additional Instructions');?></h4>
+            </div>
+            <div class="fieldset fieldset-wide">
+                <table cellspacing="0" class="form-list">
+                    <tbody>
+                    <tr>
+                        <td class="value">
+                            <textarea name="comment" class="textarea design-comment" rows="2" cols="15" disabled="disabled"><?php echo $comment; ?></textarea>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    <?php endif;?>
+    <style type="text/css">
+      .design-grid-wrap{
+        overflow: hidden;
+        padding-bottom: 25px;
+        }
+      .design-products-grid .item{
+        overflow: hidden;
+        text-align: center;
+        }
+        .design-products-grid .item img{
+          max-width: 100%;
+          height: auto;
+          }
+        .design-product{
+          margin: 0 0 20px;
+          float: left;
+          width: 30%;
+          margin-right: 2%;
+          max-width: 600px;
+          }
+      .design-comment{
+        height:7.5em
+        }
+    </style>
+    <script type="text/javascript">
+        function downloadImage(url) {
+            location.href = url;
+        }
+    </script>
+<?php endif;?>
+
+
+
+
+
+
+
+
+
+
+
+<?php
+    $_imagesCollection = $this->getUploadedImagesCollection($gravitaSessionId);
+    //$_collectionSize = $this->getUploadedImagesCollection($gravitaSessionId)->getSize();
+?>
+<?php if ($gravitaSessionId): ?>
+<div class="content-header">
+    <table cellspacing="0">
+        <tbody>
+            <tr>
+                <td style="width:50%;"><h3 class="icon-head">User Uploaded Images</h3></td>
+                <td class="form-buttons"><?php echo $this->getButtonsHtml() ?></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<?php
+ 
+?>
+<?php if (!$_collectionSize): ?>
+    <div class="message"><?php echo $this->__('You have no designed products') ?></div>
+<?php else: ?>
+    <div class="design-grid-wrap">
+        <?php $i=0; foreach ($_imagesCollection as $_image): 
+		
+		  
+		
+		?>
+            <?php if ($i++%$_columnCount==0): ?>
+              <ul class="design-products-grid">
+            <?php endif ?>
+              <li class="item<?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif; ?>">
+                <div class="design-product">
+                  <img src="<?php echo stripslashes(Mage::helper('gomage_designer/image_uploaded')->init($_image->getImage())->resize(400)); ?>" width="400" height="400" alt="" title=""/>
+                  <div class="actions">
+                      <button title="<?php echo $this->__('Download Image');?>" type="button" onclick="downloadUImage('<?php echo Mage::getSingleton('gomage_designer/uploadedImage_config')->getBaseMediaUrl().$_image->getImage()?>')">
+                          <span><span><span><?php echo $this->__('Download Image');?></span></span></span>
+                      </button>
+                  </div>                
+                </div> 
+                  
+              </li>
+            <?php if ($i%$_columnCount==0 || $i==$_collectionSize): ?>
+              </ul>
+            <?php endif ?>
+        <?php endforeach ?>
+    </div>
+ 
+    <script type="text/javascript">
+        function downloadUImage(url) {
+            location.href = url;
+        }
+    </script>
+<?php endif;?>
+ <?php endif;?>

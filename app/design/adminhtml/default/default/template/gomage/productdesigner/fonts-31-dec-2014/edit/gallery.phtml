@@ -1,0 +1,137 @@
+<?php
+/**
+ * GoMage Product Designer Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use/
+ * @version      Release: 1.0.0
+ * @since        Available since Release 1.0.0
+ */
+?>
+<div class="entry-edit">
+ <div class="entry-edit-head">
+  <h4 class="icon-head head-edit-form fieldset-legend"><?php echo $this->__('Category'); ?></h4>
+  <div class="form-buttons"></div>
+ </div>
+ <div id="group_fields10" class="fieldset fieldset-wide">
+  <div class="hor-scroll">
+   <table cellspacing="0" class="form-list" style="width: 100%;">
+    <tbody>
+     <tr>
+      <td colspan="3" class="value" style="width: 100%;">
+       <div id="<?php echo $this->getHtmlId() ?>">
+        <div class="grid">
+         <table width="100%" border="0" cellspacing="0" id="<?php echo $this->getHtmlId() ?>_grid" class="form-list">                 
+          <tbody>
+           <tr class="template" id="<?php echo $this->getHtmlId() ?>_template">
+            <td class="label"><label for="name">Font Category</label></td>
+            <td class="value"><input type="text" name="cat_name" id="cat_name" value="" class="input-text required-entry" /></td>
+           </tr>
+          </tbody>                                    
+         </table>
+        </div>
+       </div>                       
+      </td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+ </div>
+</div>
+
+
+<div class="entry-edit">
+    <div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend"><?php echo $this->__('Fonts'); ?></h4>
+        <div class="form-buttons"></div>
+    </div>
+    <div id="group_fields10" class="fieldset fieldset-wide">
+        <div class="hor-scroll">
+            <table cellspacing="0" class="form-list" style="width: 100%;">
+                <tbody>
+                    <tr>
+                        <td colspan="3" class="value" style="width: 100%;">
+                        <div id="<?php echo $this->getHtmlId() ?>">
+                            <div class="grid">
+                                <table width="100%" cellspacing="0" id="<?php echo $this->getHtmlId() ?>_grid" class="data border">
+                                    <colgroup>
+                                        <col>
+                                        <col>
+                                        <col width="1">
+                                        <col width="1">
+                                    </colgroup><thead>
+                                    <tr class="headings">
+                                        <th><?php echo $this->__('Label'); ?></th>
+                                        <th><?php echo $this->__('Sort Order'); ?></th>
+                                        <th><?php echo $this->__('Exclude'); ?></th>
+                                        <th><?php echo $this->__('Remove'); ?></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="<?php echo $this->getHtmlId() ?>_list">
+                                        <tr class="template no-display" id="<?php echo $this->getHtmlId() ?>_template">
+                                            <td class="cell-label"><input type="text" onchange="<?php echo $this->getJsObjectName(); ?>.updateImage('__file__')" onkeyup="<?php echo $this->getJsObjectName(); ?>.updateImage('__file__')" class="input-text"></td>
+                                            <td class="cell-position"><input type="text" onchange="<?php echo $this->getJsObjectName(); ?>.updateImage('__file__')" onkeyup="<?php echo $this->getJsObjectName(); ?>.updateImage('__file__')" class="input-text validate-number"></td>
+                                            <td class="cell-disable a-center"><input type="checkbox" onclick="<?php echo $this->getJsObjectName(); ?>.updateImage('__file__')"></td>
+                                            <td class="cell-remove a-center"><input type="checkbox" onclick="<?php echo $this->getJsObjectName(); ?>.updateImage('__file__')"></td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="100" class="last" style="padding:8px">
+                                                <?php echo $this->getUploaderHtml() ?>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+
+                        <input type="hidden" value="<?php echo $this->htmlEscape($this->getImagesJson()) ?>" name="general[media_gallery][images]" id="<?php echo $this->getHtmlId() ?>_save">
+                        <input type="hidden" value="<?php echo $this->htmlEscape($this->getImagesValuesJson()) ?>" name="general[media_gallery][values]" id="<?php echo $this->getHtmlId() ?>_save_image">
+
+                        <script type="text/javascript">
+                            //<![CDATA[
+                            Product.Gallery.prototype.handleUploadComplete = function(files) {
+                                files.each( function(item) {
+                                    if (!item.response.isJSON()) {
+                                        try {
+                                            console.log(item.response);
+                                        } catch (e2) {
+                                            alert(item.response);
+                                        }
+                                        return;
+                                    }
+                                    var response = item.response.evalJSON();
+                                    if (response.error) {
+                                        return;
+                                    }
+                                    var newImage = {};
+                                    newImage.url = response.url;
+                                    newImage.file = response.file;
+                                    newImage.label = response.label;
+                                    newImage.tags = '';
+                                    newImage.position = this.getNextPosition();
+                                    newImage.disabled = 0;
+                                    newImage.removed = 0;
+                                    this.images.push(newImage);
+                                    this.uploader.removeFile(item.id);
+                                }.bind(this));
+                                this.container.setHasChanges();
+                                this.updateImages();
+                            }
+                            Product.Gallery.prototype.file2id = {
+                                'no_selection' : 0
+                            };
+                            window.<?php echo $this->getJsObjectName(); ?> = new Product.Gallery('<?php echo $this->getHtmlId() ?>', <?php echo $this->getUploader()->getJsObjectName() ?>, <?php echo $this->getImageTypesJson() ?>);
+                            //]]>
+                        </script>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

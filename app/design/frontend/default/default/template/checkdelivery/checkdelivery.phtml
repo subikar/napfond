@@ -1,0 +1,37 @@
+<style>
+.block-check-delivery .block-title strong {background-image:none; font-size: 11px;}
+.block-check-delivery .block-content {padding:0 10px;  }
+.block-check-delivery .button {float: right;}
+.block-check-delivery input{width: 107px;}
+</style>
+<div class="block block-list block-check-delivery">
+    <div class="block-title">
+		<?php $blockLabel = Mage::getStoreConfig('checkdelivery/general/block_title'); ?>
+        <strong><span><?php echo $this->__($blockLabel) ?></span></strong>
+    </div>
+    <div class="block-content" >		
+		<br>
+			<input name="zipcode" size="17" type="text" id="zipcode" maxlength="10" class="input-text" placeholder="<?php echo $this->__('Enter ZIP Code'); ?>"/>
+			<button type="button" name="zip-check" title="Check" class="button" id="zip-check" ><span><?php echo $this->__('Check'); ?></span></button>
+			<div id="delivery-message"></div>
+			<?php $defaultHtml = Mage::getStoreConfig('checkdelivery/general/default_html'); ?>
+			<div id="delivery-html"><?php echo $defaultHtml ?></div>
+			
+		<br>		
+    </div>
+</div>
+
+<script>
+	Event.observe('zip-check', 'click', function(event){
+		new Ajax.Request("<?php echo $this->getUrl('checkdelivery/index/index') ?>", {
+			method: "get",
+			parameters: {zipcode : $('zipcode').value },
+			onSuccess: function(transport) {
+				 var json = transport.responseText.evalJSON();
+				 $('delivery-message').update(json.message);				 
+				 $('delivery-message').setStyle({ color: json.color});
+				 $('delivery-html').update(json.html);	
+			}
+		});
+	});
+</script>

@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Search
+ */
+-->
+<config>
+    <modules>
+        <Amasty_Search>
+            <version>1.0.0</version>
+        </Amasty_Search>
+    </modules>
+    
+    <global>
+        <models>
+            <amsearch>
+                <class>Amasty_Search_Model</class>
+                <resourceModel>amsearch_mysql4</resourceModel>
+            </amsearch>
+            
+            <amsearch_mysql4>
+                <class>Amasty_Search_Model_Mysql4</class>
+            </amsearch_mysql4>
+            
+            <catalogsearch>
+                <rewrite>
+        			<advanced>Amasty_Search_Model_Catalogsearch_Advanced</advanced>
+        		</rewrite> 
+            </catalogsearch> 
+            
+        </models>
+        
+        <resources>
+            <amsearch_setup>
+                <setup>
+                    <module>Amasty_Search</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </amsearch_setup>
+            
+            <amsearch_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </amsearch_write>
+            
+            <amsearch_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </amsearch_read>
+        </resources>
+
+        <blocks>
+            <amsearch>
+                <class>Amasty_Search_Block</class>
+            </amsearch>
+        </blocks>
+         
+        <helpers>
+            <amsearch>
+                <class>Amasty_Search_Helper</class>
+            </amsearch>
+        </helpers>
+    </global>
+    
+     <frontend>
+        <translate>
+            <modules>
+                <Amasty_Search>
+                    <files>
+                        <default>Amasty_Search.csv</default>
+                    </files>
+                </Amasty_Search>
+            </modules>
+        </translate>
+    </frontend>  
+     
+        
+   <adminhtml>
+		<acl>
+			<resources>
+				<all>
+					<title>Allow Everything</title>
+				</all>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <amsearch translate="title" module="amsearch">
+                                            <title>Advanced Search</title>
+                                        </amsearch>
+                                    </children>
+                                </config>
+                            </children>
+                        </system> 
+                     </children>
+                </admin> 
+			</resources>
+		</acl>
+        <translate>
+            <modules>
+                <Amasty_Search>
+                    <files>
+                        <default>Amasty_Search.csv</default>
+                    </files>
+                </Amasty_Search>
+            </modules>
+        </translate>
+    </adminhtml> 
+    
+    <default>
+        <amsearch>
+           <general>
+                <ranges></ranges>
+            </general>
+        </amsearch>
+    </default>
+</config>

@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Gravita_Relatedbhishoom>
+            <version>0.1.0</version>
+        </Gravita_Relatedbhishoom>
+    </modules>
+	
+	<global>
+        <models>
+            <relatedbhishoom>
+                <class>Gravita_Relatedbhishoom_Model</class>
+                <resourceModel>relatedbhishoom_mysql4</resourceModel>
+            </relatedbhishoom>
+            <relatedbhishoom_mysql4>
+                <class>Gravita_Relatedbhishoom_Model_Mysql4</class>
+            </relatedbhishoom_mysql4>
+        </models>
+        <blocks>
+            <relatedbhishoom>
+                <class>Gravita_Relatedbhishoom_Block</class>
+            </relatedbhishoom>
+        </blocks>
+        <helpers>
+            <relatedbhishoom>
+                <class>Gravita_Relatedbhishoom_Helper</class>
+            </relatedbhishoom>  
+        </helpers>
+    </global>
+    
+    <admin>
+        <routers>
+            <relatedbhishoom>
+                <use>admin</use>
+                <args>
+                    <module>Gravita_Relatedbhishoom</module>
+                    <frontName>relatedbhishoom</frontName>
+                </args>
+            </relatedbhishoom>
+        </routers>
+    </admin> 
+	 
+	<adminhtml>
+		<translate>
+            <modules>
+                <mage_adminhtml>
+                    <files>
+                        <relatedbhishoom>Gravita_Relatedbhishoom.csv</relatedbhishoom>
+                    </files>
+                </mage_adminhtml>
+            </modules>
+        </translate>
+		
+		<menu>
+            <search>
+                <children>
+                    <relatedbhishoom_adminform translate="title" module="relatedbhishoom">
+                        <title>Related Products</title>
+                        <action>relatedbhishoom/adminhtml_relatedbhishoomform</action>
+                    </relatedbhishoom_adminform>
+                </children>
+            </search>			
+        </menu>
+		
+		<acl>
+            <resources>
+                <admin>
+                    <children>
+                        <catalog>
+                            <children>
+                                <relatedbhishoom_adminform>
+                                    <title>My Form</title>
+                                </relatedbhishoom_adminform>
+                            </children>
+                        </catalog>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        
+        <layout>
+            <updates>
+                <relatedbhishoom>
+                    <file>relatedbhishoom.xml</file>
+                </relatedbhishoom>
+            </updates>
+        </layout>
+	</adminhtml>  
+</config>

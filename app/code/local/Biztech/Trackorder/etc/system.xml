@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+    <tabs>
+        <biztech translate="label" module="trackorder">
+            <label>Biztech Extensions</label>
+            <sort_order>400</sort_order>
+        </biztech>
+    </tabs>
+    <sections>
+        <trackorder translate="label" module="trackorder">
+            <label>Track Order</label>
+            <tab>biztech</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>10</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <trackorder_general translate="label">
+                    <label>General</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enabled translate="label">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Select Yes to enable this feature.</comment>
+                        </enabled>
+                        <toplinks translate="label">
+                            <label>Allowed For Top Links</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>150</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Select Yes to allow for Top Links.</comment>
+                            <depends>
+                                <enabled>1</enabled>
+                            </depends>
+                        </toplinks>
+                        <topmenu translate="label">
+                            <label>Allowed For Top Menu</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>200</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Select Yes to allow for Top Menu.</comment>
+                             <depends>
+                                <enabled>1</enabled>
+                            </depends>
+                        </topmenu>
+                        <sendtrack_link translate="label">
+                            <label>Send TrackOrder Link</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>250</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Select Yes to send track order link in email.</comment>
+                        </sendtrack_link>
+                        <show_widget translate="label">
+                            <label>Show TrackOrder Widget</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>trackorder/system_config_frontend_widgetsettings</source_model>
+                            <sort_order>250</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Choose column for widget to appear</comment>
+                        </show_widget>
+                    </fields>
+                </trackorder_general>
+            </groups>
+        </trackorder>
+    </sections>
+</config>

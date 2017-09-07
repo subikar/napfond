@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<layout>
+    <fproduct_adminhtml_fproductform_index>
+        <update handle="fproduct_fproductform_index"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="fproduct" template="fproduct/fproduct.phtml"/>
+        </reference>
+    </fproduct_adminhtml_fproductform_index>
+	
+	<fproduct_adminhtml_edit_index>
+        <update handle="fproduct_edit_index"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="edit" template="fproduct/edit.phtml"/>
+        </reference>
+    </fproduct_adminhtml_edit_index>
+</layout>

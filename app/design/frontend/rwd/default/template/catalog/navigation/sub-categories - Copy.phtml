@@ -1,0 +1,275 @@
+<!-- shop section start here-->
+<?php $_maincategorylisting = $this->getCurrentCategory()?>
+ <?php $_categories=$this->getCurrentChildCategories()?>
+ <?php 
+ 	 echo $mainCat = $this->getCurrentCategory()->getName();
+ 	if($mainCat == 'Gift')
+	 {
+		 echo '<h2 class="pick_device">Choose your  Gifts </h2>';
+		 echo '<div class="pick_device_div">Shop  at bhishoom for all your Gifts  custom made  for your  special ones . you can either buy from  our awesome  designs under  various product categories to suit his or her personality  and can customize it  or you can custom make  gift right from scratch  to create a one of a kind gift  to surprise your special ones .  Give a gift they’ll never forget because it will be made by you, just for them.</div>';
+	 }
+	 else
+	 { 
+	 	echo '<h2 class="pick_device">Pick the device you possess</h2>';
+	 }?> 
+ <?php 
+ $connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+ if($_categories->count()):?>
+  <div id="categories" class="shop-section">
+   <div class="row">
+	<?php $i=1; foreach ($_categories as $_category):?>
+	 <?php if($_category->getIsActive()):
+		$cur_category = Mage::getModel('catalog/category')->load($_category->getId());
+		$layer = Mage::getSingleton('catalog/layer');
+		$layer->setCurrentCategory($cur_category);	   
+		$catName = $this->getCurrentCategory()->getName(); 
+	 ?>
+     
+     <?php $_imageUrl = $cur_category->getThumbnail();
+		if($_imageUrl != ''){
+	 ?>       
+     <div class="col-md-6">
+	  <div class="skin-toggle">
+	   <div class="img-skin" id="mobileSkin">       
+		<a href="<?php echo $this->getCategoryUrl($_category)?>" title="<?php echo $catName;?>"><img alt="<?php echo $catName;?>" src="<?php echo $this->getSkinUrl('images/mobile-skin.jpg');?>"></a> 
+    	<div class="skin-tab">
+		 <a href="<?php echo $this->getCategoryUrl($_category)?>" title="<?php echo $catName;?>"><div class="skin-title"><?php echo $catName;?></div></a>				
+		</div>
+	   </div>
+	   <div id="mobile-menu" class="munu-categories">
+		<ul>
+        <?php
+		
+		$children = Mage::getModel('catalog/category')->getCategories($_category->getId());
+		$c_counter = 1;
+		$children_counter = $children->count();
+		 
+		
+		foreach ($children as $category) {
+		
+			if($children_counter % 2 == 1 && $c_counter == $children_counter){
+				echo '<li><a href="'.$this->getCategoryUrl($category).'" title="'.$category->getName().'">&nbsp;</a></li>';				
+			 }
+			$c_counter++;
+			echo '<li><a href="'.$this->getCategoryUrl($category).'" title="'.$category->getName().'">'.$category->getName().'</a></li>';
+			
+		}
+		
+		?>		 
+		</ul>
+	   </div>
+	  </div> 
+     </div>       
+        
+     <?php /*?><a href="<?php echo $this->getCategoryUrl($_category)?>">
+      <img src="<?php echo $this->getUrl() . 'media/catalog/category/' .$_imageUrl?>">
+     </a><?php */?>      
+    <?php } ?>    
+   <?php  endif;?>
+  <?php $i++;endforeach ?>
+  </div>
+    </div>  
+  <?php $layer->setCurrentCategory($_maincategorylisting);  ?>
+ <?php endif; ?>
+ 
+	<!--<div id="categories" class="shop-section">
+		<div class="row">
+			<div class="col-md-6">
+				<div class="skin-toggle">
+					<div class="img-skin" id="mobileSkin">       
+						<a href=""><img alt="Mobile Skin" src="<?php //echo $this->getSkinUrl('images/mobile-skin.jpg');?>"></a> 
+    					<div class="skin-tab">
+							<a href=""><div class="skin-title">Mobile Skin</div></a>				
+						</div>
+		
+					</div>
+					<div id="mobile-menu" class="munu-categories">
+						<ul>
+							<li><a href="">Mobile skin 1</a></li>
+							<li><a href="">Mobile skin 1</a></li>
+							<li><a href="">Mobile skin 1</a></li>
+							<li><a href="">Mobile skin 1</a></li>
+							<li><a href="">Mobile skin 1</a></li>
+							<li><a href="">Mobile skin 1</a></li>
+							<li><a href="">Mobile skin 1</a></li>
+							<li><a href="">View all</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="skin-toggle">
+					<div class="img-skin" id="mobileSkin">       
+						<a href=""><img alt="Mobile Skin" src="<?php echo $this->getSkinUrl('images/mobile-skin.jpg');?>"></a> 
+    					<div class="skin-tab">
+							<a href=""><div class="skin-title">Mobile Skin</div></a>				
+						</div>
+		
+					</div>
+					<div id="mobile-menu" class="munu-categories">
+						<ul>
+							<li><a href="">Mobile skin 1</a></li>
+							<li><a href="">Mobile skin 1</a></li>
+							<li><a href="">Mobile skin 1</a></li>
+							<li><a href="">Mobile skin 1</a></li>
+							<li><a href="">Mobile skin 1</a></li>
+							<li><a href="">Mobile skin 1</a></li>
+							<li><a href="">Mobile skin 1</a></li>
+							<li><a href="">View all</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>-->
+<!-- shop section end here-->
+
+<div class="col-md-12">
+	<div class="chooseBrand">
+ <h2 class="more_case">
+  <span>Oops!!Unable to find your Gadget! </span><br /> Search no more!!! We have got more options here!!!.
+ </h2>
+
+ <?php 
+ $connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+ $first_top_cat = $this->getCurrentCategory()->getName();
+ switch($first_top_cat)
+ {
+	 case "T-Shirt":
+	 $qry = "select dt.id, dt.type_id, dt.brand_name, dd.select1, dd.select2, dd.select3 FROM drop_device as dd, drop_data as dt where dd.id = dt.type_id and dd.device_name = '".$first_top_cat."' and dt.active = 1 Group BY dt.brand_name";
+     $rowsArray = $connection->fetchAll($qry); 
+	 $rowArray = $connection->fetchRow($qry);?>	 
+	 <div class="bselect">
+      <select name="bselect" id="bselect" onchange="get_device(this.value, '<?php echo $rowArray['type_id'];?>', '<?php echo $rowArray['select2'];?>')">
+       <option value="0"><?php echo $rowArray['select1'];?></option><?php
+	   foreach($rowsArray as $rowsArray1)
+   	   { ?>
+         <option value="<?php echo $rowsArray1['brand_name'];?>"><?php echo $rowsArray1['brand_name'];?></option>
+       <?php
+	   }?>
+      </select>
+     </div>     
+     <div class="bvalue">
+      <select name="bvalue" id="bvalue" onchange="get_device1(this.value, '<?php echo $rowArray['type_id'];?>', '<?php echo $rowArray['select2'];?>')">
+       <option value="0"><?php echo $rowArray['select2'];?></option>
+      </select>
+     </div>
+     <div class="bvalue">
+      <select name="bvalue1" id="bvalue1">
+       <option value="0"><?php echo $rowArray['select3'];?></option>
+      </select>
+     </div>
+     <div class="brandBtn" style="display:none;">
+      <input class="button" type="button" name="view_cases" id="view_cases" value="Go" onclick="chk_validate();" />
+     </div>     
+	 <?php
+	 break;
+	 case "Laptop Skin":
+	 $qry = "select dt.id, dt.type_id, dt.brand_name, dd.select1, dd.select2 FROM drop_device as dd, drop_data as dt where dd.id = dt.type_id and dd.device_name = '".$first_top_cat."' and dt.active = 1 Group BY dt.brand_name";
+     $rowsArray = $connection->fetchAll($qry); 
+	 $rowArray = $connection->fetchRow($qry);?>	 
+	 <div class="bselect">
+      <select name="bselect" id="bselect" onchange="get_device(this.value, '<?php echo $rowArray['type_id'];?>', '<?php echo $rowArray['select2'];?>')">
+       <option value="0"><?php echo $rowArray['select1'];?></option><?php
+	   foreach($rowsArray as $rowsArray1)
+   	   { ?>
+         <option value="<?php echo $rowsArray1['brand_name'];?>"><?php echo $rowsArray1['brand_name'];?></option>
+       <?php
+	   }?>
+      </select>
+     </div>     
+     <div class="bvalue">
+      <select name="bvalue" id="bvalue">
+       <option value="0"><?php echo $rowArray['select2'];?></option>
+      </select>
+     </div>
+     <div class="brandBtn">
+      <input class="button" type="button" name="view_cases" id="view_cases" value="Go" onclick="chk_validate();" disabled="disabled" />
+     </div>     
+	 <?php
+	 break;
+	 default:
+	 $qry = "select dt.id, dt.type_id, dt.brand_name, dd.select1, dd.select2 FROM drop_device as dd, drop_data as dt where dd.id = dt.type_id and dd.device_name = 'Mobile Case' and dt.active = 1 Group BY dt.brand_name";
+     $rowsArray = $connection->fetchAll($qry); 
+	 $rowArray = $connection->fetchRow($qry);?>	 
+	 <div class="bselect">
+      <select name="bselect" id="bselect" onchange="get_device(this.value, '<?php echo $rowArray['type_id'];?>', '<?php echo $rowArray['select2'];?>')">
+       <option value="0"><?php echo $rowArray['select1'];?></option><?php
+	   foreach($rowsArray as $rowsArray1)
+   	   { ?>
+         <option value="<?php echo $rowsArray1['brand_name'];?>"><?php echo $rowsArray1['brand_name'];?></option>
+       <?php
+	   }?>
+      </select>
+     </div>     
+     <div class="bvalue">
+      <select name="bvalue" id="bvalue">
+       <option value="0"><?php echo $rowArray['select2'];?></option>
+      </select>
+     </div>
+     <div class="brandBtn">
+      <input class="button" type="button" name="view_cases" id="view_cases" value="Go" onclick="chk_validate();" />
+     </div>     
+	 <?php
+ } 
+ ?>
+ </div>
+</div>
+
+<script type="text/javascript">
+function get_device(val, type_id, select2)
+{
+   var dataString = "get_device="+val+"&type_id="+type_id+"&select="+select2;
+   var reloadurl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'admin_cat.php'?>';
+	//Element.show('loadingmask');
+	new Ajax.Request(reloadurl, {
+	method: 'post',
+	parameters: dataString,
+	onComplete: function(transport) {
+	//Element.hide('loadingmask');
+	document.getElementById("bvalue").innerHTML = transport.responseText;
+	}
+	});
+}
+function get_device1(val, type_id, select2)
+{
+   var dataString = "get_device="+val+"&type_id="+type_id+"&select="+select2;
+   var reloadurl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'admin_cat.php'?>';
+	//Element.show('loadingmask');
+	new Ajax.Request(reloadurl, {
+	method: 'post',
+	parameters: dataString,
+	onComplete: function(transport) {
+	//Element.hide('loadingmask');
+	document.getElementById("bvalue1").innerHTML = transport.responseText;
+	}
+	});
+}
+function chk_validate()
+{
+	var bselect = document.getElementById("bselect").value;
+	var bvalue = document.getElementById("bvalue").value;
+	
+	if(bselect == 0)
+	{
+		alert("Please Select First Value");
+		return false;
+	}
+	if(bvalue == 0)
+	{
+		alert("Please Select Second Value");
+		return false;
+	}
+	
+	var dataString = "get_bselect="+bselect+"&get_bvalue="+bvalue;
+    var reloadurl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'admin_cat.php'?>';
+	//Element.show('loadingmask');
+	new Ajax.Request(reloadurl, {
+	method: 'post',
+	parameters: dataString,
+	onComplete: function(transport) {
+	window.location.href = transport.responseText;
+	}
+	});
+}
+</script>

@@ -1,0 +1,81 @@
+<?php
+/**
+ * GoMage Product Designer Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use/
+ * @version      Release: 1.0.0
+ * @since        Available since Release 1.0.0
+ */
+?>
+<?php $licenseEnabled =  $this->licenseAgreementsEnabled() && $this->getLicenceAgreementsText(); ?>
+<div>
+    <div id="uploadedImages" class="displayNone">
+        <?php echo $this->getChildHtml('uploadedImages'); ?>      
+    </div>
+   
+    <?php if ($licenseEnabled):?>
+    <ul class="form-list">
+      <li class="control control-rights">
+        <input type="checkbox" class="checkbox" name="licence_agreements" id="licence_agreements" />
+        <label for="licence_agreements"><?php echo $this->__('I have the rights to use these images') ?></label>
+      </li>
+    </ul>
+    <div class="pd_more_info_link">
+        <a href="javascript:;" id="license-agreements-link"><?php echo $this->__('More info') ?></a>
+        <div id="license-agreemants" class="pd-license-agreements-popup" style="display: none">
+            <?php echo $this->getLicenceAgreementsText(); ?>
+        </div>
+    </div>
+    <?php endif;?>
+</div>
+<div id="file-input-box" <?php echo $licenseEnabled ? 'style="display:none;"' : ''?>>
+    <form target="iframeSave" id="uploadImages" enctype="multipart/form-data" action="<?php echo Mage::getUrl('designer/index/uploadImages'); ?>" method="post">
+	
+		<div id="ajax-loader2" class="displayNone">	
+		 <i class="fa-li fa-lg fa fa-spinner fa-spin"></i> Processing...
+		</div>
+        <div class="pd-upload-input displayNone">
+          <input name="filesToUpload[]" id="filesToUpload" type="file" multiple="multiple" accept="<?php echo $this->getAllowedImageMimeTypesString(); ?>"/>
+        </div>
+		
+        <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $this->getMaxUploadFileSize();?>" />
+         <div class="pd-upload-buttons" style="display:none">
+          <button class="button" type="submit" id="gra_upload_image"><span><span><?php echo $this->__('Upload'); ?></span></span></button>
+          <button class="button" id="remove-img-btn" type="button" <?php if (!$this->hasImages()):?>style="display: none"<?php endif;?>><span><span><?php echo $this->__('Remove Images'); ?></span></span></button>        
+        </div>
+        <iframe id="iframeSave" name="iframeSave" style="display:none;"></iframe>
+    </form>
+	
+<script type="text/javascript">
+
+document.getElementById("filesToUpload").onchange = function() {
+    //document.getElementById("gra_upload_image").click();
+	
+	generateClickEvents('gra_upload_image')
+	
+	jQuery("#ajax-loader2").removeClass("displayNone");
+	jQuery("#ajax-loader2").addClass("displayBlock");
+};
+	
+</script>	
+	
+    <?php if ($this->imageConditionsEnabled() && $text = $this->getImageConditionsText()): ?>
+        <div id="image-conditions">
+            <?php echo $text; ?>
+        </div>
+    <?php endif;?>
+</div>
+<script type="text/javascript">
+    document.observe('dom:loaded', function(e){
+        var imagesUploader = new GoMage.ImageUploader(
+            '<?php echo $this->getMaxUploadFileSize();?>',
+            '<?php echo $this->getAllowedImageMimeTypesJson()?>',
+            '<?php echo $this->getAllowedImageExtensions();?>',
+            '<?php echo $this->getRemoveImgUrl();?>'
+        );
+    }.bind(this));
+</script>

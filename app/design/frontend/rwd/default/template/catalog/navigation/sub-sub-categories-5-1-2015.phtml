@@ -1,0 +1,185 @@
+<div id="after-cr-design" class="col-md-8">
+ <h1 class="pick_device">Choose your devices</h1>
+ <div id="categories">
+  <?php $_maincategorylisting=$this->getCurrentCategory()?>
+  <?php $_categories=$this->getCurrentChildCategories()?>
+  <?php 
+   $connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+   if($_categories->count()):?>
+    <?php $i=1; foreach ($_categories as $_category):?>
+     <?php if($_category->getIsActive()):
+		$cur_category=Mage::getModel('catalog/category')->load($_category->getId());
+   		$layer = Mage::getSingleton('catalog/layer');
+		$layer->setCurrentCategory($cur_category);
+    	$catName = $this->getCurrentCategory()->getName();   
+	    $_imageUrl = $cur_category->getThumbnail();
+		if($_imageUrl != ''){
+		?>    
+    	 <div class="col-md-4">
+	      <div class="category-box">
+     	   <a href="<?php echo $this->getCategoryUrl($_category)?>">
+            <img src="<?php echo $this->getUrl() . 'media/catalog/category/' .$_imageUrl?>">
+     	   </a>     
+	      </div>
+    	 </div> 
+	    <?php } ?>    
+     <?php  endif;?>
+    <?php $i++;endforeach ?>
+   <?php $layer->setCurrentCategory($_maincategorylisting);  ?>
+  <?php endif; ?>
+ </div>
+</div>
+<div class="col-md-4">
+ <div class="chooseBrand pickBrand">
+  <h2 class="more_case">
+   <span>Unable to find you device? </span><br /> Search from over 200 models.
+  </h2>
+  <?php 
+  $first_top_cat = $this->getCurrentCategory()->getName();
+  switch($first_top_cat)
+  {
+	 case "T-Shirt":
+	 $qry = "select dt.id, dt.type_id, dt.brand_name, dd.select1, dd.select2, dd.select3 FROM drop_device as dd, drop_data as dt where dd.id = dt.type_id and dd.device_name = '".$first_top_cat."' and dt.active = 1 Group BY dt.brand_name";
+     $rowsArray = $connection->fetchAll($qry); 
+	 $rowArray = $connection->fetchRow($qry);?>	 
+	 <div class="bselect">
+      <select name="bselect" id="bselect" onchange="get_device(this.value, '<?php echo $rowArray['type_id'];?>', '<?php echo $rowArray['select2'];?>')">
+       <option value="0"><?php echo $rowArray['select1'];?></option><?php
+	   foreach($rowsArray as $rowsArray1)
+   	   { ?>
+         <option value="<?php echo $rowsArray1['brand_name'];?>"><?php echo $rowsArray1['brand_name'];?></option>
+       <?php
+	   }?>
+      </select>
+     </div>     
+     <div class="bvalue">
+      <select name="bvalue" id="bvalue" onchange="get_device1(this.value, '<?php echo $rowArray['type_id'];?>', '<?php echo $rowArray['select2'];?>')">
+       <option value="0"><?php echo $rowArray['select2'];?></option>
+      </select>
+     </div>
+     <div class="bvalue">
+      <select name="bvalue1" id="bvalue1">
+       <option value="0"><?php echo $rowArray['select3'];?></option>
+      </select>
+     </div>
+     <div class="brandBtn" style="display:none;">
+      <input class="button" type="button" name="view_cases" id="view_cases" value="Go" onclick="chk_validate();" />
+     </div>     
+	 <?php
+	 break;
+	 case "Laptop Skin":
+	 $qry = "select dt.id, dt.type_id, dt.brand_name, dd.select1, dd.select2 FROM drop_device as dd, drop_data as dt where dd.id = dt.type_id and dd.device_name = '".$first_top_cat."' and dt.active = 1 Group BY dt.brand_name";
+     $rowsArray = $connection->fetchAll($qry); 
+	 $rowArray = $connection->fetchRow($qry);?>	 
+	 <div class="bselect">
+      <select name="bselect" id="bselect" onchange="get_device(this.value, '<?php echo $rowArray['type_id'];?>', '<?php echo $rowArray['select2'];?>')">
+       <option value="0"><?php echo $rowArray['select1'];?></option><?php
+	   foreach($rowsArray as $rowsArray1)
+   	   { ?>
+         <option value="<?php echo $rowsArray1['brand_name'];?>"><?php echo $rowsArray1['brand_name'];?></option>
+       <?php
+	   }?>
+      </select>
+     </div>     
+     <div class="bvalue">
+      <select name="bvalue" id="bvalue">
+       <option value="0"><?php echo $rowArray['select2'];?></option>
+      </select>
+     </div>
+     <div class="brandBtn">
+      <input class="button" type="button" name="view_cases" id="view_cases" value="Go" onclick="chk_validate();" disabled="disabled" />
+     </div>     
+	 <?php
+	 break;
+	 default:
+	 $qry = "select dt.id, dt.type_id, dt.brand_name, dd.select1, dd.select2 FROM drop_device as dd, drop_data as dt where dd.id = dt.type_id and dd.device_name = 'Mobile Case' and dt.active = 1 Group BY dt.brand_name";
+     $rowsArray = $connection->fetchAll($qry); 
+	 $rowArray = $connection->fetchRow($qry);?>	 
+	 <div class="bselect">
+      <select name="bselect" id="bselect" onchange="get_device(this.value, '<?php echo $rowArray['type_id'];?>', '<?php echo $rowArray['select2'];?>')">
+       <option value="0"><?php echo $rowArray['select1'];?></option><?php
+	   foreach($rowsArray as $rowsArray1)
+   	   { ?>
+         <option value="<?php echo $rowsArray1['brand_name'];?>"><?php echo $rowsArray1['brand_name'];?></option>
+       <?php
+	   }?>
+      </select>
+     </div>     
+     <div class="bvalue">
+      <select name="bvalue" id="bvalue">
+       <option value="0"><?php echo $rowArray['select2'];?></option>
+      </select>
+     </div>
+     <div class="brandBtn">
+      <input class="button" type="button" name="view_cases" id="view_cases" value="Go" onclick="chk_validate();" />
+     </div>     
+	 <?php
+  } 
+ ?>
+ </div>
+</div>
+<script src="<?php echo Mage::getBaseUrl('js')?>jquery-scrolltofixed.js" type="text/javascript"></script>
+<script type="text/javascript">
+ jQuery(document).ready(function() {
+   jQuery('#scroll_rgt_div').scrollToFixed( { top: 0, limit: function(){   
+   var limit = (jQuery('#scroll_rgt_div_wrapper').offset().top + jQuery('#scroll_rgt_div_wrapper').outerHeight() + 420);
+   jQuery('#scroll_rgt_div').css("left","auto")
+   return limit;
+   } } );    
+});
+function get_device(val, type_id, select2)
+{
+   var dataString = "get_device="+val+"&type_id="+type_id+"&select="+select2;
+   var reloadurl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'admin_cat.php'?>';
+	//Element.show('loadingmask');
+	new Ajax.Request(reloadurl, {
+	method: 'post',
+	parameters: dataString,
+	onComplete: function(transport) {
+	//Element.hide('loadingmask');
+	document.getElementById("bvalue").innerHTML = transport.responseText;
+	}
+	});
+}
+function get_device1(val, type_id, select2)
+{
+   var dataString = "get_device="+val+"&type_id="+type_id+"&select="+select2;
+   var reloadurl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'admin_cat.php'?>';
+	//Element.show('loadingmask');
+	new Ajax.Request(reloadurl, {
+	method: 'post',
+	parameters: dataString,
+	onComplete: function(transport) {
+	//Element.hide('loadingmask');
+	document.getElementById("bvalue1").innerHTML = transport.responseText;
+	}
+	});
+}
+function chk_validate()
+{
+	var bselect = document.getElementById("bselect").value;
+	var bvalue = document.getElementById("bvalue").value;
+	
+	if(bselect == 0)
+	{
+		alert("Please Select First Value");
+		return false;
+	}
+	if(bvalue == 0)
+	{
+		alert("Please Select Second Value");
+		return false;
+	}
+	
+	var dataString = "get_bselect="+bselect+"&get_bvalue="+bvalue;
+    var reloadurl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'admin_cat.php'?>';
+	//Element.show('loadingmask');
+	new Ajax.Request(reloadurl, {
+	method: 'post',
+	parameters: dataString,
+	onComplete: function(transport) {
+	window.location.href = transport.responseText;
+	}
+	});
+}
+</script>

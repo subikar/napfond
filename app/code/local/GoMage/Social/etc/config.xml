@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * GoMage Social Connector Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use
+ * @version      Release: 1.0
+ * @since        Class available since Release 1.0
+ */ 
+ -->
+<config>
+	<modules>
+		<GoMage_Social>
+			<version>1.0.0</version>
+		</GoMage_Social>
+	</modules>
+	<frontend>
+		<routers>
+			<gomage_social>
+				<use>standard</use>
+				<args>
+					<module>GoMage_Social</module>
+					<frontName>gomage_social</frontName>
+				</args>
+			</gomage_social>
+		</routers>
+		<layout>
+			<updates>
+				<gomage_social module="gomage_social">
+					<file>gomage-social.xml</file>
+				</gomage_social>
+			</updates>
+		</layout>		
+	</frontend>
+	<adminhtml>
+		<events>
+			<admin_system_config_changed_section_gomage_social>
+                <observers>
+                    <gomage_social_changed>                        
+                        <class>gomage_social/observer</class>
+                        <method>saveConfig</method>
+                    </gomage_social_changed>
+                </observers>
+            </admin_system_config_changed_section_gomage_social>
+            <controller_action_predispatch>
+                <observers>
+                    <gomage_social_notify>
+                        <class>gomage_social/observer_notify</class>
+                        <method>notify</method>
+                    </gomage_social_notify>
+                </observers>
+            </controller_action_predispatch>
+        </events>
+	</adminhtml>
+	<global>
+		<blocks>
+			<gomage_social>
+				<class>GoMage_Social_Block</class>
+			</gomage_social>
+		</blocks>
+		<models>
+			<gomage_social>
+				<class>GoMage_Social_Model</class>
+				<resourceModel>gomage_social_mysql4</resourceModel>
+			</gomage_social>
+			<gomage_social_mysql4>
+				<class>GoMage_Social_Model_Mysql4</class>
+				<entities>
+					<entity>
+						<table>gomage_social_entity</table>
+					</entity>
+				</entities>
+			</gomage_social_mysql4>
+		</models>
+		<resources>
+			<gomage_social_setup>
+				<setup>
+					<module>GoMage_Social</module>
+				</setup>
+				<connection>
+					<use>core_setup</use>
+				</connection>
+			</gomage_social_setup>
+			<gomage_social_write>
+				<connection>
+					<use>core_write</use>
+				</connection>
+			</gomage_social_write>
+			<gomage_social_read>
+				<connection>
+					<use>core_read</use>
+				</connection>
+			</gomage_social_read>
+		</resources>
+		<helpers>
+			<gomage_social>
+				<class>GoMage_Social_Helper</class>
+			</gomage_social>
+		</helpers>
+	</global>
+	<crontab>
+        <jobs>
+        	<gomage_social_information>
+                <schedule><cron_expr>0 2 10 * *</cron_expr></schedule>
+                <run><model>gomage_social/observer::saveConfig</model></run>
+			</gomage_social_information>			
+        </jobs>
+    </crontab> 
+	<default>
+		<gomage_social>
+			<facebook>				
+				<fast_links_type>1</fast_links_type>
+				<login_type>1</login_type>
+				<checkout_type>1</checkout_type>				
+				<text>Login with Facebook</text>
+				<order>1</order>
+			</facebook>
+			<linkedin>				
+				<fast_links_type>1</fast_links_type>
+				<login_type>1</login_type>
+				<checkout_type>1</checkout_type>
+				<text>Login with LinkedIn</text>
+				<order>2</order>
+			</linkedin>			
+			<google>				
+				<fast_links_type>1</fast_links_type>
+				<login_type>1</login_type>
+				<checkout_type>1</checkout_type>
+				<text>Login with Google</text>
+				<order>3</order>
+			</google>
+			<information>
+				<text>
+					<![CDATA[<h2>GoMage Extensions</h2><p><a href="http://www.gomage.com/extensions/gomage-lightcheckout.html"><img title="GoMage LightCheckout - only one step on the checkout page" src="http://www.gomage.com/media/magentoconnect_image/lightcheckout.png" alt="GoMage LightCheckout" /></a> <a href="http://www.gomage.com/extensions/gomage-feed-pro.html"><img title="GoMage Feed Pro - send your product data to all Search Engines you know" src="http://www.gomage.com/media/magentoconnect_image/feed_pro.png" alt="GoMage Feed Pro" /></a> <a href="http://www.gomage.com/extensions/gomage-advanced-navigation.html"><img title="GoMage Advanced Navigation - helps you to optimize and improve navigation on your site" src="http://www.gomage.com/media/magentoconnect_image/advanced_navigation.png" alt="GoMage Advanced Navigation" /></a> <a href="http://www.gomage.com/extensions/promo.html"><img title="GoMage Ads &amp; Promo - simple, flexible, yet powerful solution for advertising and promoting your products" src="http://www.gomage.com/media/magentoconnect_image/ads_and_promo.png" alt="GoMage Ads &amp; Promo" /></a> <a href="http://www.gomage.com/extensions/procart.html"><img title="GoMage ProCart - allows your customers to add products to cart without page reloading or redirecting" src="http://www.gomage.com/media/magentoconnect_image/procart.png" alt="GoMage ProCart" /></a> <a href="http://www.gomage.com/extensions/gomage-sales-and-deals.html"><img title="GoMage Sales and Deals extension is all about providing the best deals for your customers" src="http://www.gomage.com/media/magentoconnect_image/sales_and_deals.png" alt="GoMage Sales and Deals" /></a></p>]]>
+				</text>
+			</information>
+		</gomage_social>
+	</default>
+</config> 

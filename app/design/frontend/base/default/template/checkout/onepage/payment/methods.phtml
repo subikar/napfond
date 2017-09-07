@@ -1,0 +1,487 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+if(!function_exists ('is_decimal')){
+function is_decimal( $val )
+{
+    return is_numeric( $val ) && floor( $val ) != $val;
+} 
+}
+
+/**
+ * One page checkout payment methods
+ *
+ * @var $this Mage_Checkout_Block_Onepage_Payment_Methods
+ */
+ 
+ $session        = Mage::getSingleton('checkout/session');
+ $quote_id       = $session->getQuoteId();
+ 
+    //$resource = Mage::getSingleton('core/resource');
+     
+    $readConnection = Mage::helper('function/more')->getDbReadObject(); // To read from the database
+     
+    $writeConnection = Mage::helper('function/more')->getDbWriteObject(); // To write to the database
+	
+	$query = 'SELECT country_id FROM sales_flat_quote_address where quote_id=' . $quote_id." and address_type='shipping'";     
+	$countryIDVar = $readConnection->fetchOne($query); 
+ 
+if($countryIDVar == 'IN')
+	$cashOnDeliverFee = Mage::getStoreConfig('payment/phoenix_cashondelivery/inlandcosts');
+else
+	$cashOnDeliverFee = Mage::getStoreConfig('payment/phoenix_cashondelivery/foreigncountrycosts'); 
+ 
+////////////////////////////////////////Get online payment discount/////////////////////////////////////////////////
+$oRule = Mage::getModel('salesrule/rule')->load(7);
+
+
+$couponDiscountPercentage = $oRule->getDiscountAmount();
+$couponDiscountRuleApplyToShippingAmount = $oRule->getData("apply_to_shipping");
+if(is_decimal($couponDiscountPercentage))
+$couponDiscountPercentage = number_format($oRule->getDiscountAmount(),2);
+else
+$couponDiscountPercentage = number_format($oRule->getDiscountAmount(),0);
+
+////////////////////////////////////////End of Get online payment discount/////////////////////////////////////////// 
+ 
+$key = 'ablebToShip';
+$myRegistryKey = Mage::registry($key); 
+
+$quote = Mage::getModel('checkout/session')->getQuote();
+
+
+
+//////////////////////////////////////Check Gift Certificate Balance In Cart If it is applied/////////////////////////////
+$giftCertificatBalance = 0;
+
+if($quote->getGiftcertCode()!=''){
+$cert = Mage::getModel('ugiftcert/cert')->load($quote->getGiftcertCode(), 'cert_number');
+$giftCertificatBalance =  $cert->getBaseBalance();
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+$quoteData= $quote->getData();
+
+$grandTotalQuote=$quoteData['grand_total'];
+
+////////////////////////////////////////Apply Online Payment discount to grand total//////////////////////////////////
+$percentage = $couponDiscountPercentage;
+
+//////////////////////////////////////Check Gift Certificate items In Cart/////////////////////////////
+$query = 'SELECT row_total FROM sales_flat_quote_item WHERE product_id = "113906" and quote_id="'.$quote->getId().'"'; 
+$gift_certi_rows = $readConnection->fetchAll($query);	
+$gift_certi_Total = 0;
+foreach($gift_certi_rows as $gift_certi_row)
+{
+	$gift_certi_Total = $gift_certi_Total + $gift_certi_row["row_total"];
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+if($couponDiscountRuleApplyToShippingAmount)
+$new_grandTotalQuote_online_discount = ($percentage / 100) * ($grandTotalQuote-$gift_certi_Total-$giftCertificatBalance);
+else
+$new_grandTotalQuote_online_discount = ($percentage / 100) * ($quoteData['base_subtotal_with_discount']-$gift_certi_Total-$giftCertificatBalance);
+
+
+ $new_grandTotalQuote_online_discount = ceil($new_grandTotalQuote_online_discount);
+ 
+ if($new_grandTotalQuote_online_discount < 0)
+ $new_grandTotalQuote_online_discount = 0;
+ 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+if($quoteData['cod_fee'] > 0)
+	$grandTotalQuoteCod = Mage::helper('core')->currency($grandTotalQuote, true, false);
+else
+	$grandTotalQuoteCod = Mage::helper('core')->currency(($grandTotalQuote + $cashOnDeliverFee), true, false);
+
+
+
+
+if($couponDiscountRuleApplyToShippingAmount){
+
+		if($quoteData['cod_fee'] > 0)
+		$grandTotalQuoteOther = Mage::helper('core')->currency(($grandTotalQuote - $cashOnDeliverFee - $new_grandTotalQuote_online_discount), true, false);
+		else
+		$grandTotalQuoteOther = Mage::helper('core')->currency(($grandTotalQuote - $new_grandTotalQuote_online_discount), true, false);
+
+}
+else{
+
+		if($quoteData['cod_fee'] > 0)
+		$grandTotalQuoteOther = Mage::helper('core')->currency(($quoteData['base_subtotal'] - $cashOnDeliverFee - $new_grandTotalQuote_online_discount) + ($grandTotalQuote - $quoteData['base_subtotal']), true, false);
+		else{
+			
+			
+		 $grandTotalQuoteOther = Mage::helper('core')->currency(($quoteData['base_subtotal'] - $new_grandTotalQuote_online_discount) + ($grandTotalQuote - $quoteData['base_subtotal']), true, false);
+		
+		}
+
+}
+
+
+
+
+
+
+	
+if($myRegistryKey!='')
+$getAblebToShip = explode(';',$myRegistryKey);
+
+
+$key = 'otherProduct';
+$otherProductValue = Mage::registry($key); 
+
+ 
+	$cashonDelivery = true;		
+	$totalEligble = false;	 
+ 
+ if($otherProductValue == true){
+ 
+	
+	
+	$query = "SELECT postcode FROM sales_flat_quote_address where quote_id='" . $quote_id."' and address_type='shipping'";     
+	$postcodeVar = $readConnection->fetchOne($query);
+	
+	$query = "SELECT country_id FROM sales_flat_quote_address where quote_id='" . $quote_id."' and address_type='shipping'";     
+	$countryIDVar = $readConnection->fetchOne($query);
+
+	$query = "SELECT count(*) as zipCodeCountRow FROM fedex_zipcode where TRIM(zipcode)='".trim($postcodeVar)."' and TRIM(LOWER(cod_servc)) = 'cod'";     
+	$zipcodeCountRow = $readConnection->fetchOne($query);
+	
+	//$pindata = Mage::getStoreConfig('checkdelivery/general/pincode');
+	//$pincodearray = explode(",", $pindata);
+	//$pincodearray=array_map('trim',$pincodearray);	
+
+	if($zipcodeCountRow==0)		
+		$cashonDelivery = false;
+	}
+
+    $methods = $this->getMethods();
+    $oneMethod = count($methods) <= 1;
+	$show = true;
+?>
+<?php if (empty($methods)): ?>
+
+<dt> <?php echo $this->__('No Payment Methods') ?> </dt>
+<?php else:
+?>
+<dt id="temp_cashondelivery" class="displayNone">
+  <input type="radio" class="radio"  title="Cash On Delivery" autocomplete="off" disable readonly>
+  <label for="p_method_cashondelivery" class="cash_on_delivery_method_lbl" style="color: #aaa;">Cash On Delivery</label>
+  <?php /*?><span style="display: table-cell;">
+			<span style="color:#ff0000;font-size: 11px;font-weight: normal;display: table-cell;padding-top: 5px;" class="displayNone" id="totalEligbleSpan">			
+			Sorry , Cash on delivery is not available as the order value is not between rs.<?php echo Mage::helper('core')->currency(Mage::getStoreConfig('payment/phoenix_cashondelivery/min_order_total'), true, false);?> and rs. <?php echo Mage::helper('core')->currency(Mage::getStoreConfig('payment/phoenix_cashondelivery/max_order_total'), true, false);?>.Please choose any other mode of payment.</span>			
+			<span style="color:#ff0000;font-size: 11px;font-weight: normal;margin-top: 5px;" class="displayNone" id="pincodeEligbleSpan">Sorry, Cash on delivery is not available for the selected pincode.Please choose any other mode of payment.</span>
+			<span style="color:#ff0000;font-size: 11px;font-weight: normal;display: table-cell;padding-top: 5px;" class="displayNone" id="totalEligbleSpanBoth">
+			Sorry, Cash on delivery is not available for the selected pincode  and the order value is not between rs.<?php echo Mage::helper('core')->currency(Mage::getStoreConfig('payment/phoenix_cashondelivery/min_order_total'), true, false);?> and rs. <?php echo Mage::helper('core')->currency(Mage::getStoreConfig('payment/phoenix_cashondelivery/max_order_total'), true, false);?>.Please choose any other mode of payment. 
+			</span>
+			<?php foreach($getAblebToShip as $getAblebToShipVal){?>
+			<span style="color:#ff0000;font-size: 11px;font-weight: normal;margin-top: 5px;display:block;" id="pincodeEligbleSpan"><?php echo $getAblebToShipVal?></span></span>			
+			<?php }?>
+			</span><?php */?>
+</dt>
+<?php 
+    foreach ($methods as $_method):
+        $_code = $_method->getCode();
+		echo $_code;
+		//exit();
+		
+		//if($_code=='cashondelivery'){
+		if($_code=='phoenix_cashondelivery'){
+		 
+		 if($cashonDelivery == false){
+		 $totalEligble = true;
+		 continue;
+		 }
+		 else{
+		 $show = false;
+		 
+		 }
+		 if(count($getAblebToShip) > 0)
+		 {
+			$totalEligble = true;
+			$show = true;
+			continue;
+		 }
+		} 
+		
+?>
+<dt class="displayNone">
+  <?php if(!$oneMethod): ?>
+  <input id="p_method_<?php echo $_code ?>" value="<?php echo $_code ?>" type="radio" name="payment[method]" title="<?php echo $this->escapeHtml($_method->getTitle()) ?>" onclick="payment.switchMethod('<?php echo $_code ?>')"<?php if($this->getSelectedMethodCode()==$_code): ?> checked="checked"<?php endif; ?> class="radio" />
+  <?php else: ?>
+  <span class="no-display">
+  <input id="p_method_<?php echo $_code ?>" value="<?php echo $_code ?>" type="radio" name="payment[method]" checked="checked" class="radio" />
+  </span>
+  <?php $oneMethod = $_code; ?>
+  <?php endif; ?>
+  <label for="p_method_<?php echo $_code ?>"><?php echo $this->escapeHtml($this->getMethodTitle($_method)) ?> <?php echo $this->getMethodLabelAfterHtml($_method) ?></label>
+</dt>
+<?php if ($html = $this->getPaymentMethodFormHtml($_method)): ?>
+<dd class="displayNone"> <?php echo $html; ?> </dd>
+<?php endif; ?>
+<?php endforeach;
+    endif;
+?>
+<?php echo $this->getChildChildHtml('additional'); ?>
+<?php /*******************************************My custom code*******************************************************/ ?>
+<input type="hidden" name="payment[drop_category]" id="drop_category" value="CC,NB,EMI,COD,CASH" />
+<div class="bhoechie-tab-container">
+  <ul class="nav nav-tabs col-sm-4 responsive" id="myTab">
+    <li class="codCustom"><a class="deco-none misc-class" href="#cashOn">Cash on Delivery</a></li>
+    <li class="rajorPay"><a href="#rajorPay">Razor Pay</a></li>
+  </ul>
+  <div class="col-sm-8 tab-content responsive">
+    <div class="tab-pane active" id="cashOn">
+      <h3>Cash on Delivery</h3>
+      <center>
+      <div class="approved_cod" class="displayNone">
+      The cash on delivery option is available for the selected pincode. A handling charge of
+      <?php 
+		if($countryIDVar == 'IN')
+		echo Mage::helper('core')->currency(Mage::getStoreConfig('payment/phoenix_cashondelivery/inlandcosts'), true, false);
+		else
+		echo Mage::helper('core')->currency(Mage::getStoreConfig('payment/phoenix_cashondelivery/foreigncountrycosts'), true, false);
+?>
+      will be added to the total order value.
+      <p class="approved_cod">Total amount payble <?php echo $grandTotalQuoteCod?> </p>
+      <a title="Proceed to payment" class="placeOrderPaymentOptions approved_cod" onclick="jQuery('#paymentSave').click()">Proceed to payment</a> <span class="please-wait paymentMethodWait" style="display:none;"> <img src="<?php echo $this->getSkinUrl('images/opc-ajax-loader.gif') ?>" alt="<?php echo $this->__('Please Wait') ?>" title="<?php echo $this->__('Please Wait') ?>" class="v-middle" /> <?php echo $this->__('Please Wait') ?> </span> </div>
+    <span style="display: table-cell;"> <span style="<?php /*?>color:#ff0000;font-size: 11px;font-weight: normal;padding-top: 5px;<?php */?>" class="displayNone" id="totalEligbleSpan"> Sorry , Cash on delivery is not available as the order value is not between <?php echo Mage::helper('core')->currency(Mage::getStoreConfig('payment/phoenix_cashondelivery/min_order_total'), true, false);?> and <?php echo Mage::helper('core')->currency(Mage::getStoreConfig('payment/phoenix_cashondelivery/max_order_total'), true, false);?>.Please choose any other mode of payment.</span> <span style="<?php /*?>color:#ff0000;font-size: 11px;font-weight: normal;margin-top: 5px;<?php */?>" class="displayNone" id="pincodeEligbleSpan">Sorry, Cash on delivery is not available for the selected pincode.Please choose any other mode of payment.</span> <span style="<?php /*?>color:#ff0000;font-size: 11px;font-weight: normal;padding-top: 5px;<?php */?>" class="displayNone" id="totalEligbleSpanBoth"> Sorry, Cash on delivery is not available for the selected pincode  and the order value is not between <?php echo Mage::helper('core')->currency(Mage::getStoreConfig('payment/phoenix_cashondelivery/min_order_total'), true, false);?> and <?php echo Mage::helper('core')->currency(Mage::getStoreConfig('payment/phoenix_cashondelivery/max_order_total'), true, false);?>.Please choose any other mode of payment. </span>
+    <?php foreach($getAblebToShip as $getAblebToShipVal){?>
+    <span style="<?php /*?>color:#ff0000;font-size: 11px;font-weight: normal;margin-top: 5px;display:block;<?php */?>" id="pincodeEligbleSpan"><?php echo $getAblebToShipVal?></span>
+    <?php }?>
+    </span>
+    </center>
+  </div>
+
+  <div class="tab-pane" id="rajorPay">
+    <h3>Razor Pay</h3>
+    <center>
+      <p> Please click on ‘proceed to payment‘ button and you will be redirected to a secured payment gateway for payment. After successful payment authorization you we be redirected to our order confirmation page .</p>
+      <p> Total amount payble <?php echo $grandTotalQuoteOther?></p>
+      <p> <a title="Proceed to payment" class="placeOrderPaymentOptions" onclick="jQuery('#paymentSave').click()">Proceed to payment</a> <span class="please-wait paymentMethodWait" style="display:none;"> <img src="<?php echo $this->getSkinUrl('images/opc-ajax-loader.gif') ?>" alt="<?php echo $this->__('Please Wait') ?>" title="<?php echo $this->__('Please Wait') ?>" class="v-middle" /> <?php echo $this->__('Please Wait') ?> </span> </p>
+    </center>
+  </div>
+ </div>
+<div class="clearfix"></div>
+</div>
+<script>
+jQuery(document).ready(function() {
+	
+	
+if (jQuery(".shippingDescChkout")[0]){
+    // Do something if class exists
+	
+	
+	
+} else {
+	//jQuery("#designerLoader").show();
+    jQuery("#checkoutTotals tr:nth-last-child(1)").before('<tr id="prepandRow"><td colspan="2" class="text-left shippingDescChkout" style="">Shipping Charges</td><td class="a-right last" style=""><span class="price"><?php $shippingPrice = Mage::helper('function/more')->getShippingPrice();if($shippingPrice > 0) echo Mage::helper('core')->currency($shippingPrice); else echo 'Free';?></span></td></tr>');
+	
+	jQuery("#defaultGrandTotalDiv").addClass('displayNone');
+	jQuery("#renderGrandTotalDiv").removeClass('displayNone');
+}	
+	
+	
+	
+    jQuery("div.bhoechie-tab-menu>div.list-group>a").click(function(e) {
+        e.preventDefault();
+        jQuery(this).siblings('a.active').removeClass("active");
+        jQuery(this).addClass("active");
+        var index = jQuery(this).index();
+        jQuery("div.bhoechie-tab>div.bhoechie-tab-content").removeClass("active");
+        jQuery("div.bhoechie-tab>div.bhoechie-tab-content").eq(index).addClass("active");
+    });
+	
+	
+
+//alert('hi');
+
+      jQuery( 'ul.nav.nav-tabs  a' ).click( function ( e ) {
+        e.preventDefault();
+        jQuery( this ).tab( 'show' );
+      } );
+
+      ( function( jQuery ) {
+          // Test for making sure event are maintained
+          jQuery( '.js-alert-test' ).click( function () {
+            alert( 'Button Clicked: Event was maintained' );
+          } );
+          fakewaffle.responsiveTabs( [ 'xs', 'sm' ] );
+      } )( jQuery );
+
+
+	
+	
+});
+</script>
+<?php /*******************************************End of my custom code*******************************************************/ ?>
+<script type="text/javascript">
+    //<![CDATA[
+    <?php echo $this->getChildChildHtml('scripts'); ?>
+    payment.init();
+    <?php if (is_string($oneMethod)): ?>
+    payment.switchMethod('<?php echo $oneMethod ?>');
+        <?php endif; ?>
+    //]]>
+	<?php if($show == false){?>
+	//jQuery("#temp_cashondelivery").addClass("displayNone");
+	jQuery(".approved_cod").removeClass("displayNone");
+	<?php }else{?>
+	//jQuery("#temp_cashondelivery").removeClass("displayNone");
+	jQuery(".approved_cod").addClass("displayNone");
+	  <?php if($totalEligble == false && $cashonDelivery == false){?>
+			jQuery("#totalEligbleSpanBoth").removeClass("displayNone");
+			jQuery("#totalEligbleSpanBoth").css("display", "block");	
+	  <?php }else{ ?>
+		<?php if($totalEligble == false){?>
+			jQuery("#totalEligbleSpan").removeClass("displayNone");
+			jQuery("#totalEligbleSpan").css("display", "block");
+		<?php }else{?>
+			jQuery("#totalEligbleSpan").addClass("displayNone");			
+			jQuery("#totalEligbleSpan").css("display", "none");
+		<?php }?>
+	
+		<?php if($cashonDelivery == false){?>
+			jQuery("#pincodeEligbleSpan").removeClass("displayNone");
+			jQuery("#pincodeEligbleSpan").css("display", "block");
+		<?php }else{?>
+			jQuery("#pincodeEligbleSpan").addClass("displayNone");
+			jQuery("#pincodeEligbleSpan").css("display", "none");
+		<?php }?>
+	  <?php }?>	
+	<?php }?>
+
+
+</script> 
+<script type="text/javascript">
+			 //shippingTitleSO = 'Shipping (Fedex - STANDARD OVERNIGHT)';
+			
+			 //shippingTitlePO = 'Shipping (Fedex - PRIORITY OVERNIGHT)';
+			 shippingTitleSO = 'Shipping Charges';
+			
+			 shippingTitlePO = 'Shipping Charges';
+			 currentShippingTitle = '';	
+if(document.getElementById("p_method_phoenix_cashondelivery")){
+ jQuery("#p_method_phoenix_cashondelivery").attr('checked', 'checked');
+
+jQuery(".codCustom").click(function(){
+	
+	if(currentShippingTitle == '')
+	currentShippingTitle = jQuery('.shippingDescChkout').html();
+	
+	if(currentShippingTitle != shippingTitleSO)
+	{
+		jQuery('.shippingDescChkout').html(shippingTitleSO);
+	}
+	
+	jQuery(".codCustom").addClass("active")
+	
+	jQuery("#defaultGrandTotalDiv").addClass("displayNone");
+	jQuery("#renderGrandTotalDiv").removeClass("displayNone");
+
+	jQuery("#renderGtVal").html("<?php echo $grandTotalQuoteCod; ?>");
+			
+	jQuery( "#prepandRow" ).remove();
+
+	jQuery("#checkoutTotals tr:nth-last-child(2)").before('<tr id="prepandRow"><td colspan="2" class="a-left" style="">COD Handling Charges</td><td class="a-right last" style=""><span class="price"><?php echo Mage::helper('core')->currency(($cashOnDeliverFee), true, false)?></span></td></tr>');	
+});
+//jQuery(".codCustom").click();
+
+jQuery(".codCustom").click(function(){
+	
+	jQuery("#p_method_razorpay").prop('checked', false);
+	jQuery("#p_method_phoenix_cashondelivery").prop('checked', true);
+});
+
+jQuery(".rajorPay").click(function(){
+	
+	jQuery("#p_method_razorpay").prop('checked', true);
+	jQuery("#p_method_phoenix_cashondelivery").prop('checked', false);
+});
+ 
+}
+else{
+	jQuery(".rajorPay").addClass("active"); 
+	jQuery(".codCustom").removeClass("active"); 
+	jQuery(".rajorPay").click(); 
+	jQuery(".codCustom").click(function(){
+		jQuery(".codCustom").removeClass("active"); 
+		jQuery("#prepandRow").hide();
+		jQuery("#renderGtVal").html("<?php echo Mage::helper('core')->currency(($grandTotalQuote), true, false)?>");
+
+		return false;		
+	}); 
+	
+}
+
+
+function  onlinePaymentDiscount(refThis){
+	jQuery("#p_method_razorpay").prop('checked', true);
+	jQuery("#p_method_phoenix_cashondelivery").prop('checked', false);
+	if(document.getElementById("prepandRow"))
+	jQuery( "#prepandRow" ).remove();
+	
+	if(currentShippingTitle == '')
+	currentShippingTitle = jQuery('.shippingDescChkout').html();
+	else{
+		
+		
+			new_grandTotalQuote_online_discount = '<?php echo $new_grandTotalQuote_online_discount;?>';
+			if(new_grandTotalQuote_online_discount >= 5000){
+					jQuery('.shippingDescChkout').html(shippingTitleSO);
+			}
+			else{
+					jQuery('.shippingDescChkout').html(shippingTitlePO);
+			}		
+	}
+	
+	
+	<?php if($new_grandTotalQuote_online_discount > 0){?>
+	jQuery("#checkoutTotals tr:nth-last-child(2)").before('<tr id="prepandRow"><td colspan="2" class="a-left" style="">5% Online Payment Discount</td><td class="a-right last" style=""><span class="price"> <?php echo Mage::helper('core')->currency(($new_grandTotalQuote_online_discount * -1), true, false)?></span></td></tr>');
+	<?php }?>
+	
+	jQuery("#defaultGrandTotalDiv").addClass("displayNone");
+	jQuery("#renderGrandTotalDiv").removeClass("displayNone");
+
+	jQuery("#renderGtVal").html("<?php echo $grandTotalQuoteOther; ?>");
+}
+
+
+jQuery(".rajorPay").click(function(){
+	
+	onlinePaymentDiscount(this);	 
+	 
+});
+jQuery(".rajorPay").addClass("active"); 
+onlinePaymentDiscount();
+jQuery(".codCustom").removeClass("active"); 
+window.scrollTo(0,0);
+	
+</script>

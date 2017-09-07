@@ -1,0 +1,215 @@
+<?php $connection = Mage::getSingleton('core/resource')->getConnection('core_read');?>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery.fancybox.js');?>"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('css/jquery.fancybox.css');?>" media="all" />
+<div class="seller-form">
+ <div class="row">
+  <div class="col-md-12">	
+   <div class="footer-text-container" id="after-cr-design" style="margin:0;">
+	<h1>Sell on bhishoom</h1>
+	<p>Unleash your creativity . In just few simple steps see your creativity transformed into world class merchandise . Bhishoom.com will manufacture and market products carrying your designs and you will earn a fixed royalty on each sales . Get a platform to showcase your designs and earn.<br>
+Join us, sell and earn ...!!!
+	</p>
+   </div>
+  </div>
+  </div>
+ <!--sell your design -->
+ <div class="homepage-printvanue">	
+		<div class="body-container-home">
+			<div class="home-page-container">
+			<div class="row">
+            	<div class="col-sm-6 col-md-6">
+            	<div class="home-page-first-container">
+			<div class="image-container">
+				<img src="<?php echo $this->getSkinUrl('images/colarge.jpg');?>">	
+			</div>
+			</div>
+            </div>
+            <!--close-home-page-image-container-->
+            <div class="col-sm-6 col-md-6">
+				<div class="home-page-first-container">
+			<div class="border-left">
+				<div class="home-page-text">
+				<ul>
+				<li class="paper-image"><i class="fa fa-file-o"></i><span>Its absolutely free to sell.</span></li><br>
+				<li class="paper-image1"><i class="fa fa-hand-o-right"></i><span>Any one can sell designs on Bhishoom  from amateur to professional. </span></li><br>
+				<li class="paper-image2"><i class="fa fa-bullhorn"></i><span>Choose from many top quality products to showcase your designs .</span></li><br>
+				<li class="paper-image3"><i class="fa fa-money"></i><span>Get  15% revenue sharing each time your product sells .</span></li>
+        <li class="paper-image3"><i class="fa fa-flash"></i><span>Promote your work within your social circle to get more sales and boost your  reputation as designer cum online entrepreneur.</span></li>
+				</ul>
+				</div>
+				</div>
+			</div>
+            </div>
+            </div>
+            <!--closehome page first container -->
+			</div><!--End home page container-->
+			
+		</div>
+		<div class="row">
+      <div class="col-md-12">
+       	<div class="button-container">
+		    	<div class="button-image1" onclick="get_faq()"><a href="#seller_faq">FAQ</a></div>
+			    <div class="button-image1" onclick="get_start()"><a href="#seller_form" id="show_form">Get Started</a></div>
+        </div>
+		  </div>
+    </div>
+  </div>
+ <!--end here-->
+<div style="display: none;">
+ <div id="seller_form" style="width:570px;overflow:auto;">
+  <div class="seller-form">
+   <form name="sform" id="fid" class="scaffold-form" method="post" action="<?php echo $this->getUrl('sform/index/sellerdetail');?>"  enctype="multipart/form-data">
+   <input type="hidden" name="cur_url" value="<?php echo $currentUrl = Mage::helper('core/url')->getCurrentUrl();?>" />
+   <?php /*?><input type="hidden" name="cus_id" value="<?php echo $cus_id;?>" /><?php */?>
+   <div class="content">
+    <label class="contant-label">Seller Form</label> 
+    <ul class="form-list"> 
+     <li class="sel-li">
+      <label for="name" class="sel-li-label"><span class="required">*</span>Full Name:</label>
+      <input type="text" class="input-text required-entry"   name="name" id="name" value=""/>
+      <div id="new_name" style="color:red;"></div>
+	 </li>
+	
+     <li class="sel-li">
+      <label for="email" class="sel-li-label">Email Id:</label>
+      <input type="email" class="input-text required-entry validate-email" name="email" id="email" value=""/>
+	  <div id="new_email" style="color:red;" ></div>
+     </li>
+     <li class="sel-li">
+      <label for="add" class="sel-li-label">Address:</label>
+      <input type="text" class="input-text required-entry" name="address" id="address" value="" /></li>
+     <div id="new_add" style="color:red;"></div>
+	 <li class="sel-li">
+      <label for="add" class="sel-li-label">Country:</label>
+     <?php $_countries = Mage::getResourceModel('directory/country_collection')->loadData()->toOptionArray(false) ?>
+	 <?php if (count($_countries) > 0): ?>
+      <select name="country" id="country" class="textarea" onchange="getstate(this.value);">       
+       <?php foreach($_countries as $_country): ?>
+       <?php if($_country['value'] == 'IN'){?>
+        <option value="<?php echo $_country['value']; ?>" selected="selected"><?php echo $_country['label']; ?></option>
+       <?php } else { ?>
+        <option value="<?php echo $_country['value'] ?>"><?php echo $_country['label'] ?></option><?php } ?>
+       <?php endforeach; ?>
+      </select>
+     <?php endif; ?>
+    </li>
+    <li class="sel-li">
+      <label for="contact" class="sel-li-label">Contact No.:</label>
+      <input type="text" class="input-text required-entry" name="phone" id="phone" onkeypress="return isNumber(event);" value=""  />
+    <div id="new_phone" style="color:red;"></div>
+	</li>   
+    <li class="sel-li">   
+     <label>Please provide genuine links directing to your artwork only</label> &nbsp;&nbsp;&nbsp;&nbsp;
+     <a href="javascript:void(0)" title="Add Input" onClick="addInput('dynamicInput');"><i class="fa fa-plus fa-2x"></i></a>
+     <a href="javascript:void(0)" title="Delete Input" onClick="delInput('dynamicInput');"><i class="fa fa-minus fa-2x"></i></a>
+     <br />
+     <div id="dynamicInput">
+       <div id="input_1">
+        <label class="sel-li-label"></label>
+     	<input type="text" class="input-text sform_link" name="sform_link[]" value="" placeholder="Link 1" id="link_1" />
+		
+		<span title="" data-placement="right" data-toggle="tooltip" class="glyphicon glyphicon-info-sign  apg-info displayInlinImportant marLeft10pxCss" data-original-title="Please share links to your online digital creatives. Eg: Website, Blog, Deviant Art, Facebook, Behance, Instagram etc. "></span>
+
+     	<span id="error_1" class="error_class"></span>
+       </div> 
+     </div>   
+    </li> 
+    <li class="sel-li-i">
+     <label>Upload Your Image(for display on website)</label>
+     <input type="file" name="c_img" />
+    </li> 
+    <li class="sel-li-i">
+     <label>Upload Your Image(for print)</label>
+     <input type="file" name="p_img" />
+    </li> 
+   </ul> 
+  </div> 
+  <br />
+  <input type="checkbox" name="sform-ckeck" value="1" checked="checked" id="sform-ckeck"  onchange="checkAddress(this)" />&nbsp;&nbsp;
+  By signing in, I agree to the Bhishoom <a href="<?php echo $this->getUrl('artists_term');?>" target="_blank"><strong>Copyright Policy and Terms for putting the artwork.</strong></a>	  
+  <div class="clear">&nbsp;</div>
+  <label class="sel-li-label"></label>
+  <input type="submit" name="submit" value="Submit" class="button" id="submit" onClick="return submitform();"/>  
+ </form> 
+</div>
+</div>
+</div>
+ <div class="row" id="seller_faq" style="display:none;">
+  <div class="col-md-8 col-md-offset-2">
+   <div class="bs-example">
+    <div id="accordion" class="panel-group">
+      <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('artist_faq')->toHtml(); ?>
+    </div>
+   </div>
+  </div>
+ </div> 
+</div>
+<script type="text/javascript">
+var customForm = new VarienForm('fid',true);
+jQuery(document).ready(function(){
+ jQuery("#show_form").fancybox({
+	'titlePosition'		: 'inside',
+	'transitionIn'		: 'none',
+	'transitionOut'		: 'none'
+ });
+});
+
+jQuery(document).ready(function(){
+    jQuery('[data-toggle="tooltip"]').tooltip();   
+});
+
+function get_start()
+{
+	if(document.getElementById("seller_form").style.display == 'none')
+	{
+		document.getElementById("seller_form").style.display = 'block';
+		document.getElementById("seller_faq").style.display = 'none';
+	}
+}
+function get_faq()
+{
+	if(document.getElementById("seller_faq").style.display == 'none')
+	{
+		document.getElementById("seller_faq").style.display = 'block';
+		document.getElementById("seller_form").style.display = 'none';
+	}
+}
+var counter = 1;
+function addInput(divName)
+{
+  var newdiv = document.createElement('div');
+  newdiv.setAttribute('id', 'input_'+(counter+1));	
+  newdiv.innerHTML = "<br><label class='sel-li-label'></label><input type='text' class='input-text sform_link' name='sform_link[]' placeholder='Link"+ (counter+1)+"' id='link_"+(counter+1)+"'> <span id='error_"+(counter+1)+"' class='error_class'></span>";
+  document.getElementById(divName).appendChild(newdiv);
+  counter++;
+}
+
+function delInput(divName)	
+{
+  if(counter > 1)
+  {		 
+    document.getElementById('input_'+counter).remove();
+    counter--;
+  }
+}
+function checkAddress(element) {
+
+    var myLayer = document.getElementById('submit');
+    if (element.checked == true) {
+        myLayer.className = "button";
+        myLayer.disabled = "";
+    } else {
+        myLayer.className = "button";
+        myLayer.disabled = "disabled";
+    };
+}
+</script>
+<style type="text/css">
+th{padding: 4px 29px 0px 14px;}
+td{padding: 4px 29px 0px 14px;}
+.seller-form .button-grey:hover {
+ background-color: #fff;
+    border: 1px solid #C5B1B5;
+    color: #000;
+}
+</style>

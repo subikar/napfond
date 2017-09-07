@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]> <html lang="en" id="top" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" id="top" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" id="top" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" id="top" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" id="top" class="no-js"> <!--<![endif]-->
+
+<head>
+<?php echo $this->getChildHtml('head') ?>
+</head>
+<body<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?>>
+ <?php echo $this->getChildHtml('after_body_start') ?>
+ <div class="wrapper">
+  <?php echo $this->getChildHtml('global_notices') ?>
+  <div class="page">
+   <?php echo $this->getChildHtml('header') ?>
+   <?php echo $this->getChildHtml('global_messages') ?>
+   <div class="container">
+    <div class="main-container col1-layout">
+     <div class="main">
+      <?php echo $this->getChildHtml('breadcrumbs') ?>
+      <div class="col-main">                    
+	   <?php 
+	    $_categories = Mage::getModel('catalog/category')->getCategories(24);
+    	$mainCat = Mage::getModel('catalog/category')->load(24)->getName();
+	    echo '<div id="after-cr-design"><div class="col-sm-12"><h1 class="pick_device">Shop Now</h1>
+          <h4>Shop from various products and thousands of designs to suit your individual style. You can even customize it then by adding text, images, vectors etc. though our <strong>GoBhishoom</strong> customizer.</h4></div></div>';
+       ?> 
+       <?php 
+    	$connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+		$currentUrl = Mage::helper('core/url')->getCurrentUrl();
+    	if(count($_categories)):
+       ?>
+	   <div id="shop_pg_cate" class="shop-section">
+        <div class="row">
+         <?php $i=1; foreach ($_categories as $_category):?>
+          <?php 
+          if($_category->getIsActive())
+		  {
+          	$cur_category = Mage::getModel('catalog/category')->load($_category->getId());
+          	$catName = $cur_category->getName();
+			//echo $catName;
+			$_imageUrl = $cur_category->getImageUrl();	 
+          	if($_imageUrl == '')
+            {
+				$_imageUrl = $cur_category->getThumbnail();
+			}
+			else
+            {?>       
+                <div class="col-md-6">
+                 <div class="skin-toggle">
+                  <div class="img-skin" id="mobileSkin">  
+                   <a href="<?php echo $cur_category->getUrl()?>" title="<?php echo $catName;?>">                 
+                    <img alt="<?php echo $catName;?>" src="<?php echo $_imageUrl;?>">                
+                   </a> 
+                   <div class="skin-tab">
+				   <?php
+				     if ($catName == 'Laptop Skin'){
+					    echo '<div class="" style="float:left;"><a href="'.$cur_category->getUrl().'" title="'.$catName.'">'.$catName.'</a></div>';
+					    ?>
+						 <div class="" style="float:right;"><a href="<?php echo Mage::getBaseUrl().'shop/tablet-skin.html/';?>" target="_blank" title="Tablet Skin">Tablet Skin</a></div>
+						
+					  <?php }
+                     
+					   else{
+					  					   
+				   ?>
+                    <a href="<?php echo $cur_category->getUrl()?>" title="<?php echo $catName;?>"><div class="skin-title"><?php echo $catName;?></div></a>
+                    <?php
+					   }
+					?>					
+                   </div>
+                  </div>
+                  <div id="mobile-menu" class="munu-categories">
+                   <ul>
+                   <?php		
+                   $children = $cur_category->getChildren();
+                   $c_counter = 1;   
+				   $tabletFlag = false;		
+                   foreach (explode(",",$children) as $category)
+                   {
+                       
+					   $sub_cat = Mage::getModel('catalog/category')->load($category);
+					    if ($catName == 'Laptop Skin'){
+					    echo '<li class="" style="float:left;"><a href="'.$sub_cat->getUrl().'" title="'.$sub_cat->getName().'">'.$sub_cat->getName().'</a></li>';
+					    
+                           if($catName == 'Laptop Skin' && $c_counter == 4)
+                           {
+                               echo '<li class="" style="float:left;"><a href="'.$currentUrl.'/laptop-skin/custom-size.html/" title="Custom Size">Custom Size</a></li>';	
+                           }
+						
+						
+						
+						  if($tabletFlag == false)
+						   {
+						   ?>
+						   <li class="" style="float:right;">
+						   <a href="<?php echo Mage::getBaseUrl().'shop/tablet-skin/apple.html';?>" target="_blank" title="Apple">Apple</a><br>
+						   <a href="<?php echo Mage::getBaseUrl().'shop/tablet-skin/samsung-tabs.html';?>" target="_blank" title="Samsung">Samsung</a><br>
+						   <a href="<?php echo Mage::getBaseUrl().'shop/tablet-skin/all-tabs.html';?>" target="_blank" title="All other tab">All other tab</a><br>
+						   <a href="<?php echo Mage::getBaseUrl().'shop/tablet-skin/custom-size.html';?>" target="_blank" title="Custom Size">Custom Size</a>
+						   </li>
+						   <?php  
+						  $tabletFlag = true;
+						   }
+						}
+                        else{    			   
+                       echo '<li><a href="'.$sub_cat->getUrl().'" title="'.$sub_cat->getName().'">'.$sub_cat->getName().'</a></li>';
+                       }
+                       if($c_counter == 6)
+                       {
+                           if($catName == 'Mobile Skin')
+                           {
+                               echo '<li class="see-over"><a href="'.$currentUrl.'/mobile-skin.html" title="'.$catName.'">See Over 200 Models</a></li>';	
+                           }
+                           if($catName == 'Mobile Case')
+                           {
+                               echo '<li class="see-over"><a href="'.$currentUrl.'/mobile-case.html" title="'.$catName.'">See Over 100 Models</a></li>';	
+                           }
+						   break; 
+                       }
+					   
+					   
+                       $c_counter++;	   
+                   }		
+                   ?>		 
+                   </ul>
+                  </div>
+                 </div> 
+                </div>            
+           <?php } }?>    
+           <?php $i++;endforeach ?>
+        </div>
+       </div>  
+      <?php endif; ?>
+     </div>
+    </div>
+   </div>
+  </div>
+  <?php echo $this->getChildHtml('footer_before') ?>
+  <?php echo $this->getChildHtml('footer') ?>
+  <?php echo $this->getChildHtml('global_cookie_notice') ?>
+  <?php echo $this->getChildHtml('before_body_end') ?>
+ </div>
+</div>
+<?php echo $this->getAbsoluteFooter() ?>
+</body>
+</html>
+

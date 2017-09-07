@@ -1,0 +1,62 @@
+<?php
+/**
+ * GoMage Product Designer Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use/
+ * @version      Release: 1.0.0
+ * @since        Available since Release 1.0.0
+ */
+?>
+<?php
+$categories = $this->getCategoriesCollection();
+$subCategories = $this->getSubCategoriesCollection();
+?>
+<ul class="form-list">
+    <?php if ($this->navigationEnabled()): ?>
+        <li>
+        <div class="input-box">
+            <?php if ($categories->getSize()): ?>
+              <select name="mainCategory" id="mainCategoriesSearchField">
+                  <option value=""><?php echo $this->__('Select Main Category'); ?></option>
+                  <?php foreach($categories as $_category): ?>
+                      <option value="<?php echo $_category->getId()?>" <?php echo $this->_getSelectedCategoryId() == $_category->getId() ? 'selected="selected"' : ''?>>
+                          <?php echo $_category->getName();?>
+                      </option>
+                  <?php endforeach;?>
+              </select>
+            <?php endif;?>
+        </div>
+        </li>
+        <li>
+        <div class="input-box">
+            <?php if ($subCategories->getSize()): ?>
+              <select name="subCategory" id="subCategoriesSearchField">
+                  <option value=""><?php echo $this->__('Select Child Category'); ?></option>
+                  <?php foreach($subCategories as $_category): ?>
+                      <option value="<?php echo $_category->getId()?>" <?php echo $this->_getSelectedSubcategoryId() == $_category->getId() ? 'selected="selected"' : ''?>>
+                          <?php echo $_category->getName();?>
+                      </option>
+                  <?php endforeach;?>
+              </select>
+            <?php endif;?>
+        </div>
+        </li>
+    <?php endif;?>
+    <?php if ($this->searchEnabled()): ?>
+        <li>
+            <div class="input-box">
+                <input id="tagsSearchField" name="search" class="input-text cliparts-panel-search" type="search" value="<?php echo $this->_getSearchTags(); ?>" placeholder="<?php echo $this->__('Search by comma separated tags...'); ?>" />
+            </div>
+        </li>
+    <?php endif; ?>
+</ul>
+<?php if ($this->searchEnabled()): ?>
+    <div class="actions">
+        <button class="button pd-btn cliparts-panel-search-btn disabled" id="cliparts-search-btn"><span><span><?php echo $this->__('Search'); ?></span></span></button>
+        <button class="button pd-btn cliparts-panel-search-btn" id="cliparts-reset-btn" style="display: none"><span><span><?php echo $this->__('Reset'); ?></span></span></button>
+    </div>
+<?php endif; ?>

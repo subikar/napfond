@@ -1,0 +1,41 @@
+<script type="text/javascript">
+<?php if (Mage::helper('razorpay_payments')->isRazorpayEnabled()) : ?>
+    <?php $_code = Razorpay_Payments_Model_Paymentmethod::METHOD_CODE; ?>
+    var defaultPlaceOrderButton = $$('button[type=submit][class~="btn-checkout"]')[0];
+    defaultPlaceOrderButton.setAttribute('onclick', '');
+
+    var paymentIdField = 'razorpay_payment_id';
+
+    var onSuccess = function(data) {
+        $(paymentIdField).value = data.razorpay_payment_id;
+        review.save();
+    };
+
+    var onError = function(message) {
+        alert(message);
+        checkout.back();
+    };
+
+    var beforeStart = function() {
+        defaultPlaceOrderButton.disabled = true;
+    };
+
+    var onUserClose = function() {
+        defaultPlaceOrderButton.disabled = false;
+        $(paymentIdField).remove();
+    };
+
+    var placeOrder = function() {
+        if (payment.currentMethod == '<?php echo $_code ?>') {
+            razorpayUtils.placeOrder(onSuccess, onUserClose, beforeStart, '<?php echo $this->getFormId()?>', paymentIdField);
+        } else {
+            review.save();
+        }
+    };
+
+    Event.observe(defaultPlaceOrderButton, 'click', placeOrder);
+<?php else: ?>
+    var defaultPlaceOrderButton = $$('button[type=submit][class~="btn-checkout"]')[0];
+    defaultPlaceOrderButton.setAttribute('onclick', 'review.save();');
+<?php endif; ?>
+</script>

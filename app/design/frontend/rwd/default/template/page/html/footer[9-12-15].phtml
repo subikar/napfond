@@ -1,0 +1,210 @@
+<?php 
+//$first_name = 'David';
+//setcookie('first_name',$first_name,time() + (86400 * 7));
+//echo $this->getChildHtml('sitePopUpBlock'); 
+
+?>
+<?php /* ?><div class="footer-container">
+    <div class="footer">
+        <?php echo $this->getChildHtml() ?>
+        <address class="copyright"><?php echo $this->getCopyright() ?></address>
+    </div>
+</div>
+<?php */ ?>
+<script type="text/javascript">
+//alert(window.location.host)
+jQuery(document).ready(function() {
+    jQuery("img").on("contextmenu",function(){
+       return false;
+    }); 
+}); 
+	
+jQuery('document').ready(function($) 
+{
+	var li_count = jQuery('#checkoutSteps li.section').filter(function() { return jQuery(this).css('display') !== 'none'; }).length;
+	//alert(li_count);
+	jQuery('#checkoutSteps').addClass('tabSize'+li_count);
+
+	jQuery('#checkoutSteps .button').click(function(){
+		jQuery("#checkoutSteps").removeClass (function (index, css) {
+			return (css.match (/\btab\S+/g) || []).join(' ');
+		});
+		/*var curr_id = jQuery('.active').attr('id');
+		//alert(curr_id);
+		if(curr_id == 'opc-review')
+		{	
+				var hj = jQuery('#checkout-step-review').innerHeight();
+				var hj = hj + 110;
+				jQuery('#checkoutSteps').css({'height': hj});
+		}*/
+			var hj = jQuery('#checkoutSteps > .active > .step').innerHeight();
+			var hj = hj + 250;
+			jQuery('#checkoutSteps').css({'height': hj});
+			var li_count = jQuery('#checkoutSteps li.section').filter(function() { return jQuery(this).css('display') !== 'none'; }).length;
+			//alert(li_count);
+			jQuery('[class^="tab"]').css('color', 'red');
+			jQuery('#checkoutSteps').addClass('tabSize'+li_count);
+	});
+	jQuery('#checkoutSteps #opc-review .step-title').click(function(){
+      var hj = jQuery('#checkoutSteps > .active > .step').innerHeight();
+			var hj = hj + 250;
+			jQuery('#checkoutSteps').css({'height': hj});
+			var li_count = jQuery('#checkoutSteps li.section').filter(function() { return jQuery(this).css('display') !== 'none'; }).length;
+			jQuery('[class^="tab"]').css('color', 'red');
+			jQuery('#checkoutSteps').addClass('tabSize'+li_count);
+	});
+  jQuery('#checkoutSteps #opc-billing .step-title').click(function(){
+      var hj = jQuery('#checkoutSteps > .active > .step').innerHeight();
+      var hj = hj + 300;
+      jQuery('#checkoutSteps').css({'height': hj});
+      var li_count = jQuery('#checkoutSteps li.section').filter(function() { return jQuery(this).css('display') !== 'none'; }).length;
+      jQuery('[class^="tab"]').css('color', 'red');
+      jQuery('#checkoutSteps').addClass('tabSize'+li_count);
+  });
+  jQuery('#checkoutSteps #opc-shipping .step-title').click(function(){
+      var hj = jQuery('#checkoutSteps > .active > .step').innerHeight();
+      var hj = hj + 250;
+      jQuery('#checkoutSteps').css({'height': hj});
+      var li_count = jQuery('#checkoutSteps li.section').filter(function() { return jQuery(this).css('display') !== 'none'; }).length;
+      jQuery('[class^="tab"]').css('color', 'red');
+      jQuery('#checkoutSteps').addClass('tabSize'+li_count);
+  });
+});  
+</script>
+
+<div class="container">
+  <div class="row row-xs allLogoCon">
+    <div class="col-sm-6"> 
+    <img src="<?php echo $this->getSkinUrl('images/All-Logo1.png');?>" /> </div>
+    <div class="dividerSm20 hidden-lg hidden-sm hidden-md"></div>
+    <div class="col-sm-6"> 
+    <img src="<?php echo $this->getSkinUrl('images/All-Logo2.png');?>" /> </div>
+  </div>
+  <div class="divider30"></div>
+</div>
+<div id="footer-cover">
+<div class="footer-container">
+  <div class="footer">
+    <?php // echo $this->getChildHtml() ?>
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-10 col-xs-offset-1  col-lg-10 col-lg-offset-1">
+          <div class="footer-title">
+            <h3 class="club-bish"><img src="<?php echo $this->getSkinUrl('images/club-bhishoom.png');?>" /></h3>
+            <p>Subscribe to club Bhishoom to receive discount, limited period offers, club members exclusive deals and special preview of new designs.</p>
+          </div>
+          <div class="footer-sec-2">
+            <?php  echo $this->getChildHtml('newsletter') ?>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="links social-media">
+    <div class="container">
+      <ul>
+        <li class="parentLi"><span class="footerFollowUs">Love Us :</span></li>
+        <li class="parentLi">
+          <ul>
+            <li><a href="https://www.facebook.com/bhishoom/" target="_blank"><i class="fa fa-facebook fa-4x"></i></a></li>
+            <li><a href="https://twitter.com/GoBhishoom" target="_blank"><i class="fa fa-twitter fa-4x"></i></a></li>
+            <li><a href="https://www.pinterest.com/bhishoom" target="_blank"><i class="fa fa-pinterest fa-4x "></i></a></li>
+            <li><a href="https://instagram.com/bhishoom/" target="_blank"><i class="fa fa-instagram fa-4x"></i></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div id="footer-cover1" class="footer-sec">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <div class="do-features"> <img src="<?php echo $this->getSkinUrl('images/logoFooter.png');?>" />
+            <div class="sub-footer-menu">
+              <ul class="sub-toogle">
+                <li><a href="<?php echo $this->getUrl("faq");?>" target="_blank" title="FAQ">FAQ</a></li>
+                <li><a href="<?php echo $this->getUrl("payment");?>" target="_blank" title="Payment Methods"></i>Payment</a></li>
+                <li><a href="<?php echo $this->getUrl("shipping");?>" target="_blank" title="Shipping Policy"></i>Shipping</a></li>
+                <li><a href="<?php echo $this->getUrl("bhishoom-policies");?>" target="_blank" title="Privacy & Security Policy">Bhishoom policies</a></li>
+                <li><a href="<?php echo $this->getUrl("bhishoom-story");?>" target="_blank" title="Bhisoom Story">About Us</a></li>
+                <li><a href="<?php echo $this->getUrl("contacts");?>" target="_blank" title="Contact Us"></i>Contact Us</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <address class="copyright">
+  <?php echo $this->getCopyright() ?>
+  </address>
+</div>
+<script>
+jQuery(document).ready(function() {
+    var jaxH  = jQuery(window).height();
+	var jaxHn = jQuery('#responsiveNavItem .resVHeaderLogoVf').height();
+	var jaxHt = jaxH - jaxHn;
+	jQuery("#responsiveBtn").click(function() {
+		jQuery("#responsiveNavItem").show('slow');
+		jQuery("#header-nav").css('height', jaxHt);
+		jQuery('body').css('overflow', 'hidden');
+	});
+	jQuery("#responsiveBtn1").click(function() {
+		jQuery("#responsiveNavItem").hide('slow');
+		jQuery('body').css('overflow', 'auto');
+	});
+	
+	
+	jQuery("#header-nav li.dropdown .plusIcon").click(function() {
+		if(jQuery(this).find("i").hasClass("fa-minus")){
+			jQuery(this).find("i").removeClass('fa-minus');
+			jQuery(this).find("i").addClass('fa-plus');
+			jQuery(this).parent().removeClass("open");
+		}
+		else {
+			jQuery("#header-nav li.dropdown .plusIcon i").removeClass('fa-minus');
+			jQuery(this).find("i").addClass('fa-minus');
+			
+			jQuery("#header-nav li.dropdown").removeClass('open');
+			jQuery(this).parent().addClass('open');
+			var headHeight = jQuery("#responsiveHeader").height();
+			jQuery(window).scrollTop(headHeight);
+		}
+	});
+
+	//jQuery("#header-nav li.dropdown .plusIcon .fa-minus").click(function() {
+		//alert('hi');
+		// jQuery("#header-nav li.dropdown .plusIcon").find("i").removeClass('fa-minus');
+		// jQuery("#header-nav li.dropdown .plusIcon").find("i").addClass('fa-plus');
+		
+		//jQuery(this).find("i").removeClass("fa-mimus");
+		// jQuery(this).find("i").addClass("fa-plus");
+		
+		// jQuery("#header-nav li.dropdown.open").removeClass('open');
+		//jQuery(this).parent("#header-nav .dropdown").addClass('open');
+	//});
+	
+	function searchbtn(){
+		if (jQuery("#searchBtnH .fa").hasClass("fa-search")) 
+			{
+				jQuery("#searchBtnH .fa").removeClass('fa-search');
+				jQuery("#searchBtnH .fa").addClass('fa-times');
+			}
+		else
+			{
+				jQuery("#searchBtnH .fa").removeClass('fa-times');
+				jQuery("#searchBtnH .fa").addClass('fa-search');
+			}
+		};
+		
+	//jQuery("#responsiveSearch").slideUp();
+	jQuery("#searchBtnH").click(function() {
+		 
+		jQuery("#responsiveSearch").slideToggle();
+		searchbtn();
+	});
+	
+	
+});
+
+</script>

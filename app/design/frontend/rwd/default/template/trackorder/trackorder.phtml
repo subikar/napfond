@@ -1,0 +1,476 @@
+<?php
+$orderIncrementId = $this->getRequest()->getParam('order_num');
+$order = Mage::getModel('sales/order')->loadByIncrementId($orderIncrementId);
+ 
+ 
+ 
+if(!$order->getId()){?>
+
+<div class="row"><div class="col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1 col-md-6 col-md-offset-3"><div id="trackOrderBox">
+  <div class="trackModalDialog">
+    <div class="loginmodal-container">
+      <h1>Track Order</h1>
+      <form action="" method="get">
+	  <?php if($orderIncrementId!=''){ ?>
+	  <p class="red">Invalid order number.</p>
+	  <?php } ?>
+        <p>
+          <input class="form-control" type="text" name="order_num" placeholder="Track Order">
+        </p>
+        <p><br>
+          <input type="submit" name="login" class="btn button" value="Check Status">
+        </p>
+      </form>
+    </div>
+  </div>
+</div></div></div>
+<?php	
+}
+else{
+
+
+
+$order = Mage::getModel('sales/order')->loadByIncrementId($orderIncrementId);
+      $payment_method = $order->getPayment()->getMethodInstance()->getTitle();
+      $payment_method_code = $order->getPayment()->getMethodInstance()->getCode();
+
+$billingAddress = $order->getBillingAddress();
+$shippingAddress = $order->getShippingAddress();
+
+$customerEmailAddress = $order->getCustomerEmail();;
+$customerName = $order->getCustomerName();
+
+$orderHistory = $order->getStatusHistoryCollection(true);
+
+$differentOrderStatus = array();
+
+foreach ($orderHistory as $orderHistoryData) {
+  
+	if(!in_array($orderHistoryData->getData('status'),$differentOrderStatus))
+		$differentOrderStatus[] = $orderHistoryData->getData('status');
+	
+}
+
+
+$order2 = Mage::getModel('sales/order')->load($order->getData('entity_id'));
+$shipment_collection = Mage::getResourceModel('sales/order_shipment_collection')
+            ->setOrderFilter($order)
+            ->load();
+			
+$shipmentItemArray = array();			
+$shipmentItemTrackingNumberArray = array();			
+$shipmentIdArray = array();			
+			
+			
+foreach($shipment_collection as $shipment){
+    $trkCommaSpearator = '';
+    $trkNumbers = '';
+	
+    $shItemCommaSpearator = '';
+    $shItemString = '';
+
+	 
+	$shipmentIdArray[] = $shipment->getId();
+	
+	foreach($shipment->getAllTracks() as $tracking_number){
+        $trkNumbers = $trkNumbers.$trkCommaSpearator.$tracking_number->getNumber();
+		$trkCommaSpearator = ',';
+    }
+    
+    foreach ($shipment->getAllItems() as $product){
+		
+		$shItemString = $shItemString.$shItemCommaSpearator.$product->getData('order_item_id');		
+		$shItemCommaSpearator = ',';
+		
+		$shipmentItemArray['order_item_id'][$product->getData('order_item_id')] = $trkNumbers;
+		
+    }
+	
+	$shipmentItemArray[] = $shItemString;
+	$shipmentItemTrackingNumberArray[] = $trkNumbers;
+}
+
+$trackingResponse = array();
+foreach($shipmentItemTrackingNumberArray as $shipmentItemTrackingNumberArrayKey=>$shipmentItemTrackingNumberArrayVal)
+{
+	$trkResponse = Mage::helper('function/more')->getFedexTrackingResponse($shipmentItemTrackingNumberArrayVal,$shipmentIdArray[$shipmentItemTrackingNumberArrayKey]);	
+	$trackingResponse[$shipmentItemTrackingNumberArrayVal] = $trkResponse->getData()[0]['latest_track_info'];
+}
+
+//echo '<pre>';
+//print_r($shipmentItemArray);
+//print_r($shipmentItemTrackingNumberArray);
+//print_r($trackingResponse);
+
+?>
+<div id="addcart-pannel" class="trackorderPage">
+  <div id="after-cr-design">
+    <div class="page-title title-buttons">
+      <h1 >Order Status</h1>
+    </div>
+  </div>
+  <div class="ordersGroup">
+    <div class="orderStatusCx row">
+      <div class="orderNoCx col-sm-4">Order No. <span>#<?php echo $order->getData("increment_id")?></span><div class="clearfix"></div></div>
+      <div class="placedCx col-sm-4">Placeed on: <span><?php echo date('d M Y',strtotime($order->getData("created_at")))?></span><div class="clearfix"></div></div>
+      <div class="TotalXc col-sm-4"><strong>Total</strong> <span><?php echo Mage::helper('core')->currency($order->getData("grand_total"))?></span><div class="clearfix"></div></div>
+    </div>
+    <div class="orderGroup">
+      <?php
+	  
+	  
+$orderItems = $order->getAllVisibleItems();
+foreach ($orderItems as $items){
+	
+	
+      $_product = Mage::getModel('catalog/product')->load($items->getProductId());
+      $product_small_image_path = Mage::helper('catalog/image')->init($_product,'small_image')->resize(75);
+      
+	  
+	   $opts = $items->getProductOptions();
+	   
+	   
+	  if($opts["simple_sku"] != ''){
+	  $product_small_image_path = Mage::helper('catalog/image')->init(Mage::getModel('catalog/product')->load(Mage::getModel('catalog/product')->getResource()->getIdBySku($opts["simple_sku"])),'small_image')->resize(75);  
+	  } 
+	   
+	   
+	  $designId = '';
+	  
+        if ($opts["info_buyRequest"]["design"] > 0) {
+             $designId = $opts["info_buyRequest"]["design"];
+        }
+        if ($designId) {
+            if ($image = Mage::getModel('gomage_designer/design')->getDesignThumbnailImage($designId)) {
+                $product_small_image_path = $this->helper('gomage_designer/image_design')->init($image);
+				$product_small_image_path = str_replace('cache/','',$product_small_image_path);
+				//$product_small_image_path = $product_small_image_path->resize(75);
+            }
+			else
+			$product_small_image_path = $this->getProductThumbnail();
+        }	  
+	  
+	  
+	  
+	  $itemsInfoArray = $items->getData();
+	  
+	  $blank_backImagePath = '';
+	  ///////////////////////////////////////Item front and back image path///////////////////////////////////
+ 			$folderURL = Mage::helper('function')->graGetFolderUrl($itemsInfoArray["prdUrl"]);
+			$folderPath = Mage::helper('function')->graGetFolderPath($itemsInfoArray["prdUrl"]);
+
+		if(is_file($folderPath . DS . 'mask-back.png')){		
+			if(!is_file($folderPath . DS . 'resized75' . DS . 'mask-back.png'))
+			{
+			   $blank_backImagePath = Mage::helper('function')->resizeImg('mask-back.png', 75, 75,$folderURL,$folderPath,'resized75');
+			}
+			else
+			{
+				$blank_backImagePath = $folderURL . '/' . 'resized75' . '/' . 'mask-back.png';
+			}
+		}
+		elseif(is_file($folderPath . DS . 'mask.png')){
+			if(!is_file($folderPath . DS . 'resized75' . DS . 'mask.png'))
+			{
+			   $blank_backImagePath = Mage::helper('function')->resizeImg('mask.png', 75, 75,$folderURL,$folderPath,'resized75');
+			}
+			else
+			{
+				$blank_backImagePath = $folderURL . '/' . 'resized75' . '/' . 'mask.png';
+			}
+		}
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////	
+	$getTrackingInfo = unserialize($trackingResponse[$shipmentItemArray['order_item_id'][$items->getId()]]);
+	$parstTrackInfoStatus = array();
+	$parstTrackInfoDate = array();
+	$parstTrackInfoTime = array();
+	$itemStatus = false;
+	foreach($getTrackingInfo as $getTrackingInfoVal){
+		
+		$parstTrackInfoStatus[] = $getTrackingInfoVal['activityCode'];
+		$parstTrackInfoDate[] = $getTrackingInfoVal['deliverydate'];
+		$deliverTime = explode(':',$getTrackingInfoVal['deliverytime']);		
+		$parstTrackInfoTime[] = $deliverTime[0].':'.$deliverTime[1];
+		
+		if($itemStatus == false && ($getTrackingInfoVal['activityCode']=='DL' || $getTrackingInfoVal['activityCode'] == 'IT' || $getTrackingInfoVal['activityCode']=='OC'
+		|| $getTrackingInfoVal['activityCode']=='PL'|| $getTrackingInfoVal['activityCode']=='IN'|| $getTrackingInfoVal['activityCode']=='OD'))
+		  $itemStatus = $getTrackingInfoVal['activityCode'];
+	}
+	//echo '<pre>';
+	//print_r($parstTrackInfoStatus);
+	//print_r($parstTrackInfoDate);
+?>
+      <div class="singleOrder">
+        <table class="cart-table data-table hidden-sm hidden-xs" id="shopping-cart-table">
+          <tbody>
+            <tr class="first last odd">
+              <td rowspan="2" valign="middle"><span class="product-image-success">
+                <?php
+	if($blank_backImagePath != '')
+	{?>
+                <a href="<?php echo $itemsInfoArray["prdfullUrl"]?>"><img src="<?php echo $blank_backImagePath;?>" width="75" height="75" style="position:absolute"></a>
+                <?php } ?>
+                <img src="<?php echo $product_small_image_path ?>" width="75" height="75" align="<?php echo $items->getName(); ?>"/> </span></td>
+              <td><h3>Item</h3></td>
+              <td><h3>Qty</h3></td>
+              <td><h3>Status</h3></td>
+              <td><h3>Price</h3></td>
+            </tr>
+            <tr class="first last odd">
+              <td><div class="productNameCx"> <a href="<?php echo $itemsInfoArray["prdfullUrl"]?>"><?php echo $items->getName()?></a> </div></td>
+              <td><p><?php echo (int)$items->getQtyOrdered();?></p></td>
+              <?php
+			  $itemStatus=$getTrackingInfoVal['activityCode'];
+			  ?>
+              <td><div class="statusCx"><?php if($itemStatus=='DL') { echo 'Delivered'; } else if($itemStatus=='IT') { echo 'In Transit'; }else if($itemStatus=='OC') { echo 'Dispatched';}
+			  else if($itemStatus=='PL') { echo 'Placed'; } else if($itemStatus=='IN') { echo 'In Process'; } else if($itemStatus=='OD') { echo 'Out for Delivery'; } ?><?php //echo $items->getId()?></div></td>
+              <td><div class="priceCx"><?php echo Mage::helper('core')->currency($items->getPrice())?></div></td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <table class="data-table hidden-lg hidden-md table table-stripted" id="shopping-cart-table1">
+          <tbody>
+            <tr class="first last odd">
+              <td valign="middle"><span class="product-image-success">
+                <?php
+	if($blank_backImagePath != '')
+	{?>
+                <a href="<?php echo $itemsInfoArray["prdfullUrl"]?>"><img src="<?php echo $blank_backImagePath;?>" width="75" height="75" style="position:absolute"></a>
+                <?php } ?>
+                <img src="<?php echo $product_small_image_path ?>" width="75" height="75" align="<?php echo $items->getName(); ?>"/> </span></td>
+                
+                
+                
+                <td><div class="productNameCx"> <a href="<?php echo $itemsInfoArray["prdfullUrl"]?>"><strong><?php echo $items->getName()?></strong></a> </div></td></tr>
+              <tr>
+              <td><h3>Qty</h3></td> <td><p><?php echo (int)$items->getQtyOrdered();?></p></td></tr>
+              <tr>
+              <td><h3>Status</h3></td><td><div class="statusCx"><?php echo $items->getStatus()?></div></td></tr><tr>
+              <td><h3>Price</h3></td><td><div class="priceCx"><?php echo Mage::helper('core')->currency($items->getPrice())?></div></td></tr>
+            </tr>
+            <tr class="first last odd">
+              
+              
+             
+              
+            </tr>
+          </tbody>
+        </table>
+        
+        <div class="stepwizard">
+          <div class="stepwizard-row setup-panel">
+            <div class="stepwizard-step">
+              <p>Placed</p>
+              <a href="#step-1" type="button" class="btn btn-primary btn-circle"><i class="fa fa-check"></i> </a>
+              <p class="dateTimeCx"><?php echo date('d-M-Y h:i a',strtotime($order->getData("created_at")))?></p>
+            </div>
+			
+			
+			<?php
+			if(time() - strtotime($order->getData("created_at")) >= 7200)
+			 $inprocess = true;
+			?>
+			
+            <div class="stepwizard-step">
+              <p>In Process</p>
+              <a href="#step-2" type="button" class="btn <?php if($inprocess){?>btn-primary<?php }else{ echo "btn-default";}?> btn-circle" <?php if(!$inprocess){?> disabled="disabled"<?php }?>><i class="fa fa-check"></i> </a>
+              <p class="dateTimeCx"><?php if($inprocess) echo date('d-M-Y h:i a',(strtotime($order->getData("created_at"))+7200))?></p>
+            </div>
+			
+			<?php
+			$showInfo=false;
+			$showInfoDate=false;
+			$btnClass = 'btn-default';
+			if(in_array('PU',$parstTrackInfoStatus)){
+				$showInfo=true;
+				$keyElementArray = array_search('PU',$parstTrackInfoStatus);
+				
+				$showInfoDate = strtotime($parstTrackInfoDate[$keyElementArray].' '.$parstTrackInfoTime[$keyElementArray]);	
+				
+				$showInfoDate = $showInfoDate + 19800;				
+				$showInfoDate = date('d-M-Y h:i a',$showInfoDate);			
+				$btnClass = 'btn-primary';
+			}
+			?>
+			
+            <div class="stepwizard-step">
+              <p>Dispatched</p>
+              <a href="#step-3" type="button" class="btn <?php echo $btnClass?> btn-circle" <?php if($showInfo==false){?>disabled="disabled"<?php }?>><i class="fa fa-check"></i> </a>
+              <p class="dateTimeCx"><?php if($showInfoDate) echo date('d-M-Y h:i a',strtotime($showInfoDate));?></p>
+            </div>
+			
+			<?php
+			$showInfo=false;
+			$showInfoDateFrom = false;
+			$showInfoDateTo = false;
+			$btnClass = 'btn-default';
+			
+			if(in_array('PU',$parstTrackInfoStatus)){
+				foreach($parstTrackInfoStatus as $parstTrackInfoStatusKey=>$parstTrackInfoStatusVal){
+					
+					if($showInfoDateTo == false){
+						$showInfoDateTo = strtotime($parstTrackInfoDate[$parstTrackInfoStatusKey].' '.$parstTrackInfoTime[$parstTrackInfoStatusKey]);
+						
+				$showInfoDateTo = $showInfoDateTo + 19800;
+				
+				$showInfoDateTo = date('d-M-Y h:i a',$showInfoDateTo);
+						
+						
+						$showInfoDateToKey = $parstTrackInfoStatusKey;
+						$showInfo=true;
+						$btnClass = 'btn-primary';					
+					}
+					if($parstTrackInfoStatusVal == 'OD'){
+						$showInfoDateTo=false;
+						$showInfo=false;
+						$btnClass = 'btn-default';					
+					}
+				
+					if($parstTrackInfoStatusVal == 'PU' && (($parstTrackInfoStatusKey-1) !=  $showInfoDateToKey)){
+					$showInfoDateFrom = strtotime($parstTrackInfoDate[$parstTrackInfoStatusKey-1].' '.$parstTrackInfoTime[$parstTrackInfoStatusKey-1]);
+					
+				$showInfoDateFrom = $showInfoDateFrom + 19800;
+				
+				$showInfoDateFrom = date('d-M-Y h:i a',$showInfoDateFrom);
+					
+					}
+					
+									
+				}
+			}
+			
+			if($showInfoDateFrom == false){
+				$showInfoDateFrom = $showInfoDateTo;
+				$showInfoDateTo = false;
+			}	
+			?>
+			
+			
+            <div class="stepwizard-step">
+              <p>In Transit</p>
+              <a href="#step-3" type="button" class="btn <?php echo $btnClass?> btn-circle" <?php if($showInfo==false){?>disabled="disabled"<?php }?>><i class="fa fa-check"></i> </a>
+              <p class="dateTimeCx"><?php if($showInfoDateFrom) echo date('d-M-Y h:i a',strtotime($showInfoDateFrom));?><?php if($showInfoDateTo) echo ' to '.date('d-M-Y h:i a',strtotime($showInfoDateTo));?></p>
+            </div>
+			
+			
+			<?php
+			$showInfo=false;
+			$showInfoDate=false;
+			$btnClass = 'btn-default';
+			if(in_array('OD',$parstTrackInfoStatus)){
+				$showInfo=true;
+				$keyElementArray = array_search('OD',$parstTrackInfoStatus);				
+				$showInfoDate = strtotime($parstTrackInfoDate[$keyElementArray].' '.$parstTrackInfoTime[$keyElementArray]);
+				
+				$showInfoDate = $showInfoDate + 19800;
+				
+				$showInfoDate = date('d-M-Y h:i a',$showInfoDate);
+				
+				$btnClass = 'btn-primary';
+			}
+			?>
+			
+			
+            <div class="stepwizard-step">
+              <p>Out for Delivery</p>
+              <a href="#step-3" type="button" class="btn <?php echo $btnClass?> btn-circle" <?php if($showInfo==false){?>disabled="disabled"<?php }?>><i class="fa fa-check"></i> </a>
+              <p class="dateTimeCx"><?php if($showInfoDate) echo date('d-M-Y h:i a',strtotime($showInfoDate));?></p>
+            </div>
+			
+			
+			<?php
+			$showInfo=false;
+			$showInfoDate=false;
+			$btnClass = 'btn-default';
+			if(in_array('DL',$parstTrackInfoStatus)){
+				$showInfo=true;
+				$keyElementArray = array_search('DL',$parstTrackInfoStatus);				
+				$showInfoDate = strtotime($parstTrackInfoDate[$keyElementArray].' '.$parstTrackInfoTime[$keyElementArray]);
+				
+				$showInfoDate = $showInfoDate + 19800;
+				
+				$showInfoDate = date('d-M-Y h:i a',$showInfoDate);
+				
+				$btnClass = 'btn-primary';
+			}
+			?>
+			
+			
+            <div class="stepwizard-step">
+              <p>Delivered</p>
+              <a href="#step-4" type="button" class="btn <?php echo $btnClass?> btn-circle" <?php if($showInfo==false){?>disabled="disabled"<?php }?>><i class="fa fa-check"></i> </a>
+              <p class="dateTimeCx"><?php if($showInfoDate) echo date('d-M-Y h:i a',strtotime($showInfoDate));?></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <?php }?>
+    </div>
+    <div class="ordersAddress row">
+      <div class="shippingAdd col-sm-4"> <i class="fa fa-map-marker"></i>
+        <?php $country_name_shipping=Mage::app()->getLocale()->getCountryTranslation($shippingAddress['country_id']); ?>
+        <address>
+        <h3>Shipping Address : </h3>
+        <?php echo $shippingAddress['prefix'].' '.$shippingAddress['firstname'].' '.$shippingAddress['lastname'];?>,<br/>
+        <?php echo $shippingAddress['street']; ?>,<br/>
+        <?php echo $shippingAddress['city']; ?> - <?php echo $shippingAddress['postcode']; ?> (<?php echo $shippingAddress['region']; ?>) <?php echo $country_name_shipping; ?><br/>
+        <span style="width:62px;display:inline-block;">Mobile</span>: <?php echo $shippingAddress['telephone']; ?><br/>
+        <span style="width:62px;display:inline-block;">Email</span>: <?php echo $shippingAddress['email']; ?>
+        </td>
+        </address>
+      </div>
+      <?php $country_name_billing=Mage::app()->getLocale()->getCountryTranslation($billingAddress['country_id']); ?>
+      <div class="shippingAdd col-sm-4"> <i class="fa fa-map-marker"></i>
+        <address>
+        <h3>Billing Address : </h3>
+        <?php echo $billingAddress['prefix'].' '.$billingAddress['firstname'].' '.$billingAddress['lastname'];?>,<br/>
+        <?php echo $billingAddress['street']; ?>,<br/>
+        <?php echo $billingAddress['city']; ?> - <?php echo $billingAddress['postcode']; ?> (<?php echo $billingAddress['region']; ?>) <?php echo $country_name_billing; ?><br/>
+        <span style="width:62px;display:inline-block;">Mobile</span>: <?php echo $billingAddress['telephone']; ?><br/>
+        <span style="width:62px;display:inline-block;">Email</span>: <?php echo $billingAddress['email']; ?>
+        </td>
+        </address>
+      </div>
+      <div class="shippingTotal col-sm-4">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tfoot>
+            <tr>
+              <td class="txtLabel"><?php echo $this->__('Order Total') ?></td>
+              <td><?php echo Mage::helper('core')->currency($order->getGrandTotal(),true); ?></td>
+            </tr>
+          </tfoot>
+          <tbody>
+            <tr>
+              <td class="txtLabel"><?php echo $this->__('Cart Total') ?></td>
+              <td><?php echo Mage::helper('core')->currency($order->getSubtotal())?></td>
+            </tr>
+            <?php if($order->getDiscountAmount() != 0): ?>
+            <tr>
+              <td class="txtLabel"><?php echo $this->__('Coupon Discount').'('.$order->getDiscountDescription().')' ?></td>
+              <td><?php echo Mage::helper('core')->currency($order->getDiscountAmount(),true) ?></td>
+            </tr>
+            <?php endif;?>
+            <?php if(($order->getFeeAmount() * -1) > 0) : ?>
+            <tr>
+              <td class="txtLabel"><?php echo $this->__('5% Online Payment Discount')?></td>
+              <td><?php echo Mage::helper('core')->currency($order->getFeeAmount(),true) ?></td>
+            </tr>
+            <?php endif;?>
+            <tr>
+              <td class="txtLabel"><?php echo $this->__('Shipping Charges'); ?></td>
+              <td><?php if($order->getShippingInclTax() > 0) echo Mage::helper('core')->currency($order->getShippingInclTax(),true);else echo "Free"; ?></td>
+            </tr>
+            <?php if($payment_method_code == 'phoenix_cashondelivery'): ?>
+            <tr>
+              <td class="txtLabel"><?php echo $this->__('COD Handling Charges')?></td>
+              <td><?php echo Mage::helper('core')->currency($order->getCodFee(),true) ?></td>
+            </tr>
+            <?php endif;?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<?php }?>

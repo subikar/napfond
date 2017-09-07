@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+<featuredproduct_adminhtml_featuredproduct_index>
+<reference name="content">
+<block type="featuredproduct/adminhtml_featuredproduct" name="featuredproduct" />
+</reference>
+</featuredproduct_adminhtml_featuredproduct_index>
+</layout>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]> <html lang="en" id="top" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" id="top" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" id="top" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" id="top" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html lang="en" id="top" class="no-js">
+<!--<![endif]-->
+<head>
+<?php echo $this->getChildHtml('head') ?>
+</head>
+<body<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?>>
+<?php echo $this->getChildHtml('after_body_start') ?>
+<?php
+$createURLKey = array();
+$createURLKey2 = array();
+
+$params = $this->getRequest()->getParams();
+$cat_id = $params['catid'];
+$cur_cat = Mage::getModel('catalog/layer')->getCurrentCategory()->getId();
+if($cat_id == '')
+{
+	$cat_id = $cur_cat;
+}
+$_category = Mage::getModel('catalog/category')->load($cat_id);  // category ID=10	
+$customize_thousnad_of_design_link = str_replace('create','shop',$_category->getUrl()); 
+	//echo $_category->getUrl();  // get category URL
+	 // $_category->getUrlKey();   // get category URL Key
+	//echo $_category->getName();  // get category Name
+/*
+$category = Mage::getModel('catalog/category')
+        ->getCollection()
+        ->addAttributeToFilter('url_key', $_category->getUrlKey())
+        ->getFirstItem();
+	
+function getAllUrlKey($catid)	
+ {
+    global $createURLKey;	
+	$_category = Mage::getModel('catalog/category')->load($catid);
+	
+	if($_category->getParentId() != 1)		
+	 $createURLKey[] =  $_category->getUrlKey(); 
+ 
+	if($_category->getParentId() != 1)	
+		getAllUrlKey($_category->getParentId());	
+	 
+		 
+		return $createURLKey;
+	 
+ }	
+$createURLKeyReturn = getAllUrlKey($_GET['catid']);
+unset($createURLKey);
+$createURLKey2Return = getAllUrlKey($category->getId());	
+ 
+  
+ for($ii=0;$ii<count($createURLKeyReturn);$ii++)
+ {
+   unset($createURLKey2Return[$ii]);
+ }
+ $createURLKey2Return = array_values($createURLKey2Return);
+
+
+ for($ii=0;$ii<count($createURLKeyReturn);$ii++)
+ {
+   if($createURLKeyReturn[$ii] != $createURLKey2Return[$ii])
+	  {
+		 
+	  }
+ }
+ */
+/*
+$categoryIds = array($_GET['catid']);//category id
+
+ 
+$collection = Mage::getResourceModel('catalog/product_collection')
+->joinField('category_id','catalog/category_product','category_id','product_id=entity_id',null,'left')
+->addAttributeToFilter('category_id', array('in' => $_GET['catid']))
+->addAttributeToSelect('*');
+$collection->getSelect()->limit(1);
+$collection->load();
+foreach ($collection as $product)
+{	
+//print_r($product);						 
+	  $blankPrdId = $product->getId();
+}	
+*/
+
+$_category = Mage::getModel('catalog/category')->load($_GET['catid']);
+ $_collection = $_category->getProductCollection();
+$_product =  $_collection->getFirstItem(); // this will get first item in collection
+
+$blankPrdId = $_product->getId();
+					 
+?>
+<div class="wrapper"> <?php echo $this->getChildHtml('global_notices') ?>
+ <div class="page"> <?php echo $this->getChildHtml('header') ?> <?php echo $this->getChildHtml('global_messages') ?>
+  <div class="container">
+   <div class="main-container col1-layout">
+    <div class="main"> <?php echo $this->getChildHtml('breadcrumbs') ?>
+     <div class="col-main">
+      <div class="row" id="create-design">
+       <div id="after-cr-design" class="col-sm-12">
+        <h1>Create Your Own</h1>
+       </div>
+       <div class="col-md-offset-2 col-sm-4">
+        <div class="item-box-c"> 
+         <a href="<?php echo Mage::getStoreConfig(Mage_Core_Model_Url::XML_PATH_SECURE_URL); ?>designer?id=<?php echo $blankPrdId;?>&cat_id=<?php echo $_GET['catid']?>">
+          <div class="thumbnail"><img src="<?php echo $this->getSkinUrl('images/create-your-own.png');?>"> </div>
+          <h3>Create your own design on blank product</h3>
+         </a> 
+        </div>
+        <div class="featured-box">
+         <ul>
+          <li><i class="fa fa-heart"></i>Start from scratch on a blank product </li>
+          <li><i class="fa fa-heart"></i>Add background color</li>
+          <li><i class="fa fa-heart"></i>Add your images/designs (your  library , facebook ,instagram etc. ) or choose from 1000’s of our  designs </li>
+          <li><i class="fa fa-heart"></i>Add text to personalize it </li>
+          <li><i class="fa fa-heart"></i>Vectors to show your creativity</li>
+         </ul>
+        </div>
+        <a href="<?php echo Mage::getStoreConfig(Mage_Core_Model_Url::XML_PATH_SECURE_URL); ?>designer?id=<?php echo $blankPrdId;?>&cat_id=<?php echo $_GET['catid']?>" class="btn btn-danger btn-lg">Start Now</a> 
+       </div>
+       <div class="col-sm-4">
+        <div class="item-box-c"> 
+         <a href="<?php echo $customize_thousnad_of_design_link?>">
+          <div class="thumbnail"><img src="<?php echo $this->getSkinUrl('images/our-design.png');?>"> </div>
+          <h3>Customize  on thousands of our  designs </h3>
+         </a> 
+        </div>
+        <div class="featured-box">
+         <ul>
+          <li><i class="fa fa-heart"></i>Select from our already created awesome designs in various categories.</li>
+          <li><i class="fa fa-heart"></i>Add your own images /designs on it </li>
+          <li><i class="fa fa-heart"></i>Add text to personalize  it</li>
+          <li><i class="fa fa-heart"></i>Add vectors to decorate it</li>
+         </ul>
+        </div>
+        <a href="<?php echo $customize_thousnad_of_design_link;?>" class="btn btn-danger btn-lg">Start Now</a> 
+       </div>
+       <?php /*?><div class="col-sm-4">
+                <div class="item-box-c"> <a href="#">
+                  <div class="thumbnail"><img src="<?php echo $this->getSkinUrl('images/create-template.png');?>"> </div>
+                  <h3>Customize our prefixed templates    </h3>
+                  </a> </div>
+                <div class="featured-box">
+                  <ul>
+                    <li><i class="fa fa-heart"></i>Choose from 100’s of templates precreated  for various occassions  and  favourite  memories </li>
+                    <li><i class="fa fa-heart"></i>Add your images in prefixed slots</li>
+                    <li><i class="fa fa-heart"></i>Add your text in prefixed slots </li>
+                  </ul>
+                </div>
+                <a href="#" class="btn btn-danger btn-lg">Start Now</a> </div><?php */?>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <?php echo $this->getChildHtml('footer_before') ?> <?php echo $this->getChildHtml('footer') ?> 
+  <?php echo $this->getChildHtml('global_cookie_notice') ?> <?php echo $this->getChildHtml('before_body_end') ?> 
+ </div>
+</div>
+<?php echo $this->getAbsoluteFooter() ?>
+</body>
+</html>

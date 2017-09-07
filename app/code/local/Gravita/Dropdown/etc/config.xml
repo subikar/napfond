@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Gravita_Dropdown>
+            <version>0.1.0</version>
+        </Gravita_Dropdown>
+    </modules>
+	
+	<global>
+        <models>
+            <dropdown>
+                <class>Gravita_Dropdown_Model</class>
+                <resourceModel>dropdown_mysql4</resourceModel>
+            </dropdown>
+            <dropdown_mysql4>
+                <class>Gravita_Dropdown_Model_Mysql4</class>
+            </dropdown_mysql4>
+        </models>
+        <blocks>
+            <dropdown>
+                <class>Gravita_Dropdown_Block</class>
+            </dropdown>
+        </blocks>
+        <helpers>
+            <dropdown>
+                <class>Gravita_Dropdown_Helper</class>
+            </dropdown>  
+        </helpers>
+    </global>
+    
+    <admin>
+        <routers>
+            <dropdown>
+                <use>admin</use>
+                <args>
+                    <module>Gravita_Dropdown</module>
+                    <frontName>dropdown</frontName>
+                </args>
+            </dropdown>
+        </routers>
+    </admin> 
+	 
+	<adminhtml>
+		<translate>
+            <modules>
+                <mage_adminhtml>
+                    <files>
+                        <dropdown>Gravita_Dropdown.csv</dropdown>
+                    </files>
+                </mage_adminhtml>
+            </modules>
+        </translate>
+		
+		<!--<menu>
+            <catalog>
+                <children>
+                    <dropdown_adminform translate="title" module="dropdown">
+                        <title>Filter Dropdown</title>
+                        <action>dropdown/adminhtml_dropdownform</action>
+                    </dropdown_adminform>
+                </children>
+            </catalog>
+        </menu>-->
+		
+		<acl>
+            <resources>
+                <admin>
+                    <children>
+                        <catalog>
+                            <children>
+                                <dropdown_adminform>
+                                    <title>My Form</title>
+                                </dropdown_adminform>
+                            </children>
+                        </catalog>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        
+        <layout>
+            <updates>
+                <dropdown>
+                    <file>dropdown.xml</file>
+                </dropdown>
+            </updates>
+        </layout>
+	</adminhtml>  
+</config>

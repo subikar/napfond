@@ -1,0 +1,44 @@
+<?xml version="1.0"?> 
+
+<config>
+    <acl>
+	<resources>
+	    <admin>
+		<children>
+		    <system>
+			<children>
+			    <config>
+				<children>
+				    <changeproductposition>
+					<title>Changeproductposition</title>
+				    </changeproductposition>
+				</children>
+			    </config>
+			</children>
+		    </system>	
+		    <strapp translate="title" module="changeproductposition">
+			<title>Strapp</title>
+			<sort_order>76</sort_order> 
+			<depends>
+	<module>Strapp_Changeproductposition</module>
+	<config>changeproductposition/productposition/enabled</config>
+			</depends>
+			<children>
+			    <changeproductposition translate="title" module="changeproductposition">
+				<title>Changeproductposition</title>
+				<sort_order>0</sort_order>
+				<children>
+				    <items translate="title" module="changeproductposition">
+					<title>Import Product Position</title>
+					<sort_order>0</sort_order>
+					<action>changeproductposition/adminhtml_importposition</action>
+																    </items>				    
+				</children>
+			    </changeproductposition>
+			</children>
+		    </strapp>					
+		</children>
+	    </admin>
+        </resources>
+    </acl>
+</config>

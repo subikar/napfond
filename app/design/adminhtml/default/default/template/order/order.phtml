@@ -1,0 +1,168 @@
+<link rel="stylesheet" href="<?php echo Mage::getStoreConfig(Mage_Core_Model_Url::XML_PATH_SECURE_URL);?>js/jquery.datetimepicker.css">
+<script type="text/javascript" src="<?php echo Mage::getStoreConfig(Mage_Core_Model_Url::XML_PATH_SECURE_URL);?>js/lib/jquery/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="<?php echo Mage::getStoreConfig(Mage_Core_Model_Url::XML_PATH_SECURE_URL);?>js/lib/jquery/noconflict.js"></script>
+<?php /*?><script type="text/javascript" src="<?php echo Mage::getStoreConfig(Mage_Core_Model_Url::XML_PATH_SECURE_URL);?>js/jquery.maskedinput.min.js"></script><?php */?>
+<script type="text/javascript" src="<?php echo Mage::getStoreConfig(Mage_Core_Model_Url::XML_PATH_SECURE_URL);?>js/jquery.datetimepicker.full.js"></script>
+
+<div class="content-header">
+ <table cellspacing="0" class="grid-header">
+  <tr>
+   <td width="25%" height="35"><h3><?php echo $this->__('Order Email')?></h3></td>
+  </tr>
+ </table>
+</div>
+<div class="grid" id="display-cat" >
+ <form id="drop" name="drop" method="post" action="">
+  <input type="text" name="orderid" value="" id="order_id" class="input-text input-order" placeholder="Please Enter Order Id" required="required">
+  <input type="button" value="Submit" onclick="return get_order();" class="pure-button pure-button-primary">
+ </form>
+ <div class="clearer"></div>
+ <form id="order-detail" name="order-detail" method="post" action="<?php echo $this->getUrl('*/*/emailsend');?>">
+  <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+  <input type="hidden" name="oid" id="oid" value="">
+  <div class="box-left" id="ship-box" style="display:none;">
+    <!--Shipping Address-->
+    <div class="entry-edit">
+      <div class="entry-edit-head">
+          <h4 class="icon-head head-shipping-address">Shipping Address</h4>        
+      </div>
+      <div id="ship-add"></div>  
+    </div>
+  </div>
+  <div class="clearer"></div>
+  <div id="order-grid" class="box-left" style="display:none;">
+    <div class="entry-edit">
+      <div class="entry-edit-head">
+        <h4 class="icon-head head-products">Items Ordered</h4>
+      </div>
+    </div>  
+    <div class="grid np">
+      <div class="hor-scroll">
+        <table cellspacing="0" class="data order-tables">
+          <colgroup>
+            <col width="1">
+            <col width="1">
+            <col width="1">                   
+            <col width="1">
+            <col width="1">
+          </colgroup>
+          <thead>
+            <tr class="headings">
+              <th class="a-center"></th>
+              <th class="a-center">ITEM DETAILS</th>                      
+              <th class="a-center">Qty</th>
+              <th class="a-center">Price</th>  
+              <th class="a-center">Sub Total</th>                    
+            </tr>
+          </thead>
+          <tbody class="even" id="order-items"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="clearer"></div>
+    <input type="text" readonly="readonly" id="order_date" name="delivery_date" class="input-text input-date" placeholder="Please Enter Delivery Date" required="required">
+    <input type="submit" value="Send Mail" name="mail_send" class="pure-button pure-button-primary">
+  </div>
+ </form>  
+</div>
+<script type="text/javascript">
+
+
+jQuery( document ).ready(function() {
+	
+jQuery('#order_date').datetimepicker({theme:'dark',timepicker:false,
+	format:'d-m-Y',
+	formatDate:'d-m-Y',
+});
+   
+});
+
+
+
+
+function get_order()
+{
+  var order_id = document.getElementById("order_id").value;
+  if(order_id == '')
+  {
+    alert("Please Enter Order Id");
+  }
+  else
+  {
+    var datastring = "getshipping=1&orderid="+order_id;
+    var forum_url = '<?php echo Mage::getBaseUrl().'order/adminhtml_orderform/bpost'?>';
+    new Ajax.Request(forum_url, {
+        method: 'post',
+        parameters: datastring,
+        onComplete: function(transport) 
+        {  
+          document.getElementById("ship-box").style.display = 'block';
+          document.getElementById("oid").value = order_id;
+          var response = transport.responseText;
+          document.getElementById("ship-add").innerHTML = response;
+          get_order_items(order_id);
+        }          
+    });
+  }  
+}
+
+function get_order_items(order_id)
+{
+  if(order_id != '')
+  {
+    var datastring = "getitems=1&orderid="+order_id;
+    var forum_url = '<?php echo Mage::getBaseUrl().'order/adminhtml_orderform/items'?>';
+    new Ajax.Request(forum_url, {
+      method: 'post',
+      parameters: datastring,
+      onComplete: function(transport) 
+      {  
+        document.getElementById("order-grid").style.display = 'block';
+        var response = transport.responseText;
+        //alert(response);
+        document.getElementById("order-items").innerHTML = response;
+      }          
+    });
+  } 
+}
+function update_total(order_id,item_id)
+{
+  var chk = document.getElementById("chk_"+item_id).checked;
+  var datastring = "updatetotal=1&orderid="+order_id+"&itemid="+item_id;
+  var forum_url = '<?php echo Mage::getBaseUrl().'order/adminhtml_orderform/updateTotal'?>';
+  new Ajax.Request(forum_url, {
+    method: 'post',
+    parameters: datastring,
+    onComplete: function(transport) 
+    {  
+      var response = transport.responseText;
+      var g_total = document.getElementById("g-total").innerHTML;
+      var grand_total = 0;var main_total = 0;
+      if(chk == false)
+      {
+        grand_total = parseFloat(g_total)-parseFloat(response);
+      }
+      else
+      {
+        grand_total = parseFloat(g_total)+parseFloat(response);
+      }
+      //main_total = parseFloat(grand_total);
+      document.getElementById("g-total").innerHTML = grand_total;
+    }          
+  });  
+}
+
+function delivery_email()
+{
+  var order_id = document.getElementById("order_id").value;
+  if(order_id == '')
+  {
+    alert("Please Enter Order Id");
+  }
+  var order_date = document.getElementById("order_date").value;
+  if(order_date == '')
+  {
+    alert("Please Enter Order Date");
+  }
+}
+</script>

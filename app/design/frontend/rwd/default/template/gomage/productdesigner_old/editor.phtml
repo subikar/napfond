@@ -1,0 +1,219 @@
+<?php
+/**
+ * GoMage Product Designer Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use/
+ * @version      Release: 1.0.0
+ * @since        Available since Release 1.0.0
+ */
+?>
+<?php
+$_product = $this->getProduct();
+//Is Product Navigation (Choose Product) Tab Enabled
+$navigationEnabled = $this->isNavigationEnabled();
+
+//Is Design (Add Design) Tab Enabled
+$designEnabled = $this->isDesignEnabled() && $_product->getId();
+
+//Is Text (Add Text) Tab Enabled
+$textEnabled = $this->isTextEnabled() && $_product->getId();
+
+//Is Image (Upload Image) Tab Enabled
+$imageEnabled = $this->isUploadImageEnabled() && $_product->getId();
+
+$productImageMinSize = $this->getProductOriginalImageMinSizes();
+?>
+<script type="text/javascript">
+    var optionsPrice = new Product.OptionsPrice(<?php echo $this->helper('gomage_designer')->getProductPriceConfigJson(); ?>);
+    function initProductDesigner() {
+        var settings = {};
+        settings.navigation = {
+            chooseProduct : $("pd_choose_product"),
+            addDesign : $("pd_add_design"),
+            addText : $("pd_add_text"),
+            addImage : $("pd_add_image"),
+            designGallery : $("pd_design_gallery"),
+            saveDesign: $("pd_save_design"),
+            continue : $('pd_gt_product'),
+            zoom: $('pd_zoom')
+        };
+
+        settings.controls = {
+            undo: 'pd_undo',
+            redo: 'pd_redo',
+            flip_x: 'pd_flip_horizontal',
+            flip_y: 'pd_flip_vertical',
+            allign_by_center: 'pd_allign_by_center',
+            remove: 'pd_delete'
+        };
+
+        settings.imageMinSize = <?php echo $this->getProductOriginalImageMinSizesJson(); ?>;
+
+        settings.prices = <?php echo $this->getDesignPriceConfigJson(); ?>;
+        settings.isCustomerLoggedIn = '<?php echo $this->isCustomerLoggedIn(); ?>';
+        settings.isProductSelected = <?php echo $this->isProductSelected() ? 1 : 0; ?>;
+        settings.isNavigationEnabled = <?php echo $this->isNavigationEnabled(); ?>;
+        settings.isDesignedEnabled = <?php echo $this->isDesignEnabled(); ?>;
+        settings.isTextEnabled = <?php echo $this->isTextEnabled(); ?>;
+        settings.isUploadImageEnabled = <?php echo $this->isUploadImageEnabled(); ?>;
+        settings.product = <?php echo $this->getEditorConfigJson(); ?>;
+        settings.container = $("pd_container");
+
+        window.w = new GoMage.ProductDesigner(settings,
+            '<?php echo Mage::getUrl('*/index/continue')?>',
+            '<?php echo Mage::getUrl('*/customer/loginPost')?>',
+            '<?php echo Mage::getUrl('*/customer/createPost')?>',
+            '<?php echo Mage::getUrl('*/index/saveDesign')?>'
+        );
+    }
+    document.observe("dom:loaded", function(e){
+        initProductDesigner();
+    }.bind(this));
+</script>
+<div id="product-designer" class="product-designer">
+    <div class="product-designer-header">
+        <div id="pd_nav_container" class="pd_nav_container">
+            <button class="button pd-btn" style="<?php echo !$navigationEnabled ? 'display:none' : ''; ?>" id="pd_choose_product"><span><span><?php echo Mage::helper('gomage_designer')->__('Choose Product') ?></span></span></button>
+            <button class="button pd-btn" style="<?php echo !$designEnabled || !$this->isProductSelected() ? 'display:none' : '';?>" id="pd_add_design"><span><span><?php echo Mage::helper('gomage_designer')->__('Add Cliparts') ?></span></span></button>
+            <button class="button pd-btn" style="<?php echo !$textEnabled || !$this->isProductSelected()? 'display:none' : ''; ?>" id="pd_add_text"><span><span><?php echo Mage::helper('gomage_designer')->__('Add Text') ?></span></span></button>
+            <button class="button pd-btn" style="<?php echo !$imageEnabled || !$this->isProductSelected()? 'display:none' : ''; ?>" id="pd_add_image"><span><span><?php echo Mage::helper('gomage_designer')->__('Upload Images') ?></span></span></button>
+        </div>
+        <div id="pd_save_container" class="pd_save_container" style="display: <?php echo $this->isProductSelected() ? 'block': 'none'?>">
+            <button class="button pd-btn" id="pd_zoom"><span><span><?php echo Mage::helper('gomage_designer')->__('Preview') ?></span></span></button>
+            <button class="button pd-btn disabled" id="pd_save_design"><span><span><?php echo Mage::helper('gomage_designer')->__('Save  Design') ?></span></span></button>
+            <button class="button pd-btn disabled" id="pd_gt_product"><span><span><?php echo Mage::helper('gomage_designer')->__('Continue') ?></span></span></button>
+        </div>
+    </div>
+    
+    <div class="product-designer-content">
+      
+      <div class="product-designer-sidebar">
+          <div id="pd_panels" class="pd_panels pd-box">
+              <!-- Product Designer Tabs -->
+              <div id="pd_tabs" class="pd_tabs">
+                    <?php if ($this->isNavigationEnabled()): ?>
+                    <div class="pd-tab-content" id="pd_choose_product-content" <?php if ($this->isActiveTab('navigation')): ?>style="display: block;"<?php endif;?>>
+                        <h4 class="pd-header"><?php echo $this->__('Choose Product'); ?></h4>
+                        <?php if ($this->isHelpEnabled('navigation')):?>
+                            <span class="tab-help-icon">?</span>
+                            <!-- Для всплывающего окна предлагаю задать в стилях min-width и min-height -->
+                            <div class="tab-help-content" style="display: none; width: <?php echo $this->getHelpPopupWidth('navigation')?>px; height: <?php echo $this->getHelpPopupHeight('navigation')?>px">
+                                <?php echo $this->getHelpText('navigation');?>
+                            </div>
+                        <?php endif;?>
+                        <div class="pd-content">
+                            <?php echo $this->getChildHtml('productNavigator'); ?>
+                        </div>
+                    </div>
+                    <?php endif;?>
+                  <?php if ($this->isDesignEnabled()): ?>
+                      <div class="pd-tab-content" id="pd_add_design-content" <?php if ($this->isActiveTab('design')): ?>style="display: block;"<?php endif;?>>
+                          <h4 class="pd-header"><?php echo $this->__('Choose Cliparts'); ?></h4>
+                          <?php if ($this->isHelpEnabled('design')):?>
+                              <span class="tab-help-icon">?</span>
+                              <div class="tab-help-content" style="display: none; width: <?php echo $this->getHelpPopupWidth('design')?>px; height: <?php echo $this->getHelpPopupHeight('design')?>px">
+                                  <?php echo $this->getHelpText('design');?>
+                              </div>
+                          <?php endif;?>
+                          <div class="pd-content">
+                              <?php echo $this->getChildHtml('addDesign'); ?>
+                          </div>
+                      </div>
+                  <?php endif;?>
+                  <?php if ($this->isTextEnabled()): ?>
+                      <div class="pd-tab-content" id="pd_add_text-content" <?php if ($this->isActiveTab('text')): ?>style="display: block;"<?php endif;?>>
+                          <h4 class="pd-header"><?php echo $this->__('Add Text'); ?></h4>
+                          <?php if ($this->isHelpEnabled('text')):?>
+                              <span class="tab-help-icon">?</span>
+                              <div class="tab-help-content" style="display: none; width: <?php echo $this->getHelpPopupWidth('text')?>px; height: <?php echo $this->getHelpPopupHeight('text')?>px">
+                                  <?php echo $this->getHelpText('text');?>
+                              </div>
+                          <?php endif;?>
+                          <div class="pd-content">
+                              <?php echo $this->getChildHtml('addText'); ?>
+                          </div>
+                      </div>
+                  <?php endif;?>
+                  <?php if ($this->isUploadImageEnabled()): ?>
+                      <div class="pd-tab-content" id="pd_add_image-content" <?php if ($this->isActiveTab('upload_image')): ?>style="display: block;"<?php endif;?>>
+                          <h4 class="pd-header"><?php echo $this->__('Upload Images'); ?></h4>
+                          <?php if ($this->isHelpEnabled('upload_image')):?>
+                              <span class="tab-help-icon">?</span>
+                              <div class="tab-help-content" style="display: none; width: <?php echo $this->getHelpPopupWidth('upload_image')?>px; height: <?php echo $this->getHelpPopupHeight('upload_image')?>px">
+                                  <?php echo $this->getHelpText('upload_image');?>
+                              </div>
+                          <?php endif;?>
+                          <div class="pd-content">
+                              <?php echo $this->getChildHtml('uploadImage'); ?>
+                          </div>
+                      </div>
+                  <?php endif;?>
+              </div>
+              <!-- End Of Product Designer Tabs -->
+          </div>
+          <div id="additional_panels" style="display: <?php echo !$this->isProductSelected() ? 'none' : 'block'?>">
+              <?php $config = $this->getEditorConfig(); ?>
+              <div id="pd_sides" class="pd_sides pd-box">
+                  <h4 class="pd-header"><?php echo $this->__('Choose Side') ?></h4>
+                  <ul class="pd_sides_list">
+                  <?php $images = $this->getProductImages();?>
+                  <?php foreach ($images as $k => $v): ?>
+                      <li>
+                        <img width="48" height="48" class="product-image" src="<?php echo $v['u'] ?>" data-id="<?php echo $k; ?>" data-image-id="<?php echo $v['id'] ?>" alt="">
+                      </li>
+                  <?php endforeach ?>
+                  </ul>
+                  <script type="text/html" class="no-display" id="product-image-template">
+                      <li>
+                          <img width="48" height="48" class="product-image" src="#{url}" data-id="#{image-id}" data-image-id="#{data-image-id}">
+                      </li>
+                  </script>
+              </div>
+              <?php $colors = $this->getProductColors();?>
+                  <div id="product-colors" class="product-colors pd-box" style="<?php if (!$colors || empty($colors)) echo "display: none";?>">
+                      <h4 class="pd-header"><?php echo $this->__('Choose Color') ?></h4>
+                      <?php if ($colors): ?>
+                          <?php foreach($colors as $color): ?>
+                              <span class="color-btn <?php if ($color['option_id'] == $config['default_color']) echo 'selected'?>" data-color_id="<?php echo $color['option_id']?>" <?php if ($color['image']):?>style="background-image: url(<?php echo $color['image']; ?>); background-position: 50% 50%; background-repeat: no-repeat no-repeat"<?php endif;?>><?php if (!$color['image']): echo $color['value']; endif;?></span>
+                          <?php endforeach;?>
+                      <?php endif;?>
+                  </div>
+              <?php if ($this->additionalInstructionsEnabled()): ?>
+                  <div id="additional_instructions" class="additional_instructions pd-box">
+                      <?php echo $this->getChildHtml('additionalInstructions');?>
+                  </div>
+              <?php endif; ?>
+          </div>
+          <div id="design_price_container" class="product-designer-price" style="<?php if (!$this->isProductSelected()) echo "display: none"?>">
+              <?php echo $this->getChildHtml('design_price'); ?>
+          </div>
+      </div>
+      
+      <div class="product-designer-main-col">
+        <div id="pd_container"></div>
+        
+        <div id="pd_bottom_panel" class="pd_bottom_panel" style="width: <?php echo $this->getProductImageWidth();?>px; display: <?php echo !$this->isProductSelected() ? 'none' : 'block'?>">
+            <button class="button pd-btn disabled" id="pd_flip_horizontal"><span><span><?php echo Mage::helper('gomage_designer')->__('Horizontal Flip') ?></span></span></button>
+            <button class="button pd-btn disabled" id="pd_flip_vertical"><span><span><?php echo Mage::helper('gomage_designer')->__('Vertical Flip') ?></span></span></button>
+            <button class="button pd-btn disabled" id="pd_delete"><span><span><?php echo Mage::helper('gomage_designer')->__('Remove') ?></span></span></button>
+            <button class="button pd-btn disabled" id="pd_allign_by_center"><span><span><?php echo Mage::helper('gomage_designer')->__('Align by center') ?></span></span></button>
+            <button class="button pd-btn disabled" id="pd_undo"><span><span><?php echo Mage::helper('gomage_designer')->__('Undo') ?></span></span></button>
+            <button class="button pd-btn disabled" id="pd_redo"><span><span><?php echo Mage::helper('gomage_designer')->__('Redo') ?></span></span></button>
+        </div>        
+        
+      </div>
+      
+    </div>
+
+</div>
+<?php if (!$this->getCustomerId()): ?>
+    <?php echo $this->getChildHtml('customer.login');?>
+    <?php echo $this->getChildHtml('customer.register');?>
+<?php endif;?>
+<div id="product-zoom-container" style="width: <?php echo $productImageMinSize['width'] + 5 ?>px; height: <?php echo $productImageMinSize['height']+5 ?>px;">
+    <canvas id="product-zoom-canvas"></canvas>
+</div>

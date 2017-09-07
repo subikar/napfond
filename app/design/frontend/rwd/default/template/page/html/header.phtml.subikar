@@ -1,0 +1,746 @@
+<?php /* ?>
+<div class="header-language-background"> 
+    <div class="header-language-container">
+        <div class="store-language-container">
+            <?php echo $this->getChildHtml('store_language') ?>
+        </div>
+
+        <?php echo $this->getChildHtml('currency_switcher') ?>
+
+        <p class="welcome-msg"><?php echo $this->getChildHtml('welcome') ?> <?php echo $this->getAdditionalHtml() ?></p>
+    </div>
+</div>
+<?php */ 
+ 
+$connection = Mage::helper('function/more')->getDbReadObject();
+$write = Mage::helper('function/more')->getDbWriteObject();	
+
+$checkMobileDeviceBhishoom = Mage::helper('function/more')->chkIfmobileBhishomm();
+?>
+<script type="text/javascript">
+var redirectUrl = '<?php echo $this->helper('core/url')->getCurrentUrl();?>';
+var URL = '<?php echo $this->getUrl(); ?>';
+function show_reg()
+{
+	 	jQuery("#old_user").hide();
+		jQuery("#new_register").show();
+	 
+}
+function show_login()
+{
+
+		jQuery("#quicklogin").find('#old_user').show();
+		jQuery("#quicklogin").find('#new_register').hide();
+
+
+}
+</script>
+<?php
+$currCat = Mage::getModel('catalog/layer')->getCurrentCategory()->getName();
+Mage::getSingleton('core/session')->setCurrCat($currCat);
+?>
+<?php /*?>
+$myValue = '';	 
+$myValue=Mage::getSingleton('core/session')->getMyValue(); 
+if(isset($myValue) && $myValue == 'cart')
+{		 
+ ?>
+  <script type="text/javascript">
+  	jQuery(document).ready(function() {
+		setTimeout(function(){
+			jQuery("#header-cart").addClass("skip-active");
+			setTimeout(function()
+			{
+				jQuery("#header-cart").removeClass("skip-active");
+			}, 5000);
+		}, 1000);
+    });
+  </script>
+  <?php 
+   Mage::getSingleton('core/session')->unsMyValue();
+}
+*/?>
+
+<div id="responsiveHeader" class="hidden-lg hidden-md">
+  <div class="container-fluid">
+    <div class="row row-xs">
+      <div class="col-xs-4 ">
+        <button id="responsiveBtn"  data-toggle="offcanvas" class="navbar-toggle pull-left collapsed" type="button"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+      </div>
+      <div class="col-xs-4"> <a class="logoM"  href="<?php echo $this->getUrl('') ?>"> <img src="<?php echo $this->getSkinUrl('images/logo.png');?>" alt="<?php echo $this->getLogoAlt() ?>" /> </a></div>
+      <div class="col-xs-4">
+        <div id="responsiveLinks" class="">
+          <div class="responsiveLinks"> 
+		<span id="searchBtnH" ><i class="fa fa-search"></i></span>
+          
+            <!--<a href="#header-account" class="skip-link skip-account"> <i class="fa fa-user fa-lg"></i> -->
+			<?php /*<?php if(Mage::getSingleton('customer/session')->isLoggedIn()):    ?>
+            <a title="Log Out" class="login-link skip-account" href="<?php echo $this->getUrl('').'customer/account/logout/';?>"><i class="fa fa-sign-out fa-lg"></i></a> 
+			<a title="My Account" class="login-link skip-account myHead" href="<?php echo $this->getUrl('').'customer/account/';?>"><i class="fa fa-user fa-lg"></i> </a>
+            <?php else: ?>
+            <span id="searchBtnH" ><i class="fa fa-search"></i></span>
+            */
+			?>
+			<?php /*?> <div id="<?php if(Mage::getSingleton('customer/session')->isLoggedIn()){ ?>header-search2<?php }else{?>header-search<?php }?>" class="skip-content"> <?php echo $this->getChildHtml('topSearch'); ?> </div><?php */?>
+			 <?php
+			 $cart = 0;
+			  $items = Mage::getSingleton('checkout/session')->getQuote()->getAllItems();
+			foreach($items as $item){
+				$cart  += $item->getQty();
+			}
+			
+ ?>
+            <a href="<?php echo $this->getBaseUrl().'checkout/cart/';?>" title="<?php echo $cart ?> Item in your cart" class="skip-cart  no-count">
+            <div class="noti_bubble"><?php echo $cart ?> </div>
+            <i class="fa fa-shopping-cart fa-lg"></i> </a>
+            
+            
+            <!-- Cart -->
+            <div class="header-minicart">
+              <?php //echo $this->getChildHtml('minicart_head'); ?>
+            </div>
+            <div class="store-language-container"></div>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</div>
+<div class="clearfix"></div>
+<div id="responsiveSearch"> <?php echo $this->getChildHtml('topSearch'); ?> </div>
+<div class="clearfix"></div>
+<div id="responsiveNavItem">
+  <div class="blackBackresponsive"></div>
+  <header id="header" class="hidden-xs hidden-sm">
+    <div class="container">
+      <div  class="page-header">
+        <div class="page-header-container">
+          <div class="row">
+            <div class="col-md-2 hidden-sm hidden-xs"> <a class="logo" href="<?php echo $this->getUrl('') ?>"> <img src="<?php echo $this->getLogoSrc() ?>" alt="<?php echo $this->getLogoAlt() ?>" class="large" />
+              <?php /*?> <img src="<?php echo $this->getLogoSrcSmall() ?>" alt="<?php echo $this->getLogoAlt() ?>" class="small" /> <?php */?>
+              </a> </div>
+            <div style="display:none;">
+              <?php 
+$sql        = "Select * from amenu_update_tracking where up_flag_type = 'upper'";
+$rows       = $connection->fetchRow($sql); //fetchRow($sql), fetchOne($sql),...	
+	
+	if($rows["up_flag"]=='y'){
+		file_put_contents(Mage::getBaseDir('media')."/menu_cache/menu_text.txt", $this->getChildHtml('topLinks'));
+	 
+		file_put_contents(Mage::getBaseDir('media')."/menu_cache/menu_text.txt", php_strip_whitespace (Mage::getBaseDir('media')."/menu_cache/menu_text.txt")); 
+	
+		$sql = "update amenu_update_tracking set up_flag='n' where up_flag_type = 'upper'";
+		$write->query($sql);
+	} 
+	
+	include_once(Mage::getBaseDir('media')."/menu_cache/menu_text.txt");	 
+
+	 ?>
+            </div>
+            <div id="wp-nav-container" class="nav-container">
+              <div style="" class="" id="custommenu">
+              <div style="" class="" id="custommenu">
+              
+<div id="popup24" class="wp-custom-menu-popup" onmouseout="wpHideMenuPopup(this, event, 'popup24', 'menu24')" onmouseover="wpPopupOver(this, event, 'popup24', 'menu24')" style="z-index: 9999; top: 42px; left: 0px; display: none;">
+<div class="block1">
+<div class="col-md-7 custom-left-menu shop">
+<div class="column first odd">
+<div class="itemMenu level1">
+<a class="itemMenuName level1 actParent" href="<?php echo $this->getBaseUrl() ?>shop/mobile-skin.html"><span>Mobile Skin</span></a>
+<div class="itemSubMenu level1">
+<div class="itemMenu level2">
+    <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-skin/apple.html"><span>Apple</span></a>
+    <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-skin/samsung.html"><span>Samsung</span></a>
+    <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-skin/nokia.html"><span>Nokia</span></a>
+    <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-skin/htc.html"><span>HTC</span></a>
+    <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-skin/google-nexus.html"><span>Google Nexus</span></a>
+    <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-skin/lenovo.html"><span>Lenovo</span></a>
+    <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-skin/lg.html"><span>LG</span></a>
+    <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-skin/motorola.html"><span>Motorola</span></a>
+    <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-skin/sony.html"><span>Sony</span></a>
+    <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-skin/xiaomi.html"><span>Xiaomi</span></a>
+    <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-skin/oppo.html"><span>Oppo</span></a>
+    <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-skin/gionee.html"><span>Gionee</span></a>
+    <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-skin/blackberry.html"><span>Blackberry</span></a>
+    <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-skin/asus.html"><span>Asus</span></a>
+    <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-skin/one-plus-one.html"><span>One Plus</span></a>
+    <a class="itemMenuName level2 actParent" href="<?php echo $this->getBaseUrl() ?>shop/mobile-skin/letv.html"><span>LeTV</span></a>
+    
+    
+    
+</div></div></div></div>
+
+<div class="column second-last even">
+<div class="itemMenu level1">
+<a class="itemMenuName level1" href="<?php echo $this->getBaseUrl() ?>shop/mobile-case.html"><span>Mobile Case</span></a>
+<div class="itemSubMenu level1">
+<div class="itemMenu level2">
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>shop/mobile-case/apple.html"><span>Apple</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>shop/mobile-case/samsung.html"><span>Samsung</span></a>
+<a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-case/htc.html"><span>HTC</span></a>
+<a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-case/google-nexus.html"><span>Google Nexus</span></a>
+<a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-case/lg.html"><span>LG</span></a>
+<a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-case/motorola.html"><span>Motorola</span></a>
+<a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-case/sony.html"><span>Sony</span></a>
+<a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-case/xiaomi.html"><span>Xiaomi</span></a>
+<a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-case/one-plus-one.html"><span>One Plus</span></a>
+<a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-case/blackberry.html"><span>Blackberry</span></a>
+<a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-case/letv.html"><span>LeTV</span></a>
+<a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-case/gionee.html"><span>Gionee</span></a>
+<a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-case/asus.html"><span>Asus</span></a>
+<a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-case/microsoft.html"><span>Microsoft</span></a>
+<a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-case/huawei.html"><span>Huawei</span></a>
+<a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-case/vivo.html"><span>Vivo</span></a>
+<a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-case/micromax.html"><span>Micromax</span></a>
+<a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-case/coolpad.html"><span>Coolpad</span></a>
+<a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/mobile-case/yu.html"><span>YU</span></a>
+
+
+</div></div></div></div><div class="column last odd">
+<a href="javascript:void(0)" class="itemMenuName level1"><span>T-Shirt</span></a>
+<div class="itemSubMenu level1">
+<div class="itemMenu level2">
+<a href=" <?php echo $this->getBaseUrl() ?>shop/t-shirt/him.html" class="itemMenuName level2"><span>Him</span></a>
+<a href=" <?php echo $this->getBaseUrl() ?>shop/t-shirt/her.html" class="itemMenuName level2"><span>Her</span></a>
+</div>
+</div>
+<div class="itemMenu level1"><a class="itemMenuName level1" href="<?php echo $this->getBaseUrl() ?>shop/laptop-skin.html"><span>Laptop Skin</span></a><div class="itemSubMenu level1"><div class="itemMenu level2"><a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/laptop-skin/11inch-12inch.html"><span>11 inch-12 inch</span></a><a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/laptop-skin/13inch-14inch.html"><span>13 inch-14 inch</span></a><a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/laptop-skin/15inch-16inch.html"><span>15 inch-16 inch</span></a><a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/laptop-skin/17-inch-18-inch.html"><span>17 inch-18 inch</span></a><a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/laptop-skin/custom-size.html"><span>Custom Size</span></a></div></div><a class="itemMenuName level1" href="<?php echo $this->getBaseUrl() ?>shop/tablet-skin.html"><span>Tablet Skin</span></a><div class="itemSubMenu level1"><div class="itemMenu level2"><a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/tablet-skin/apple.html"><span>Apple</span></a><a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/tablet-skin/samsung.html"><span>Samsung</span></a><a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/tablet-skin/all-tabs.html"><span>All Other Tabs</span></a><a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shop/tablet-skin/custom-size.html"><span>Custom Size</span></a></div></div></div></div></div><div class="col-md-5 custom-right-menu">
+								<a class="itemMenuName level1" href="javascript:void(0);"><span class="itemMenuStyle">Shop By Style</span></a>
+                                <div class="column odd new-class left">                                    
+									<div class="itemSubMenu level1">
+										<div class="itemMenu level2">
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=189&amp;p=1&amp;ref=shopbyshop"><span>3D</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=41&amp;p=1&amp;ref=shopbyshop"><span>Animals</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=331&amp;p=1&amp;ref=shopbyshop"><span>Auto &amp; Transportation</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=58&amp;p=1&amp;ref=shopbyshop"><span>Comic &amp; Cartoon</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=48&amp;p=1&amp;ref=shopbyshop"><span>Cities &amp; Travel</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=193&amp;p=1&amp;ref=shopbyshop"><span>Desi</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=109&amp;p=1&amp;ref=shopbyshop"><span>Floral</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=38&amp;p=1&amp;ref=shopbyshop"><span>Famous</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=67&amp;p=1&amp;ref=shopbyshop"><span>Fashion</span></a>										  
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=333&amp;p=1&amp;ref=shopbyshop"><span>Flags</span></a>										  
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=227&amp;p=1&amp;ref=shopbyshop"><span>Graphic</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=335&amp;p=1&amp;ref=shopbyshop"><span>Gym &amp; Health</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=332&amp;p=1&amp;ref=shopbyshop"><span>Humour</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=337&amp;p=1&amp;ref=shopbyshop"><span>Hearts</span></a>
+										</div>
+									</div>	  
+                                </div>
+								<div class="column even new-class right">
+									<div class="itemSubMenu level1">
+										<div class="itemMenu level2">											  
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=329&amp;p=1&amp;ref=shopbyshop"><span>Illustration</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=113&amp;p=1&amp;ref=shopbyshop"><span>Jerseys</span></a>									  
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=200&amp;p=1&amp;ref=shopbyshop"><span>Movies &amp; Television</span></a>							  
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=225&amp;p=1&amp;ref=shopbyshop"><span>Music</span></a>										  
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=199&amp;p=1&amp;ref=shopbyshop"><span>Nature &amp; Landscape</span></a>								  
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=192&amp;p=1&amp;ref=shopbyshop"><span>Party</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=195&amp;p=1&amp;ref=shopbyshop"><span>Political</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=334&amp;p=1&amp;ref=shopbyshop"><span>Profession &amp; Personality</span></a>					  
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=224&amp;p=1&amp;ref=shopbyshop"><span>Quirky</span></a>										  
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=198&amp;p=1&amp;ref=shopbyshop"><span>Religion &amp; Spirituality</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=196&amp;p=1&amp;ref=shopbyshop"><span>Retro</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=56&amp;p=1&amp;ref=shopbyshop"><span>Sports</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=115&amp;p=1&amp;ref=shopbyshop"><span>Textures &amp; Patterns</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=57&amp;p=1&amp;ref=shopbyshop"><span>Typography</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=336&amp;p=1&amp;ref=shopbyshop"><span>Weapon</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>shopbystyle?case_style=53&amp;p=1&amp;ref=shopbyshop"><span>Zodiac</span></a>
+										</div>
+									</div>	  
+                                </div>
+                             </div>
+<div class="row">
+                                 <div class="drop-footer">
+                                  <div class="col-sm-12"><div class="col-md-7">
+                                   <div class="row aj_R-flyoutPodRow">        
+                                    <div class="aj_R-imagePod">                                                    
+                                     <a href="<?php echo $this->getBaseUrl() ?>promotional_gift" class="aj_R-flyoutPodBlockLink">                                                        
+                                      <img src="<?php echo $this->getBaseUrl() ?>skin/frontend/rwd/default/images/gift-drop.png" class="aj_R-podImage">Save big with bhishoom coupons &amp; promotional offers
+                                      <div style="" class="aj_R-pseudoLink">See our deals &gt;</div>
+                                     </a>
+                                    </div>   
+                                   </div>
+                                  </div>
+                                  <div class="col-md-5">
+                                   <div class="row aj_R-flyoutPodRow">
+                                    <div class="aj_R-imagePod1">
+                                     <a href="<?php echo $this->getBaseUrl() ?>create.html" class="aj_R-flyoutPodBlockLink">
+                                      <img src="<?php echo $this->getBaseUrl() ?>skin/frontend/rwd/default/images/getimage1.png" class="aj_R-podImage-right">Create you own
+                                      <div style="" class="aj_R-pseudoLink">(Design your own product)</div>
+                                     </a>
+                                    </div>   
+                                   </div></div>
+                                  </div>
+                                 </div>
+                                </div>
+</div>
+</div> 
+<div id="popup25" class="wp-custom-menu-popup" onmouseout="wpHideMenuPopup(this, event, 'popup25', 'menu25')" onmouseover="wpPopupOver(this, event, 'popup25', 'menu25')" style="top: 42px; left: 0px; z-index: 9999; display: none;">
+<div class="block1">
+<div class="col-md-7 custom-left-menu create">
+<div class="column first odd">
+<div class="itemMenu level1">
+<a class="itemMenuName level1" href=" <?php echo $this->getBaseUrl() ?>create/mobile-skin.html"><span>Mobile Skin</span></a>
+<div class="itemSubMenu level1">
+<div class="itemMenu level2">
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-skin/apple.html"><span>Apple</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-skin/samsung.html"><span>Samsung</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-skin/nokia.html"><span>Nokia</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-skin/blackberry.html"><span>Blackberry</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-skin/google-nexus.html"><span>Google Nexus</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-skin/htc.html"><span>HTC</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-skin/lenovo.html"><span>Lenovo</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-skin/lg.html"><span>LG</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-skin/motorola.html"><span>Motorola</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-skin/sony.html"><span>Sony</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-skin/xiaomi.html"><span>Xiaomi</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-skin/oppo.html"><span>Oppo</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-skin/gionee.html"><span>Gionee</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-skin/one-plus-one.html"><span>One Plus One</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-skin/asus.html"><span>Asus</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-skin/letv.html"><span>LeTV</span></a>
+
+</div></div></div></div>
+
+<div class="column second-last even">
+<div class="itemMenu level1">
+<a class="itemMenuName level1" href=" <?php echo $this->getBaseUrl() ?>create/mobile-case.html"><span>Mobile Case</span></a>
+<div class="itemSubMenu level1">
+<div class="itemMenu level2">
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-case/apple.html"><span>Apple</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-case/samsung.html"><span>Samsung</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-case/nokia.html"><span>Nokia</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-case/blackberry.html"><span>Blackberry</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-case/google-nexus.html"><span>Google Nexus</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-case/htc.html"><span>HTC</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-case/lg.html"><span>LG</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-case/motorola.html"><span>Motorola</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-case/sony.html"><span>Sony</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-case/xiaomi.html"><span>Xiaomi</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-case/asus.html"><span>Asus</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-case/letv.html"><span>LeTV</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-case/one-plus.html"><span>One Plus</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-case/gionee.html"><span>Gionee</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-case/microsoft.html"><span>Microsoft</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-case/huawei.html"><span>Huawei</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-case/vivo.html"><span>Vivo</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-case/micromax.html"><span>Micromax</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-case/coolpad.html"><span>Coolpad</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/mobile-case/yu.html"><span>YU</span></a>
+
+</div></div></div></div><div class="column last odd">
+<a href="javascript:void(0)" class="itemMenuName level1"><span>T-Shirt</span></a>
+<div class="itemSubMenu level1">
+<div class="itemMenu level2">
+<a href="<?php echo $this->getBaseUrl() ?>create/t-shirt/him.html" class="itemMenuName level2"><span>Him</span></a>
+<a href="<?php echo $this->getBaseUrl() ?>create/t-shirt/her.html" class="itemMenuName level2"><span>Her</span></a>
+</div>
+</div>
+<div class="itemMenu level1">
+<a class="itemMenuName level1" href=" <?php echo $this->getBaseUrl() ?>create/laptop-skin.html"><span>Laptop Skin</span></a>
+<div class="itemSubMenu level1">
+<div class="itemMenu level2">
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/laptop-skin/11inch-12inch.html"><span>11inch/12inch</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/laptop-skin/13inch-14inch.html"><span>13inch/14inch</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/laptop-skin/15inch-16inch.html"><span>15inch/16inch</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/laptop-skin/17inch-18inch.html"><span>17inch/18inch</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/laptop-skin.html"><span>Custom Size</span></a>
+</div></div>
+<a class="itemMenuName level1" href=" <?php echo $this->getBaseUrl() ?>create/tablet-skin.html"><span>Tablet Skin</span></a>
+<div class="itemSubMenu level1">
+<div class="itemMenu level2">
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/tablet-skin/apple.html"><span>Apple</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/tablet-skin/samsung.html"><span>Samsung</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>create/tablet-skin/all-tabs.html"><span>All Other Tabs</span></a>
+</div></div></div></div></div>
+</div>
+<div id="wp_custom_menu_25" class="mobile-case">
+<p><img src="<?php echo $this->getBaseUrl() ?>media/wysiwyg/cat_img/create-drop.jpg" alt=""></p>
+</div>
+</div>
+<div id="popup26" class="wp-custom-menu-popup" onmouseout="wpHideMenuPopup(this, event, 'popup26', 'menu26')" onmouseover="wpPopupOver(this, event, 'popup26', 'menu26')" style="z-index: 10000; top: 42px; left: 0px; display: none;">
+<div id="wp_custom_menu_26" class="mobile-case">
+<div class="sell-heading block1">
+<div class="sell-left">
+<h2>Sell Your Designs</h2>
+<p>Get your designs/artwork transformed into beautiful products and earn money. It’s very simple and completely free to sell your designs on our retail quality products.</p>
+<h4>It’s easy and fun..!!!</h4>
+<div id="learnmore" class="button">
+<a href="<?php echo $this->getBaseUrl() ?>sell.html">Learn more</a></div>
+</div>
+<div class="sell-image">
+<img src="<?php echo $this->getBaseUrl() ?>media/wysiwyg/cat_img/sell-drop.jpg" alt=""></div>
+</div>
+</div>
+</div>
+
+
+<div id="popup27" class="wp-custom-menu-popup" onmouseout="wpHideMenuPopup(this, event, 'popup27', 'menu27')" onmouseover="wpPopupOver(this, event, 'popup27', 'menu27')" style="z-index: 9999; top: 42px; left: 0px; display: none;">
+<div class="block1">
+<div class="col-md-7 custom-left-menu gift"><a href=" <?php echo $this->getBaseUrl() ?>create.html">
+<img src="<?php echo $this->getBaseUrl() ?>skin/frontend/rwd/default/images/gift1_create_drop.jpg"></a>
+<div class="create-btn marginTop8px"><a href=" <?php echo $this->getBaseUrl() ?>create.html">Create now</a></div>
+<div class="column first last odd"><div class="itemMenu level1">
+<a class="itemMenuName level1" href=" <?php echo $this->getBaseUrl() ?>gift/create-your-own-gift.html"><span>Create Your Own Gift </span></a>
+<div class="itemSubMenu level1"><div class="itemMenu level2">
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>gift/create-your-own-gift/mobile-cases.html"><span>Mobile Cases</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>gift/create-your-own-gift/mobile-skin.html"><span>Mobile Skin</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>gift/create-your-own-gift/laptop-skin.html"><span>Laptop Skin</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>gift/create-your-own-gift/tablet-skin.html"><span>Tablet Skin</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>gift/create-your-own-gift/mugs.html"><span>Mugs</span></a>
+<a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>gift/create-your-own-gift/key-chain.html"><span>Key Chain</span></a></div>
+</div></div></div></div><div class="col-md-5 custom-right-menu">
+								<a class="itemMenuName level1" href="javascript:void(0);"><span class="itemMenuStyle">Gift By Style</span></a>
+                                <div class="column odd new-class left">                                    
+									<div class="itemSubMenu level1">
+										<div class="itemMenu level2">
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>giftbystyle?case_style=189&amp;p=1&amp;ref=shopbygift"><span>3D</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>giftbystyle?case_style=41&amp;p=1&amp;ref=shopbygift"><span>Animals</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>giftbystyle?case_style=331&amp;p=1&amp;ref=shopbygift"><span>Auto &amp; Transportation</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>giftbystyle?case_style=58&amp;p=1&amp;ref=shopbygift"><span>Comic &amp; Cartoon</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>giftbystyle?case_style=48&amp;p=1&amp;ref=shopbygift"><span>Cities &amp; Travel</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>giftbystyle?case_style=193&amp;p=1&amp;ref=shopbygift"><span>Desi</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>giftbystyle?case_style=109&amp;p=1&amp;ref=shopbygift"><span>Floral</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>giftbystyle?case_style=38&amp;p=1&amp;ref=shopbygift"><span>Famous</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>giftbystyle?case_style=67&amp;p=1&amp;ref=shopbygift"><span>Fashion</span></a>										  
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>giftbystyle?case_style=333&amp;p=1&amp;ref=shopbygift"><span>Flags</span></a>										  
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>giftbystyle?case_style=227&amp;p=1&amp;ref=shopbygift"><span>Graphic</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>giftbystyle?case_style=335&amp;p=1&amp;ref=shopbygift"><span>Gym &amp; Health</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>giftbystyle?case_style=332&amp;p=1&amp;ref=shopbygift"><span>Humour</span></a>
+										  <a class="itemMenuName level2" href="<?php echo $this->getBaseUrl() ?>giftbystyle?case_style=337&amp;p=1&amp;ref=shopbygift"><span>Hearts</span></a>
+										  <a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>giftbystyle?case_style=329&amp;p=1&amp;ref=shopbygift"><span>Illustration</span></a>
+                                        </div>
+									</div>	  
+                                </div>
+								<div class="column even new-class right">
+									<div class="itemSubMenu level1">
+										<div class="itemMenu level2">											  
+										  
+										  <a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>giftbystyle?case_style=113&amp;p=1&amp;ref=shopbygift"><span>Jerseys</span></a>									  
+										  <a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>giftbystyle?case_style=200&amp;p=1&amp;ref=shopbygift"><span>Movies &amp; Television</span></a>							  
+										  <a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>giftbystyle?case_style=225&amp;p=1&amp;ref=shopbygift"><span>Music</span></a>										  
+										  <a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>giftbystyle?case_style=199&amp;p=1&amp;ref=shopbygift"><span>Nature &amp; Landscape</span></a>								  
+										  <a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>giftbystyle?case_style=192&amp;p=1&amp;ref=shopbygift"><span>Party</span></a>
+										  <a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>giftbystyle?case_style=195&amp;p=1&amp;ref=shopbygift"><span>Political</span></a>
+										  <a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>giftbystyle?case_style=334&amp;p=1&amp;ref=shopbygift"><span>Profession &amp; Personality</span></a>					  
+										  <a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>giftbystyle?case_style=224&amp;p=1&amp;ref=shopbygift"><span>Quirky</span></a>										  
+										  <a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>giftbystyle?case_style=198&amp;p=1&amp;ref=shopbygift"><span>Religion &amp; Spirituality</span></a>
+										  <a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>giftbystyle?case_style=196&amp;p=1&amp;ref=shopbygift"><span>Retro</span></a>
+										  <a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>giftbystyle?case_style=56&amp;p=1&amp;ref=shopbygift"><span>Sports</span></a>
+										  <a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>giftbystyle?case_style=115&amp;p=1&amp;ref=shopbygift"><span>Textures &amp; Patterns</span></a>
+										  <a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>giftbystyle?case_style=57&amp;p=1&amp;ref=shopbygift"><span>Typography</span></a>
+										  <a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>giftbystyle?case_style=336&amp;p=1&amp;ref=shopbygift"><span>Weapon</span></a>
+										  <a class="itemMenuName level2" href=" <?php echo $this->getBaseUrl() ?>giftbystyle?case_style=53&amp;p=1&amp;ref=shopbygift"><span>Zodiac</span></a>
+										</div>
+									</div>	  
+                                </div>
+                             </div>
+<div class="row1">
+                                 <div class="drop-footer">
+                                  <div class="col-sm-12"><div class="col-md-7">
+                                   <div class="row aj_R-flyoutPodRow">        
+                                    <div class="aj_R-imagePod">                                                    
+                                     <a href=" <?php echo $this->getBaseUrl() ?>eform" class="aj_R-flyoutPodBlockLink">                                                        
+                                      <img src="<?php echo $this->getBaseUrl() ?>skin/frontend/rwd/default/images/git-certificate.jpg" class="aj_R-podImage"><span class="aj_R-podspan">Corporate Gift</span>
+                                      <div style="" class="aj_R-pseudoLink1">Please contact us at "bulkorder@bhishoom.com" for all your bulk order/corporate gifting </div>
+                                     </a>
+                                    </div>   
+                                   </div>
+                                  </div>
+                                  <div class="col-md-5">
+                                   <div class="row aj_R-flyoutPodRow">
+                                    <div class="aj_R-imagePod1">
+                                     <a href=" <?php echo $this->getBaseUrl() ?>gift/gift-certificate/gift-certificate.html" class="aj_R-flyoutPodBlockLink">
+                                      <img src="<?php echo $this->getBaseUrl() ?>skin/frontend/rwd/default/images/gift-drop.jpg" class="aj_R-podImage-right"><span class="aj_R-podspan">Gift Certificate</span>
+                                      <div style="" class="aj_R-pseudoLink">Buy a gift certificate and give your special one freedom to choose their gift from Bhishoom.</div>
+                                     </a>
+                                    </div>   
+                                   </div>
+                                  </div></div>
+                                 </div>
+                                </div>
+</div>
+</div>
+<div id="menu24" class="menu act" onmouseover="wpShowMenuPopup(this, event, 'popup24');" onmouseout="wpHideMenuPopup(this, event, 'popup24', 'menu24')">
+<div class="parentMenu">
+<a href="<?php echo $this->getBaseUrl() ?>shop" rel="<?php echo $this->getBaseUrl() ?>shop">
+<span>Shop</span>
+</a>
+</div>
+</div>
+<div id="menu25" class="menu" onmouseover="wpShowMenuPopup(this, event, 'popup25');" onmouseout="wpHideMenuPopup(this, event, 'popup25', 'menu25')">
+<div class="parentMenu">
+<a href="<?php echo $this->getBaseUrl() ?>create.html" rel="<?php echo $this->getBaseUrl() ?>create.html">
+<span>Create</span>
+</a>
+</div>
+</div>
+<div id="menu26" class="menu" onmouseover="wpShowMenuPopup(this, event, 'popup26');" onmouseout="wpHideMenuPopup(this, event, 'popup26', 'menu26')">
+<div class="parentMenu">
+<a href="<?php echo $this->getBaseUrl() ?>sell.html" rel="<?php echo $this->getBaseUrl() ?>sell.html">
+<span>Sell</span>
+</a>
+</div>
+</div>
+<div id="menu27" class="menu" onmouseover="wpShowMenuPopup(this, event, 'popup27');" onmouseout="wpHideMenuPopup(this, event, 'popup27', 'menu27')">
+<div class="parentMenu">
+<a href="#" rel="#">
+<span>Gift</span>
+</a>
+</div>
+</div>
+<div class="clearBoth"></div>              </div>
+              
+              
+              
+              
+              
+                <?php
+//
+//	$sql        = "Select up_flag from amenu_update_tracking where up_flag_type = 'upper_menu_foooter'";
+//	$rows       = $connection->fetchRow($sql); //fetchRow($sql), fetchOne($sql),...	
+//	
+//	if($rows["up_flag"]=='y'){ 
+//  
+//		 $menuContent = Mage::helper('custommenu')->getMenuContent(); 
+//		 $mobileMenuContent = Mage::helper('custommenu')->getMobileMenuContent();		 
+// 
+//		file_put_contents(Mage::getBaseDir('media')."/menu_cache/menu_text_top.txt", ($menuContent['topMenu'])); 
+//		file_put_contents(Mage::getBaseDir('media')."/menu_cache/menu_text_top.txt", php_strip_whitespace (Mage::getBaseDir('media')."/menu_cache/menu_text_top.txt"));
+//		file_put_contents(Mage::getBaseDir('media')."/menu_cache/menu_text_popup.txt", ($menuContent['popupMenu'])); 
+//		file_put_contents(Mage::getBaseDir('media')."/menu_cache/menu_text_popup.txt", php_strip_whitespace (Mage::getBaseDir('media')."/menu_cache/menu_text_popup.txt"));
+//		file_put_contents(Mage::getBaseDir('media')."/menu_cache/menu_text_mobile.txt", ($mobileMenuContent)); 
+//		file_put_contents(Mage::getBaseDir('media')."/menu_cache/menu_text_mobile.txt", php_strip_whitespace (Mage::getBaseDir('media')."/menu_cache/menu_text_mobile.txt")); 
+//		$sql = "update amenu_update_tracking set up_flag='n' where up_flag_type = 'upper_menu_foooter'";
+//		$write->query($sql);
+//	}
+//
+//include_once(Mage::getBaseDir('media')."/menu_cache/menu_text_popup.txt");	 
+//include_once(Mage::getBaseDir('media')."/menu_cache/menu_text_top.txt");	 
+                
+//?>
+              </div>
+            </div>
+            <div class="col-md-5 pull-right hidden-sm hidden-xs">
+              <div id="<?php if(Mage::getSingleton('customer/session')->isLoggedIn()){ ?>header-search2<?php }else{?>header-search<?php }?>" class="skip-content"> <?php echo $this->getChildHtml('topSearch'); ?> </div>
+              <!-- Skip Links -->
+              <div class="skip-links"> <a href="#header-nav" class="skip-link skip-nav"> <span class="icon"></span> <span class="label"><?php echo $this->__('Menu'); ?></span></a> <a href="#header-search" class="skip-link skip-search"> <span class="icon"></span> <span class="label"><?php echo $this->__('Search'); ?></span> </a>
+                <?php if(Mage::getSingleton('customer/session')->isLoggedIn()):    ?>
+                <a title="Log Out" class="login-link skip-account hidden-sm hidden-xs" href="<?php echo $this->getUrl('').'customer/account/logout/';?>"><i class="fa fa-sign-out fa-lg"></i></a> <a title="My Account" class="login-link skip-account myHead  hidden-sm hidden-xs" href="<?php echo $this->getUrl('').'customer/account/edit';?>"><i class="fa fa-user fa-lg"></i> </a>
+                <?php else: ?>
+                <a title="Log In" class="login-link skip-account" id="alogin" href="javascript:void(0)"><i class="fa fa-user fa-lg"></i></i></a>
+                <?php endif; ?>
+                <!-- Cart -->
+                <div class="header-minicart"> <?php echo $this->getChildHtml('minicart_head'); ?> </div>
+                <div class="store-language-container"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div class="nav-section">
+    <div class="container">
+      <div class="page-header">
+        <div class="resVHeaderLogoVf">
+          <div class="row row-xs">
+            <div class="col-xs-3"> <a id="responsiveBtn1">Back</a> </div>
+            <div class="col-xs-6 text-center"> <a class="logoM" href="<?php echo $this->getUrl('') ?>"> <img src="<?php echo $this->getSkinUrl('images/logo.png');?>" alt="<?php echo $this->getLogoAlt() ?>" /> </a></div>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+        <!-- Navigation -->
+        <div id="header-nav" class="skip-content1 nav-collapse1 collapse1">
+          <div class="navbar_icon_bar">
+            <ul>
+              <li class="free_shiping">Free shipping <br>
+                above Rupees <?php echo Mage::getStoreConfig('carriers/fedex/free_shipping_subtotal');?>/-</li>
+              <li class="best_in_class">Best-in-Class<br>
+                Quality Guaranteed.</li>
+            </ul>
+          </div>
+          <?php //echo $this->getChildHtml('topMenu') ?>
+          <?php 
+
+
+/*$sql        = "Select * from amenu_update_tracking where up_flag_type = 'lower'";
+$rows       = $connection->fetchRow($sql); //fetchRow($sql), fetchOne($sql),...	
+	
+	if($rows["up_flag"]=='y'){ 
+			 $rootcatId= '24';
+	$categories = Mage::getModel('catalog/category')->getCategories($rootcatId);
+	
+
+	
+	file_put_contents(Mage::getBaseDir('media')."/menu_cache/menu.txt", Mage::helper('function')->get_categories($categories));
+	
+	
+	file_put_contents(Mage::getBaseDir('media')."/menu_cache/menu.txt", php_strip_whitespace (Mage::getBaseDir('media')."/menu_cache/menu.txt"));
+	
+			$sql = "update amenu_update_tracking set up_flag='n' where up_flag_type = 'lower'";
+			$write->query($sql);
+	} */
+	
+	include_once(Mage::getBaseDir('media')."/menu_cache/menu.txt");
+	
+	//echo file_get_contents(Mage::getBaseUrl('media')."/menu_cache/menu.txt");
+	?>
+        </div>
+		<?php //if($checkMobileDeviceBhishoom){?>
+        <div  id="responsiveNav">
+          <?php include_once(Mage::getBaseDir('media')."/menu_cache/mobile_menu_bhishoom.txt"); ?>
+          <?php 
+			$sessionCustomer =Mage::getSingleton("customer/session");
+			 if ($sessionCustomer->isLoggedIn()) {
+			?>
+          <ul class="loginNav navGroup3">
+            <li><a href="<?php echo Mage::getUrl('customer/account/edit');?>"><i class="mi mi-Login"></i>My Account</a></li>
+            <li><a href="<?php echo Mage::getUrl('customer/account/logout');?>"><i class="mi mi-logOut"></i>Logout</a></li>
+          </ul>
+          <?php
+				} 
+				else {
+				?>
+          <ul class="loginNav navGroup4">
+            <li><a href="<?php echo Mage::getUrl('customer/account/login'); ?>"><i class="mi mi-Login"></i> Login</a> </li>
+          </ul>
+          <?php   
+				}
+				?>
+          <ul class="mainNav1 navGroup2">
+            <li><a href="<?php echo $this->getUrl('faq')?>"><i class="mi mi-faqs"></i>FAQ's</a></li>
+            <li><a href="<?php echo $this->getUrl('trackorder') ?>"> <i class="mi mi-orderStatus"></i>Track Order</a></li>
+            <li><a href="<?php echo $this->getUrl('contacts') ?>"><i class="mi mi-contactUs"></i>Contact Us</a></li>
+          </ul>
+        </div>
+        <?php //}?>
+        <!-- Account --> 
+      </div>
+    </div>
+  </div>
+</div>
+<?php echo $this->getChildHtml('topContainer'); ?>
+<?php
+$j=0;
+?>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('quicklogin/tinybox.js') ?>"></script> 
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('quicklogin/quicklogin.js') ?>"></script> 
+<script type="text/javascript">
+jQuery(document).ready(function(){
+    jQuery(".dropdown").hover(
+        function() { jQuery('.dropdown-menu', this).fadeIn("fast");
+        },
+        function() { jQuery('.dropdown-menu', this).fadeOut("fast");
+    });
+});
+function get_device(val, type_id, select2)
+{
+   var dataString = "get_device="+val+"&type_id="+type_id+"&select="+select2;
+   var reloadurl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'admin_cat.php'?>';
+	//Element.show('loadingmask');
+	new Ajax.Request(reloadurl, {
+	method: 'post',
+	parameters: dataString,
+	onComplete: function(transport) {
+	//Element.hide('loadingmask');
+	document.getElementById("bvalues").innerHTML = transport.responseText;
+	}
+	});
+}
+function get_device1(val, type_id, select3)
+{
+   var dataString = "get_device="+val+"&type_id="+type_id+"&select="+select3;
+   var reloadurl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'admin_cat.php'?>';
+	//Element.show('loadingmask');
+	new Ajax.Request(reloadurl, {
+	method: 'post',
+	parameters: dataString,
+	onComplete: function(transport) {
+	//Element.hide('loadingmask');
+	document.getElementById("bvalues1").innerHTML = transport.responseText;
+	}
+	});
+}
+function chk_validate()
+{
+	var bselect = document.getElementById("bselects").value;
+	var bvalue = document.getElementById("bvalues").value;	
+	if(bselect == 0)
+	{
+		alert("Please Select First Value");
+		return false;
+	}
+	if(bvalue == 0)
+	{
+		alert("Please Select Second Value");
+		return false;
+	}
+	
+	var dataString = "get_bselect="+bselect+"&get_bvalue="+bvalue;
+    var reloadurl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'admin_cat.php'?>';
+	//Element.show('loadingmask');
+	new Ajax.Request(reloadurl, {
+	method: 'post', 
+	parameters: dataString,
+	onComplete: function(transport) {
+	window.location.href = transport.responseText;
+	}
+	});
+}
+jQuery(function () {
+    var $active = jQuery('#accordion-skin .panel-collapse.in').prev().addClass('active');
+    $active.find('a').append('<i class="glyphicon glyphicon-minus" id="acc-sign"></i>');
+    jQuery('#accordion-skin .panel-heading').not($active).find('a').append('<i class="glyphicon glyphicon-plus" id="acc-sign"></i>');
+    jQuery('#accordion-skin').on('show.bs.collapse', function (e) {
+        jQuery('#accordion-skin .panel-heading.active').removeClass('active').find('.glyphicon').toggleClass('glyphicon-plus glyphicon-minus');
+        jQuery(e.target).prev().addClass('active').find('.glyphicon').toggleClass('glyphicon-plus glyphicon-minus');
+    })
+});
+jQuery(function () {
+    var $active = jQuery('#accordion-lapi .panel-collapse.in').prev().addClass('active');
+    $active.find('a').append('<i class="glyphicon glyphicon-minus" id="acc-sign"></i>');
+    jQuery('#accordion-lapi .panel-heading').not($active).find('a').append('<i class="glyphicon glyphicon-plus" id="acc-sign"></i>');
+    jQuery('#accordion-lapi').on('show.bs.collapse', function (e) {
+        jQuery('#accordion-lapi .panel-heading.active').removeClass('active').find('.glyphicon').toggleClass('glyphicon-plus glyphicon-minus');
+        jQuery(e.target).prev().addClass('active').find('.glyphicon').toggleClass('glyphicon-plus glyphicon-minus');
+    })
+});
+/* My Model ceter code*/
+/*jQuery(document).ready(function(){
+    function alignModal(){
+        var modalDialog = jQuery(this).find(".modal-dialog");
+        
+        // Applying the top margin on modal dialog to align it vertically center
+        modalDialog.css("margin-top", Math.max(0, (jQuery(window).height() - modalDialog.height()) / 2));
+    }
+    // Align modal when it is displayed
+    jQuery(".modal").on("shown.bs.modal", alignModal);
+    
+    // Align modal when user resize the window
+    jQuery(window).on("resize", function(){
+       jQuery(".modal:visible").each(alignModal);
+    });   
+});*/
+
+</script>
+<script>
+jQuery(document).ready(function(){
+	var thing = jQuery('#responsiveNavItem');
+    var extra = 100;
+    var old = jQuery(thing).scrollTop();
+    $(thing).scroll(function() {
+        if ($(thing).scrollTop() < old) {
+            $(thing).scrollTop($(thing).scrollTop()-extra);
+        } else if ($(thing).scrollTop() > old) {
+            $(thing).scrollTop($(thing).scrollTop()+extra);
+        }
+        old = $(thing).scrollTop();
+    });
+	
+	jQuery(".skip-cart").click(function(){jQuery("#header-cart").addClass('skip-active');})
+	jQuery(".skip-link-close").click(function(){jQuery("#header-cart").removeClass('skip-active');})
+});
+</script>

@@ -1,0 +1,513 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+/**
+ * Product view template
+ *
+ * @see Mage_Catalog_Block_Product_View
+ * @see Mage_Review_Block_Product_View
+ */
+?>
+<?php $_helper = $this->helper('catalog/output'); ?>
+<?php $_product = $this->getProduct(); ?>
+<?php $category_id = Mage::registry('current_category')->getId();?>
+<?php
+// FIND 2nd LEVEL Category for Product
+$cats = $_product->getCategoryIds();
+$arr = array();
+$arr[3]   = "Mobile Case";
+$arr[34]  = "Mobile Skin";
+$arr[4]   = "T-Shirt";
+$arr[8]   = "Laptop Skin";
+$arr[478] = "Tablet Skin";
+$desired_cat_name = "";
+foreach($arr as $key => $val)
+{
+  if(in_array( $key, $cats ))
+  {
+     $desired_cat_name = $val;     
+	 break;
+  }  
+}
+?>
+
+<script type="text/javascript">
+    var optionsPrice = new Product.OptionsPrice(<?php echo $this->getJsonConfig() ?>);
+</script>
+
+<div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
+<div class="product-view">
+<div class="product-essential" id="prod_view">
+<form action="<?php echo $this->getSubmitUrl($_product) ?>" method="post" id="product_addtocart_form"<?php if($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
+  <?php echo $this->getBlockHtml('formkey') ?>
+  <div class="no-display">
+	<input type="hidden" name="bhishoom_product_fromCat" value="<?php echo $category_id ?>" />
+    <input type="hidden" name="product" value="<?php echo $_product->getId() ?>" />
+    <input type="hidden" name="related_product" id="related-products-field" value="" />
+  </div>
+  <div class="clearfix"></div>
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="product-img-box"> <?php echo $this->getChildHtml('media') ?>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="first_div">
+        <div class="product-brand-name" style="visibility:hidden">BHISHOOM</div>
+        <div class="need_help1 pull-right">Need Help? call <?php echo Mage::getStoreConfig('general/store_information/phone');?> </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="product-name">
+        <?php 
+	   $_category_detail = Mage::registry('current_category');
+	   if($_category_detail != '')
+	   {
+	       $cat_name = $_category_detail->getName();
+		   $prod_name = $_helper->productAttribute($_product, $_product->getName(), 'name');
+		   $p_name = explode($cat_name, $prod_name);
+		   $product_name = $p_name[1];
+	   }
+	   else
+	   {
+		  $product_name = $_helper->productAttribute($_product, $_product->getName(), 'name');
+	   }
+	 ?>
+        <span class="h1">
+		<?php echo $_helper->productAttribute($_product, $_product->getName(), 'name'); ?>
+		<?php if($desired_cat_name!="") echo " - $desired_cat_name";
+		?>
+		</span>
+		
+		
+		
+		</div>
+      <div class="addtocart-toggle">
+        <div class="product-shop">
+          <?php /*?><div class="price-info">
+     <?php echo $this->getPriceHtml($_product); ?>
+     <?php echo $this->getChildHtml('bundle_prices') ?>
+     <?php echo $this->getTierPriceHtml() ?>
+     </div><?php */?>
+          <!--  <div class="extra-info">
+      <?php //echo $this->getReviewsSummaryHtml($_product, 'default', false)?>
+      <?php //echo $this->getChildHtml('product_type_availability'); ?>
+     </div> -->
+          
+            <?php 
+		      if($_category_detail != '')
+		      {
+		    ?>
+			  <div class="for_model">
+					<div class="catName">For <?php echo $cat_name;?></div>
+			  </div>          
+		     <?php 
+			 } 
+			 ?>
+		  
+            <?php $case_designer = $_product->getAttributeText('case_designer');?>
+            <?php if($case_designer!='')
+			{
+			?>
+            <div class="design_by">Designed by: <span class="designer_name"><?php echo $case_designer;?></span></div>
+			<?php 
+			}
+			?>
+          
+          <div class="clearfix"></div>
+          
+          <?php echo $this->getChildHtml('alert_urls') ?> <?php echo $this->getChildHtml('other');?>
+          <?php if ($_product->isSaleable() && $this->hasOptions()):?>
+          <?php echo $this->getChildChildHtml('container1', '', true, true) ?>
+          <?php endif;?>
+        </div>
+        <div class="add-to-cart-wrapper"> <?php echo $this->getChildHtml('product_type_data') ?> <?php echo $this->getChildHtml('extrahint') ?>
+          <?php if (!$this->hasOptions()):?>
+          <div class="add-to-box product-options-bottom gift-cert-prd-opt">
+            <?php if($_product->isSaleable()): ?>
+            <?php echo $this->getChildHtml('addtocart') ?>
+            <?php if( $this->helper('wishlist')->isAllow() || $_compareUrl=$this->helper('catalog/product_compare')->getAddUrl($_product)): ?>
+            <?php if( $this->helper('wishlist')->isAllow() || $_compareUrl=$this->helper('catalog/product_compare')->getAddUrl($_product)): ?>
+            <span class="or"><?php echo $this->__('OR') ?></span>
+            <?php endif; ?>
+            <?php endif; ?>
+            <?php echo $this->getChildHtml('addto') ?> <?php echo $this->getChildHtml('sharing') ?> </div>
+          <div class="clear"></div>
+          <?php echo $this->getChildHtml('extra_buttons') ?>
+          <?php elseif (!$_product->isSaleable()): ?>
+          <div class="add-to-box"> <?php echo $this->getChildHtml('addto') ?> <?php echo $this->getChildHtml('sharing') ?> </div>
+          <?php endif; ?>
+          <?php endif; ?>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="clearfix"></div>
+      <?php  if($category_id==359){
+   
+   }
+   else{
+   ?>
+      <div class="cod-availiability show-for-large-up">
+        <div class="row row-xs">
+          <div class="col-md-6 col-xs-12 deliver-chk-text">Check COD Availability </div>
+          <div class="col-md-4 col-xs-7 deliver-status-input">
+            <input type="text" id="checkcod" class="form-control" placeholder="Enter Pincode" name="checkcod">
+          </div>
+          <div class="col-md-2 col-xs-5 deliver-status-input-btn">
+            <input type="button" value="Check" class="chk-btn btn-block" onclick="chk_cod()">
+          </div>
+          <div class="dividerSm20 hidden-lg hidden-md"></div>
+        </div>
+        <div id="cod_msg"></div>
+      </div>
+    </div>
+    <?php }
+  ?>
+  </div>
+  <?php /*?><div class="rel-like"></div><?php */?>
+  </div>
+  <div class="clearfix"></div>
+  </div>
+  <div id="productDetailBtn" class="productDetailbtn"> Product Detail <span><i class="fa fa-plus"></i></span> </div>
+  <script>
+	jQuery(document).ready(function() {
+       jQuery('#productDetailBtn').click( function(){
+		   if (jQuery('#productDetailBtn i.fa').hasClass('fa-plus'))
+		   {
+			jQuery('.short-description').toggle('3000');
+			jQuery('#productDetailBtn i.fa').removeClass('fa-plus');
+			jQuery('#productDetailBtn i.fa').addClass('fa-minus');
+		   }
+		   else
+		   {
+			jQuery('.short-description').toggle('3000');
+			jQuery('#productDetailBtn i.fa').removeClass('fa-minus');
+			jQuery('#productDetailBtn i.fa').addClass('fa-plus');   
+			}
+	 } )
+		   
+    });
+</script>
+  <?php /*?><?php if ($_product->getShortDescription()):?>
+    <div class="short-description">
+     <h2 class="product-info-title">Product Information</h2>
+     <div class="std">
+      <?php //echo $short_desc = $_helper->productAttribute($_product, $_product->getShortDescription(), 'short_description');//echo $short_description = str_replace('<br/>', '', $short_desc);?>
+     </div>
+    </div>       
+   <?php endif;?><?php */?>
+  <?php
+   $_category = Mage::registry('current_category');
+   $path = $_category->getPath();
+   $ids  = explode('/', $path);
+   //$ids  = 3;
+   if(in_array(3, $ids))
+   {?>
+  <div  class="short-description">
+    <h2 class="product-info-title caseinfo">Product Information</h2>
+    <?php /*?>Case<?php */?>
+    <div class="std">
+      <div class="des_contant">
+        <p>Bhishoom designer Case allows you to personalize and protect your device in style. Made from best quality lightweight hard polycarbonate material and printed with ultra high definition technology it makes your phone stand out from the rest.</p>
+        <ul>
+          <li>Tough,  durable, lightweight and stylish protection for your phone.</li>
+          <li>Non-slip  ergonomic design with access to all ports, controls &amp; sensors. </li>
+          <li>Ultra  high definition printing technology for vivid graphics.</li>
+          <li>Thousands  of exclusive designs to cater your unique style and personality.</li>
+          <li>Infinite  customized decoration possibilities with our &ldquo;GoBhishoom Customizer&rdquo;. </li>
+          <li>Freshly  manufactured and usually dispatched within 3-5 days from our facility.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <?php 
+   }
+   else if((in_array(34, $ids)))
+   {?>
+  <div class="short-description">
+    <?php /*?>Skin<?php */?>
+    <h2 class="product-info-title sikin1mobileinfo">Product Information </h2>
+    <div class="std">
+      <div class="des_contant">
+        <p>Bhishoom designer skin allows you to personalize and protect your  device in style. Made from best quality vinyl and printed with ultra high  definition technology it makes your phone look slim &amp; stylish to stand out  from the rest.</p>
+        <ul>
+          <li>Durable,  sleek and stylish scratch protection for your phone.</li>
+          <li>Designed to  fit your device perfectly with access to all ports, camera, controls &amp;  sensors.</li>
+          <li>Easy to  apply &amp; remove, reusable and leaves no residue when removed. </li>
+          <li>Ultra high  definition printing technology for vivid graphics.</li>
+          <li>Thousands of  exclusive designs to cater to your unique style and personality.</li>
+          <li>Infinite  customized decoration possibilities with our &ldquo;GoBhishoom Customizer&rdquo;. </li>
+          <li>All skins  are well laminated and water resistant.</li>
+          <li>Freshly  manufactured and usually dispatched within 3-5 days from our facility.           </li>
+        </ul>
+        <h3 align="right" class="products_info">
+         <?php /*?> <?php if((in_array(8, $ids)) || (in_array(478, $ids))){
+			
+			?>
+          <div class="installation-guide-btn"><a href="<?php echo Mage::helper('cms/page')->getPageUrl(lap_tab_skin_installation)?>">Skin Installation Guide</a></div>
+        </h3>
+        <?php
+			}
+			else{
+			?><?php */?>
+        <div class="installation-guide-btn"><a href="<?php echo Mage::helper('cms/page')->getPageUrl(skin_installation)?>">Skin Installation Guide</a></div>
+        </h3>
+        <?php /*?><?php
+			}
+			?><?php */?>
+      </div>
+    </div>
+  </div>
+  <?php 
+   }
+   else if((in_array(478, $ids)))
+   {?>
+  <div class="short-description">
+    <?php /*?>Skin<?php */?>
+    <h2 class="product-info-title sikin2tabinfo">Product Information </h2>
+    <div class="std">
+      <div class="des_contant">
+        <p>Bhishoom designer skin allows you to personalize and protect your  tablet in style. Made from best quality vinyl and printed with ultra high  definition technology it makes your tablet look stylish and stand out from the  rest.</p>
+        <ul>
+          <li>Durable,  sleek and stylish scratch protection for your tablet .</li>
+          <li>You can  order any custom size so that it fits your tablet perfectly .</li>
+          <li>Easy to  apply &amp; remove, reusable and leaves no residue when removed. </li>
+          <li>Ultra high  definition printing technology for vivid graphics.</li>
+          <li>Thousands of  exclusive designs to cater to your unique style and personality.</li>
+          <li>Infinite  customized decoration possibilities with our &ldquo;GoBhishoom Customizer&rdquo;. </li>
+          <li>All skins  are well laminated and water resistant.</li>
+        </ul>
+        <p>Freshly manufactured and usually dispatched  within 3-5 days from our facility</p>
+        <h3 align="right" class="products_info">
+          <?php /*?><?php if((in_array(8, $ids)) || (in_array(478, $ids))){
+			
+			?><?php */?>
+          <div class="installation-guide-btn"><a href="<?php echo Mage::helper('cms/page')->getPageUrl(lap_tab_skin_installation)?>">Skin Installation Guide</a></div>
+        </h3>
+       <?php /*?> <?php
+			}
+			else{
+			?>
+        <div class="installation-guide-btn"><a href="<?php echo Mage::helper('cms/page')->getPageUrl(skin_installation)?>">Skin Installation Guide</a></div>
+        </h3>
+        <?php
+			}
+			?><?php */?>
+      </div>
+    </div>
+  </div>
+  <?php 
+   }
+   else if((in_array(8, $ids)))
+   {?>
+  <div class="short-description">
+    <?php /*?>Skin<?php */?>
+    <h2 class="product-info-title sikin3laptopinfo">Product Information </h2>
+    <div class="std">
+      <div class="des_contant">
+        <p> Bhishoom designer skin allows you to personalize and protect your  laptop in style. Made from best quality vinyl and printed with ultra high  definition technology it makes your laptop look stylish and stand out from the  rest.</p>
+        <ul>
+          <li>Durable,  sleek and stylish scratch protection for your laptop.</li>
+          <li>You can  order any custom size so that it fits your laptop perfectly .</li>
+          <li>Easy to  apply &amp; remove, reusable and leaves no residue when removed. </li>
+          <li>Ultra high  definition printing technology for vivid graphics.</li>
+          <li>Thousands of  exclusive designs to cater to your unique style and personality.</li>
+          <li>Infinite  customized decoration possibilities with our &ldquo;GoBhishoom Customizer&rdquo;. </li>
+          <li>All skins  are well laminated and water resistant.</li>
+          <li>Freshly  manufactured and usually dispatched within 3-5 days from our facility.           </li>
+        </ul>
+        <h3 align="right" class="products_info">
+         <?php /*?> <?php if((in_array(8, $ids)) || (in_array(478, $ids))){
+			
+			?><?php */?>
+          <div class="installation-guide-btn"><a href="<?php echo Mage::helper('cms/page')->getPageUrl(laptop_skin_installation)?>">Skin Installation Guide</a></div>
+        </h3>
+       <?php /*?> <?php
+			}
+			else{
+			?>
+        <div class="installation-guide-btn"><a href="<?php echo Mage::helper('cms/page')->getPageUrl(skin_installation)?>">Skin Installation Guide</a></div>
+        </h3>
+        <?php
+			}
+			?><?php */?>
+      </div>
+    </div>
+  </div>
+  <?php
+   }
+   else if(in_array(4, $ids))
+   {?>
+  <div class="short-description">
+    <h2 class="product-info-title tShirtinfo">Product Information</h2>
+    <?php /*?>T-shirt<?php */?>
+    <div class="std">
+      <div class="des_contant">
+        <p>Bhishoom tees are made from 100% premium cotton  material and printed freshly for you using direct to garment high definition  printing technology to give million colours and vivid print quality.</p>
+        <ul>
+          <li>100%  premium cotton, 190 GSM, pre-shrunk, colourfast tees.</li>
+          <li>Best-in  class HD printing technology for million colours and vivid prints.</li>
+          <li>Thousands  of exclusive designs to cater your unique style and personality.</li>
+          <li>Infinite  CUSTOMIZED decoration possibilities with our &ldquo;GoBhishoom Customizer&rdquo;.</li>
+          <li>Freshly  manufactured and usually dispatched within 5-7 days from our facility.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <?php
+   }?>
+  <?php  if($category_id==359){
+   
+   }
+   else{
+   ?>
+  <?php echo $this->getChildHtml('related_products') ?>
+  <?php
+   }
+  ?>
+  <div class="clearer"></div>
+  <?php if ($_product->isSaleable() && $this->hasOptions()):?>
+  <?php echo $this->getChildChildHtml('container2', '', true, true) ?>
+  <?php endif;?>
+</form>
+<script type="text/javascript">
+        //<![CDATA[
+            var productAddToCartForm = new VarienForm('product_addtocart_form');
+            productAddToCartForm.submit = function(button, url) {
+                if (this.validator.validate()) {
+                    var form = this.form;
+                    var oldUrl = form.action;
+
+                    if (url) {
+                       form.action = url;
+                    }
+                    var e = null;
+                    try {
+                        this.form.submit();
+                    } catch (e) {
+                    }
+                    this.form.action = oldUrl;
+                    if (e) {
+                        throw e;
+                    }
+
+                    if (button && button != 'undefined') {
+                        button.disabled = true;
+                    }
+                }
+            }.bind(productAddToCartForm);
+
+            productAddToCartForm.submitLight = function(button, url){
+                if(this.validator) {
+                    var nv = Validation.methods;
+                    delete Validation.methods['required-entry'];
+                    delete Validation.methods['validate-one-required'];
+                    delete Validation.methods['validate-one-required-by-name'];
+                    // Remove custom datetime validators
+                    for (var methodName in Validation.methods) {
+                        if (methodName.match(/^validate-datetime-.*/i)) {
+                            delete Validation.methods[methodName];
+                        }
+                    }
+
+                    if (this.validator.validate()) {
+                        if (url) {
+                            this.form.action = url;
+                        }
+                        this.form.submit();
+                    }
+                    Object.extend(Validation.methods, nv);
+                }
+            }.bind(productAddToCartForm);
+        //]]>
+        </script>
+</div>
+<div class="clear"></div>
+<?php /*?><div class="product-collateral toggle-content tabs">
+        <?php if ($detailedInfoGroup = $this->getChildGroup('detailed_info', 'getChildHtml')):?>
+            <dl id="collateral-tabs" class="collateral-tabs">
+                <?php foreach ($detailedInfoGroup as $alias => $html):?>
+                    <dt class="tab"><span><?php echo $this->escapeHtml($this->getChildData($alias, 'title')) ?></span></dt>
+                    <dd class="tab-container">
+                        <div class="tab-content"><?php echo $html ?></div>
+                    </dd>
+                <?php endforeach;?>
+            </dl>
+        <?php endif; ?>
+    </div><?php */?>
+<?php //echo $this->getChildHtml('crosssell') ?>
+<?php echo $this->getChildHtml('upsell_products') ?> <?php echo $this->getChildHtml('product_additional_data') ?>
+</div>
+<?php  if($category_id !=359 ){ /*?>
+<div class="row insta">
+ <div class="products-grid products-grid">
+  <h2 style="text-align:center;">Tag your Bhishoom moments using #gobhishoom on Facebook/Instagram.</h2>
+  <ul>
+    <?php
+    $helper = Mage::helper('instagramconnect');	
+    $lstImages = Mage::helper('instagramconnect/product')->getInstagramGalleryImages($this->getProduct());
+     if($helper->isEnabled() && $helper->showImagesOnProductPage() && count($lstImages ) > 0) : ?>
+        <?php 
+		foreach ( $lstImages as $_image): 	
+            $params = array('id' => $this->getProduct()->getId());
+            if ($_image) {
+                $params['image'] = $_image->getImageId();
+            };	
+        ?>
+          <li class="insta col-md-3">
+           <a href="#" onclick="popWin('<?php echo $this->getUrl('instagramconnect/gallery/index', $params) ?>', 'gallery', 'width=300,height=300,left=0,top=0,location=no,status=yes,scrollbars=yes,resizable=yes'); return false;" title="<?php echo $this->htmlEscape($_image->getCaptionText()) ?>"><img src="<?php echo $_image->getStandardResolutionUrl(); ?>" alt="<?php echo $this->htmlEscape($_image->getCaptionText()) ?>" /></a>
+          </li>
+        <?php endforeach; ?>
+     <?php endif; ?>
+  </ul> 
+ </div>
+</div>    
+<?php */ }?>
+<script type="text/javascript">
+function chk_cod()
+{
+	var pincode = document.getElementById("checkcod").value;
+	if(pincode == '')
+	{
+		document.getElementById("cod_msg").innerHTML = '<span class="cod_require">Please Enter Pincode</span>';
+	}
+	else
+	{
+		var dataString = "pincode="+pincode;
+	    var reloadurl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'admin_cat.php'?>';
+		//Element.show('loadingmask');
+		new Ajax.Request(reloadurl, {
+		method: 'post',
+		parameters: dataString,
+		onComplete: function(transport) {
+		//Element.hide('loadingmask');
+		document.getElementById("cod_msg").innerHTML = transport.responseText;
+		}
+		});
+	}
+}
+</script>
+<?php //echo $this->getLayout()->createBlock("checkdelivery/checkdelivery")->setBlockId("checkdelivery")->toHtml();?>

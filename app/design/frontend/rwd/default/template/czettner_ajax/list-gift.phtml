@@ -1,0 +1,175 @@
+<?php
+$params = $this->getRequest()->getParams();
+if(isset($params['model_name']) && $params['model_name'] != '')
+{
+	$model_name = $params['model_name'];
+}
+if($model_name == ''){$model_name = 'iphone-6-plus';}
+$_category = Mage::registry('current_category');
+$parentCategoryName = $_category->getParentCategory()->getParentCategory()->getName();
+/***************************Code for fetching blank image**************************/
+$current_cat_id = $_category->getId();
+$idcat_obj = Mage::getModel('catalog/category')->load($current_cat_id);		 
+$id_cat_path .= $sep.$idcat_obj->getUrlKey();
+$sep = '/';
+if($id_cat_path == 'mobile-case')
+{
+	$folderURL = Mage::helper('function')->graGetFolderUrl($id_cat_path.'/'.$model_name);	
+	$folderPath = Mage::helper('function')->graGetFolderPath($id_cat_path.'/'.$model_name);
+	$blank_backImagePath = Mage::helper('function')->resizeImg('mask.png', 400, 400,$folderURL,$folderPath,'resized');	 
+}
+else if($id_cat_path = 'mobile-skin')
+{
+	$folderURL = Mage::helper('function')->graGetFolderUrl($id_cat_path.'/'.$model_name);	
+	$folderPath = Mage::helper('function')->graGetFolderPath($id_cat_path.'/'.$model_name);
+	$blank_backImagePath = Mage::helper('function')->resizeImg('mask-back.png', 400, 400,$folderURL,$folderPath,'resized');	
+}
+ 
+/***********************************End Code for fetching blank image************************************************/
+?> 
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery-ias.min.js') ?>"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('css/jquery.ias.css');?>" media="all" />
+<script  type="text/javascript">
+	jQuery(document).ready(function(){
+		jQuery.ias({
+			container : ".category-products",
+			item : ".col-sm-3",
+			next : "a.next",
+			pagination : '.pages',
+			loader : "<img src='<?php echo $this->getSkinUrl('images/728.GIF');?>' style='clear:both;' />",
+			triggerPageThreshold : 9999
+		});
+	});
+</script>
+<?php
+$_productCollection=$this->getLoadedProductCollection();
+global $productCollectionSizeForDisplay;
+$productCollectionSizeForDisplay = $_productCollection->getSize();
+$_helper = $this->helper('catalog/output');
+?>
+<?php if(!$_productCollection->count()): ?>
+ <p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>
+<?php else: ?>
+ <?php echo $this->getToolbarHtml() ?>
+ <?php echo $this->getChildHtml('mana.catalog.leftnav') ?>
+ <div class="category-products"> 
+  <?php // Grid Mode 
+	$_category = Mage::registry('current_category');
+	$cat_name = $_category->getName();
+	$parentCategoryId = $_category->getParentId();
+  ?>   	  
+  <?php $_collectionSize = $_productCollection->count() ?>
+  <?php $_columnCount = $this->getColumnCount(); ?>
+  <div class="row products-grid products-grid--max-<?php echo $_columnCount; ?>-col">
+   <?php $i=0; foreach ($_productCollection as $_product): 
+   
+  
+  // $categoryIds = $products->getCategoryIds();
+		if($_category->getId() == 24)
+		  {	      $blank_backImagePath = '';
+				  $ids = $_product->getCategoryIds();
+				  
+				  $blank_backImagePathArr = Mage::helper('function')->getBlankFrontBackImages($ids[rand(0,(count($ids)-1))]);		 
+				  if(count($blank_backImagePathArr) == 1)
+					$blank_backImagePath = $blank_backImagePathArr[0];
+				  else if(count($blank_backImagePathArr) == 2)
+					$blank_backImagePath = $blank_backImagePathArr[1];
+					
+					if(strpos($blank_backImagePath,'laptop-skin')>0)
+						$blank_backImagePath = '';
+		  }
+   
+   ?>
+   <?php /*if ($i++%$_columnCount==0): ?><?php endif*/ ?> 
+    <div class="col-sm-3 item<?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif; ?>">
+     <div class="pro-feature terst">
+      <div id="slider" class="product-block"> 
+       <a  href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image pro-imglx">
+	    <?php
+		if($blank_backImagePath != ''){?>		 
+		 <img src="<?php echo $blank_backImagePath;?>" width="400" height="400" style="position:absolute">	
+         <img id="product-collection-image-<?php echo $_product->getId(); ?>" src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->constrainOnly(true)->keepAspectRatio(true)->keepFrame(false)->resize(400, null); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+	<?php }else{?>
+          <img id="product-collection-image-<?php echo $_product->getId(); ?>" src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->constrainOnly(true)->keepAspectRatio(true)->keepFrame(false)->resize(400, null); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+	<?php }?>		 
+	   </a>        
+       <div id="pro-dis-ss">
+        <div id="discription-pro">            
+         <div class="product-info">            
+          <hr>
+          <div class="quickView">
+           <i class="fa fa-search "></i>
+            <a href="<?php echo $this->getUrl('ajax/product/quickview/id/' . $_product->getId()).'?catid='.$_category->getId() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>" id="quick_view" class="ajax">Quick View</a>
+          </div>
+          <h2 class="product-name">
+           <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>">
+			<?php echo $this->stripTags($_product->getName(), null, true) ?>
+           </a>
+          </h2>
+          <?php
+           $_nameAfterChildren = $this->getChild('name.after')->getSortedChildren();
+           foreach($_nameAfterChildren as $_nameAfterChildName):
+            $_nameAfterChild = $this->getChild('name.after')->getChild($_nameAfterChildName);
+            $_nameAfterChild->setProduct($_product);
+          ?>
+           <?php echo $_nameAfterChild->toHtml(); ?>
+          <?php endforeach; ?>
+          <?php $cat_id = Mage::getModel('catalog/layer')->getCurrentCategory()->getParentCategory()->getParentCategory()->getId();
+			if($cat_id == '34'){?><style type="text/css">.regular-price{display:none;}</style><?php } ?>
+             <?php echo $this->getPriceHtml($_product, true) ?>
+             <?php if($_product->getRatingSummary()): ?>
+              <?php echo $this->getReviewsSummaryHtml($_product, 'short') ?>
+             <?php endif; ?>
+         </div>
+         <?php $flag = 0;
+		 if(!$_product->getEnableProductDesigner()){
+			 $flag = 1;
+		 }?>
+         <div class="actions hover-btn <?php if($flag == 1){?>only-buy<?php }?>">			
+		  <?php		  
+          if (Mage::helper('gomage_designer')->isEnabled()) {
+           $buttons[] = array(
+            'add_to_cart_enabled' => (!$_product->getEnableProductDesigner() || !$_disabledAddToCart) ? true : false,
+            'add_to_design_enabled' => $_product->getEnableProductDesigner() ? true : false,
+            'design_url' => GoMage_ProductDesigner_Block_Catalog_Product_List::_getDesignUrl($_product)
+           ); 
+		  if($_product->getEnableProductDesigner()){
+          ?>			
+          <div class="gpd-button">
+           <button type="button" title="<?php echo Mage::helper('gomage_designer')->__('Design It') ?>" class="btn btn-primary" onclick="setLocation('<?php echo GoMage_ProductDesigner_Block_Catalog_Product_List::_getDesignUrl($_product)?>')">
+            <span><span><?php echo $this->__('Design It') ?></span></span>
+           </button>
+          </div>	               
+       <?php } }?>	
+          <div class="btn-add2cart">
+           <?php if($_product->isSaleable() && !$_product->canConfigure()): ?>
+            <button type="button" title="<?php echo $this->__('Buy It') ?>" class="btn btn-danger" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><span><span><?php echo $this->__('Buy It') ?></span></span></button>
+             <?php elseif($_product->isSaleable()): ?>
+              <?php /*?><a title="<?php echo $this->__('View Details') ?>" class="btn btn-danger" href="<?php echo $_product->getProductUrl() ?>"><?php echo $this->__('View Details') ?></a><?php */?>				<button type="button" title="<?php echo $this->__('Buy It') ?>" class="btn btn-danger" onclick="setLocation('<?php echo $_product->getProductUrl() ?>')"><span><span><?php echo $this->__('Buy It') ?></span></span></button>
+             <?php else: ?>
+              <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+             <?php endif; ?>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+    <?php /*if ($i%$_columnCount==0 || $i==$_collectionSize): ?><?php endif*/ ?>
+   <?php endforeach ?>
+  </div>
+  <script type="text/javascript">decorateGeneric($$('ul.products-grid'), ['odd','even','first','last'])</script>
+ 
+ <div class="toolbar-bottom" style="display:none;"> <?php echo $this->getToolbarHtml() ?> </div>
+</div>
+<?php endif; ?>
+<?php
+    //set product collection on after blocks
+    $_afterChildren = $this->getChild('after')->getSortedChildren();
+    foreach($_afterChildren as $_afterChildName):
+        $_afterChild = $this->getChild('after')->getChild($_afterChildName);
+        $_afterChild->setProductCollection($_productCollection);
+    ?>
+<?php echo $_afterChild->toHtml(); ?>
+<?php endforeach; ?>

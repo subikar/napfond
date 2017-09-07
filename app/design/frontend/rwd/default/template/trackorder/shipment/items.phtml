@@ -1,0 +1,91 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+  $siteBaseUrl = Mage::helper('function/more')->getBhishoomSiteBaseUrl(); 
+?>
+
+
+
+<?php $_shipment = $this->getShipment() ?>
+<?php $_order    = $this->getOrder() ?>
+<?php if ($_shipment && $_order): ?>
+<td class="inner" style="padding-top:10px;padding-bottom:10px;padding-right:10px;padding-left:10px;" ><table width="100%" border="0" class="tableborder" cellspacing="5" cellpadding="0" style="border-spacing:0;font-family:sans-serif;color:#333333;border-width:1px;border-style:solid;border-color:#A6A6A6;border-top-width:0px;border-left-width:0px;" >
+            <tbody>
+              <tr style="border-width:1px;border-style:solid;border-color:#A6A6A6;border-top-width:0px;border-left-width:0px;" >
+                <td bgcolor="#c71b1b" style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;border-width:1px;border-style:solid;border-color:#A6A6A6;border-right-width:0px;border-bottom-width:0px;" ><p class="tableHead oneWord" style="Margin:0;line-height:1.5;font-weight:bold;padding-top:5px;padding-bottom:5px;padding-right:5px;padding-left:5px;font-size:12px;color:#fff;background-color:#c71b1b;background-image:none;background-repeat:repeat;background-position:top left;background-attachment:scroll;text-align:center;white-space:nowrap;" >S. No.</p></td>
+                <td bgcolor="#c71b1b" style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;border-width:1px;border-style:solid;border-color:#A6A6A6;border-right-width:0px;border-bottom-width:0px;" ><p class="tableHead" style="Margin:0;line-height:1.5;font-weight:bold;padding-top:5px;padding-bottom:5px;padding-right:5px;padding-left:5px;font-size:12px;color:#fff;background-color:#c71b1b;background-image:none;background-repeat:repeat;background-position:top left;background-attachment:scroll;text-align:center;" >ITEM DETAILS</p></td>
+                <td  bgcolor="#c71b1b" style="max-width:150px;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;border-width:1px;border-style:solid;border-color:#A6A6A6;border-right-width:0px;border-bottom-width:0px;" ><p class="tableHead" style="Margin:0;line-height:1.5;font-weight:bold;padding-top:5px;padding-bottom:5px;padding-right:5px;padding-left:5px;font-size:12px;color:#fff;background-color:#c71b1b;background-image:none;background-repeat:repeat;background-position:top left;background-attachment:scroll;text-align:center;" >QTY</p></td>
+              </tr>
+   
+
+    <?php $i=0; foreach ($_shipment->getAllItems() as $_item): ?>
+    <?php if($_item->getOrderItem()->getParentItem()) continue; else $i++; ?>
+     
+      
+      <?php $_item->setData("serial_number_bhishoom",$i); ?>
+	   <?php echo $this->getItemHtml($_item) ?>
+     
+	<?php endforeach; ?>
+	<?php 
+	
+	/*<tfoot>
+	 <tr>
+            <td colspan="2" align="right" style="padding:3px 9px">Subtotal</td>
+            <td align="right" style="padding:3px 9px"><?php echo $_order->formatPrice($_order->getSubtotal()) ?></td>
+        </tr>
+	
+	</tfoot>
+	*/ 
+	
+	?>
+	</tbody>
+</table>
+
+<?php if(Mage::getStoreConfig('trackorder/trackorder_general/enabled') && Mage::getStoreConfig('trackorder/trackorder_general/sendtrack_link') && ($_order->getTrackLink() != NULL)) { ?>
+
+<table cellspacing="0" cellpadding="0" border="0" width="650">
+    <thead>
+        <tr>
+            <th align="left" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><?php echo $this->__('Track Your Order') ?></th>
+        </tr>
+    </thead>
+    <tbody bgcolor="#F6F6F6">
+        <tr>
+            <td style="font-size: 12px; padding: 7px 9px 9px 9px; border-left: 1px solid #EAEAEA;
+border-bottom: 1px solid #EAEAEA; border-right: 1px solid #EAEAEA;">
+                <?php echo $this->__('Track Your Order ');?>
+                <a style="text-decoration: none;" href="<?php echo $siteBaseUrl.'trackorder/index/view/'.$_order->getTrackLink();?>"> <?php echo $this->__('Here');?></a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<?php } ?>
+
+<?php endif;
+
+ ?>
+
+
+

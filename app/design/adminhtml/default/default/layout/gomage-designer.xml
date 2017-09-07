@@ -1,0 +1,113 @@
+<?xml version="1.0" ?>
+<!--
+/**
+* GoMage Product Designer Extension
+*
+* @category     Extension
+* @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+* @author       GoMage
+* @license      http://www.gomage.com/license-agreement/  Single domain license
+* @terms of use http://www.gomage.com/terms-of-use/
+* @version      Release: 1.0.0
+* @since        Available since Release 1.0.0
+*/
+-->
+<layout>
+    <adminhtml_catalog_product_edit>
+        <reference name="head">
+            <action method="addJs"><script>prototype/window.js</script></action>
+            <action method="addItem"><type>js_css</type><name>prototype/windows/themes/default.css</name></action>
+            <action method="addItem"><type helper="gomage_designer/getCssType"/><name helper="gomage_designer/getWindowCssPath"/></action>
+            <action method="addJs"><script>gomage/productdesigner/vendor/fabric.min.js</script></action>
+            <action method="addJs"><script>gomage/productdesigner/vendor/excanvas.compiled.js</script></action>
+            <action method="addJs"><script>gomage/productdesigner/prototype/prototype.js</script></action>
+        </reference>
+    </adminhtml_catalog_product_edit>
+    <adminhtml_catalog_product_new>
+        <reference name="head">
+            <action method="addJs"><script>prototype/window.js</script></action>
+            <action method="addItem"><type>js_css</type><name>prototype/windows/themes/default.css</name></action>
+            <action method="addItem"><type helper="gomage_designer/getCssType"/><name helper="gomage_designer/getWindowCssPath"/></action>
+            <action method="addJs"><script>gomage/productdesigner/vendor/fabric.min.js</script></action>
+            <action method="addJs"><script>gomage/productdesigner/vendor/excanvas.compiled.js</script></action>
+            <action method="addJs"><script>gomage/productdesigner/prototype/prototype.js</script></action>
+        </reference>
+    </adminhtml_catalog_product_new>
+    <adminhtml_designer_product_edit>
+            <block type="gomage_designer/adminhtml_product_edit" name="product_designer_product" template="gomage/productdesigner/product/edit.phtml" output="toHtml" />
+    </adminhtml_designer_product_edit>
+    <adminhtml_cliparts_edit>
+        <update handle="editor" />
+        <reference name="left">
+            <block name="cliparts_categories_tree" type="gomage_designer/adminhtml_cliparts_tree" template="gomage/productdesigner/cliparts/tree.phtml" />
+        </reference>
+        <reference name="content">
+            <block name="cliparts_edit"  type="gomage_designer/adminhtml_cliparts_edit" template="gomage/productdesigner/cliparts/edit.phtml">
+                <block name="form" type="gomage_designer/adminhtml_cliparts_edit_form" template="gomage/productdesigner/cliparts/edit/form.phtml">
+                    <block name="gallery" type="gomage_designer/adminhtml_cliparts_edit_gallery" />
+                </block>
+            </block>
+        </reference>
+        <!--<reference name="js">-->
+            <!--<block type="core/template" template="catalog/wysiwyg/js.phtml" name="catalog.wysiwyg.js" />-->
+        <!--</reference>-->
+    </adminhtml_cliparts_edit>
+	
+    <adminhtml_fontswithcats_edit>
+        <update handle="editor" />
+        <reference name="left">
+            <block name="fontswithcats_categories_tree" type="gomage_designer/adminhtml_fontswithcats_tree" template="gomage/productdesigner/fontswithcats/tree.phtml" />
+        </reference>
+        <reference name="content">
+            <block name="fontswithcats_edit"  type="gomage_designer/adminhtml_fontswithcats_edit" template="gomage/productdesigner/fontswithcats/edit.phtml">
+                <block name="form" type="gomage_designer/adminhtml_fontswithcats_edit_form" template="gomage/productdesigner/fontswithcats/edit/form.phtml">
+                    <block name="gallery" type="gomage_designer/adminhtml_fontswithcats_edit_gallery" />
+                </block>
+            </block>
+        </reference>
+        <!--<reference name="js">-->
+            <!--<block type="core/template" template="catalog/wysiwyg/js.phtml" name="catalog.wysiwyg.js" />-->
+        <!--</reference>-->
+    </adminhtml_fontswithcats_edit>
+
+    <adminhtml_fonts_edit>
+        <update handle="editor" />
+        <reference name="content">
+            <block name="cliparts_edit"  type="gomage_designer/adminhtml_fonts_edit" template="gomage/productdesigner/fonts/edit.phtml">
+                <block name="form" type="gomage_designer/adminhtml_fonts_edit_form" template="gomage/productdesigner/fonts/edit/form.phtml">
+                    <block name="gallery" type="gomage_designer/adminhtml_fonts_edit_gallery" />
+                </block>
+            </block>
+        </reference>
+    </adminhtml_fonts_edit>
+	
+	<adminhtml_fontcat>
+        <reference name="content">
+            <block name="fontcat" type="gomage_designer/adminhtml_fontcat" template="gomage/productdesigner/fontcat/fontcat.phtml"></block>
+        </reference>
+    </adminhtml_fontcat>
+
+    <adminhtml_sales_order_view>
+        <reference name="order_items">
+            <action method="addColumnRender"><column>name</column><block>gomage_designer/adminhtml_sales_items_column_name</block><template>gomage/productdesigner/sales/items/column/name.phtml</template><type>simple</type></action>
+            <action method="addColumnRender"><column>name</column><block>gomage_designer/adminhtml_sales_items_column_name</block><template>gomage/productdesigner/sales/items/column/name.phtml</template><type>configurable</type></action>
+        </reference>
+    </adminhtml_sales_order_view>
+
+    <adminhtml_designer_design_view>
+        <reference name="content">
+            <block type="gomage_designer/adminhtml_design_view" name="design.view" template="gomage/productdesigner/design/view.phtml">
+                <action method="setHeader"><header>View Design</header></action>
+                <action method="setColumnCount"><count>3</count></action>
+            </block>
+        </reference>
+    </adminhtml_designer_design_view>
+
+    <adminhtml_catalog_product_attribute_edit>
+        <reference name="head">
+            <action method="addJs"><script>lib/flex.js</script></action>
+            <action method="addJs"><script>lib/FABridge.js</script></action>
+            <action method="addJs"><script>mage/adminhtml/flexuploader.js</script></action>
+        </reference>
+    </adminhtml_catalog_product_attribute_edit>
+</layout>

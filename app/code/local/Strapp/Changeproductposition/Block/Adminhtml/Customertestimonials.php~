@@ -1,0 +1,13 @@
+<?php
+ 
+class Strapp_Customertestimonials_Block_Adminhtml_Customertestimonials extends Mage_Adminhtml_Block_Widget_Grid_Container
+{
+  public function __construct()
+  {
+    $this->_controller = 'adminhtml_customertestimonials';
+    $this->_blockGroup = 'customertestimonials';
+    $this->_headerText = Mage::helper('customertestimonials')->__('Feedback Manager');
+    $this->_addButtonLabel = Mage::helper('customertestimonials')->__('Add Feedback');
+    parent::__construct();
+  }
+}

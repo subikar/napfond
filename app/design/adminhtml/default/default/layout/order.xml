@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<layout>
+    <order_adminhtml_orderform_index>
+        <update handle="order_orderform_index"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="order" template="order/order.phtml"/>
+        </reference>
+    </order_adminhtml_orderform_index>
+	
+	<order_adminhtml_edit_index>
+        <update handle="order_edit_index"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="edit" template="order/edit.phtml"/>
+        </reference>
+    </order_adminhtml_edit_index>
+</layout>

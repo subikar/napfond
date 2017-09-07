@@ -1,0 +1,40 @@
+<?php
+/**
+ * iKantam LLC
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the iKantam EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://magento.ikantam.com/store/license-agreement
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade
+ * HouseConfigurator Module to newer versions in the future.
+ *
+ * @category   Ikantam
+ * @package    Ikantam_HouseConfigurator
+ * @author     iKantam Team <support@ikantam.com>
+ * @copyright  Copyright (c) 2012 iKantam LLC (http://www.ikantam.com)
+ * @license    http://magento.ikantam.com/store/license-agreement  iKantam EULA
+ */
+?>
+<?php /** @var $this Ikantam_InstagramConnect_Block_Adminhtml_System_Config_Form_Field_User */ ?>
+
+<?php $userData = $this->getUserData(); ?>
+<?php if($userData): ?>
+
+    <img width="50px" src="<?php echo $userData->user->profile_picture;  ?>" />
+    <h4><?php echo $userData->user->username; ?></h4>
+
+<?php endif; ?>
+<?php $authUrl = Mage::helper("adminhtml")->getUrl("instagramconnect/adminhtml_auth/index"); ?>
+<button class="scalable save" type="button" title="Auth on Instagram" onclick="setLocation('<?php echo $authUrl; ?>')">
+    <span>
+        <span>
+            <span>Auth on Instagram</span>
+        </span>
+    </span>
+</button>

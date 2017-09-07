@@ -1,0 +1,22 @@
+<?php
+/**
+ * GoMage Product Designer Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use/
+ * @version      Release: 1.0.0
+ * @since        Available since Release 1.0.0
+ */
+?>
+<?php foreach($this->getUploadedImages() as $image): ?>
+    <img src="<?php echo $this->getImageUrl($image['image']); ?>"
+         data-origin-url="<?php echo $this->getOriginImageUrl($image['image']); ?>" class="clipart-image111" alt="" title=""/>
+<?php endforeach; ?>
+<div id="upload-image-error" <?php if (!$this->getError()):?>style="display: none" <?php endif;?>>
+    <?php if ($text = $this->getError()): ?>
+        <p><?php echo $text;?></p>
+    <?php endif;?>
+</div>

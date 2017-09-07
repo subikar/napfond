@@ -1,0 +1,232 @@
+<?php 
+//$first_name = 'David';
+//setcookie('first_name',$first_name,time() + (86400 * 7));
+//echo $this->getChildHtml('sitePopUpBlock'); 
+
+?>
+<?php /* ?><div class="footer-container">
+    <div class="footer">
+        <?php echo $this->getChildHtml() ?>
+        <address class="copyright"><?php echo $this->getCopyright() ?></address>
+    </div>
+</div>
+<?php */ ?>
+
+
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/owl.carousel.js') ?>"></script> 
+
+
+
+<div id="footer-cover">
+<div class="footer-container">
+  <div class="footer">
+    <?php // echo $this->getChildHtml() ?>
+
+    <div class="newsletterpopup">
+    	<div class="newsletterpopup-inner-wrapper">
+    		<span class="fa fa-times fa-lg thm-btn-close-popup"></span>
+    		<div class="thm-generic-wrapper">
+        		<h3>Join Baba Cover &amp;</h3> <h2> GET 15% OFF ! YES PLEASE</h2>
+    			<?php  echo $this->getChildHtml('newsletter') ?>
+    		</div>
+    	</div>
+    </div>
+
+  </div>
+  <div id="footer-cover1" class="footer-sec">
+    	<div class="baba_footer">
+    		<div class="propsContainer">
+    			<div class="container">
+	    			<div class="row hidden-xs">
+	    				<div class="col-sm-3 col-xs-3">
+	    					<a target="_blank" href="/blog/customer-care-production-and-shipping/"><i class="freeShipping" ></i><h2>FREE SHIPPING</h2></a>
+	    				</div>
+	    				<div class="col-sm-3 col-xs-3">
+	    					<a target="_blank" href="/blog/customer-care-production-and-shipping/"><i class="freeShipping" ></i><h2>EASY RETURNS</h2></a>
+	    				</div>
+	    				<div class="col-sm-3 col-xs-3">
+	    					<a target="_blank" href="/blog/customer-care-production-and-shipping/"><i class="freeShipping" ></i><h2>CASH ON DELIVERY</h2></a>
+	    				</div>
+	    				<div class="col-sm-3 col-xs-3">
+	    					<a target="_blank" href="/blog/customer-care-production-and-shipping/"><i class="freeShipping" ></i><h2>ORDER TRACKING</h2></a>
+	    				</div>
+	    			</div>
+    			</div>
+    		</div>
+    		<div class="container">
+    			<div class="row">
+    				<div class="col-sm-3 baba_cover">
+    					<h2>HELP</h2>
+    					<ul class="links desktopViewFooter">
+    						<li>
+    							<a target="_blank" href="<?php  Mage::getBaseUrl(); ?>/napfond/babacover-story/">About us</a>
+    						</li>
+    						<li>
+    							<a target="_blank" href="<?php  Mage::getBaseUrl(); ?>/napfond/products/">Products</a>
+    						</li>
+    						<li>
+    							<a target="_blank" href="<?php  Mage::getBaseUrl(); ?>/napfond/Customercare/">Customer care</a>
+    						</li>
+    						<li>
+    							<a target="_blank" href="<?php  Mage::getBaseUrl(); ?>/napfond/sales_terms/">Sell with us</a>
+    						</li>
+    						<li>
+    							<a target="_blank" href="<?php  Mage::getBaseUrl(); ?>/napfond/shipping/">Production and Shipping</a>
+    						</li>
+    						<li>
+    							<a target="_blank" href="<?php  Mage::getBaseUrl(); ?>/napfond/refund-policy/">Return, Refund & Cancellation policy</a>
+    						</li>
+    						<li>
+    							<a target="_blank" href="<?php  Mage::getBaseUrl(); ?>/napfond/privacy-policy-cookie-restriction-mode/">Privacy policy</a>
+    						</li>
+    						<li>
+    							<a target="_blank" href="<?php  Mage::getBaseUrl(); ?>/napfond/terms/">Terms & Conditions</a>
+    						</li>
+    					</ul>
+    				</div>
+    				<div class="col-sm-3 baba_cover">
+    					<h2>SUPPORT</h2>
+    					<ul class="links">
+    						<li>
+    						<a href="#" ><i class="phoneIcon" ></i><span >1234-567-098</span></a><br ><span class="workingHours" >(Monday To Saturday 10 AM - 6 PM)</span></li>
+    						<li ><a href="#" ><i class="emailIcon" ></i><span >support@babacover.com</span></a></li>
+    						<li ><i class="locationIcon"></i>
+    							<text class="locationInfo" style="overflow: hidden;">Adinath Trader,<br> Plot no 43,44 basement <br >Triveni heights , <br>Triveninagar,<br> Jaipur 302018
+    							</text>
+    						</li>
+    						
+    				</div>
+    				<div class="col-sm-3 baba_cover">
+    					<h2>KEEP IN TOUCH</h2>
+    					<ul class="links desktopViewFooter">
+    						<li>
+    							<a target="_blank" href="#" ><i class="fbIcon"></i><span">Facebook</span></a>
+    						</li>
+    						<li>
+    							<a target="_blank" href="#" ><i class="fbIcon"></i><span">Twitter</span></a>
+    						</li>
+    						<li>
+    							<a target="_blank" href="#" ><i class="fbIcon"></i><span">Instagram</span></a>
+    						</li>
+    					</ul>
+    				</div>
+    				<div class="col-sm-3 baba_cover">
+    					<h2>PAYMENT METHODS</h2>
+    					<div class="cardTypes">
+    						<img src="<?php  Mage::getBaseUrl(); ?>/napfond/skin/frontend/rwd/default/images/footer_block_img_4.jpg" alt="Payment Methods" class="paymentMethod">
+    						<span id="siteseal""><img style="cursor:pointer;cursor:hand" src="<?php  Mage::getBaseUrl(); ?>/napfond/skin/frontend/rwd/default/images/footer_block_img_5.gif" onclick="verifySeal();" alt="SSL site seal - click to verify"></span>
+    					</div>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+  </div>
+  <address class="copyright">
+  <?php echo $this->getCopyright() ?>
+  </address>
+</div>
+<script>
+
+function welscroll(){
+	var jwwidth = jQuery('.jcarousel-wrapper').innerWidth();
+	var jwwidthx = jwwidth/4;
+	//alert(jwwidthx);
+	jQuery('.jcarousel-wrapper .gallary').css('width',jwwidthx+'px');
+}
+
+	function responsiveNavFun()
+	{
+	jQuery("#responsiveBtn").click(function() {
+		//alert('ok');
+		jQuery("#responsiveNavItem").show('slow');
+		jQuery("#responsiveNav").css('height', jaxHt);
+		//jQuery("#responsiveNav ul.mainNav").css('height', jaxHtu);
+		jQuery("#responsiveNav").slideToggle(300);
+		jQuery('body').css('overflow', 'hidden');
+	});
+	}
+	
+	function searchbtn(){
+		if (jQuery("#searchBtnH .fa").hasClass("fa-search")) 
+			{
+				jQuery("#searchBtnH .fa").removeClass('fa-search');
+				jQuery("#searchBtnH .fa").addClass('fa-times');
+			}
+		else
+			{
+				jQuery("#searchBtnH .fa").removeClass('fa-times');
+				jQuery("#searchBtnH .fa").addClass('fa-search');
+			}
+		};	
+	
+jQuery(document).ready(function() {
+		
+	welscroll();
+	jQuery(window).resize(function() {
+		welscroll();
+	}); 
+	
+		
+    jQuery("img").on("contextmenu",function(){
+       return false;
+    }); 	
+	
+	
+	
+    var jaxH  = jQuery(window).height();//screen height
+	var jaxHn = jQuery('#responsiveNavItem .resVHeaderLogoVf').height();//Responsive logo section height
+	var jaxHt = jaxH - jaxHn; //height for menu
+	var jaxHtu = jaxHt - jaxHn;
+	
+
+	jQuery("#responsiveBtn1").click(function() {
+		jQuery("#responsiveNavItem").hide('slow');
+		jQuery('body').css('overflow', 'auto');
+		//jQuery("#responsiveNav").slideToggle(300);
+	});
+	jQuery("#responsiveNavItem .blackBackresponsive").click(function() {
+		jQuery("#responsiveNavItem").hide('slow');
+		jQuery('body').css('overflow', 'auto');
+		//jQuery("#responsiveNav").slideToggle(300);
+	});
+	responsiveNavFun();
+	
+	
+	/********New Code************/
+	jQuery("#responsiveNav span").click(function(){
+		if (jQuery( this ).children().hasClass('fa-plus'))
+		{
+			jQuery( this ).children().removeClass('fa-plus');	
+			jQuery( this ).children().addClass('fa-minus');
+		}
+		else
+		{
+			jQuery( this ).children().removeClass('fa-minus');	
+			jQuery( this ).children().addClass('fa-plus');
+		}
+		jQuery( this ).parent().next().slideToggle(300);
+		
+	});
+ 
+
+	
+
+		
+	//jQuery("#responsiveSearch").slideUp();
+	jQuery("#searchBtnH").click(function() {
+		 
+		jQuery("#responsiveSearch").slideToggle();
+		searchbtn();
+	});
+
+
+        //jQuery('img').imgPreload()
+
+	
+	
+});
+
+
+</script>
+ 

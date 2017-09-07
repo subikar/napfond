@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<layout>
+    <trending_adminhtml_trendingform_index>
+        <update handle="trending_trendingform_index"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="trending" template="trending/trending.phtml"/>
+        </reference>
+    </trending_adminhtml_trendingform_index>
+	
+	<trending_adminhtml_edit_index>
+        <update handle="trending_edit_index"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="edit" template="trending/edit.phtml"/>
+        </reference>
+    </trending_adminhtml_edit_index>
+	
+	<trending_adminhtml_style_index>
+        <update handle="trending_style_index"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="style" template="trending/style.phtml"/>
+        </reference>
+    </trending_adminhtml_style_index>
+</layout>

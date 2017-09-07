@@ -1,0 +1,134 @@
+<link rel="stylesheet" href="<?php echo $this->getSkinUrl('css/acc/demo2.css');?>" type="text/css" />
+<?php
+//$collection = Mage::getModel('catalog/product')->getCollection();
+ $layer = Mage::getSingleton('catalog/layer');
+ $_category = $layer->getCurrentCategory();
+ $currentCategoryId = $_category->getId();
+?>
+<div class="panel panel-default dsfdf">
+  <div class="panel-heading <?php echo $this->getName();?>">
+   <h4 class="panel-title"><a href="#<?php echo $this->getName();?>" data-toggle="collapse" data-parent="#accordion"><?php echo $this->getName();?>
+   <i class="fa fa-caret-down"></i></a></h4>
+  </div>
+  <div id="<?php echo $this->getName();?>" class="panel-collapse collapse">
+   
+  <?php 
+   if($this->getName() == 'Model')
+   { 
+   	 $i=1;
+	 $first_top_cat_id = $_category->getParentCategory()->getParentCategory()->getId();
+	 $children = Mage::getModel('catalog/category')->getCategories($first_top_cat_id);
+	 foreach ($children as $category) 
+	 { ?>
+      <div id="section<?php echo $i;?>" class="accordion">
+	   <?php echo $category->getName();?>
+      </div>
+      <div class="container">
+       <div class="content">
+		 <?php
+         if($category->hasChildren()) 
+         {
+            $children2 = Mage::getModel('catalog/category')->getCategories($category->getId());
+            echo '<ul>';
+            foreach ($children2 as $sub_cat) 
+            { 
+              echo '<li><a href="'.$sub_cat->getUrl().'">'.$sub_cat->getName().'</a></li>';
+            }				
+            echo '</ul>';
+          } ?>
+       </div> 				
+      </div><?php $i++;
+	  }		
+	}
+	else
+	{
+	  echo '<ul><div class="panel-body">'; 
+	  foreach ($this->getItems() as $_item): ?>      
+       <?php $str_lbl = str_replace(" ", "", $_item->getLabel()); ?>
+       <?php //echo $this->urlEscape($_item->getName()) ?>
+       <li class="filter_lbl" id="<?php echo $str_lbl;?>">
+        <input type="checkbox" name="label_chk" id="label_chk" onclick="if(this.checked == true) location.href='<?php echo $this->urlEscape($_item->getUrl()) ?>'" />
+        <a href="<?php echo $this->urlEscape($_item->getUrl()) ?>"><?php echo $_item->getLabel() ?></a>         
+       </li>        
+      <?php endforeach; 
+	  echo '</div></ul>';
+	  
+	  
+	$attr = strtolower($this->getName());
+	$attr_img = 'attr_img';
+	$connection = Mage::helper('function/more')->getDbReadObject();
+    $select = $connection->select()
+    ->from('stock_img', array('attr_img', 'attr_val'))
+    ->where("cat_id3 =".$currentCategoryId." and attr_name = '".$attr."'"); 
+    $rowsArray = $connection->fetchAll($select);
+	for($i=0;$i<count($rowsArray);$i++)
+	{
+		$media = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);
+		$arr = str_replace(" ", "", $rowsArray[$i]['attr_val']);
+	?> 
+    <div class="filter_div" id="<?php echo $arr.'content';?>"><img src="<?php echo $media.'filter_img/'.$rowsArray[$i]['attr_img'];?>"></div>
+    <?php }	  
+	  
+	  
+    } 
+ ?>
+ 
+  </div>  
+</div> 
+<?php /*?><?php foreach ($this->getItems() as $_item): ?>
+    <li>
+        <?php if ($_item->getCount() > 0): ?>
+            <a href="<?php echo $this->urlEscape($_item->getUrl()) ?>">
+                <?php echo $_item->getLabel() ?>
+                <?php if ($this->shouldDisplayProductCount()): ?>
+                <span class="count">(<?php echo $_item->getCount() ?>)</span>
+                <?php endif; ?>
+            </a>
+        <?php else: ?>
+            <span>
+                <?php echo $_item->getLabel(); ?>
+                <?php if ($this->shouldDisplayProductCount()): ?>
+                    <span class="count">(<?php echo $_item->getCount() ?>)</span>
+                <?php endif; ?>
+            </span>
+        <?php endif; ?>
+    </li>
+<?php endforeach ?><?php */?>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/highlight.pack.js');?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery.cookie.js');?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery.accordion.js');?>"></script>
+<script type="text/javascript">
+jQuery(document).ready(function() {
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  jQuery.fn.slideFadeToggle = function(speed, easing, callback) {
+    return this.animate({opacity: 'toggle', height: 'toggle'}, speed, easing, callback);
+  };
+        //accordion
+  jQuery('.accordion').accordion({
+   defaultOpen: 'section1',
+   cookieName: 'accordion_nav',
+   speed: 'slow',
+   animateOpen: function (elem, opts) { //replace the standard slideUp with custom function
+    elem.next().stop(true, true).slideFadeToggle(opts.speed);
+   },
+   animateClose: function (elem, opts) { //replace the standard slideDown with custom function
+    elem.next().stop(true, true).slideFadeToggle(opts.speed);
+   }
+  });
+});
+
+<!--
+function magejump(targ,selObj,restore){
+ eval(targ+".location='"+selObj.options[selObj.selectedIndex].value+"'");
+ if (restore) selObj.selectedIndex=0;
+}
+
+jQuery('.filter_div').hide();
+//jquery('div').hide();
+jQuery('.filter_lbl').bind('mouseover', function() {
+	jQuery('.filter_div').hide();
+	jQuery('#'+jQuery(this).attr('id')+'content').show();
+});  
+//-->
+</script>

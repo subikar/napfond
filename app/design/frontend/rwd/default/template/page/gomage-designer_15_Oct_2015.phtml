@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+
+<!--[if lt IE 7 ]> <html lang="en" id="top" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" id="top" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" id="top" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" id="top" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" id="top" class="no-js"> <!--<![endif]-->
+
+<head>
+<script type="text/javascript">
+var orderAthreeAfour = '';
+var A3Price = '';
+var A4Price = '';
+var folderUrl = '';
+var showCustomizeButton = '';
+var origState;
+var jQueryUploadedImageIframeRespVar = '';
+var showWhichSlideJsVar = new Array();
+var loginByFbDesingerTab = 'no';
+var checkClickEventBindOrNotTshirt = 'no';
+var objSlidesSide = {
+    '1': 'front',
+    '2': 'back'
+};
+colorNameTshirt = '';
+url_para_cat_id = '<?php echo $_GET['cat_id']?>';
+optionString = '';
+
+var skipPreview_1 = false;
+var skipPreview_2 = false;
+</script>
+<?php echo $this->getChildHtml('head');?>
+<script src="<?php echo Mage::getBaseUrl('js');?>jquery.form.js"></script>
+<script src="<?php echo Mage::getBaseUrl('js');?>jquery-bigtext.js"></script>
+<?php /*?><script src="<?php echo Mage::getBaseUrl('js');?>instafeed.min.js"></script><?php */?>
+
+</head>
+<body <?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?>>
+
+<?php
+
+
+
+$reqCateVar = Mage::app()->getRequest()->getParam('cat_id');
+
+$tabletArray = array('478','479','991','214','213','212','211','992','176','993','518','787','788','786','789','790','791','477','532','533','472','250','249','248','247','637','178','638','534','654','655','659','656','657','1103','535');
+$laptopArray = array('8','21','42','44','972','84','85','86','87','88');
+
+ $maxPrintSizeW = 15.5;
+ $maxPrintSizeH = 11;
+
+
+if(in_array($reqCateVar,$tabletArray)){
+ $maxPrintSizeW = 15.5;
+ $maxPrintSizeH = 11;
+} 
+ 
+if(in_array($reqCateVar,$laptopArray)){
+ $maxPrintSizeW = 15.5;
+ $maxPrintSizeH = 11;
+} 
+$siteBaseUrl = Mage::getStoreConfig(Mage_Core_Model_Url::XML_PATH_SECURE_URL);
+
+
+?>
+
+
+<?php echo $this->getChildHtml('after_body_start') ?>
+<?php
+$_product = Mage::getModel("catalog/product")->load( $_GET['id'] );
+$options = Mage::getModel('catalog/product_option')->getProductOptionCollection($_product);
+
+if(count($options) > 0){
+?>
+<div id="productOptionsDiv">
+<div id="back-bg-black-kj"></div>
+<div id="productOptionsDiv-outer">
+<img src="<?php echo $this->getSkinUrl("images/go-bhishoom.gif")?>"  <?php /*?>class="go-gif translate-mid"<?php*/?> style="margin:0 auto;" />
+<?php $formKey = Mage::getSingleton('core/session')->getFormKey();?>
+
+<div class="graproductOptionsDivCloseMargin translate-mid displayNone">
+<a href="javascript:void(0)" class="productOptionsDivClose" onclick="chkSelectPrdOptions()">X</a>
+<form action="<?php echo Mage::getBaseUrl();?>/checkout/cart/add/product/<?php echo $_GET['id']; ?>" method="post" id="sendToCart">
+<div id="outOfStockCreateSectionPopWarning" class="displayNone validation-advice"></div>
+<div class="clear"></div>
+ <input type="hidden" name="form_key" value="<?php echo $formKey; ?>" />
+ <input type="hidden" name="qty" value="1"> 
+ <input type="hidden" name="design" id="gra_cust_dsg_id" value=""> 
+<?php
+$showCustomizeButton = false;
+?>
+<script type="text/javascript">
+showCustomizeButton = 'no';
+</script>
+<?php
+
+echo '<div class="size-chart-div-create displayNone">
+             <a class="productOptionsDivCloseCreateSize" href="javascript:void(0)" onclick="jQuery(\'.size-chart-div-create\').addClass(\'displayNone\')">X</a>
+             
+               <img src="'.$this->getSkinUrl('images/size_chart.png').'">
+              
+            </div>';
+
+foreach ($options as $option) {
+
+ if ($option->getType() === 'drop_down' || $option->getType() === 'radio') {
+ 
+ $showCustomizeButton = true; 
+?>
+<script type="text/javascript">
+showCustomizeButton = 'yes';
+</script>
+<?php 
+ if($option->getDefaultTitle() != 'Print Area'){
+  echo $option->getDefaultTitle();
+  
+	if($option->getDefaultTitle() == 'Size'){
+	
+		echo '<p class="size_chart"><a class="red" id="sizeform" href="#size_div" onclick="jQuery(\'.size-chart-div-create\').removeClass(\'displayNone\')">( Know Your Size ) </a></p>';
+    }
+			
+  echo '<br/>';
+  $printAreaClass = '';
+ }else{
+ $printAreaClass = 'printArea';
+ } 
+  
+ if($option->getDefaultTitle() == 'Choose Print Size' || $option->getDefaultTitle() == 'Select Size' || $option->getDefaultTitle() == 'Choose Size'){
+  $printChooseSizeClass = 'printChooseSizeClass';
+ }
+ else
+  $printChooseSizeClass = '';
+  
+  ?>
+  <select title="<?php echo $option->getDefaultTitle();?>" class="prdOptionsSelect form-control <?php echo $printAreaClass?> <?php echo $printChooseSizeClass?>" id="<?php echo $option->getOptionId()?>" name="options[<?php echo $option->getOptionId()?>]" onchange="checkCustomizerSelectValue(this);updateCustomizerColorGra(this,'<?php echo $option->getDefaultTitle()?>');<?php if($printChooseSizeClass=='printChooseSizeClass'){?>laptabCustomSizesetValues()<?php }?>" <?php if($option->getDefaultTitle() == 'Print Area') echo 'style="display:none;"';?>>
+<?php 
+  $values = Mage::getSingleton('catalog/product_option_value')->getValuesCollection($option);
+  if(strpos(strtolower($option->getDefaultTitle()), 'choose') === false)
+	echo '<option value="">Choose '.$option->getDefaultTitle().'</option>';
+  else
+	echo '<option value="">'.$option->getDefaultTitle().'</option>';
+ 
+  foreach ($values as $value) {
+    if($value->getPrice() > 0){
+     echo '<option cutomattr="'.$value->getTitle().' - Additional : '.Mage::helper('core')->currency($value->getPrice(), true, false).'" value="'.$value->getId().'">'.$value->getTitle().'</option>';
+     //echo '<option value="'.$value->getId().'">'.$value->getTitle().' - Additional : '.Mage::helper('core')->currency($value->getPrice(), true, false).'</option>';
+	 }
+	else
+		{
+			//echo '<option value="'.$value->getId().'">'.$value->getTitle().' - Additional : '.Mage::helper('core')->currency($value->getPrice(), true, false).'</option>';
+			
+			if(trim(strtolower($option->getDefaultTitle())) == 'choose side')
+			echo '<option cutomattr="'.str_replace('"','&rdquor;',$value->getTitle()).' - Additional : '.Mage::helper('core')->currency($value->getPrice(), true, false).'" cutomattr2="'.str_replace('"','&rdquor;',$value->getTitle()).'" value="'.$value->getId().'">'.$value->getTitle().' (Price:&nbsp;'.Mage::helper('core')->currency(($_product->getFinalPrice()+$value->getPrice())).')</option>';			
+			else
+			echo '<option cutomattr="'.str_replace('"','&rdquor;',$value->getTitle()).' - Additional : '.Mage::helper('core')->currency($value->getPrice(), true, false).'" cutomattr2="'.str_replace('"','&rdquor;',$value->getTitle()).'" value="'.$value->getId().'">'.ucwords($value->getTitle()).'</option>';
+			
+			if($printAreaClass == 'printArea')			
+			{
+			
+			}
+		}
+?>		
+<script type="text/javascript">
+<?php if(trim($value->getTitle()) == 'A3'){?>
+A3Price = '<?php echo Mage::helper('core')->currency(($_product->getFinalPrice() + $value->getPrice()), true, false)?>';
+A3Price = A3Price.replace(".00", "");
+<?php } else if(trim($value->getTitle()) == 'A4'){?>
+A4Price = '<?php echo Mage::helper('core')->currency(($_product->getFinalPrice() + $value->getPrice()), true, false)?>';
+A4Price = A4Price.replace(".00", "");
+<?php }?>
+</script>		
+<?php	 
+	}
+	echo '</select>';
+	
+
+	
+	if($option->getDefaultTitle() != 'Print Area')
+	echo '<br/>';	
+	
+	
+  }
+ else if($option->getType() === 'field')
+ {
+
+    if($option->getDefaultTitle() == 'Product Detail'){
+?>	
+<input type="hidden" class="txtGraProductDetailsAbt" id="<?php echo $option->getOptionId()?>" name="options[<?php echo $option->getOptionId()?>]" />
+<?php
+	}
+	else if(trim($option->getDefaultTitle()) == 'H')
+	{
+?>
+<div class="txtGraCustomSizeDtlsDiv">	
+<span class="txtGraCustomSizeDtlsHeightSpan">Height: &nbsp;<br/><input type="number" min="1" max="<?php echo $maxPrintSizeH?>" step="0.5" class="txtGraCustomSizeDtlsHeight" id="<?php echo $option->getOptionId()?>" name="options[<?php echo $option->getOptionId()?>]" /><br/>Max: <?php echo $maxPrintSizeH?></span>
+<?php	
+	}
+	else if(trim($option->getDefaultTitle()) == 'W')
+	{
+?>	
+<span class="txtGraCustomSizeDtlsWidthSpan">Width: &nbsp;<br/><input type="number" min="1" max="<?php echo $maxPrintSizeW?>" step="0.5" class="txtGraCustomSizeDtlsWidth" id="<?php echo $option->getOptionId()?>" name="options[<?php echo $option->getOptionId()?>]" /><br/>Max: <?php echo $maxPrintSizeW?></span>
+</div>
+<?php	
+	}
+	
+	
+ }
+}
+?>
+<script type="text/javascript">
+
+
+
+var SelectBoxAdditionalPrice = new Array();
+var SelectBoxAdditionalPriceKey = new Array();
+var SelectBoxAdditionalPriceKeyIter = 0
+var ProductInitialPrice = 0
+function updateCustomizerColorGra(sel_text_obj,SelectBoxTitleStr)
+{
+  //SelectBoxValueArr = jQuery("#"+jQuery(sel_text_obj).attr('id')+" option:selected").text().split(":")
+  SelectBoxValueArr = jQuery("#"+jQuery(sel_text_obj).attr('id')+" option:selected").attr('cutomattr').split(":")
+  total = 0;
+  arrayLengthChkCustomOptionPrice = SelectBoxValueArr.length;
+  //alert(arrayLengthChkCustomOptionPrice)
+  
+		  sel_text = SelectBoxValueArr[0]
+		  arrKeyForUse = jQuery(sel_text_obj).attr('id');
+  
+  
+  if(arrayLengthChkCustomOptionPrice > 1)
+  {
+		  
+		  //alert(arrKeyForUse)
+		  
+		  SelectBoxAdditionalPrice["'"+arrKeyForUse+"'"] =  parseFloat(jQuery.trim(SelectBoxValueArr[SelectBoxValueArr.length-1].match(/[\d\.\d]+/i)).substr(1),2);
+		  
+		  if(SelectBoxValueArr[SelectBoxValueArr.length-1].indexOf('-Rs.') >=0 )
+		   SelectBoxAdditionalPrice["'"+arrKeyForUse+"'"] = eval('-'+SelectBoxAdditionalPrice["'"+arrKeyForUse+"'"])
+		  
+		  if(SelectBoxAdditionalPriceKey.indexOf("'"+arrKeyForUse+"'") == -1)
+			SelectBoxAdditionalPriceKey[SelectBoxAdditionalPriceKeyIter++] = "'"+arrKeyForUse+"'"
+			
+		 
+				
+			arrayLength = SelectBoxAdditionalPriceKey.length;
+			for (var i = 0; i < arrayLength; i++) {
+			 total = total + SelectBoxAdditionalPrice[SelectBoxAdditionalPriceKey[i]]  
+			}		
+	
+	}
+
+		  if(ProductInitialPrice == 0)
+			ProductInitialPrice =   parseFloat(jQuery.trim(jQuery(".price-box > .regular-price > .price").html().match(/[\d\.\d]+/i)).substr(1));
+
+
+	
+	currency_symbol = '<?php echo Mage::app()->getLocale()->currency( Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();?>'
+	jQuery(".price-box > .regular-price > .price").html('')
+	jQuery(".price-box > .regular-price > .price").html(currency_symbol+' '+(ProductInitialPrice + total))
+	jQuery("#price-more-info > #product_price > .price").html('')
+	jQuery("#price-more-info > #product_price > .price").html(currency_symbol+' '+(ProductInitialPrice + total))
+	
+	
+	
+    if(SelectBoxTitleStr.toLowerCase()=='color' || SelectBoxTitleStr.toLowerCase()=='colour')
+    {   
+		sel_text = jQuery.trim(sel_text)
+		sel_text = sel_text.toLowerCase();
+		if(sel_text.indexOf("- additional") >= 0)		
+			sel_text = sel_text.replace("- additional", ""); 
+		sel_text = jQuery.trim(sel_text)
+		sel_text = sel_text.replace(" ", "_").toLowerCase(); 
+		
+		var evt = document.createEvent("HTMLEvents");
+        evt.initEvent("click", true, true);
+        var new_id = "clr_opt_"+sel_text;
+		
+        document.getElementById(new_id).dispatchEvent(evt);
+	}
+ }
+</script>
+<?php if($showCustomizeButton == true){?>
+<script type="text/javascript">
+
+</script>
+<div class="actions clear">
+<button class="btn btn-lg btn-primary btn-block" title="Customize Now" type="button" onclick="chkSelectPrdOptions()"><span><span>Customize Now</span></span> </button>
+</div>
+<?php }?>
+</form>
+</div>
+<script type="text/javascript">
+var optionStringComma = '';
+function checkCustomizerSelectValue(obj){
+
+	
+	
+	jQuery("#optionStr").html('');
+   /////For handling mobile skin fron/back condition//////////////////
+   if(jQuery.trim(jQuery('option:selected', obj).attr('cutomattr2')).toLowerCase() == 'back' || jQuery.trim(jQuery('option:selected', obj).attr('cutomattr2')).toLowerCase() == 'front + back' || jQuery.trim(jQuery('option:selected', obj).attr('cutomattr2')).toLowerCase() == 'front+back')
+    {
+    if(jQuery.trim(jQuery('option:selected', obj).attr('cutomattr2')).toLowerCase() == 'front + back' || jQuery.trim(jQuery('option:selected', obj).attr('cutomattr2')).toLowerCase() == 'front+back'){
+		 jQuery("#imageFlagSide_1").show();
+		 jQuery("#preview_1").show();
+		 jQuery("#preview_2_div").css("width", "50%");
+		 skipPreview_1 = false
+	 }
+	else
+ 	 {
+		 jQuery("#imageFlagSide_1").hide();
+		 jQuery("#2").click();
+		 jQuery("#preview_1").hide();	 
+		 jQuery("#preview_2_div").css("width", "100%"); 
+		 
+		 skipPreview_1 = true
+	 }
+	 }
+	/////End for handling mobile skin fron/back condition////////////////// 
+	if(jQuery(obj).val() != '')
+	  jQuery(obj).css("border","1px solid #ccc");
+	else 
+	  jQuery(obj).css("border","1px solid #ff0000");
+	  
+
+}
+function chkSelectPrdOptions()
+{  
+   flag = true;
+   //jQuery("#optionStrsss").html('');
+   //optionString = 'Choosed Options:&nbsp;'
+   //jQuery("#optionStrsss").append(optionString);
+   
+   //optionStringComma = '';
+   
+   selectElements = jQuery("#productOptionsDiv").find("select");
+   
+   jQuery.each(selectElements, function(index, selectElement){
+	if(jQuery(selectElement).val() == "" && jQuery(selectElement).is(":visible"))
+	{   
+	    flag = false;
+		jQuery(selectElement).css("border","1px solid #ff0000");
+	}
+	else{
+		
+		jQuery(selectElement).css("border","1px solid #ccc");
+	}
+	if(!jQuery(selectElement).hasClass("printArea")){
+		//optionString = optionStringComma+ jQuery(selectElement).attr("title").replace("Choose","") + ':&nbsp;'+ jQuery('option:selected', selectElement).attr('cutomattr2'); 
+		//optionStringComma = ', '; 	
+		//jQuery("#optionStrsss").append(optionString);
+		//jQuery("#optionStrsss").removeClass("displayNone");	
+	}
+	
+   });
+   
+  
+   selectElements = jQuery("#productOptionsDiv").find("input[type='number']");
+   
+   jQuery.each(selectElements, function(index, selectElement){
+   
+   
+
+	if(jQuery(selectElement).val() == "" || parseFloat(jQuery(selectElement).val()) > parseFloat(jQuery(selectElement).attr('max')))
+	{   
+	    flag = false;
+		jQuery(selectElement).css("border","1px solid #ff0000");
+	} 
+	else{
+		
+		jQuery(selectElement).css("border","1px solid #ccc");
+	}
+   });
+   
+			textSize = jQuery("select[title='Size']  option:selected").text()
+			textColor = jQuery("select[title='Color']  option:selected").text()
+			textColorId = textColor.toLowerCase().replace(" ", "_");
+   if(flag == true){
+   
+		if(typeof tshirtObj == 'undefined')
+			jQuery('#productOptionsDiv').hide();
+		else{
+			jQuery("button[title='Customize Now'] > span > span").html('Customize Now...')
+			updateCustomizerColorGra(jQuery("select[title='Color']"),'Color');
+		}	
+   
+				/*jQuery.ajax({
+                    method: "POST",
+                    url: "<?php echo $siteBaseUrl?>check_inventory.php",
+                    data: {
+                        skU: '<?php echo $_product->getSku()?>',
+                        siZe: textSize,
+                        colOr: textColor
+                    }
+                })
+                .done(function(response) {
+					jQuery('#outOfStockCreateSectionPopWarning').html('');
+					jQuery('#outOfStockCreateSectionPopWarning').hide();
+					jQuery("button[title='Customize Now'] > span > span").html('Customize Now');
+					jQuery("clr_opt_grey_melenge")
+					if(response == 'Not Required')
+					{
+						jQuery('#productOptionsDiv').hide();
+					}
+					else if(response > 0)
+					{
+						jQuery('#productOptionsDiv').hide();
+					}
+					else{
+						jQuery('#outOfStockCreateSectionPopWarning').html('Product is out of stock.');
+						jQuery('#outOfStockCreateSectionPopWarning').show();
+						jQuery('#clr_opt_'+textColorId).hide();
+						jQuery('#productOptionsDiv').show();
+					}
+                    //jQuery("#results_ajax1").append(response);
+                    //jQuery("#results_ajax1").show();
+                    //jQuery("#mylist" + leaderUserId).hide();
+                });*/
+   }
+   else
+   return false;
+   
+   /*if(flag == true)
+	jQuery('#productOptionsDiv').hide();
+   else
+    return false; */  
+}
+
+function selectDropDownByText(id,theText){
+jQuery(id+" option").each(function() {
+  if(jQuery(this).text() == theText) {
+    jQuery(this).attr('selected', 'selected');            
+  }                        
+});
+}
+
+function laptabCustomSizesetValues(){
+
+
+if(jQuery(".printChooseSizeClass option:selected").text().toLowerCase() == '7 inch / 8 inch ( printed size : 8" by 5.5" )'.toLowerCase()){
+ jQuery(".txtGraCustomSizeDtlsHeight").val('7');
+ jQuery(".txtGraCustomSizeDtlsWidth").val('8');
+}
+else if(jQuery(".printChooseSizeClass option:selected").text().toLowerCase() == '9 inch /10 inch ( printed size : 10" by 7" )'.toLowerCase()){
+ jQuery(".txtGraCustomSizeDtlsHeight").val('9');
+ jQuery(".txtGraCustomSizeDtlsWidth").val('10');
+}
+else if(jQuery(".printChooseSizeClass option:selected").text().toLowerCase() == '11 inch / 12 inch  ( printed size : 12.5 " by 9 " )'.toLowerCase()){
+ jQuery(".txtGraCustomSizeDtlsHeight").val('11');
+ jQuery(".txtGraCustomSizeDtlsWidth").val('12');
+}
+else if(jQuery(".printChooseSizeClass option:selected").text().toLowerCase() == '13 inch / 14 inch  ( printed size : 14 " by 9.5 " )'.toLowerCase()){
+ jQuery(".txtGraCustomSizeDtlsHeight").val('13');
+ jQuery(".txtGraCustomSizeDtlsWidth").val('14');
+}
+else if(jQuery(".printChooseSizeClass option:selected").text().toLowerCase() == '15 inch / 16 inch ( printed size : 15 " by 10.5 " )'.toLowerCase()){
+ jQuery(".txtGraCustomSizeDtlsHeight").val('15');
+ jQuery(".txtGraCustomSizeDtlsWidth").val('16');
+}
+else if(jQuery(".printChooseSizeClass option:selected").text().toLowerCase() == '17 inch / 18 inch ( printed size : 15.5 " by 11 " )'.toLowerCase()){
+ jQuery(".txtGraCustomSizeDtlsHeight").val('17');
+ jQuery(".txtGraCustomSizeDtlsWidth").val('18');
+}
+else{
+ jQuery(".txtGraCustomSizeDtlsHeight").show();
+ jQuery(".txtGraCustomSizeDtlsWidth").show();
+ jQuery(".txtGraCustomSizeDtlsHeightSpan").show();
+ jQuery(".txtGraCustomSizeDtlsWidthSpan").show();
+  
+ jQuery(".txtGraCustomSizeDtlsHeight").css('display', 'inline-block')
+ jQuery(".txtGraCustomSizeDtlsWidth").css('display', 'inline-block')
+ jQuery(".txtGraCustomSizeDtlsHeightSpan").css('display', 'inline-block')
+ jQuery(".txtGraCustomSizeDtlsWidthSpan").css('display', 'inline-block')
+ 
+ jQuery(".txtGraCustomSizeDtlsDiv").show();
+}
+}
+
+</script>
+
+</div>
+<?php }else{
+$formKey = Mage::getSingleton('core/session')->getFormKey();
+?>
+<form action="<?php echo Mage::getBaseUrl();?>/checkout/cart/add/product/<?php echo $_GET['id']; ?>" method="post" id="sendToCart">
+ <input type="hidden" name="form_key" value="<?php echo $formKey; ?>" />
+ <input type="hidden" name="qty" value="1"> 
+ <input type="hidden" name="design" id="gra_cust_dsg_id" value=""> 
+</form>	
+
+<?php } ?>
+ </div>
+<div class="wrapper">
+ <?php echo $this->getChildHtml('global_notices') ?>
+ <div class="page">
+  <?php echo $this->getChildHtml('header'); ?>
+  <?php echo $this->getChildHtml('global_messages') ?>
+  <div class="container">
+   <div class="main-container col1-layout">
+    <div class="main">
+     <?php echo $this->getChildHtml('breadcrumbs') ?>
+	 <div class="col-main">                    
+      <?php echo $this->getChildHtml('content') ?>
+     </div>
+    </div>
+   </div>
+  </div>
+  <?php echo $this->getChildHtml('footer_before') ?>
+  <?php echo $this->getChildHtml('footer') ?>
+  <?php echo $this->getChildHtml('global_cookie_notice') ?>
+  <?php echo $this->getChildHtml('before_body_end') ?>
+ </div>
+ </div>
+ <?php echo $this->getAbsoluteFooter() ?>
+<script type="text/javascript">
+
+if(showCustomizeButton == 'no' || showCustomizeButton == '' )
+jQuery("#chgOptionsCustomize").hide();
+</script>
+ </body>
+</html>
+

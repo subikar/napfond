@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<?php
+$siteBaseUrl = Mage::helper('function/more')->getBhishoomSiteBaseUrl();
+
+?>
+<!--[if lt IE 7 ]> <html lang="en" id="top" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" id="top" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" id="top" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" id="top" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" id="top" class="no-js"> <!--<![endif]-->
+
+<head>
+<script type="text/javascript">
+<?php 
+  $_product = Mage::getModel("catalog/product")->load( $_GET['id'] );
+  $customerId = (int) Mage::getSingleton('customer/session')->getCustomer()->getId();
+  $sessionId = Mage::getSingleton('customer/session')->getEncryptedSessionId();
+  $fileDir = ($customerId ? $customerId : $sessionId);
+?>
+var loginByFbDesingerTab = 'no';
+var TARGET_W = 600;
+var TARGET_H = 300;
+var baseUrlForMedia = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA)?>';
+curr_obj_id = 0;
+currentUploadedDir = '<?php echo $fileDir?>';
+url_para_cat_id = '<?php echo $_GET['cat_id']?>';
+var jSonEncodeString = '<?php echo $_product->getBhsTplCustSrlz()?>';
+var objsImage = new Array();
+var objsImageidx = 0;
+var objsText = new Array();
+var objsTextidx = 0;
+</script>
+<?php echo $this->getChildHtml('head') ?>
+
+</head>
+<body<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?>>
+<?php echo $this->getChildHtml('after_body_start') ?>
+<?php
+
+ $options = Mage::getModel('catalog/product_option')->getProductOptionCollection($_product);
+ if(count($options) > 0){
+?>
+<div id="productOptionsDiv">
+<?php $formKey = Mage::getSingleton('core/session')->getFormKey();?>
+<img src="<?php echo $this->getSkinUrl("images/go-bhishoom.gif")?>"  class="go-gif translate-mid" style="margin:0 auto;" />
+<div id="back-bg-black-kj"></div>
+<div class="graproductOptionsDivCloseMargin translate-mid">
+<a href="javascript:void(0)" class="productOptionsDivClose" onclick="chkSelectPrdOptions()">X</a>
+<form action="<?php echo $siteBaseUrl;?>/checkout/cart/add/product/<?php echo $_GET['id']; ?>" method="post" id="sendToCart">
+ <input type="hidden" name="form_key" value="<?php echo $formKey; ?>" />
+ <input type="hidden" name="qty" value="1"> 
+ <input type="hidden" name="design" id="gra_cust_dsg_id" value=""> 
+<?php
+foreach ($options as $option) {
+ if ($option->getType() === 'drop_down' || $option->getType() === 'radio') {
+ 
+ 
+ 
+ if($option->getDefaultTitle() != 'Print Area'){
+  echo $option->getDefaultTitle();echo '<br/>';
+  $printAreaClass = 'printArea';
+ } 
+  
+  
+  ?>
+  <select class="prdOptionsSelect form-control <?php echo $printAreaClass?>" id="<?php echo $option->getOptionId()?>" name="options[<?php echo $option->getOptionId()?>]" onchange="checkCustomizerSelectValue(this);updateCustomizerColorGra(this,'<?php echo $option->getDefaultTitle()?>')" <?php if($option->getDefaultTitle() == 'Print Area') echo 'style="display:none;"';?>>
+<?php 
+  $values = Mage::getSingleton('catalog/product_option_value')->getValuesCollection($option);
+  echo '<option value="">Choose '.$option->getDefaultTitle().'</option>';
+  foreach ($values as $value) {
+    if($value->getPrice() > 0)
+     echo '<option value="'.$value->getId().'">'.$value->getTitle().' - Additional : '.Mage::helper('core')->currency($value->getPrice(), true, false).'</option>';
+	else
+		{
+			//echo '<option value="'.$value->getId().'">'.$value->getTitle().' - Additional : '.Mage::helper('core')->currency($value->getPrice(), true, false).'</option>';
+			echo '<option value="'.$value->getId().'">'.$value->getTitle().'</option>';
+		}
+	 
+	}
+	echo '</select>';
+	
+	if($option->getDefaultTitle() != 'Print Area')
+	echo '<br/>';	
+	
+	
+  }
+}
+?>
+<script type="text/javascript">
+
+
+
+var SelectBoxAdditionalPrice = new Array();
+var SelectBoxAdditionalPriceKey = new Array();
+var SelectBoxAdditionalPriceKeyIter = 0
+var ProductInitialPrice = 0
+function updateCustomizerColorGra(sel_text_obj,SelectBoxTitleStr)
+{
+  SelectBoxValueArr = jQuery("#"+jQuery(sel_text_obj).attr('id')+" option:selected").text().split(":")
+  total = 0;
+  arrayLengthChkCustomOptionPrice = SelectBoxValueArr.length;
+  //alert(arrayLengthChkCustomOptionPrice)
+  
+		  sel_text = SelectBoxValueArr[0]
+		  arrKeyForUse = jQuery(sel_text_obj).attr('id');
+  
+  
+  if(arrayLengthChkCustomOptionPrice > 1)
+  {
+		  
+		  //alert(arrKeyForUse)
+		  
+		  SelectBoxAdditionalPrice["'"+arrKeyForUse+"'"] =  parseFloat(jQuery.trim(SelectBoxValueArr[1].match(/[\d\.\d]+/i)).substr(1),2);
+		  
+		  if(SelectBoxValueArr[1].indexOf('-Rs.') >=0 )
+		   SelectBoxAdditionalPrice["'"+arrKeyForUse+"'"] = eval('-'+SelectBoxAdditionalPrice["'"+arrKeyForUse+"'"])
+		  
+		  if(SelectBoxAdditionalPriceKey.indexOf("'"+arrKeyForUse+"'") == -1)
+			SelectBoxAdditionalPriceKey[SelectBoxAdditionalPriceKeyIter++] = "'"+arrKeyForUse+"'"
+			
+		 
+				
+			arrayLength = SelectBoxAdditionalPriceKey.length;
+			for (var i = 0; i < arrayLength; i++) {
+			 total = total + SelectBoxAdditionalPrice[SelectBoxAdditionalPriceKey[i]]  
+			}		
+	
+	}
+
+		  if(ProductInitialPrice == 0)
+			ProductInitialPrice =   parseFloat(jQuery.trim(jQuery(".price-box > .regular-price > .price").html().match(/[\d\.\d]+/i)).substr(1));
+
+
+	
+	currency_symbol = '<?php echo Mage::app()->getLocale()->currency( Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();?>'
+	jQuery(".price-box > .regular-price > .price").html('')
+	jQuery(".price-box > .regular-price > .price").html(currency_symbol+' '+(ProductInitialPrice + total))
+	jQuery("#price-more-info > #product_price > .price").html('')
+	jQuery("#price-more-info > #product_price > .price").html(currency_symbol+' '+(ProductInitialPrice + total))
+	
+	
+	
+    if(SelectBoxTitleStr.toLowerCase()=='color' || SelectBoxTitleStr.toLowerCase()=='colour')
+    {   
+		sel_text = jQuery.trim(sel_text)
+		sel_text = sel_text.toLowerCase();
+		if(sel_text.indexOf("- additional") >= 0)		
+			sel_text = sel_text.replace("- additional", ""); 
+		sel_text = jQuery.trim(sel_text)
+		sel_text = sel_text.replace(" ", "_").toLowerCase(); 
+		
+		var evt = document.createEvent("HTMLEvents");
+        evt.initEvent("click", true, true);
+        var new_id = "clr_opt_"+sel_text;
+		//alert(new_id) 
+        document.getElementById(new_id).dispatchEvent(evt);
+	}
+ }
+</script>
+<div class="actions">
+<button class="btn btn-lg btn-primary btn-block" title="Customize Now" type="button" onclick="chkSelectPrdOptions()"><span><span>Customize Now</span></span> </button>
+</div>
+</form>
+</div>
+<script type="text/javascript">
+function checkCustomizerSelectValue(obj){
+	if(jQuery(obj).val() != '')
+	  jQuery(obj).css("border","1px solid #ccc");
+	else 
+	  jQuery(obj).css("border","1px solid #ff0000");
+}
+function chkSelectPrdOptions()
+{  
+   flag = true;
+   selectElements = jQuery("#productOptionsDiv").find("select");
+   jQuery.each(selectElements, function(index, selectElement){
+	if(jQuery(selectElement).val() == "" && jQuery(selectElement).is(":visible"))
+	{   
+	    flag = false;
+		jQuery(selectElement).css("border","1px solid #ff0000");
+	}
+   });
+   if(flag == true)
+	jQuery('#productOptionsDiv').hide();
+   else
+    return false;   
+}
+
+function selectDropDownByText(id,theText){
+jQuery(id+" option").each(function() {
+  if(jQuery(this).text() == theText) {
+    jQuery(this).attr('selected', 'selected');            
+  }                        
+});
+}
+
+</script>
+
+</div>
+<?php }else{
+$formKey = Mage::getSingleton('core/session')->getFormKey();
+?>
+<form action="<?php echo $siteBaseUrl;?>/checkout/cart/add/product/<?php echo $_GET['id']; ?>" method="post" id="sendToCart">
+ <input type="hidden" name="form_key" value="<?php echo $formKey; ?>" />
+ <input type="hidden" name="qty" value="1"> 
+ <input type="hidden" name="design" id="gra_cust_dsg_id" value=""> 
+</form>	
+<?php
+}
+
+?>
+<div class="wrapper">
+ <?php echo $this->getChildHtml('global_notices') ?>
+ <div class="page">
+  <?php echo $this->getChildHtml('header') ?>
+  <?php echo $this->getChildHtml('global_messages') ?>
+  <div class="container">
+   <div class="main-container col1-layout">
+    <div class="main">
+     <?php echo $this->getChildHtml('breadcrumbs') ?>
+	 <div class="col-main">                    
+      <?php echo $this->getChildHtml('content') ?>
+     </div>
+    </div>
+   </div>
+  </div>
+  
+
+
+ 
+ 
+  
+  
+  <?php echo $this->getChildHtml('footer_before') ?>
+  <?php echo $this->getChildHtml('footer') ?>
+  <?php echo $this->getChildHtml('global_cookie_notice') ?>
+  <?php echo $this->getChildHtml('before_body_end') ?>
+ </div>
+ </div>
+   
+     <div id="popup_crop">
+        <div class="form_crop">
+            <span class="close" onclick="close_popup('popup_crop')">x</span>
+            <h2>Crop photo</h2>
+            <!-- This is the image we're attaching the crop to -->
+            <img id="cropbox" style="width:1000px;height:1000px;" />
+            
+            <!-- This is the form that our event handler fills -->
+            <form>
+                <input type="hidden" id="x" name="x" />
+                <input type="hidden" id="y" name="y" />
+                <input type="hidden" id="w" name="w" />
+                <input type="hidden" id="h" name="h" />
+                <input type="hidden" id="photo_url" name="photo_url" />
+                <input type="hidden" id="photo_url_type" name="photo_url_type" />
+                
+                <input type="button" value="Crop Image" id="crop_btn" onclick="objCallDirectDesignerImage.jcropCropPhoto()" />
+            </form>
+        </div>
+    </div> 
+
+ <?php echo $this->getAbsoluteFooter() ?>
+</body>
+</html>
+

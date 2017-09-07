@@ -1,0 +1,95 @@
+<?php
+/**
+ * Media Rocks GbR
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA that is bundled with 
+ * this package in the file MEDIAROCKS-LICENSE-COMMUNITY.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://solutions.mediarocks.de/MEDIAROCKS-LICENSE-COMMUNITY.txt
+ *
+ * =================================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * =================================================================
+ * This package is designed for Magento COMMUNITY edition. 
+ * Media Rocks does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Media Rocks does not provide extension support in case of
+ * incorrect edition usage.
+ * =================================================================
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade the extension
+ * to newer versions in the future. If you wish to customize the extension
+ * for your needs please send an email to support@mediarocks.de
+ *
+ */
+
+/**
+ * Frontend newsletter subscription template
+ *
+ * @category   design
+ * @package    Mediarocks_ExtendedNewsletterSubscription
+ * @author     Media Rocks Developer
+ */ 
+?>
+
+<div class="block block-subscribe">
+  <?php /*?> <div class="block-title">
+  <strong><span><?php echo $this->__('Newsletter') ?></span></strong>
+ </div>
+<?php */?>
+<div class="generic-footer-form-wrapper hide-on-popup">
+  <form action="<?php echo $this->getFormActionUrl() ?>" method="post" id="newsletter-validate-detail">
+    <div class="block-content">
+       <div class="row">
+       <div class="col-xs-12 col-xs-offset-0 col-sm-10 col-sm-offset-1">
+        <div class="row row-xsx">
+          <div class="col-md-4 hidden-xs hidden-sm">
+            <input type="text" autocapitalize="off" autocorrect="off" spellcheck="false" name="firstname" id="firstname" placeholder="<?php echo $this->__('Enter Your Name') ?>" title="<?php echo $this->__('Enter Your Name') ?>" class="form-control input-text" />
+          </div> 
+
+          <div class="col-md-4 col-xs-8">
+            <input type="email" autocapitalize="off" autocorrect="off" spellcheck="false" name="email" id="email" placeholder="<?php echo $this->__('Enter Your Email') ?>" title="<?php echo $this->__('Enter Your Email') ?>" class="form-control required-entry validate-email" />
+          </div>
+          <div class="col-md-4 col-xs-4">
+            <button type="submit" title="<?php echo $this->__('Subscribe') ?>" class="btn btn-lg btn-primary btn-block btn-block"><span><span><?php echo $this->__('Subscribe') ?></span></span> </button>
+          </div>
+        </div>
+        </div>
+        </div>
+      </div> 
+    
+  </form>
+</div>
+
+<div class="generic-footer-form-wrapper hide-on-footer">
+  <form action="<?php echo $this->getFormActionUrl() ?>" method="post" id="newsletter-validate-detail">
+    <div class="block-content">
+       <div class="row">
+       <div class="col-xs-12 col-xs-offset-0 col-sm-10 col-sm-offset-1">
+        <div class="row row-xsx">
+          <div class="col-md-12 col-xs-12" style="margin-bottom: 10px;">
+            <input type="email" autocapitalize="off" autocorrect="off" spellcheck="false" name="email" id="email" placeholder="<?php echo $this->__('Enter Your Email') ?>" title="<?php echo $this->__('Enter Your Email') ?>" class="form-control required-entry validate-email" />
+          </div>
+          <div class="col-md-12 hidden-xs hidden-sm" style="margin-bottom: 10px;">
+            <input type="text" autocapitalize="off" maxlength="10" autocorrect="off" pattern=".{10,}"   required title="please enter 10 digit mobile number" required="required" spellcheck="false" name="firstname" id="firstname" placeholder="<?php echo $this->__('Your Phone Number') ?>" title="<?php echo $this->__('Your Phone Number') ?>" class="form-control input-text" />
+          </div> 
+          <div class="col-md-12 col-xs-12" style="margin-bottom: 10px;">
+            <button type="submit" title="<?php echo $this->__('Subscribe') ?>" class="btn btn-lg btn-primary btn-block btn-block"><span><span><?php echo $this->__('Subscribe') ?></span></span> </button>
+          </div>
+        </div>
+        </div>
+        </div>
+      </div> 
+    
+  </form>
+</div>
+  <script type="text/javascript">
+  //<![CDATA[
+      var newsletterSubscriberFormDetail = new VarienForm('newsletter-validate-detail');
+  //]]>
+  </script> 
+</div>

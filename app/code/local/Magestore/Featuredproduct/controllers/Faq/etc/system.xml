@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<config>
+    <tabs>
+        <magestore translate="label">
+            <label>Magestore Extension</label>
+            <sort_order>400</sort_order>
+        </magestore>
+    </tabs>
+    <sections>
+        <faq translate="label" module="faq">
+            <class>separator-top</class>
+            <label>FAQ</label>
+            <tab>magestore</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>300</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>				<general translate="label">                    <label>FAQ Configuration</label>                    <frontend_type>text</frontend_type>                    <sort_order>1</sort_order>                    <show_in_default>1</show_in_default>                    <show_in_website>1</show_in_website>                    <show_in_store>0</show_in_store>                    <fields>						<most_frequently_number translate="label">                             <label>Number of Most Frequently Questions</label>                            <frontend_type>text</frontend_type>                                                        <sort_order>2</sort_order>                            <show_in_default>1</show_in_default>                            <show_in_website>1</show_in_website>                            <show_in_store>1</show_in_store>							<comment>The number of questions that show on Most Frequently Asked Questions section</comment>                        </most_frequently_number>												<overview_number translate="label">                            <label>Number of Overview Questions</label>                            <frontend_type>text</frontend_type>                                                        <sort_order>3</sort_order>                            <show_in_default>1</show_in_default>                            <show_in_website>1</show_in_website>                            <show_in_store>1</show_in_store>							<comment>The number of questions that show on overview page of each category</comment>                        </overview_number>					</fields>					</general>							
+            </groups>
+        </faq>        
+    </sections>
+</config>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]> <html lang="en" id="top" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" id="top" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" id="top" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" id="top" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html lang="en" id="top" class="no-js">
+<!--<![endif]-->
+<head>
+ <?php echo $this->getChildHtml('head') ?>
+</head>
+<body<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?>>
+ <?php echo $this->getChildHtml('after_body_start') ?>
+ <div class="wrapper"> 
+  <?php echo $this->getChildHtml('global_notices') ?>
+  <div class="page"> 
+   <?php echo $this->getChildHtml('header') ?>
+   <?php echo $this->getChildHtml('global_messages') ?>
+   <?php echo $this->getChildHtml('responsivebannerslider_index');?>
+
+
+
+
+   <div class="container">
+    <div class="main-container col1-layout">
+     <div class="main"> 
+	  <?php echo $this->getChildHtml('breadcrumbs') ?>
+      <div class="col-main">  
+	   <?php echo $this->getChildHtml('content') ?>
+       <?php echo $this->getChildHtml('featuredproduct') ?>        
+      <div class="row" id="home-cat-2">
+       <div id="index-today-picks">
+        <h2>Trending</h2>
+        <?php echo $this->getChildHtml('home.catalog.product.new') ?> 
+       </div>
+      </div>          
+      <div class="row">
+       <div class="col-sm-12">
+        <div id="create-own"><img src="<?php echo $this->getSkinUrl('images/footerbanner.jpg');?>"></div>
+       </div>
+      </div> 
+
+      <!-- FOr her/him/kid banner --> 
+      <!-- <div class="banner-cate">
+         <div class="row">
+        <div  class="col-md-4">
+          <div class="front-new-one"> 
+            <img src="<?php echo $this->getSkinUrl('images/auto-cases2_mobile_BG.png');?>"> 
+            <div class="inner-wrap-inner">
+              <h3 class="main-title">For her</h3> 
+              <span class="small-title">Lorem Ipsum doler sit.</span> 
+              <a href="" class="tiles-banner-btn">SHOP NOW</a>
+            </div>
+          </div>
+        </div> 
+        <div  class="col-md-4">
+          <div class="front-new-one"> 
+            <img src="<?php echo $this->getSkinUrl('images/Nature-Cases_mobile_BG.png');?>"> 
+            <div class="inner-wrap-inner">
+              <h3 class="main-title">For him</h3> 
+              <span class="small-title">Lorem Ipsum doler sit.</span> 
+              <a href="" class="tiles-banner-btn">SHOP NOW</a>
+            </div>
+          </div>
+        </div>
+        <div  class="col-md-4">
+          <div class="front-new-one"> 
+            <img src="<?php echo $this->getSkinUrl('images/Infonauts_Mobile8_bg.png');?>"> 
+            <div class="inner-wrap-inner">
+              <h3 class="main-title">For kid</h3> 
+              <span class="small-title">Lorem Ipsum doler sit.</span> 
+              <a href="" class="tiles-banner-btn">SHOP NOW</a>
+            </div>
+          </div>
+        </div>       
+      </div> 
+      </div>  -->
+      <!-- end here -->
+      <div class="shopbyintrest">        
+          <h2>Shop By Interest</h2>        
+          <div class="row">
+            <div class="col-md-3">
+              <div class="shop-box">
+                <div class="shop-img"><img src="<?php echo $this->getSkinUrl('images/Gift_Center_Food_Hub.jpg');?>"></div>
+                <h2 class="skin-name">Comic Fan</h2>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="shop-box">
+                <div class="shop-img"><img src="<?php echo $this->getSkinUrl('images/Gift_Center_Food_Hub.jpg');?>"></div>
+                <h2 class="skin-name">Comic Fan</h2>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="shop-box">
+                <div class="shop-img"><img src="<?php echo $this->getSkinUrl('images/Gift_Center_Food_Hub.jpg');?>"></div>
+                <h2 class="skin-name">Comic Fan</h2>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="shop-box">
+                <div class="shop-img"><img src="<?php echo $this->getSkinUrl('images/Gift_Center_Food_Hub.jpg');?>"></div>
+                <h2 class="skin-name">Comic Fan</h2>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="shop-box">
+                <div class="shop-img"><img src="<?php echo $this->getSkinUrl('images/Gift_Center_Food_Hub.jpg');?>"></div>
+                <h2 class="skin-name">Comic Fan</h2>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="shop-box">
+                <div class="shop-img"><img src="<?php echo $this->getSkinUrl('images/Gift_Center_Food_Hub.jpg');?>"></div>
+                <h2 class="skin-name">Comic Fan</h2>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="shop-box">
+                <div class="shop-img"><img src="<?php echo $this->getSkinUrl('images/Gift_Center_Food_Hub.jpg');?>"></div>
+                <h2 class="skin-name">Comic Fan</h2>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="shop-box">
+                <div class="shop-img"><img src="<?php echo $this->getSkinUrl('images/Gift_Center_Food_Hub.jpg');?>"></div>
+                <h2 class="skin-name">Comic Fan</h2>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="shop-box">
+                <div class="shop-img"><img src="<?php echo $this->getSkinUrl('images/Gift_Center_Food_Hub.jpg');?>"></div>
+                <h2 class="skin-name">Comic Fan</h2>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="shop-box">
+                <div class="shop-img"><img src="<?php echo $this->getSkinUrl('images/Gift_Center_Food_Hub.jpg');?>"></div>
+                <h2 class="skin-name">Comic Fan</h2>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="shop-box">
+                <div class="shop-img"><img src="<?php echo $this->getSkinUrl('images/Gift_Center_Food_Hub.jpg');?>"></div>
+                <h2 class="skin-name">Comic Fan</h2>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="shop-box">
+                <div class="shop-img"><img src="<?php echo $this->getSkinUrl('images/Gift_Center_Food_Hub.jpg');?>"></div>
+                <h2 class="skin-name">Comic Fan</h2>
+              </div>
+            </div>
+          </div>
+      </div>
+      <!--bhishoom history-->
+      <div id="zStory" class="row page-homeRowMargin">
+        <div class="row">
+          <div class="col-md-12">
+            <h2>The Bhishoom Story</h2>
+          </div>
+
+          <div class="col-md-4">
+            <h5>Our Technology</h5>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+          </div>
+          <div class="col-md-4">
+            <h5>Our Products</h5>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+          </div>
+          <div class="col-md-4">
+            <h5>The People</h5>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+          </div>
+
+          <div class="small-12 column text-center">
+            
+
+      <a class="nVyq nVyq-Submit" id="page_zWidget14" href="http://www.zazzle.com/about"><strong class="nVyq-text" id="page_zWidget14-text">&nbsp;&nbsp;&nbsp;Learn More&nbsp;&nbsp;&nbsp;</strong>
+
+      </a>
+          </div>
+    </div>
+  </div>
+      <!-- end here-->        
+      <div id="product-store">
+          <h2>Products in Store</h2>
+          
+            <div class="col-sm-3">
+              <h4>Clothing & T-Shirts</h4>
+              <ul>
+                <li> Funny T-Shirts </li>
+                <li> Disney T-Shirts </li>
+                <li> Parody T-shirts </li>
+                <li> Military  T-shirts </li>
+                <li> Bacon T-Shirts</li>
+              </ul>
+            </div>
+            <div class="col-sm-3">
+              <h4>Cards & Postage</h4>
+              <ul>
+                <li> Baby Shower Invitations </li>
+                <li> Bridal Shower Invitations </li>
+                <li> Birthday Invitations </li>
+                <li> Save the Date Postcards </li>
+                <li> Wedding Postage</li>
+              </ul>
+            </div>
+            <div class="col-sm-3">
+              <h4>Arts & Posters</h4>
+              <ul>
+                <li> Keep Calm Poster </li>
+                <li> Map Poster </li>
+                <li> Vintage Posters </li>
+                <li> Fine Art Poster </li>
+                <li> Motivational Poster</li>
+              </ul> 
+            </div>
+            <div class="col-sm-3">
+              <h4>Home & Pets</h4>
+              <ul>
+                <li> Recipe Binders </li>
+                <li> Dishwaher Magnets </li>
+                <li> Cat Mugs </li>
+                <li> Quote Mugs </li>
+                <li> Baking Stickers</li>
+              </ul>
+            </div>
+          
+          
+            <div class="col-sm-3">
+              <h4>Office</h4>
+              <ul>
+                <li>Business Cards </li>
+                <li> Cometologist Business Cards </li>
+                <li> Modern Business Cards </li>
+                <li> Cool Business Cards </li>
+                <li> Professional Business Cards</li>
+              </ul>
+            </div>
+            <div class="col-sm-3">
+              <h4>Electronics</h4>
+              <ul>
+                <li> Monogram iPone 5 Cases </li>
+                <li> Cute iPhone 4 Cases </li>
+                <li> Girly iPhone 5 Cases</li>
+                <li> Samsung Galaxy S4 Cases </li>
+                <li> Pattern iPhone Cases</li>
+              </ul>
+            </div>
+            <div class="col-sm-3">
+              <h4>Accessories</h4>
+              <ul>
+                <li> Travel Luggage Tags </li>
+                <li> Tote Bags </li>
+                <li> Bridesmaid Bags </li>
+                <li> Bachelorette Party Buttons </li>
+                <li> Patriotic Hats</li>
+              </ul>
+            </div>
+            <div class="col-sm-3">
+              <h4>Other</h4>
+              <ul>
+                <li> Political Bumper Stickers </li>
+                <li> Slogan Bumper Stickers </li>
+                <li> Military Bumper Stickers </li>
+                <li> Peace Bumper Stickers </li>
+                <li> Skull Skateboards</li>
+              </ul>
+            </div>
+          
+        </div>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+ <?php echo $this->getChildHtml('footer_before') ?> 
+ <?php echo $this->getChildHtml('footer') ?> 
+ <?php echo $this->getChildHtml('global_cookie_notice') ?> 
+ <?php echo $this->getChildHtml('before_body_end') ?> </div>
+</div>
+<?php echo $this->getAbsoluteFooter() ?>
+</body>
+</html>

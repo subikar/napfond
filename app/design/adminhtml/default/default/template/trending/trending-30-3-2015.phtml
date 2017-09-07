@@ -1,0 +1,197 @@
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery-1.9.0.min.js');?>"></script>
+<?php
+$read = Mage::getSingleton('core/resource')->getConnection('core_read');
+$block_qry = $read->query("SELECT * FROM `trandingblock` WHERE `active` = 1");
+$block_res = $block_qry->fetchAll();
+$block_count = count($block_res);
+?>
+<div class="content-header">
+ <table cellspacing="0" class="grid-header">
+  <tr>
+   <td width="25%" height="35"><h3><?php echo $this->__('Home Trending Product')?></h3></td>
+   <td class="a-right">
+    <button onclick="cat_hide_div()" class="scalable back" id="back" type="button" style="display:none; float:right;"><span>Back</span></button>
+    <?php
+	if($block_count < 6){?>
+    <button onclick="img_show_div()" class="scalable add" id="add_item" type="button" style="float:right;"><span>Add New Block</span></button>
+    <?php } ?>
+   </td>
+   <td>
+    <div id="loadingmask" style="display: none;">
+	 <div class="loader" id="loading-mask-loader">
+      <img src="<?php echo $this->getSkinUrl('images/ajax-loader-tr.gif');?>" alt="<?php echo $this->__('Loading...') ?>"/></div>
+	 <div id="loading-mask"></div>
+	</div>
+   </td>
+  </tr>
+ </table>
+</div>
+<div class="grid" id="display-cat" style="display:none;">
+ <form id="drop" name="drop" method="post" action="<?php echo $this->getUrl('*/*/post')?>" onsubmit="return validate()" enctype="multipart/form-data">
+  <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+  <table cellspacing="0" class="form-list">
+   <thead>
+    <tr class="headings">
+     <th width="10%">Style</th>
+     <th>Name</th>
+     <th>Image</th>
+     <th>Link</th>
+     <th>Action</th>
+    </tr>
+   </thead>
+   <tbody>
+   <?php     
+   $read = Mage::getSingleton('core/resource')->getConnection('core_read');
+   $qry = 'SELECT * FROM `trendingproduct` WHERE active = 1';
+   $rowsArray = $read->fetchAll($qry); 
+   foreach($rowsArray as $rowsArray1)
+   {
+	   $tid = $rowsArray1['tid'];
+	   ?> 
+      <tr> 
+       <td><?php echo $rowsArray1['style_val'];?></td>      
+       <td><?php echo $rowsArray1['prod_name'];?></td>
+       <td><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'home_banner_img/'.$rowsArray1['prod_img'];?>" width="20" /></td> 
+       <td><?php echo $rowsArray1['prod_link'];?></td> 
+       <td><a href="<?php echo $this->getUrl('*/adminhtml_edit/index/tid/'.$tid)?>">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick="return del('<?php echo $tid;?>')">Delete</a></td>
+      </tr>    
+    <?php } ?>
+   </tbody> 
+  </table> 
+ </form>
+</div>
+
+<div class="grid" id="add-item" style="display:none;">
+ <form id="add_form" name="add_form" method="post" action="<?php echo $this->getUrl('*/*/bpost')?>" enctype="multipart/form-data" onsubmit="return validate()">
+  <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+   <div class="entry-edit">
+    <div class="entry-edit-head">
+	 <h4 class="icon-head head-edit-form fieldset-legend">Add Item</h4>
+    </div> 
+	<div id="responsivebannerslider_form" class="fieldset ">
+     <table cellspacing="0" class="form-list">
+      <tbody>
+       <tr>
+        <td class="label">Select Style</td>
+        <td class="value">
+        <?php 
+		$style_qry = $read->query("SELECT `option_id` FROM `eav_attribute_option` WHERE `attribute_id` = 137");
+		$style_res = $style_qry->fetchAll();		
+		?>
+         <select name="style_val" id="style_val">
+          <option value="0">Please Select Style</option>
+          <?php
+		  for($i=0;$i<count($style_res);$i++)
+		  {
+			 $option_id = $style_res[$i]['option_id'];
+			 $option_val_qry = $read->query("SELECT `value` FROM `eav_attribute_option_value` WHERE `option_id` = '".$option_id."'");
+			 $option_val_res = $option_val_qry->fetch();
+			 $option_val = $option_val_res['value'];
+			 echo '<option value="'.$option_val.'">'.$option_val.'</option>';
+		  }
+		  ?>          
+         </select> 
+        </td>     
+       </tr> 
+       <tr>
+        <td class="label">Enter Product Name</td>
+        <td class="value">
+          <input type="text" name="pname" id="pname" value="" class="input-text" />
+        </td>     
+       </tr> 
+       <tr>
+        <td class="label">Enter Product Link</td>
+        <td class="value">
+          <input type="text" name="plink" id="plink" value="" class="input-text"  />
+        </td>     
+       </tr>
+       <tr>
+        <td class="label">Enter Product Image</td>
+        <td class="value">
+          <input type="file" name="pimage" id="pimage" value="" class="input-text" />
+        </td>     
+       </tr>  
+       <tr>
+        <td class="label"></td>
+        <td class="value"><input type="submit" value="Submit" class="pure-button pure-button-primary"></td>     
+       </tr> 
+      </tbody> 
+     </table> 
+	</div>
+   </div> 
+ </form>
+</div>
+
+<script type="text/javascript">
+function img_show_div()
+{
+	if(document.getElementById("add-item").style.display == 'none')
+	{
+		document.getElementById("add-item").style.display = 'block';
+		document.getElementById("back").style.display = 'block';	
+		document.getElementById("display-cat").style.display = 'none';
+	}
+}
+function cat_hide_div()
+{
+	if(document.getElementById("display-cat").style.display == 'none')
+	{
+		document.getElementById("display-cat").style.display = 'block';
+		document.getElementById("add-item").style.display = 'none';	
+		document.getElementById("back").style.display = 'none';				
+	}
+}
+function show_cng_div(val)
+{
+	if(document.getElementById("cng_div_"+val).style.display == 'none')
+	{
+		document.getElementById("cng_div_"+val).style.display = 'block'
+	}
+	else
+	{
+		document.getElementById("cng_div_"+val).style.display = 'none'
+	}
+}
+function validate()
+{
+	if(document.getElementById("style_val").value == 0)
+	{
+		alert("Please Select Style");
+		return false;
+	}
+	if(document.getElementById("pname").value == '')
+	{
+		alert("Please Enter Product Name");
+		return false;
+	}
+	if(document.getElementById("plink").value == '')
+	{
+		alert("Please Enter Product Link");
+		return false;
+	}
+	if(document.getElementById("pimage").value == '')
+	{
+		alert("Please Upload Image");
+		return false;
+	}
+	return true;
+}
+function del(tid)
+{
+	var con = confirm("Are you sure you want to delete this.");
+	if(con == true)
+	{
+		window.location = "<?php echo $this->getUrl('*/edit/fid/')?>";
+		var dataString = "featured_id="+fid;
+	    var reloadurl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'admin_cat.php'?>';
+		//Element.show('loadingmask');
+		new Ajax.Request(reloadurl, {
+		method: 'post',
+		parameters: dataString,
+		onComplete: function(transport) {
+			window.location = "<?php echo $this->getUrl('*/adminhtml_trendingform/')?>";
+		}
+		});
+	}
+}
+</script>

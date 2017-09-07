@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Gravita_Stockimage>
+            <version>0.1.0</version>
+        </Gravita_Stockimage>
+    </modules>
+	
+	<global>
+        <models>
+            <stockimage>
+                <class>Gravita_Stockimage_Model</class>
+                <resourceModel>stockimage_mysql4</resourceModel>
+            </stockimage>
+            <stockimage_mysql4>
+                <class>Gravita_Stockimage_Model_Mysql4</class>
+            </stockimage_mysql4>
+        </models>
+        <blocks>
+            <stockimage>
+                <class>Gravita_Stockimage_Block</class>
+            </stockimage>
+        </blocks>
+        <helpers>
+            <stockimage>
+                <class>Gravita_Stockimage_Helper</class>
+            </stockimage>  
+        </helpers>
+    </global>
+    
+    <admin>
+        <routers>
+            <stockimage>
+                <use>admin</use>
+                <args>
+                    <module>Gravita_Stockimage</module>
+                    <frontName>stockimage</frontName>
+                </args>
+            </stockimage>
+        </routers>
+    </admin> 
+	 
+	<adminhtml>
+		<translate>
+            <modules>
+                <mage_adminhtml>
+                    <files>
+                        <stockimage>Gravita_Stockimage.csv</stockimage>
+                    </files>
+                </mage_adminhtml>
+            </modules>
+        </translate>
+		
+		<menu>
+            <catalog>
+                <children>
+                    <stockimage_adminform translate="title" module="stockimage">
+                        <title>Filter Images</title>
+                        <action>stockimage/adminhtml_stockimageform</action>
+                    </stockimage_adminform>
+                </children>
+            </catalog>
+        </menu>
+		
+		<acl>
+            <resources>
+                <admin>
+                    <children>
+                        <catalog>
+                            <children>
+                                <stockimage_adminform>
+                                    <title>My Form</title>
+                                </stockimage_adminform>
+                            </children>
+                        </catalog>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        
+        <layout>
+            <updates>
+                <stockimage>
+                    <file>stockimage.xml</file>
+                </stockimage>
+            </updates>
+        </layout>
+	</adminhtml>  
+</config>

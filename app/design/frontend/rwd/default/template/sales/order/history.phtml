@@ -1,0 +1,121 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<?php $_orders = $this->getOrders(); ?>
+<?php echo $this->getChildHtml('info');?><?php echo $this->getPagerHtml(); ?>
+<?php if($_orders->getSize()): ?>
+
+<div class="myOrder" id="my-orders-table">
+    <div class="myOrderHeader hidden-sm hidden-xs ">
+      <div class="row ">
+        <div class="col-md-4">
+          <h3>Summary</h3>
+        </div>
+        <div class="col-md-5">
+          <h3>Products</h3>
+        </div>
+        <div class="col-md-3">
+          <h3>Status</h3>
+        </div>
+        <div class="clearfix"></div>
+       </div>
+    </div>
+    <?php $_odd = ''; ?>
+    <?php foreach ($_orders as $_order): 
+	
+	$getOrderedItems = $_order->getAllVisibleItems();
+	
+	?>
+    <div class="myOrderbody">
+      <div class="row">
+        <div class="col-md-4">
+          <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table no-border">
+            <tbody>
+              <tr class="hidden-lg hidden-md">
+                <td><h3>Product Name :</h3></td>
+                <td>Firki Instagram Case for HTC One</td>
+              </tr>
+              <tr>
+                <td><h3>Order No. :</h3></td>
+                <td><?php echo $_order->getRealOrderId() ?></td>
+              </tr>
+              <tr class="grayColor">
+                <td><h3>Date :</h3></td>
+                <td><?php echo $this->formatDate($_order->getCreatedAtStoreDate()) ?></td>
+              </tr>
+              <tr class="grayColor">
+                <td><h3>Amount :</h3></td>
+                <td><?php echo $_order->formatPrice($_order->getGrandTotal()) ?></td>
+              </tr>
+              <tr class="hidden-lg hidden-md">
+                <td><h3>Status :</h3></td>
+                <td><?php echo $_order->getStatusLabel() ?></td>
+              </tr>
+              <tr>
+              <td></td>
+                <td class="actionMyAccunt" ><a href="<?php echo $this->getViewUrl($_order) ?>"><?php echo $this->__('View Detail') ?></a>
+                  <?php /*<span class="separator">|</span><a href="<?php echo $this->getTrackUrl($_order) ?>"><?php echo $this->__('Track Order') ?></a>&nbsp;*/ ?>
+                  <?php /*?><?php if ($this->helper('sales/reorder')->canReorder($_order)) : ?>
+                  <span class="separator">|</span> <a href="<?php echo $this->getReorderUrl($_order) ?>" class="link-reorder"><?php echo $this->__('Reorder') ?></a>
+                  <?php endif ?><?php */?></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-md-5 hidden-xs hidden-sm">
+          <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table no-border">
+            <tbody>
+              <tr>
+                <td><?php foreach($getOrderedItems as $getOrderedItemsDestails){?>
+				
+				<?php echo $getOrderedItemsDestails->getName();?><br/>
+				
+				<?php }?></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-md-3  hidden-xs hidden-sm">
+          <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table no-border">
+            <tbody>
+              <tr>
+                <td><?php echo $_order->getStatusLabel() ?></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+    <?php endforeach; ?>
+</div>
+<div class="clearfix"></div>
+<script type="text/javascript">decorateTable('my-orders-table');</script> 
+<?php echo $this->getPagerHtml(); ?>
+<?php else: ?>
+<p><?php echo $this->__('You have placed no orders.'); ?></p>
+<?php endif ?>

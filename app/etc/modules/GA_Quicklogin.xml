@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <GA_Quicklogin>
+            <active>true</active>
+            <codePool>local</codePool>
+         </GA_Quicklogin>
+    </modules>
+</config>

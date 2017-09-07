@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<config>
+	<menu>
+		<faq module="faq">
+			<title>FAQ</title>
+			<sort_order>71</sort_order>               
+			<children>
+				<faq module="faq">
+					<title>Manage FAQ</title>
+					<sort_order>0</sort_order>
+					<action>faq/adminhtml_faq</action>
+				</faq>
+				
+				<category module="faq">
+					<title>Manage Category</title>
+					<sort_order>0</sort_order>
+					<action>faq/adminhtml_category</action>
+				</category>
+			</children>
+		</faq>
+	</menu>
+	<acl>
+		<resources>
+			<all>
+				<title>Allow Everything</title>
+			</all>
+			<admin>
+				<children>
+					<system>
+						<children>
+							<config>
+								<children>
+									<faq translate="title">
+										<title>FAQ</title>
+										<sort_order>50</sort_order>
+									</faq>
+																		
+								</children>
+							</config>
+						</children>
+					</system>
+					<Magestore_Faq>
+						<title>Faq Module</title>
+						<sort_order>10</sort_order>
+					</Magestore_Faq>						
+				</children>
+			</admin>
+		</resources>
+	</acl>	
+</config>

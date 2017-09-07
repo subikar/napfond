@@ -1,0 +1,288 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * GoMage Product Designer Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use/
+ * @version      Release: 1.0.0
+ * @since        Available since Release 1.0.0
+ */
+ -->
+<layout version="0.1.0">
+    <gomage_designer3_index_index translate="label">
+        <label>GoMage Product Designer</label>
+        <remove name="right"/>
+        <remove name="left"/>
+        <reference name="root">
+            <action method="setTemplate"><template>page/gomage-designer-mobile.phtml</template></action>
+        </reference>
+        <reference name="head">
+            <action method="addJs"><script>prototype/window.js</script></action>
+            <action method="addJs"><script>varien/product.js</script></action>
+            <action method="addItem"><type>js_css</type><name>prototype/windows/themes/default.css</name></action>
+            <action method="addItem"><type helper="gomage_designer/getCssType"/><name helper="gomage_designer/getWindowCssPath"/></action>
+            <action method="addJs"><script>gomage/productdesigner/vendor/fabric.min.js</script></action>
+            <action method="addJs"><script>gomage/productdesigner/vendor/excanvas.compiled.js</script></action>
+            <action method="addJs"><script>gomage/productdesigner-mobile.js</script></action>
+            <action method="addJs"><script>gomage/productdesigner/prototype/prototype.js</script></action>
+            <action method="addJs"><script>gomage/productdesigner/varien/product.js</script></action>
+            
+            
+            <action method="addItem"><type>skin_css</type><name>css/gomage/productdesigner-mobile.css</name><params/></action>
+        </reference>
+        <reference name="content">
+            <block type="gomage_designer/editor" name="product_designer_editor" template="gomage/productdesigner-mobile/editor.phtml">
+                <block type="gomage_designer/designer_navigation" name="productNavigator" template="gomage/productdesigner-mobile/designer/navigation.phtml">
+                    <block type="gomage_designer/designer_navigation_filters" name="filters" template="gomage/productdesigner-mobile/designer/navigation/filters.phtml"/>
+                    <block type="gomage_designer/designer_navigation_product_list" name="productNavigatorList" template="gomage/productdesigner-mobile/designer/navigation/list.phtml">
+                        <block type="catalog/product_list_toolbar" name="product_navigator_toolbar" template="gomage/productdesigner-mobile/designer/navigation/toolbar.phtml">
+                            <block type="page/html_pager" name="product_list_toolbar_pager"/>
+                        </block>
+                        <action method="setToolbarBlockName"><name>product_navigator_toolbar</name></action>
+                    </block>
+                </block>
+                <block type="core/template" name="addDesign" template="gomage/productdesigner-mobile/designer/design.phtml">
+                    <block type="gomage_designer/designer_design_filters" name="design.filters" template="gomage/productdesigner-mobile/designer/design/filters.phtml"/>
+                    <block type="gomage_designer/designer_design_cliparts" name="design.cliparts" template="gomage/productdesigner-mobile/designer/design/cliparts.phtml"/>
+                </block>
+                <block type="gomage_designer/designer_text" name="addText" template="gomage/productdesigner-mobile/designer/text.phtml" />
+                <block type="gomage_designer/designer_uploadImage" name="uploadImage" template="gomage/productdesigner-mobile/designer/upload_image.phtml">
+                    <block type="gomage_designer/designer_uploadImage_images" name="uploadedImages" template="gomage/productdesigner-mobile/designer/upload_image/images.phtml" />
+                </block>
+                <block type="core/template" name="additionalInstructions" template="gomage/productdesigner-mobile/designer/additional_instructions.phtml" />
+                <block type="core/template" name="customer_form_login" as="customer.login" template="gomage/productdesigner-mobile/customer/login.phtml"/>
+                <block type="customer/form_register" name="customer_form_register" as="customer.register" template="gomage/productdesigner-mobile/customer/register.phtml"/>
+                <block type="core/template" name="design.price" as="design_price" template="gomage/productdesigner-mobile/designer/price.phtml">
+                    <action method="setProduct"><product helper="gomage_designer/initializeProduct"/></action>
+                    <block type="catalog/product_price" name="product.price" template="catalog/product/price.phtml">
+                        <action method="setIdSuffix"><id_suffix>-design</id_suffix></action>
+                    </block>
+                </block>
+            </block>
+        </reference>
+    </gomage_designer3_index_index>
+
+    <gomage_designer_design_price>
+        <block type="core/template" name="design.price" as="design_price" template="gomage/productdesigner-mobile/designer/price.phtml" output="toHtml">
+            <action method="setProduct"><product helper="gomage_designer/initializeProduct"/></action>
+            <block type="catalog/product_price" name="product.price" template="catalog/product/price.phtml">
+                <action method="setIdSuffix"><id_suffix>-design</id_suffix></action>
+            </block>
+        </block>
+    </gomage_designer_design_price>
+
+    <gomage_designer_index_filterproducts>
+        <reference name="content">
+            <block type="gomage_designer/designer_navigation" name="productNavigator" template="gomage/productdesigner-mobile/designer/navigation.phtml">
+                <block type="gomage_designer/designer_navigation_filters" name="filters" template="gomage/productdesigner-mobile/designer/navigation/filters.phtml"/>
+                <block type="gomage_designer/designer_navigation_product_list" name="productNavigatorList" template="gomage/productdesigner-mobile/designer/navigation/list.phtml">
+                    <block type="catalog/product_list_toolbar" name="product_navigator_toolbar" template="gomage/productdesigner-mobile/designer/navigation/toolbar.phtml">
+                        <block type="page/html_pager" name="product_list_toolbar_pager"/>
+                    </block>
+                    <action method="setToolbarBlockName"><name>product_navigator_toolbar</name></action>
+                </block>
+            </block>
+        </reference>
+    </gomage_designer_index_filterproducts>
+
+    <gomage_designer_index_filtercliparts>
+        <reference name="content">
+            <block type="core/template" name="design" template="gomage/productdesigner-mobile/designer/design.phtml">
+                <block type="gomage_designer/designer_design_filters" name="design.filters" template="gomage/productdesigner-mobile/designer/design/filters.phtml"/>
+                <block type="gomage_designer/designer_design_cliparts" name="design.cliparts" template="gomage/productdesigner-mobile/designer/design/cliparts.phtml"/>
+            </block>
+        </reference>
+    </gomage_designer_index_filtercliparts>
+
+    <gomage_designer_index_uploadimages translate="label">
+        <reference name="content">
+            <block type="gomage_designer/designer_uploadImage_images" name="uploadedImages" template="gomage/productdesigner-mobile/designer/upload_image/images.phtml" />
+        </reference>
+    </gomage_designer_index_uploadimages>
+
+    <gomage_designer_index_removeuploadedimages translate="label">
+        <reference name="content">
+            <block type="gomage_designer/designer_uploadImage_images" name="uploadedImages" template="gomage/productdesigner-mobile/designer/upload_image/images.phtml" />
+        </reference>
+    </gomage_designer_index_removeuploadedimages>
+
+    <catalog_category_default>
+        <reference name="head">
+            <block type="gomage_designer/page_html_head" name="gomage.designer.head">
+                <block type="gomage_designer/page_html_head" name="gomage.designer.head"/>
+            </block>
+        </reference>
+        <reference name="content">
+            <block type="gomage_designer/catalog_product_list" name="gomage.designer.product.list" template="gomage/productdesigner-mobile/catalog/product/list.phtml"/>
+        </reference>
+    </catalog_category_default>
+    <catalog_category_layered>
+        <reference name="head">
+            <block type="gomage_designer/page_html_head" name="gomage.designer.head">
+                <block type="gomage_designer/page_html_head" name="gomage.designer.head"/>
+            </block>
+        </reference>
+        <reference name="content">
+            <block type="gomage_designer/catalog_product_list" name="gomage.designer.product.list" template="gomage/productdesigner-mobile/catalog/product/list.phtml"/>
+        </reference>
+    </catalog_category_layered>
+    <!-- Top links for logged in customer -->
+    <customer_logged_in_top_links>
+        <block type="page/template_links" name="top.links" as="topLinks" output="toHtml"/>
+        <reference name="top.links">
+            <action method="addLink" translate="label title" module="customer"><label>My Account</label><url helper="customer/getAccountUrl"/><title>My Account</title><prepare/><urlParams/><position>10</position></action>
+            <action method="addLink" translate="label title" module="customer"><label>Log Out</label><url helper="customer/getLogoutUrl"/><title>Log Out</title><prepare/><urlParams/><position>100</position></action>
+            <block type="wishlist/links" name="wishlist_link" />
+            <action method="addLinkBlock"><blockName>wishlist_link</blockName></action>
+            <block type="checkout/links" name="checkout_cart_link">
+                <action method="addCartLink"></action>
+                <action method="addCheckoutLink"></action>
+            </block>
+        </reference>
+    </customer_logged_in_top_links>
+
+    <customer_logged_in_account_links>
+        <block type="page/template_links" name="account.links" as="accountLinks" output="toHtml">
+            <action method="addLink" translate="label title" module="customer"><label>Log Out</label><url helper="customer/getLogoutUrl"/><title>Log Out</title><prepare/><urlParams/><position>2</position></action>
+        </block>
+        <block type="enterprise_invitation/link" name="invitation_link_top" output="toHtml">
+            <action method="addAccountLink" translate="label title" module="enterprise_invitation"><block>account.links</block><label>Send Invitations</label><url helper="enterprise_invitation/data/getCustomerInvitationFormUrl" /><title>Send Invitations</title><prepare /><urlParams /><position>1</position><li>id="invitation-send-link"</li></action>
+        </block>
+    </customer_logged_in_account_links>
+
+    <customer_account>
+        <reference name="customer_account_navigation">
+            <block type="gomage_designer/customer_account_navigation_design" name="customer_account_navigation_design"/>
+        </reference>
+    </customer_account>
+
+    <gomage_designer_customer_designs>
+        <update handle="customer_account" />
+        <reference name="head">
+            <action method="addItem"><type>skin_css</type><name>css/gomage/productdesigner.css</name><params/></action>
+        </reference>        
+        <reference name="my.account.wrapper">
+            <block type="core/template" name="customer.designs" template="gomage/productdesigner-mobile/customer/designs.phtml">
+                <action method="setTitle" translate="title">
+                    <title>My Saved Designs </title>
+                </action>
+                <block type="gomage_designer/customer_designs" name="customer.design.list" as="design.list" template="gomage/productdesigner-mobile/customer/designs/list.phtml">
+                    <block type="page/html_pager" name="pager"/>
+                    <action method="setColumnCount"><count>4</count></action>
+                </block>
+            </block>
+            <block type="customer/account_dashboard" name="customer.account.link.back" template="customer/account/link/back.phtml"/>
+        </reference>
+    </gomage_designer_customer_designs>
+
+    <catalog_product_view>
+        <reference name="head">
+            <block type="gomage_designer/page_html_head" name="gomage.designer.head"/>
+        </reference>
+    </catalog_product_view>
+
+    <PRODUCT_TYPE_simple translate="label" module="catalog">
+        <reference name="product.info.options">
+            <action method="setTemplate">
+                <template>gomage/productdesigner/catalog/product/view/options.phtml</template>
+            </action>
+            <block type="core/template" name="product.info.option.design" as="product_option_design" template="gomage/productdesigner/catalog/product/view/options/design.phtml"/>
+        </reference>
+        <reference name="product.info.addtocart">
+            <block type="gomage_designer/catalog_product_view" name="product.info.design" template="gomage/productdesigner/catalog/product/view/addtodesign.phtml" />
+        </reference>
+        <reference name="product.info.addtocart">
+            <action method="setTemplate">
+                <template>gomage/productdesigner/catalog/product/view/addtocart.phtml</template>
+            </action>
+        </reference>
+    </PRODUCT_TYPE_simple>
+
+    <PRODUCT_TYPE_configurable translate="label" module="catalog">
+        <reference name="product.info.options">
+            <action method="setTemplate">
+                <template>gomage/productdesigner/catalog/product/view/options.phtml</template>
+            </action>
+            <block type="core/template" name="product.info.option.design" as="product_option_design" template="gomage/productdesigner/catalog/product/view/options/design.phtml"/>
+        </reference>
+        <reference name="product.info.addtocart">
+            <block type="gomage_designer/catalog_product_view" name="product.info.design" template="gomage/productdesigner/catalog/product/view/addtodesign.phtml" />
+        </reference>
+        <reference name="product.info.addtocart">
+            <action method="setTemplate">
+                <template>gomage/productdesigner/catalog/product/view/addtocart.phtml</template>
+            </action>
+        </reference>
+    </PRODUCT_TYPE_configurable>
+
+    <checkout_cart_index>
+        <reference name="checkout.cart">
+            <action method="addItemRender"><type>simple</type><block>gomage_designer/checkout_cart_item_renderer</block><template>gomage/productdesigner/checkout/cart/item/default.phtml</template></action>
+            <action method="addItemRender"><type>configurable</type><block>gomage_designer/checkout_cart_item_renderer_configurable</block><template>gomage/productdesigner/checkout/cart/item/default.phtml</template></action>
+        </reference>
+    </checkout_cart_index>
+
+    <checkout_onepage_review>
+        <reference name="root">
+            <action method="addItemRender"><type>default</type><block>gomage_designer/checkout_cart_item_renderer</block><template>gomage/productdesigner/checkout/onepage/review/item.phtml</template></action>
+            <action method="addItemRender"><type>configurable</type><block>gomage_designer/checkout_cart_item_renderer_configurable</block><template>gomage/productdesigner/checkout/onepage/review/item.phtml</template></action>
+        </reference>
+    </checkout_onepage_review>
+
+    <checkout_multishipping_addresses>
+        <reference name="checkout_addresses">
+            <action method="addItemRender"><type>default</type><block>gomage_designer/checkout_cart_item_renderer</block><template>gomage/productdesigner/checkout/multishipping/item/default.phtml</template></action>
+            <action method="addItemRender"><type>configurable</type><block>gomage_designer/checkout_cart_item_renderer_configurable</block><template>gomage/productdesigner/checkout/multishipping/item/default.phtml</template></action>
+        </reference>
+    </checkout_multishipping_addresses>
+
+    <checkout_multishipping_shipping translate="label">
+        <reference name="checkout_shipping">
+            <action method="addItemRender"><type>default</type><block>gomage_designer/checkout_cart_item_renderer</block><template>gomage/productdesigner/checkout/multishipping/item/default.phtml</template></action>
+            <action method="addItemRender"><type>configurable</type><block>designer/checkout_cart_item_renderer_configurable</block><template>gomage/productdesigner/checkout/multishipping/item/default.phtml</template></action>
+        </reference>
+        <reference name="checkout_billing_items">
+            <action method="addItemRender"><type>default</type><block>gomage_designer/checkout_cart_item_renderer</block><template>gomage/productdesigner/checkout/multishipping/item/default.phtml</template></action>
+            <action method="addItemRender"><type>configurable</type><block>gomage_designer/checkout_cart_item_renderer_configurable</block><template>gomage/productdesigner/checkout/multishipping/item/default.phtml</template></action>
+        </reference>
+    </checkout_multishipping_shipping>
+
+    <checkout_multishipping_overview>
+        <reference name="checkout_overview">
+            <action method="addItemRender"><type>default</type><block>gomage_designer/checkout_cart_item_renderer</block><template>gomage/productdesigner/checkout/multishipping/item/default.phtml</template></action>
+            <action method="addItemRender"><type>configurable</type><block>gomage_designer/checkout_cart_item_renderer_configurable</block><template>gomage/productdesigner/checkout/multishipping/item/default.phtml</template></action>
+        </reference>
+    </checkout_multishipping_overview>
+
+    <default>
+        <reference name="cart_sidebar">
+            <action method="addItemRender"><type>simple</type><block>gomage_designer/checkout_cart_item_renderer</block><template>checkout/cart/sidebar/default.phtml</template></action>
+            <action method="addItemRender"><type>configurable</type><block>gomage_designer/checkout_cart_item_renderer_configurable</block><template>checkout/cart/sidebar/default.phtml</template></action>
+        </reference>
+    </default>
+
+    <sales_order_view translate="label">
+        <reference name="order_items">
+            <action method="addItemRender"><type>default</type><block>gomage_designer/sales_order_item_renderer_default</block><template>gomage/productdesigner/sales/order/items/renderer/default.phtml</template></action>
+        </reference>
+    </sales_order_view>
+
+    <sales_order_print>
+        <reference name="sales.order.print">
+            <action method="addItemRender"><type>default</type><block>gomage_designer/sales_order_item_renderer_default</block><template>gomage/productdesigner/sales/order/items/renderer/default.phtml</template></action>
+        </reference>
+        <reference name="sales_order_print">
+            <action method="addItemRender"><type>default</type><block>gomage_designer/sales_order_item_renderer_default</block><template>gomage/productdesigner/sales/order/items/renderer/default.phtml</template></action>
+        </reference>
+    </sales_order_print>
+
+    <sales_email_order_items>
+        <reference name="items">
+            <action method="addItemRender"><type>default</type><block>gomage_designer/sales_order_email_items_default</block><template>gomage/productdesigner/sales/order/email/items/default.phtml</template></action>
+        </reference>
+    </sales_email_order_items>
+</layout>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * GoMage Product Designer Extension
+ *
+ * @category     Extension
+ * @copyright    Copyright (c) 2013 GoMage (http://www.gomage.com)
+ * @author       GoMage
+ * @license      http://www.gomage.com/license-agreement/  Single domain license
+ * @terms of use http://www.gomage.com/terms-of-use/
+ * @version      Release: 1.0.0
+ * @since        Available since Release 1.0.0
+ */
+ -->
+<config>
+    <menu>
+        <catalog translate="title" module="catalog">
+            <title>Catalog</title>
+            <sort_order>30</sort_order>
+            <depends>
+                <module>Mage_Catalog</module>
+            </depends>
+            <children>
+                <gomage_designer translate="title" module="gomage_designer">
+                    <title>Product Designer</title>
+                    <sort_order>1000</sort_order>
+                    <children>
+                        <cliparts module="gomage_designer">
+                            <title>Cliparts</title>
+                            <action>adminhtml/cliparts</action>
+                            <sort_order>1</sort_order>
+                        </cliparts>
+						<fontcat module="gomage_designer">
+                            <title>Font Category</title>
+                            <action>adminhtml/fontcat</action>
+                            <sort_order>2</sort_order>
+                        </fontcat>
+                        <fonts module="gomage_designer">
+                            <title>Fonts</title>
+                            <action>adminhtml/fonts</action>
+                            <sort_order>3</sort_order>
+                        </fonts>
+                    </children>
+                </gomage_designer>
+            </children>
+        </catalog>
+    </menu>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <catalog>
+                        <children>
+                            <gomage_designer>
+                                <title>GoMage - Product Designer</title>
+                                <sort_order>1000</sort_order>
+                                <children>
+                                    <cliparts>
+                                        <title>Cliparts</title>
+                                    </cliparts>
+									<fontcat>
+                                        <title>Font Category</title>
+                                    </fontcat>
+                                    <fonts>
+                                        <title>Fonts</title>
+                                    </fonts>
+                                </children>
+                            </gomage_designer>
+                        </children>
+                    </catalog>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <gomage_activation>
+                                        <title>GoMage - Activation</title>
+                                    </gomage_activation>
+                                    <gomage_notification>
+                                        <title>GoMage Notifications</title>
+                                    </gomage_notification>
+                                    <gomage_designer>
+                                        <title>GoMage Product Designer</title>
+                                    </gomage_designer>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>
+

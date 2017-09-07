@@ -1,0 +1,52 @@
+<?php /*$menuContent = Mage::helper('custommenu')->getMenuContent(); 
+ $mobileMenuContent = Mage::helper('custommenu')->getMobileMenuContent(); 
+ 
+    $connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+	$write = Mage::getSingleton('core/resource')->getConnection('core_write');
+	$sql        = "Select * from amenu_update_tracking where up_flag_type = 'upper_menu_foooter'";
+	$rows       = $connection->fetchRow($sql); //fetchRow($sql), fetchOne($sql),...	
+	
+	if($rows["up_flag"]=='y'){ 
+ 
+		 
+ 
+		file_put_contents(Mage::getBaseDir('media')."/menu_cache/menu_text_top.txt", ($menuContent['topMenu'])); 
+		file_put_contents(Mage::getBaseDir('media')."/menu_cache/menu_text_top.txt", php_strip_whitespace (Mage::getBaseDir('media')."/menu_cache/menu_text_top.txt"));
+		
+		
+		
+		file_put_contents(Mage::getBaseDir('media')."/menu_cache/menu_text_popup.txt", ($menuContent['popupMenu'])); 
+		file_put_contents(Mage::getBaseDir('media')."/menu_cache/menu_text_popup.txt", php_strip_whitespace (Mage::getBaseDir('media')."/menu_cache/menu_text_popup.txt"));
+		
+		
+		
+		file_put_contents(Mage::getBaseDir('media')."/menu_cache/menu_text_mobile.txt", ($mobileMenuContent)); 
+		file_put_contents(Mage::getBaseDir('media')."/menu_cache/menu_text_mobile.txt", php_strip_whitespace (Mage::getBaseDir('media')."/menu_cache/menu_text_mobile.txt"));
+		
+		 
+	 
+			echo $sql = "update amenu_update_tracking set up_flag='n',menu_cnt_top='".base64_encode($menuContent['topMenu'])."',menu_cnt_pop='".base64_encode($menuContent['popupMenu'])."',menu_cnt_mobile='".base64_encode($mobileMenuContent)."' where up_flag_type = 'upper_menu_foooter'";
+			$write->query($sql);
+ 
+	}
+	
+		$rows       = $connection->fetchRow($sql); //fetchRow($sql), fetchOne($sql),...	
+
+?>
+<script type="text/javascript">
+//<![CDATA[
+if ($('custommenu')) $('custommenu').update(Base64.decode('<?php echo $rows["menu_cnt_top"]; ?>'));
+wpPopupMenuContent = Base64.decode('<?php echo $rows["menu_cnt_pop"]; ?>');
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+wpMobileMenuContent = Base64.decode('<?php echo $rows["menu_cnt_mobile"]; ?>');
+wpCustomMenuMobileToggle();
+Event.observe(window, 'resize', function() {
+    wpCustomMenuMobileToggle();
+});
+//]]>
+</script>
+<?php */?>

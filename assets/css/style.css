@@ -1,0 +1,22 @@
+/* ==== Google font ==== */
+@import url('http://fonts.googleapis.com/css?family=Lato:400,300,700,900');
+*, div, ul, li, a, span, input, textarea, button { transition: all 0.2s linear 0s; }
+body { background: #302e2f; font-family: 'Lato', sans-serif; font-weight: 300; font-size: 16px; color: #555; line-height: 1.6em; -webkit-font-smoothing: antialiased; -webkit-overflow-scrolling: touch; }
+h1, h2, h3, h4, h5, h6 { font-family: 'Lato', sans-serif; font-weight: 300; color: #444; }
+h1 { font-size: 40px; }
+h3 { font-weight: 400; }
+h4 { font-weight: 400; font-size: 20px; }
+p { margin-bottom: 20px; font-size: 16px; }
+/* wrapper */
+
+#wrapper { text-align: center; padding: 150px 0; min-height: 650px; width: 100%; -webkit-background-size: 100%; -moz-background-size: 100%; -o-background-size: 100%; background-size: 100%; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; }
+/* footer */
+p.copyright { margin-top: 30px; color: #fff; text-align: center; }
+.links.social-media { text-align: center; }
+.links.social-media li { display: inline-block; padding: 0 20px; }
+.links.social-media li a { height: 120px; line-height: 150px; width: 120px; }
+.links.social-media i { color: #fff !important; }
+.links.social-media li a:hover { background: none repeat scroll 0 0 #ef131e; }
+.links.social-media li { display: inline-block; padding: 0 2px; }
+.links.social-media li a { border-radius: 100%; color: #fff; display: block; padding: 0; position: relative; }
+.links.social-media li em { margin: 0 !important; padding: 0 5px; }

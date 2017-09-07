@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<package>
+    <name>Razorpay_Payments</name>
+    <version>1.1.6</version>
+    <stability>beta</stability>
+    <license>MIT</license>
+    <channel>community</channel>
+    <extends/>
+    <summary>Razorpay extension to accept payments from multiple banks and wallets.</summary>
+    <description>Razorpay is a payment aggregator to accept payments from various method including netbanking, credit card, debit card, wallets etc.</description>
+    <notes>This version uses the Razorpay API v1 for the best possible experience.</notes>
+    <authors>
+        <author>
+            <name>Vivek Kumar</name>
+            <user>crims0n</user>
+            <email>vivek@razorpay.com</email>
+        </author>
+    </authors>
+    <date>2016-05-05</date>
+    <time>07:25:18</time>
+    <contents>
+        <target name="magecommunity">
+            <dir name="Razorpay">
+                <dir name="Payments">
+                    <dir name="Block">
+                        <file hash="09ad9b449bf873a6b2b3bce55923219b" name="Placeorder.php"/>
+                        <file hash="3d38f8ba62b42fc4decb7dbc7d4e8e1e" name="Setuputils.php"/>
+                    </dir>
+                    <dir name="Helper">
+                        <file hash="3eb01c681f348c86a4ec3c7dc7855439" name="Data.php"/>
+                    </dir>
+                    <dir name="Model">
+                        <file hash="044b94ddc09ff4bab47dad25bfe84326" name="Paymentmethod.php"/>
+                    </dir>
+                    <dir name="controllers">
+                        <file hash="5d119068ed59ebe6bc27ff235762cb2c" name="CheckoutController.php"/>
+                    </dir>
+                    <dir name="etc">
+                        <file hash="d2ea53be9c50e6888d5d86737ea41b67" name="config.xml"/>
+                        <file hash="890c3193ccf85870cb0bd25f31ddf076" name="system.xml"/>
+                    </dir>
+                </dir>
+            </dir>
+        </target>
+        <target name="magedesign">
+            <dir name="frontend">
+                <dir name="base">
+                    <dir name="default">
+                        <dir name="layout">
+                            <file hash="ac7bed7cced69cef2e1759b1d617c28c" name="razorpay.xml"/>
+                        </dir>
+                        <dir name="template">
+                            <dir name="razorpay">
+                                <dir name="extensions">
+                                    <dir name="appzab_osc">
+                                        <file hash="9c06defd3a6a805f5bfdf9395dd87529" name="payments.phtml"/>
+                                    </dir>
+                                    <dir name="firecheckout">
+                                        <file hash="5df51cb66507cab9e0026125a6a8f6a2" name="payments.phtml"/>
+                                    </dir>
+                                    <dir name="iwd_opc">
+                                        <file hash="a9ce71c2b5b5159d219f5fdddac0cdcb" name="payments.phtml"/>
+                                    </dir>
+                                </dir>
+                                <file hash="1493e996886160b37b930251f7ac78ce" name="order.phtml"/>
+                                <file hash="d2d234f0f02e6f5228910d2e67946db9" name="placeorder.phtml"/>
+                                <file hash="6a96d6f95747d64b37fb6b848ef13007" name="setuputils.phtml"/>
+                            </dir>
+                        </dir>
+                    </dir>
+                </dir>
+            </dir>
+        </target>
+        <target name="mageetc">
+            <dir name="modules">
+                <file hash="84978ab3d49e7f70fc8e1aa00cb2dc36" name="Razorpay_Payments.xml"/>
+            </dir>
+        </target>
+        <target name="mage">
+            <dir name="js">
+                <dir name="razorpay">
+                    <file hash="0e0cc3ec6b477a1fb397951141f1ca35" name="razorpay-utils.js"/>
+                </dir>
+            </dir>
+        </target>
+    </contents>
+    <compatible/>
+    <dependencies>
+        <required>
+            <php>
+                <min>5.5.30</min>
+                <max>5.6.20</max>
+            </php>
+        </required>
+    </dependencies>
+</package>

@@ -1,0 +1,5 @@
+function activateTab() 
+{
+  alert('hi');
+  $('alterproductposition_tabs_export_section').addClass('select');  
+}

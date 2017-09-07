@@ -1,0 +1,1363 @@
+<link rel="stylesheet" href="<?php echo $this->getSkinUrl('css/acc/demo2.css');?>" type="text/css" />
+<?php
+$cat_id = '';
+$params = $this->getRequest()->getParams();
+if(isset($params['cat']) && $params['cat'] != '')
+{
+	$cat_id = $params['cat'];
+}
+//$collection = Mage::getModel('catalog/product')->getCollection();
+$layer = Mage::getSingleton('catalog/layer');
+$_category = $layer->getCurrentCategory();
+$path = $_category->getPath();
+$path_id = explode("/", $path);
+$currentCategoryId = $_category->getId();
+$parent_catid = $_category->getParentId();
+$upper_category = Mage::getModel('catalog/category')->load($parent_catid);
+$upper_catname = $upper_category->getName();
+$giftCatName = $_category->getParentCategory()->getParentCategory()->getName();
+$connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+$write = Mage::getSingleton('core/resource')->getConnection('core_write');
+$currentUrl = Mage::helper('core/url')->getCurrentUrl();
+$base_url = Mage::getBaseUrl();
+// condition for model for case , skin and shop page
+$model_id = '';
+if(in_array(3, $path_id))
+{
+	$model_id = 3;
+}
+else if(in_array(34, $path_id))
+{
+	$model_id = 34;
+}
+else if(in_array(478, $path_id))
+{
+	$model_id = 478;
+}
+
+$laptabtexturedskin = Mage::app()->getRequest()->getParam('laptabtexturedskin');
+if($laptabtexturedskin == FALSE){
+
+if(strpos(Mage::helper('function')->getCurrentUrl() , 'laptop-tablet-skin.html') == 0){ // For handling laptop skin category conditon on mana filters
+// if page is style / shop page
+if(isset($params['p']) && $params['p'] != '')
+{
+  $case_style = $params['case_style'];
+  if($cat_id != '')
+  { 
+  	/*if(($cat_id == 3) || ($cat_id == 34) || ($cat_id == 478))
+	{
+		$model_id = $cat_id;
+	}*/
+	if($this->getName() == 'Style')
+	{
+	  if($model_id != '')
+	  {?>
+		  <div class="panel panel-default">
+		   <div class="panel-heading">
+			<h4 class="panel-title"><a href="#<?php echo 'Model';?>" data-toggle="collapse" data-parent="#accordion" id="filter-panel"><?php echo 'Model';?>
+			 <i class="fa fa-caret-down"></i></a>
+			</h4>
+		   </div>
+		   
+		   
+		   <div id="<?php echo 'Model';?>" class="panel-collapse collapse">
+			<?php          
+			 $children = Mage::getModel('catalog/category')->getCategories($model_id);
+			 foreach ($children as $category) 
+			 { ?>
+			   <div id="section<?php echo $i;?>" class="accordion">
+				<?php echo $category->getName();?><span></span>
+			   </div>
+			   <div class="container">
+				<div class="content">
+				 <?php				  
+				  if($category->hasChildren()) 
+				  {
+					$cat = Mage::getModel('catalog/category')->load($category->getId());
+					$sub_children = $cat->getChildren();
+					//$sub_children = Mage::getModel('catalog/category')->getCategories($category->getId());
+					$sub_children = explode(',', $sub_children);
+					sort($sub_children);
+                    echo '<ul>';
+                    foreach ($sub_children as $sub_cat_child) 
+                    { 
+						$sub_cats = Mage::getModel('catalog/category')->load($sub_cat_child);
+						//print_r($sub_cats);
+						if(isset($params['texturedPrdStr']) && $params['texturedPrdStr'] != '')
+						{
+							$str = '?texturedPrdStr='.$params['texturedPrdStr'];
+						}
+                        echo '<li><a href="'.rtrim($base_url.$sub_cats['url_path'],'/').$str.'">'.$sub_cats->getName().'</a></li>';
+                    }				
+                    echo '</ul>';
+				  } ?>
+				 </div>
+				</div>
+			   <?php $i++;
+			 }?> 
+			</div>
+		   </div>	
+	  <?php
+	  }
+	  if(($cat_id == 8) || ($cat_id == 21) || ($cat_id == 42) || ($cat_id == 44) || ($cat_id == 972))
+  	  { ?>
+	   <div class="panel panel-default" <?php /*?><?php if(in_array($_category->getLevel(),array(1,2,3)) && $this->getName() == "Model"){?> style="display:none !important;"<?php }?><?php */?>>
+    	 <div class="panel-heading">
+          <h4 class="panel-title"><a href="#<?php echo 'Size';?>" data-toggle="collapse" data-parent="#accordion" id="filter-panel"><?php echo 'Size';?>
+           <i class="fa fa-caret-down"></i></a>
+          </h4>
+	     </div>
+	 	 <div id="Size" class="panel-collapse collapse">
+          <ul>
+		   <div class="panel-body">
+			<li id="11-12" class="filter_lbl">
+			 <a onclick="jQuery('#filter_loading_image').show();" href = "<?php echo Mage::getBaseUrl().'shop.html?case_style='.$case_style.'&cat=21&p=1';?>"><span class="count">11 Inch - 12 Inch</span></a>
+			</li>
+			<li id="13-14" class="filter_lbl">
+
+			 <a onclick="jQuery('#filter_loading_image').show();" href = "<?php echo Mage::getBaseUrl().'shop.html?case_style='.$case_style.'&cat=42&p=1';?>"><span class="count">13 Inch - 14 Inch</span> </a>      
+			</li>
+			<li  id="15-16" class="filter_lbl">
+			 <a onclick="jQuery('#filter_loading_image').show();" href = "<?php echo Mage::getBaseUrl().'shop.html?case_style='.$case_style.'&cat=44&p=1';?>"><span class="count">15 Inch - 16 Inch</span>  </a>								            </li>
+            <li  id="17-18" class="filter_lbl">
+			 <a onclick="jQuery('#filter_loading_image').show();" href = "<?php echo Mage::getBaseUrl().'shop.html?case_style='.$case_style.'&cat=972&p=1';?>"><span class="count">17 Inch - 18 Inch</span>  </a>     
+			</li>
+		   </div>
+          </ul>	
+         </div>
+		</div>	
+    <?php 
+  }
+	} 
+	if($this->getName() == 'Color')
+  	{ ?>
+	   <div class="panel panel-default" <?php /*?><?php if(in_array($_category->getLevel(),array(1,2,3)) && $this->getName() == "Model"){?> style="display:none !important;"<?php }?><?php */?>>
+    	<div class="panel-heading">
+         <h4 class="panel-title"><a href="#<?php echo 'Gender';?>" data-toggle="collapse" data-parent="#accordion" id="filter-panel"><?php echo 'Gender';?>
+          <i class="fa fa-caret-down"></i></a>
+         </h4>
+	    </div>
+	 	<div id="Gender" class="panel-collapse collapse">
+         <ul>
+		  <div class="panel-body">
+		   <li id="AksharPathak" class="filter_lbl">
+			<a onclick="jQuery('#filter_loading_image').show();" href = "<?php echo Mage::getBaseUrl().'shop.html?case_style='.$case_style.'&cat=39&p=1';?>"><span class="count">For Him</span></a>
+		   </li>
+		   <li id="AksharPathak" class="filter_lbl">
+			<a onclick="jQuery('#filter_loading_image').show();" href = "<?php echo Mage::getBaseUrl().'shop.html?case_style='.$case_style.'&cat=292&p=1';?>"><span class="count">For Her</span> </a>    
+		   </li>
+		   <!--<li  id="AksharPathak" class="filter_lbl">
+			<a onclick="jQuery('#filter_loading_image').show();" href = "<?php echo Mage::getBaseUrl().'shop.html?case_style='.$case_style.'&cat=295&p=1';?>"><span class="count">For Kids</span>  </a>
+		   </li>-->
+		  </div>
+         </ul>	
+        </div>
+	   </div>	
+    <?php 
+  	}?>
+	<div class="panel panel-default">
+     <?php 
+	  if($parent_catid == 4 || $currentCategoryId == 4)
+      {?>
+        <div class="panel-heading">
+            <h4 class="panel-title"><a href="#<?php echo $this->getName();?>" data-toggle="collapse" data-parent="#accordion" id="filter-panel"><?php echo $this->getName();?>
+                <i class="fa fa-caret-down"></i></a>
+            </h4>
+        </div>        
+    <?php 
+     }
+      else if($this->getName() == 'Color')
+      { 
+      }   
+      else
+	  {?>
+          <div class="panel-heading">
+           <h4 class="panel-title"><a href="#<?php echo $this->getName();?>" data-toggle="collapse" data-parent="#accordion" id="filter-panel"><?php echo $this->getName();?>
+            <i class="fa fa-caret-down"></i></a>
+           </h4>
+          </div>
+      <?php 
+	  } ?>       
+     <div id="<?php echo $this->getName();?>" class="panel-collapse collapse">
+      <ul>
+       <div class="panel-body">
+        <?php foreach ($this->getItems() as $_item):  
+         $str_lbl = strtolower(str_replace(" ", "-", $_item->getLabel()));
+		 $str_lbl = str_replace("&", "and", $str_lbl); 
+        ?>
+         <li class="<?php if ($_item->getMShowSelected()): ?>m-selected-ln-item <?php endif; ?>filter_lbl" id="<?php echo $str_lbl;?>">
+         <?php if ($_item->getMSelected()): ?>
+          <a href="<?php echo $this->urlEscape($_item->getUrl()) ?>" title="<?php echo $this->escapeHtml($_item->getLabel()) ?>" onclick="var checkbox = jQuery(this).find('input');checkbox.attr('checked', !checkbox.attr('checked'));jQuery('#filter_loading_image').show();">
+           <input type="checkbox" checked="checked">&nbsp;<?php echo $this->escapeHtml($_item->getLabel()) ?>
+         <?php else : ?>
+         <?php if (!$this->getFilterOptions()->getDisableNoResultOptions() || $_item->getCount() > 0 || $_item->getMSelected()): ?>
+          <a href="<?php echo $this->urlEscape($_item->getUrl()) ?>" title="<?php echo $this->escapeHtml($_item->getLabel()) ?>" onclick="var checkbox = jQuery(this).find('input');checkbox.attr('checked', !checkbox.attr('checked'));jQuery('#filter_loading_image').show();">
+           <input type="checkbox">&nbsp;<?php echo $this->escapeHtml($_item->getLabel()) ?>
+         <?php else:  ?>
+          <span><?php echo $this->escapeHtml($_item->getLabel()) ?>
+         <?php endif; ?>
+        <?php endif; ?>
+        <?php // MANA END ?>
+        <?php if (Mage::getStoreConfigFlag('mana_filters/display/count')) : ?>
+         <span class="count">(<?php echo $_item->getCount() ?>)</span>
+        <?php endif; ?>
+        <?php if ($_item->getMSelected()): ?>
+         </a>
+        <?php else : ?>
+         <?php if (!$this->getFilterOptions()->getDisableNoResultOptions() || $_item->getCount() > 0 || $_item->getMSelected()): ?>
+          </a>
+         <?php else: ?>
+         <?php /*?></span><?php */?>
+          </span>
+         <?php endif; ?>
+        <?php endif; ?>
+       </li>
+        <?php endforeach ?>
+       </div>
+      </ul>	
+      <?php 
+		 $type = '';$model = '';$brand = '';
+		 if($path_id[3] != '')
+		 {
+		   $type = Mage::getModel('catalog/category')->load($path_id[3])->getUrl_key();
+		 }
+		 if($path_id[4] != '')
+		 {
+		   $model = Mage::getModel('catalog/category')->load($path_id[4])->getUrl_key();
+		 }
+		 if($path_id[5] != '')
+		 {
+		   $brand = Mage::getModel('catalog/category')->load($path_id[5])->getUrl_key();
+		 }			
+		 $attr = strtolower($this->getName());
+		 foreach ($this->getItems() as $_item)
+		 {
+		   $str_lbl = strtolower(str_replace(" ", "-", $_item->getLabel()));
+		   $str_lbl = str_replace("&", "and", $str_lbl); 
+		   $img = $str_lbl.'.png';
+		   if(in_array(8, $path_id))
+		   {
+		   	 $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$attr.'/'.$img;
+		   }
+		   else if(in_array(478, $path_id))
+		   {
+			 $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$attr.'/'.$img;
+		   }
+		   else if(in_array(4, $path_id))
+		   {
+			   if(in_array(39, $path_id) || in_array(292, $path_id) || in_array(295, $path_id))
+			   {
+				   $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$model.'/'.$attr.'/'.$img;
+			   }
+			   else
+			   {
+				   $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$attr.'/'.$img;
+			   }
+		   }
+		   else
+		   {
+			 $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$brand.'/'.$attr.'/'.$img;
+		   }
+		   if(getimagesize($url)) 
+		   {?>
+			 <div class="filter_div" id="<?php echo $str_lbl.'content';?>"><img src="<?php echo $url;?>"></div>
+			 <?php 
+		   }
+		  }?> 
+     </div>
+    </div>
+	<?php		
+  }
+}
+else
+{
+  if($parent_catid == 4 || $currentCategoryId == 4)
+  { 
+  	$gen = '';
+  	$gen = Mage::getSingleton('core/session')->getGen();
+  	if($gen != 1)
+  	{?>
+		<div class="panel panel-default" <?php /*?><?php if(in_array($_category->getLevel(),array(1,2,3)) && $this->getName() == "Model"){?> style="display:none !important;"<?php }?><?php */?>>
+    	 <div class="panel-heading">
+          <h4 class="panel-title"><a href="#<?php echo 'Gender';?>" data-toggle="collapse" data-parent="#accordion" id="filter-panel"><?php echo 'Gender';?>
+           <i class="fa fa-caret-down"></i></a>
+          </h4>
+	     </div>
+	 	 <div id="Gender" class="panel-collapse collapse">
+          <ul>
+		   <div class="panel-body">
+			<li id="for-her" class="filter_lbl">
+			 <a onclick="jQuery('#filter_loading_image').show();" href = "<?php echo Mage::getBaseUrl();?>shop/t-shirt/for-her.html"><span class="count">For Her</span></a>
+			</li>
+			<li id="for-him" class="filter_lbl">
+			 <a onclick="jQuery('#filter_loading_image').show();" href = "<?php echo Mage::getBaseUrl();?>shop/t-shirt/for-him.html"><span class="count">For Him</span> </a>              
+			</li>
+			<!--<li  id="for-kids" class="filter_lbl">
+			 <a onclick="jQuery('#filter_loading_image').show();" href = "<?php echo Mage::getBaseUrl();?>shop/t-shirt/for-kids-teens.html"><span class="count">For Kids</span>  </a>             
+			</li>-->
+		   </div>
+          </ul>	
+         </div>
+		</div>	
+    <?php 
+    	$gen1 = 1;
+    	Mage::getSingleton('core/session')->setGen($gen1);
+    }
+  }  
+  if($this->getName() == 'Style')
+  {
+	  if($model_id != '')
+	  {?>
+          <div class="panel panel-default">
+           <div class="panel-heading">
+            <h4 class="panel-title"><a href="#<?php echo 'Model';?>" data-toggle="collapse" data-parent="#accordion" id="filter-panel"><?php echo 'Model';?>
+             <i class="fa fa-caret-down"></i></a>
+            </h4>
+           </div>
+           <div id="<?php echo 'Model';?>" class="panel-collapse collapse">
+            <?php  
+             $children = Mage::getModel('catalog/category')->getCategories($model_id);
+             foreach ($children as $category) 
+             {
+			 ?>
+               <div id="section<?php echo $i;?>" class="accordion">
+                <?php echo $category->getName();?><span></span>
+               </div>
+               <div class="container">
+                <div class="content">
+                 <?php
+				  if($category->hasChildren()) 
+                  {
+					$cat = Mage::getModel('catalog/category')->load($category->getId());
+					$sub_children = $cat->getChildren();
+					//$sub_children = Mage::getModel('catalog/category')->getCategories($category->getId());
+					$sub_children = explode(',', $sub_children);
+					sort($sub_children);
+                    echo '<ul>';
+                    foreach ($sub_children as $sub_cat_child) 
+                    { 
+						$sub_cats = Mage::getModel('catalog/category')->load($sub_cat_child);
+						//print_r($sub_cats);
+						if(isset($params['texturedPrdStr']) && $params['texturedPrdStr'] != '')
+						{
+							$str = '?texturedPrdStr='.$params['texturedPrdStr'];
+						}
+                        echo '<li><a href="'.rtrim($base_url.$sub_cats['url_path'],'/').$str.'">'.$sub_cats->getName().'</a></li>';
+                    }				
+                    echo '</ul>';
+                  }
+				  else{
+				  
+				  //print_r($category);exit;
+				  
+				  
+				   $cat = Mage::getModel('catalog/category')->load($category->getId());
+                    echo '<ul>';
+                     
+						//$sub_cats = Mage::getModel('catalog/category')->load($sub_cat_child);
+						//print_r($sub_cats);
+                        echo '<li><a href="'.$cat->getUrl($cat).'">'.$category->getName().'</a></li>';
+                    		
+                    echo '</ul>';
+				  
+				  }	
+
+				  ?>
+                 </div>
+                </div>
+               <?php $i++;
+             }?> 
+           </div>
+          </div>	
+      <?php
+      }
+	  
+	  //print_r($path_id);
+	  
+	  if(in_array(3, $path_id)){
+?>
+	   <div class="panel panel-default displayNone" <?php /*?><?php if(in_array($_category->getLevel(),array(1,2,3)) && $this->getName() == "Model"){?> style="display:none !important;"<?php }?><?php */?>>
+    	 <div class="panel-heading">
+          <h4 class="panel-title"><a href="#<?php echo 'By_Type';?>" data-toggle="collapse" data-parent="#accordion" id="filter-panel"><?php echo 'By Type';?>
+           <i class="fa fa-caret-down"></i></a>
+          </h4>
+	     </div>
+	 	 <div id="By_Type" class="panel-collapse collapse">
+          <ul>
+		   <div class="panel-body">
+		   
+			<li id="Type_1" class="filter_lbl">
+			 <a onclick="jQuery('#filter_loading_image').show();" href="#"><span class="count">Type 1</span></a>
+			</li>
+			<li id="Type_2" class="filter_lbl">
+			 <a onclick="jQuery('#filter_loading_image').show();" href="#"><span class="count">Type 2</span> </a>      
+			</li>
+
+		   </div>
+          </ul>	
+         </div>
+		</div>
+<?php
+	  }
+	  if((in_array(8, $path_id)) || (in_array(21, $path_id)) || (in_array(42, $path_id)) || (in_array(44, $path_id)) || (in_array(972, $path_id)))
+  	  { ?>
+	   <div class="panel panel-default" <?php /*?><?php if(in_array($_category->getLevel(),array(1,2,3)) && $this->getName() == "Model"){?> style="display:none !important;"<?php }?><?php */?>>
+    	 <div class="panel-heading">
+          <h4 class="panel-title"><a href="#<?php echo 'Size';?>" data-toggle="collapse" data-parent="#accordion" id="filter-panel"><?php echo 'Size';?>
+           <i class="fa fa-caret-down"></i></a>
+          </h4>
+	     </div>
+	 	 <div id="Size" class="panel-collapse collapse">
+          <ul>
+		   <div class="panel-body">
+			<li id="11-12" class="filter_lbl">
+			 <a onclick="jQuery('#filter_loading_image').show();" href="<?php echo Mage::getBaseUrl();?>shop/laptop-skin/11inch-12inch.html"><span class="count">11 Inch - 12 Inch</span></a>
+			</li>
+			<li id="13-14" class="filter_lbl">
+			 <a onclick="jQuery('#filter_loading_image').show();" href="<?php echo Mage::getBaseUrl();?>shop/laptop-skin/13inch-14inch.html"><span class="count">13 Inch - 14 Inch</span> </a>      
+			</li>
+			<li  id="15-16" class="filter_lbl">
+			 <a onclick="jQuery('#filter_loading_image').show();" href="<?php echo Mage::getBaseUrl();?>shop/laptop-skin/15inch-16inch.html"><span class="count">15 Inch - 16 Inch</span>  </a>								            </li>
+            <li  id="17-18" class="filter_lbl">
+			 <a onclick="jQuery('#filter_loading_image').show();" href="<?php echo Mage::getBaseUrl();?>shop/laptop-skin/17inch-18inch.html"><span class="count">17 Inch - 18 Inch</span>  </a>     
+			</li>
+            <li  id="17-18" class="filter_lbl">
+			 <a onclick="jQuery('#filter_loading_image').show();" href="<?php echo Mage::getBaseUrl();?>shop/laptop-skin/custom-size.html"><span class="count">Custom Size</span>  </a>     
+			</li>
+		   </div>
+          </ul>	
+         </div>
+		</div>	
+    <?php 
+  }
+  }?>
+	  <div class="panel panel-default">
+       <?php 
+       if($parent_catid == 4 || $currentCategoryId == 4)
+       {?>
+         <div class="panel-heading monika">
+          <h4 class="panel-title"><a href="#<?php echo $this->getName();?>" data-toggle="collapse" data-parent="#accordion" id="filter-panel"><?php echo $this->getName();?>
+           <i class="fa fa-caret-down"></i></a>
+          </h4>
+    	 </div>
+         <?php 
+       }
+       else if($this->getName() == 'Color')
+       { 
+       }   
+      else if($this->getName() == 'Style' && ((in_array(34, $path_id)) || (in_array(8, $path_id)) || (in_array(478, $path_id))))
+       { 
+?>
+   	 <div class="panel-heading">
+          <h4 class="panel-title"><a href="#<?php echo $this->getName();?>" data-toggle="collapse" data-parent="#accordion" id="filter-panel"><?php echo $this->getName();?><i class="fa fa-caret-down"></i></a>
+          </h4>
+    	 </div>
+		 <div id="<?php echo $this->getName();?>" class="panel-collapse collapse">
+		<h2>SKINS BY GENRE</h2> 
+		<h4 style="clear:both"  onclick="changeIconPlusMinus('Style_Custom')"><span id="Style_Custom_Span" class="glyphicon glyphicon-plus" aria-hidden="true"></span>Designer Skins by Genre</h4> 
+       <div  style="display:none;clear:both" id="Style_Custom" <?php /*?>class="panel-collapse collapse"<?php */?>>
+         <ul>
+          <div class="panel-body">
+          <?php 
+		  foreach ($this->getItems() as $_item):  
+		  
+		  
+		  
+		  if($_item->getLabel()=='Textured Skins')
+		   continue;
+         	 $str_lbl = strtolower(str_replace(" ", "-", $_item->getLabel()));
+        	 $str_lbl = str_replace("&", "and", $str_lbl); 
+			 
+       		?>
+       		<li class="<?php if ($_item->getMShowSelected()): ?>m-selected-ln-item <?php endif; ?>filter_lbl" id="<?php echo $str_lbl;?>">
+             <?php if ($_item->getMSelected()): 
+			 
+			 
+			 
+			$redirectURL = Mage::helper('function/more')->removeManaFilter($_item->getData('value'),$this->urlEscape($_item->getUrl()));
+			
+			 ?>
+              <a href="<?php echo $redirectURL ?>" title="<?php echo $this->escapeHtml($_item->getLabel()) ?>" onclick="var checkbox = jQuery(this).find('input');checkbox.attr('checked', !checkbox.attr('checked'));jQuery('#filter_loading_image').show();">
+               <input type="checkbox" checked="checked" onclick="location.href='<?php echo $redirectURL ?>'">&nbsp;<?php echo $this->escapeHtml($_item->getLabel()) ?>
+             <?php else : ?>
+              <?php if (!$this->getFilterOptions()->getDisableNoResultOptions() || $_item->getCount() > 0 || $_item->getMSelected()): ?>
+               <a href="<?php echo $this->urlEscape($_item->getUrl()) ?>" title="<?php echo $this->escapeHtml($_item->getLabel()) ?>" onclick="var checkbox = jQuery(this).find('input');checkbox.attr('checked', !checkbox.attr('checked'));jQuery('#filter_loading_image').show();">
+                <input type="checkbox" onclick="location.href='<?php echo $this->urlEscape($_item->getUrl()) ?>'">&nbsp;<?php echo $this->escapeHtml($_item->getLabel()) ?>
+              <?php else:  ?>
+               <span><?php echo $this->escapeHtml($_item->getLabel()) ?>
+              <?php endif; ?>
+             <?php endif; ?>
+             <?php if (Mage::getStoreConfigFlag('mana_filters/display/count')) : ?>
+              <span class="count">(<?php echo $_item->getCount() ?>)</span>
+             <?php endif; ?>
+             <?php if ($_item->getMSelected()): ?>
+              </a>
+             <?php else : ?>
+              <?php if (!$this->getFilterOptions()->getDisableNoResultOptions() || $_item->getCount() > 0 || $_item->getMSelected()): ?>
+               </a></label>
+              <?php else: ?>
+               </span>
+              <?php endif; ?>
+             <?php endif; ?>
+            </li>
+           <?php endforeach ?>
+          </div>
+         </ul>	
+       	 <?php 
+		 $type = '';$model = '';$brand = '';
+		 if($path_id[3] != '')
+		 {
+		   $type = Mage::getModel('catalog/category')->load($path_id[3])->getUrl_key();
+		 }
+		 if($path_id[4] != '')
+		 {
+		   $model = Mage::getModel('catalog/category')->load($path_id[4])->getUrl_key();
+		 }
+		 if($path_id[5] != '')
+		 {
+		   $brand = Mage::getModel('catalog/category')->load($path_id[5])->getUrl_key();
+		 }			
+		 $attr = strtolower($this->getName());
+		 foreach ($this->getItems() as $_item)
+		 {
+		   $str_lbl = strtolower(str_replace(" ", "-", $_item->getLabel()));
+		   $str_lbl = str_replace("&", "and", $str_lbl); 
+		   $img = $str_lbl.'.png';
+		   if(in_array(8, $path_id))
+		   {
+		   	 $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$attr.'/'.$img;
+		   }
+		   else if(in_array(478, $path_id))
+		   {
+			 $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$attr.'/'.$img;
+		   }
+		   else if(in_array(4, $path_id))
+		   {
+			   if(in_array(39, $path_id) || in_array(292, $path_id) || in_array(295, $path_id))
+			   {
+				   $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$model.'/'.$attr.'/'.$img;
+			   }
+			   else
+			   {
+				   $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$attr.'/'.$img;
+			   }
+		   }
+		   else
+		   {
+			 $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$brand.'/'.$attr.'/'.$img;
+		   }
+		   if(getimagesize($url)) 
+		   {?>
+			 <div class="filter_div" id="<?php echo $str_lbl.'content';?>"><img src="<?php echo $url;?>"></div>
+			 <?php 
+		   }
+		  }
+		  
+		  $texturedPrdStr = explode(',',$_GET['texturedPrdStr']);
+		  // print_r ($texturedPrdStr);
+		  
+		  ?> 
+	    </div>  
+      
+
+		<h2 style="clear:both">TEXTURED SKINS</h2> 
+		<h4 style="clear:both"  onclick="changeIconPlusMinus('Metallic_Skins')"><span id="Metallic_Skins_Span" class="glyphicon glyphicon-plus" aria-hidden="true"></span>Metallic Skins</h4> 
+       <div  style="display:none;" id="Metallic_Skins">
+         <ul>
+          <div class="panel-body">
+		  
+				<li id="Shiny_Golden" class="filter_lbl"><a title="Animals" href="#" class="texturedSkinHrefClass" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201460)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201612)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201653,201767')<?php }?>"><input type="checkbox" <?php if(in_array(201460,$texturedPrdStr) || in_array(201612,$texturedPrdStr) || in_array(201653,$texturedPrdStr)) echo 'checked';?>>&nbsp;Shiny Golden</a></li>
+			 
+				
+				
+				<li id="Shiny_Silver" class="filter_lbl"><a title="Animals" href="#" class="texturedSkinHrefClass" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201461)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201613)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201654,201768')<?php }?>"><input type="checkbox" <?php if(in_array(201461,$texturedPrdStr) || in_array(201613,$texturedPrdStr) || in_array(201654,$texturedPrdStr)) echo 'checked';?>>&nbsp;Shiny Silver</a></li>
+				
+				
+				
+				<li id="Silver_wire_drawing" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201462)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201614)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201655,201769')<?php }?>"><input type="checkbox" <?php if(in_array(201462,$texturedPrdStr) || in_array(201614,$texturedPrdStr) || in_array(201655,$texturedPrdStr)) echo 'checked';?>>&nbsp;Silver wire drawing</a></li>
+				
+				
+				
+				<li id="Golden_wire_drawing" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201459)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201611)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201652,201766')<?php }?>"><input type="checkbox" <?php if(in_array(201459,$texturedPrdStr) || in_array(201611,$texturedPrdStr) || in_array(201652,$texturedPrdStr)) echo 'checked';?>>&nbsp;Golden wire drawing</a></li>
+				
+				
+				
+				<li id="Black_wire_drawing" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201458)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201610)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201651,201765')<?php }?>"><input type="checkbox" <?php if(in_array(201458,$texturedPrdStr) || in_array(201610,$texturedPrdStr) || in_array(201651,$texturedPrdStr)) echo 'checked';?>>&nbsp;Dark grey wire drawing</a></li>
+          </div>
+         </ul>	
+		 
+		 
+		 
+       	 <?php /*
+			//////////////////////////Code for fetchin filter images//////////////////////////////////////////////	
+		   foreach(codotion var placed here) 
+		   {?>
+			 <div class="filter_div" id="<?php echo $str_lbl.'content';?>"><img src="<?php echo $url;?>"></div>
+			 <?php 
+		   }
+		 */?> 
+	    </div>  
+      
+		<h4 style="clear:both"  onclick="changeIconPlusMinus('Carbon_Fiber_Skin')"><span id="Carbon_Fiber_Skin_Span" class="glyphicon glyphicon-plus" aria-hidden="true"></span>Carbon Fiber Skin</h4> 
+       <div  style="display:none;" id="Carbon_Fiber_Skin">
+         <ul>
+          <div class="panel-body">
+				
+				 
+				
+				<li id="Carbon_Fiber_Green" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201443)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201595)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201636,201750')<?php }?>"><input type="checkbox" <?php if(in_array(201443,$texturedPrdStr) || in_array(201595,$texturedPrdStr) || in_array(201636,$texturedPrdStr)) echo 'checked';?>>&nbsp;Green carbon fiber</a></li>
+				
+				<li id="Carbon_Fiber_Green" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201445)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201597)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201638,201752')<?php }?>"><input type="checkbox" <?php if(in_array(201445,$texturedPrdStr) || in_array(201597,$texturedPrdStr) || in_array(201638,$texturedPrdStr)) echo 'checked';?>>&nbsp;Pink carbon fiber</a></li>
+				
+				 
+				
+				<li id="Carbon_Fiber_Purple" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201446)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201598)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201639,201753')<?php }?>"><input type="checkbox" <?php if(in_array(201446,$texturedPrdStr) || in_array(201598,$texturedPrdStr) || in_array(201639,$texturedPrdStr)) echo 'checked';?>>&nbsp;Purple carbon fiber</a></li>
+				
+				<li id="Carbon_Fiber_Black" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201440)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201592)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201633,201747')<?php }?>"><input type="checkbox" <?php if(in_array(201440,$texturedPrdStr) || in_array(201592,$texturedPrdStr) || in_array(201633,$texturedPrdStr)) echo 'checked';?>>&nbsp;Black carbon fiber</a></li>
+				
+				 
+				
+				<li id="Carbon_Fiber_Silver" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201448)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201600)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201641,201755')<?php }?>"><input type="checkbox" <?php if(in_array(201448,$texturedPrdStr) || in_array(201600,$texturedPrdStr) || in_array(201641,$texturedPrdStr)) echo 'checked';?>>&nbsp;Silver carbon fiber</a></li>
+				
+				 
+				
+				<li id="Carbon_Fiber_Copper" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201441)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201593)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201634,201748')<?php }?>"><input type="checkbox" <?php if(in_array(201441,$texturedPrdStr) || in_array(201593,$texturedPrdStr) || in_array(201634,$texturedPrdStr)) echo 'checked';?>>&nbsp;Copper carbon fiber</a></li>
+				
+				 
+				
+				<li id="Carbon_Fiber_Golden" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201442)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201594)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201635,201749')<?php }?>"><input type="checkbox" <?php if(in_array(201442,$texturedPrdStr) || in_array(201594,$texturedPrdStr) || in_array(201635,$texturedPrdStr)) echo 'checked';?>>&nbsp;Golden carbon fiber<span class="count"></span></a></li>
+				
+				
+				
+				
+				
+				<li id="Carbon_Fiber_Pink" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;Silver carbon fiber<span class="count"></span></a></li>
+				
+				
+				 
+				
+				<li id="Carbon_Fiber_White" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201449)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201601)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201642,201756')<?php }?>"><input type="checkbox" <?php if(in_array(201449,$texturedPrdStr) || in_array(201601,$texturedPrdStr) || in_array(201642,$texturedPrdStr)) echo 'checked';?>>&nbsp;White carbon fiber</a></li>
+				
+				 
+				
+				<li id="Carbon_Fiber_Red" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201447)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201599)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201640,201754')<?php }?>"><input type="checkbox" <?php if(in_array(201447,$texturedPrdStr) || in_array(201599,$texturedPrdStr) || in_array(201640,$texturedPrdStr)) echo 'checked';?>>&nbsp;Red carbon fiber<span class="count">(81)</span></a></li>
+          </div>
+         </ul>	
+       	 <?php /*
+			//////////////////////////Code for fetchin filter images//////////////////////////////////////////////	
+		   foreach(codotion var placed here) 
+		   {?>
+			 <div class="filter_div" id="<?php echo $str_lbl.'content';?>"><img src="<?php echo $url;?>"></div>
+			 <?php 
+		   }
+		 */?> 
+	    </div>  
+      
+		<h4 style="clear:both" onclick="changeIconPlusMinus('Super_Shining_Skins')"><span id="Super_Shining_Skins_Span" class="glyphicon glyphicon-plus" aria-hidden="true"></span>Super Shining Skins</h4> 
+       <div  style="display:none;" id="Super_Shining_Skins">
+         <ul>
+          <div class="panel-body">
+		  
+				 
+		  
+				<li id="Super_Shining_Skins_Red" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201473)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201625)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201666,201780')<?php }?>"><input type="checkbox" <?php if(in_array(201473,$texturedPrdStr) || in_array(201625,$texturedPrdStr) || in_array(201666,$texturedPrdStr)) echo 'checked';?>>&nbsp;Red color shining</a></li>
+				
+				 
+				
+				<li id="Super_Shining_Skins_Orange" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201471)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201623)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201664,201778')<?php }?>"><input type="checkbox" <?php if(in_array(201471,$texturedPrdStr) || in_array(201623,$texturedPrdStr) || in_array(201664,$texturedPrdStr)) echo 'checked';?>>&nbsp;Orange color shining</a></li>
+				
+				 
+				
+				<li id="Super_Shining_Skins_Light_Blue" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201468)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201620)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201661,201775')<?php }?>"><input type="checkbox" <?php if(in_array(201468,$texturedPrdStr) || in_array(201620,$texturedPrdStr) || in_array(201661,$texturedPrdStr)) echo 'checked';?>>&nbsp;Light blue color shining</a></li>
+				
+				 
+				
+				<li id="Super_Shining_Skins_Green" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201470)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201622)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201663,201777')<?php }?>"><input type="checkbox" <?php if(in_array(201470,$texturedPrdStr) || in_array(201622,$texturedPrdStr) || in_array(201663,$texturedPrdStr)) echo 'checked';?>>&nbsp;Green color shining</a></li>
+				
+				<li id="Super_Shining_Skins_White" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201474)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201626)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201667,201781')<?php }?>"><input type="checkbox" <?php if(in_array(201474,$texturedPrdStr) || in_array(201626,$texturedPrdStr) || in_array(201667,$texturedPrdStr)) echo 'checked';?>>&nbsp;White color shining</a></li>
+				
+				 
+				
+				<li id="Super_Shining_Skins_Light_Pink" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201472)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201624)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201665)<?php }?>"><input type="checkbox" <?php if(in_array(201472,$texturedPrdStr) || in_array(201624,$texturedPrdStr) || in_array(201665,$texturedPrdStr)) echo 'checked';?>>&nbsp;Light pink color shining</a></li>
+				
+				 
+				
+				<li id="Super_Shining_Skins_Black" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201463)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201615)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201656,201770')<?php }?>"><input type="checkbox" <?php if(in_array(201463,$texturedPrdStr) || in_array(201615,$texturedPrdStr) || in_array(201656,$texturedPrdStr)) echo 'checked';?>>&nbsp;Black color shining</a></li>
+				
+				 
+				
+				<li id="small_polygon_black " class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201467)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201619)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201660,201774')<?php }?>"><input type="checkbox" <?php if(in_array(201467,$texturedPrdStr) || in_array(201619,$texturedPrdStr) || in_array(201660,$texturedPrdStr)) echo 'checked';?>>&nbsp;black small polygon shining</a></li>
+				
+				 
+				
+				<li id="abstract_shining_black" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201464)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201616)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201657,201771')<?php }?>"><input type="checkbox" <?php if(in_array(201464,$texturedPrdStr) || in_array(201616,$texturedPrdStr) || in_array(201657,$texturedPrdStr)) echo 'checked';?>>&nbsp;black abstract shining</a></li>
+				
+				 
+				
+				<li id="floral_shining_black" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201466)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201618)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201659,201773')<?php }?>"><input type="checkbox" <?php if(in_array(201466,$texturedPrdStr) || in_array(201618,$texturedPrdStr) || in_array(201659,$texturedPrdStr)) echo 'checked';?>>&nbsp;black floral shining</a></li>
+				
+				<li id="floral_shining_big_black" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201465)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201617)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201658,201772')<?php }?>"><input type="checkbox" <?php if(in_array(201465,$texturedPrdStr) || in_array(201617,$texturedPrdStr) || in_array(201658,$texturedPrdStr)) echo 'checked';?>>&nbsp;black big polygon shining</a></li>
+				
+				<li id="super_shining_black" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201463)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201615)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201656,201770')<?php }?>"><input type="checkbox" <?php if(in_array(201463,$texturedPrdStr) || in_array(201615,$texturedPrdStr) || in_array(201656,$texturedPrdStr)) echo 'checked';?>>&nbsp;super shining black</a></li>
+				
+				<li id="super_shining_black" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201471)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201596)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201637,201778')<?php }?>"><input type="checkbox" <?php if(in_array(201471,$texturedPrdStr) || in_array(201596,$texturedPrdStr) || in_array(201637,$texturedPrdStr)) echo 'checked';?>>&nbsp;super shining Orange</a></li>
+	      </div>
+         </ul>	
+       	 <?php /*
+			//////////////////////////Code for fetchin filter images//////////////////////////////////////////////	
+		   foreach(codotion var placed here) 
+		   {?>
+			 <div class="filter_div" id="<?php echo $str_lbl.'content';?>"><img src="<?php echo $url;?>"></div>
+			 <?php 
+		   }
+		 */?> 
+	    </div>  
+      
+
+		<h4 style="clear:both" onclick="changeIconPlusMinus('3D_Water_Drop_Skins')"><span id="3D_Water_Drop_Skins_Span" class="glyphicon glyphicon-plus" aria-hidden="true"></span>3D Water Drop Skins</h4> 
+       <div  style="display:none;" id="3D_Water_Drop_Skins">
+         <ul>
+          <div class="panel-body">
+		  
+				 
+		  
+				<li id="3D_Water_Drop_Skins_Black" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201434)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201586)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201627,201782')<?php }?>"><input type="checkbox" <?php if(in_array(201434,$texturedPrdStr) || in_array(201586,$texturedPrdStr) || in_array(201627,$texturedPrdStr)) echo 'checked';?>>&nbsp;Black water drops<span class="count"></span></a></li>
+				
+				 
+				
+				<li id="3D_Water_Drop_Skins_Pink" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201437)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201589)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,201630,201785)<?php }?>"><input type="checkbox" <?php if(in_array(201437,$texturedPrdStr) || in_array(201589,$texturedPrdStr) || in_array(201630,$texturedPrdStr)) echo 'checked';?>>&nbsp;Pink water drops</a></li>
+				
+								
+				
+				<li id="3D_Water_Drop_Skins_Purple" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201438)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201590)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201631,201786')<?php }?>"><input type="checkbox" <?php if(in_array(201438,$texturedPrdStr) || in_array(201590,$texturedPrdStr) || in_array(201631,$texturedPrdStr)) echo 'checked';?>>&nbsp;Purple water drops</a></li>
+				
+				 
+				
+				<li id="3D_Water_Drop_Skins_White" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201439)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201591)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201632,201787')<?php }?>"><input type="checkbox" <?php if(in_array(201439,$texturedPrdStr) || in_array(201591,$texturedPrdStr) || in_array(201632,$texturedPrdStr)) echo 'checked';?>>&nbsp;White water drops</a></li>
+				
+				 
+				
+				<li id="3D_Water_Drop_Skins_Green" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201435)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201587)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201628,201783')<?php }?>"><input type="checkbox" <?php if(in_array(201435,$texturedPrdStr) || in_array(201587,$texturedPrdStr) || in_array(201628,$texturedPrdStr)) echo 'checked';?>>&nbsp;Green water drops</a></li>
+				
+				
+				
+				<li id="3D_Water_Drop_Skins_Orange" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201436)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201588)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201629,201784')<?php }?>"><input type="checkbox" <?php if(in_array(201436,$texturedPrdStr) || in_array(201588,$texturedPrdStr) || in_array(201629,$texturedPrdStr)) echo 'checked';?>>&nbsp;Orange water drops</a></li>
+				
+          </div>
+         </ul>	
+       	 <?php /*
+			//////////////////////////Code for fetchin filter images//////////////////////////////////////////////	
+		   foreach(codotion var placed here) 
+		   {?>
+			 <div class="filter_div" id="<?php echo $str_lbl.'content';?>"><img src="<?php echo $url;?>"></div>
+			 <?php 
+		   }
+		 */?> 
+	    </div>  
+      
+
+
+		<h4 style="clear:both" onclick="changeIconPlusMinus('Faux_Leather_Skins')"><span id="Faux_Leather_Skins_Span" class="glyphicon glyphicon-plus" aria-hidden="true"></span>Faux Leather Skins</h4> 
+       <div  style="display:none;" id="Faux_Leather_Skins">
+         <ul>
+          <div class="panel-body">
+		  
+		   
+		  
+				<li id="Faux_Leather_Skins_Black_Leather" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201451)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201603)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201644,201758')<?php }?>"><input type="checkbox" <?php if(in_array(201451,$texturedPrdStr) || in_array(201603,$texturedPrdStr) || in_array(201644,$texturedPrdStr)) echo 'checked';?>>&nbsp;Black Leather</a></li>
+				
+				 
+				
+				<li id="Faux_Leather_Skins_Black_Snake_Skin" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201452)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201604)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201645,201759')<?php }?>"><input type="checkbox" <?php if(in_array(201452,$texturedPrdStr) || in_array(201604,$texturedPrdStr) || in_array(201645,$texturedPrdStr)) echo 'checked';?>>&nbsp;Black snake texture</a></li>				
+				 
+				
+				<li id="Faux_Leather_Skins_Grey_Snake_Skin" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201455)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201607)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201648,201762')<?php }?>"><input type="checkbox" <?php if(in_array(201455,$texturedPrdStr) || in_array(201607,$texturedPrdStr) || in_array(201648,$texturedPrdStr)) echo 'checked';?>>&nbsp;Grey snake texture</a></li>
+				
+				 
+				
+				<li id="Faux_Leather_Skins_Brown_Snake_Skin" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201453)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201605)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201646,201760')<?php }?>"><input type="checkbox" <?php if(in_array(201453,$texturedPrdStr) || in_array(201605,$texturedPrdStr) || in_array(201646,$texturedPrdStr)) echo 'checked';?>>&nbsp;Brown snake texture</a></li>
+				
+				 
+				
+				<li id="Faux_Leather_Skins_White_Snake_Skin" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201457)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201609)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201650,201764')<?php }?>"><input type="checkbox" <?php if(in_array(201457,$texturedPrdStr) || in_array(201609,$texturedPrdStr) || in_array(201650,$texturedPrdStr)) echo 'checked';?>>&nbsp;White snake texture</a></li>
+				
+				 
+				
+				<li id="Faux_Leather_Skins_Black_Snake_Skin" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201450)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201602)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201643,201757')<?php }?>"><input type="checkbox" <?php if(in_array(201450,$texturedPrdStr) || in_array(201602,$texturedPrdStr) || in_array(201643,$texturedPrdStr)) echo 'checked';?>>&nbsp;Black crocodile texture</a></li>
+				
+				
+				
+				<li id="Faux_Leather_Skins_White_Crocodile_Skin" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201456)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201608)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201649,201763')<?php }?>"><input type="checkbox" <?php if(in_array(201456,$texturedPrdStr) || in_array(201608,$texturedPrdStr) || in_array(201649,$texturedPrdStr)) echo 'checked';?>>&nbsp;White crocodile texture</a></li>
+				
+				 
+				
+				<li id="Faux_Leather_Skins_Golden_Crocodile_Skin" class="filter_lbl"><a title="Animals" href="#" onclick="<?php if(in_array(34, $path_id)){?>goToUrl(this,201454)<?php } if(in_array(8, $path_id)){?>goToUrl(this,201606)<?php } if(in_array(478, $path_id)){ ?>goToUrl(this,'201647,201761')<?php }?>"><input type="checkbox" <?php if(in_array(201454,$texturedPrdStr) || in_array(201606,$texturedPrdStr) || in_array(201647,$texturedPrdStr)) echo 'checked';?>>&nbsp;Golden crocodile texture</a></li>
+          </div>
+         </ul>	
+        </div>  
+      <?php /*?>
+
+		<?php /*?><h4 style="clear:both" onclick="changeIconPlusMinus('Wooden_Skin')"><span id="Wooden_Skin_Span" class="glyphicon glyphicon-plus" aria-hidden="true"></span>Wooden Skin</h4> 
+       <div  style="display:none;" id="Wooden_Skin">
+         <ul>
+          <div class="panel-body">
+				<li id="Wooden_Skin_Mohogany_Texture" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;Mohogany Texture<span class="count">(81)</span></a></li>
+				<li id="Wooden_Skin_Rose_Wood_Texture" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;Rose Wood Texture<span class="count">(81)</span></a></li>
+				<li id="Wooden_Skin_Padauk_Texture" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;Padauk Texture<span class="count">(81)</span></a></li>
+				<li id="Wooden_Skin_Eagle_Wood_Texture" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;Eagle Wood Texture<span class="count">(81)</span></a></li>
+          </div>
+         </ul>
+	    </div> 
+      
+
+		<h4 style="clear:both" onclick="changeIconPlusMinus('Pop_Colour_Skins')"><span id="Pop_Colour_Skins_Span" class="glyphicon glyphicon-plus" aria-hidden="true"></span>Pop Colour Skins</h4> 
+       <div  style="display:none;" id="Pop_Colour_Skins">
+         <ul>
+          <div class="panel-body">
+				<li id="Pop_Colour_Skins_Red" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;Red<span class="count">(81)</span></a></li>
+				<li id="Pop_Colour_Skins_Orange" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;Orange<span class="count">(81)</span></a></li>
+				<li id="Pop_Colour_Skins_Green" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;Green<span class="count">(81)</span></a></li>
+				<li id="Pop_Colour_Skins_Yellow" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;Yellow<span class="count">(81)</span></a></li>
+				<li id="Pop_Colour_Skins_White" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;White<span class="count">(81)</span></a></li>
+				<li id="Pop_Colour_Skins_Pink" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;Pink<span class="count">(81)</span></a></li>
+				<li id="Pop_Colour_Skins_Purple" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;Purple<span class="count">(81)</span></a></li>
+				<li id="Pop_Colour_Skins_Black" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;Black<span class="count">(81)</span></a></li>
+				<li id="Pop_Colour_Skins_Blue" class="filter_lbl"><a title="Animals" href="#"><input type="checkbox">&nbsp;Blue<span class="count">(81)</span></a></li>
+         </div>
+         </ul>
+       	  
+	    </div>  
+      	<?php */?> 
+</div>
+ 
+<?php	   
+       }   
+       else
+	   {?>
+    	 <div class="panel-heading rdfef">
+          <h4 class="panel-title"><a href="#<?php echo $this->getName();?>" data-toggle="collapse" data-parent="#accordion" id="filter-panel"><?php echo $this->getName();?>
+           <i class="fa fa-caret-down"></i></a>
+          </h4>
+    	 </div>
+    	<?php }?>
+	   
+       <div id="<?php echo $this->getName();?>" class="panel-collapse collapse">
+         <ul>
+          <div class="panel-body">
+          <?php 
+		  foreach ($this->getItems() as $_item):  
+         	$str_lbl = strtolower(str_replace(" ", "-", $_item->getLabel()));
+        	 $str_lbl = str_replace("&", "and", $str_lbl); 
+       		?>
+       		<li class="<?php if ($_item->getMShowSelected()): ?>m-selected-ln-item <?php endif; ?>filter_lbl" id="<?php echo $str_lbl;?>">
+             <?php if ($_item->getMSelected()): 
+			 
+			 $redirectURL = Mage::helper('function/more')->removeManaFilter($_item->getData('value'),$this->urlEscape($_item->getUrl()));
+			 
+			 
+			 ?>
+              <a href="<?php echo $redirectURL ?>" title="<?php echo $this->escapeHtml($_item->getLabel()) ?>" onclick="var checkbox = jQuery(this).find('input');checkbox.attr('checked', !checkbox.attr('checked'));jQuery('#filter_loading_image').show();">
+               <input type="checkbox" checked="checked" onclick="location.href='<?php echo $redirectURL ?>'">&nbsp;<?php echo $this->escapeHtml($_item->getLabel()) ?>
+             <?php else : ?>
+              <?php if (!$this->getFilterOptions()->getDisableNoResultOptions() || $_item->getCount() > 0 || $_item->getMSelected()): ?>
+               <a href="<?php echo $this->urlEscape($_item->getUrl()) ?>" title="<?php echo $this->escapeHtml($_item->getLabel()) ?>" onclick="var checkbox = jQuery(this).find('input');checkbox.attr('checked', !checkbox.attr('checked'));jQuery('#filter_loading_image').show();">
+                <input type="checkbox" onclick="location.href='<?php echo $this->urlEscape($_item->getUrl()) ?>'">&nbsp;<?php echo $this->escapeHtml($_item->getLabel()) ?>
+              <?php else:  ?>
+               <span><?php echo $this->escapeHtml($_item->getLabel()) ?>
+              <?php endif; ?>
+             <?php endif; ?>
+             <?php if (Mage::getStoreConfigFlag('mana_filters/display/count')) : ?>
+				<?php if(strtolower($this->getName()) != 'size'){?> <?php /* <span class="count">(<?php echo $_item->getCount() ?>)</span> */ ?> <?php }?>
+             <?php endif; ?>
+             <?php if ($_item->getMSelected()): ?>
+              </a>
+             <?php else : ?>
+              <?php if (!$this->getFilterOptions()->getDisableNoResultOptions() || $_item->getCount() > 0 || $_item->getMSelected()): ?>
+               </a>
+              <?php else: ?>
+               </span>
+              <?php endif; ?>
+             <?php endif; ?>
+            </li>
+           <?php endforeach ?>
+          </div>
+         </ul>	
+       	 <?php 
+		 $type = '';$model = '';$brand = '';
+		 if($path_id[3] != '')
+		 {
+		   $type = Mage::getModel('catalog/category')->load($path_id[3])->getUrl_key();
+		 }
+		 if($path_id[4] != '')
+		 {
+		   $model = Mage::getModel('catalog/category')->load($path_id[4])->getUrl_key();
+		 }
+		 if($path_id[5] != '')
+		 {
+		   $brand = Mage::getModel('catalog/category')->load($path_id[5])->getUrl_key();
+		 }			
+		 $attr = strtolower($this->getName());
+		 
+		 ////////////////////////////Code for filter images/////////////////////////////////////////////
+		 
+		 if(!in_array(4, $path_id)){
+		 foreach ($this->getItems() as $_item)
+		 {
+		   $str_lbl = strtolower(str_replace(" ", "-", $_item->getLabel()));
+		   $str_lbl = str_replace("&", "and", $str_lbl); 
+		   $img = $str_lbl.'.png';
+		   if(in_array(8, $path_id))
+		   {
+		   	 $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$attr.'/'.$img;
+		   }
+		   else if(in_array(478, $path_id))
+		   {
+			 $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$attr.'/'.$img;
+		   }
+		   else if(in_array(4, $path_id))
+		   {
+			   if(in_array(39, $path_id) || in_array(292, $path_id) || in_array(295, $path_id))
+			   {
+				   $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$model.'/'.$attr.'/'.$img;
+			   }
+			   else
+			   {
+				   $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$attr.'/'.$img;
+			   }
+		   }
+		   else
+		   {
+			 $url = Mage::getBaseUrl('media').'blank_images/feature-banner/'.$type.'/'.$brand.'/'.$attr.'/'.$img;
+		   }
+		   if(getimagesize($url)) 
+		   {?>
+			 <div class="filter_div" id="<?php echo $str_lbl.'content';?>"><img src="<?php echo $url;?>"></div>
+			 <?php 
+		   }
+		  }
+			}
+		  ///////////////////////////////////////////////End code for filter images//////////////////////////
+		  ?> 
+	    </div>  
+      
+	  
+	   
+	  
+	  </div>
+   <?php
+ }
+ 
+ }
+ ?>
+ <?php 
+ /*
+ <div id="filterBarMobile">
+  <div class="filterBox">
+    <select class="form-control ">
+      <option >ALL GENRE</option>
+      <optgroup label="SKINS BY GENRE">
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=189">3D</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=41">Animals</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=331"> Auto  Transportation (67)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=48"> Cities  Travel (37)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=58"> Comic  Cartoon (177)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=193"> Desi (140)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=38"> Famous (127)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=67"> Fashion (65)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=333"> Flags (8)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=109"> Floral (31)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=227"> Graphic (214)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=335"> Gym  Health (17)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=337"> Hearts (20)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=332"> Humour (281)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=329"> Illustration (95)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=113"> Jerseys (25)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=200"> Movies  Television (97)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=225"> Music (14) </option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=199"> Nature  Landscape (17)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=192"> Party (131)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=195"> Political (1)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=334"> Profession  Personality (86)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=224"> Quirky (354)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=198"> Religion  Spirituality (56)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=196"> Retro (100)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=56"> Sports (89)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=115"> Textures  Patterns (79)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=57"> Typography (247)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=336"> Weapon (23)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html?case_style=53"> Zodiac (24)</option>
+      </optgroup>
+      <optgroup label="Metallic Skins">
+      <option value="">Shiny Golden</option>
+      <option value=""> Shiny Silver</option>
+      <option value=""> Silver wire drawing</option>
+      <option value=""> Golden wire drawing</option>
+      <option value=""> Dark grey wire drawing</option>
+      </optgroup>
+      <optgroup label="Carbon Fiber Skin">
+      <option value=""> Green carbon fiber</option>
+      <option value=""> Pink carbon fiber</option>
+      <option value=""> Purple carbon fiber</option>
+      <option value=""> Black carbon fiber</option>
+      <option value=""> Silver carbon fiber</option>
+      <option value=""> Copper carbon fiber</option>
+      <option value=""> Golden carbon fiber</option>
+      <option value=""> Silver carbon fiber</option>
+      <option value=""> White carbon fiber</option>
+      <option value=""> Red carbon fiber</option>
+      </optgroup>
+      <optgroup label="Super Shining Skins">
+      <option value=""> Red color shining</option>
+      <option value=""> Orange color shining</option>
+      <option value=""> Light blue color shining</option>
+      <option value=""> Green color shining</option>
+      <option value=""> Green color shining</option>
+      <option value=""> White color shining</option>
+      <option value=""> Light pink color shining</option>
+      <option value=""> Black color shining</option>
+      <option value=""> black small polygon shining</option>
+      <option value=""> black abstract shining</option>
+      <option value=""> black floral shining</option>
+      <option value=""> black big polygon shining</option>
+      <option value=""> super shining black</option>
+      <option value=""> super shining Orange</option>
+      </optgroup>
+      <optgroup label="3D Water Drop Skins">
+      <option value=""> Black water drops</option>
+      <option value=""> Pink water drops</option>
+      <option value=""> Purple water drops</option>
+      <option value=""> White water drops</option>
+      <option value=""> Green water drops</option>
+      <option value=""> Orange water drops</option>
+      </optgroup>
+      <optgroup label="Faux Leather Skins">
+      <option value=""> Black Leather</option>
+      <option value=""> Black snake texture</option>
+      <option value=""> Grey snake texture</option>
+      <option value=""> Brown snake texture</option>
+      <option value=""> White snake texture</option>
+      <option value=""> Black crocodile texture</option>
+      <option value=""> White crocodile texture</option>
+      <option value=""> Golden crocodile texture</option>
+      </optgroup>
+    </select>
+  </div>
+  <div class="filterBox">
+    <select class="form-control " name="forma" onchange="javascript:location.href = this.value;">
+      <option>ALL MODEL</option>
+      <optgroup label="Apple">
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-5c.html">iPhone 5C</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-5-5s.html">iPhone 5/5S</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-4-4s.html">iPhone 4/4S</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6-plus.html">iPhone 6 Plus</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/ipad-2-3-4.html">iPad 2/3/4</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/ipad-air-air-2.html">iPad Air/Air 2</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/ipad-mini-mini-2.html">iPad Mini/Mini 2</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/apple/iphone-6.html">iPhone 6</option>
+      </optgroup>
+      <optgroup label="Samsung">
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-s5.html">Galaxy S5</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-s4.html">Galaxy S4</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-s3.html">Galaxy S3</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-grand-2-g7106.html">Galaxy Grand 2 G7106</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-grand-i9080-i9082.html">Galaxy Grand I9080/I9082</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-mega-5-8.html">Galaxy Mega 5.8</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-mega-6-3-i9200.html">Galaxy Mega 6.3 I9200</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-note-2-n7100.html">Galaxy Note 2 N7100</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-note-n7000.html">Galaxy Note N7000</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-note-3-n9000.html">Galaxy Note 3 N9000</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-note-4.html">Galaxy Note 4</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-s2.html">Galaxy S2</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-win.html">Galaxy Win</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-s3-mini.html">Galaxy S3 Mini</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-s4-mini.html">Galaxy S4 Mini</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-s4-zoom.html">Galaxy S4 Zoom</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-ace.html">Galaxy Ace</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-ace-plus.html">Galaxy Ace Plus</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-ace-2.html">Galaxy Ace 2</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-ace-3.html">Galaxy Ace 3</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-s-advance.html">Galaxy S Advance</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-s-duos.html">Galaxy S Duos</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-s-duos-2.html">Galaxy S Duos 2</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-grand-neo.html">Galaxy Grand Neo</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-note-8-0.html">Galaxy Note 8.0</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-note-10-1.html">Galaxy Note 10.1</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-trend.html">Galaxy Trend</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-trend-2.html">Galaxy Trend 2</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-trend-3.html">Galaxy Trend 3</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/samsung-corby.html">Samsung Corby</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/samsung-corby-2.html">Samsung Corby 2</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-nexus.html">Galaxy Nexus</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-y.html">Galaxy Y</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-alpha.html">Galaxy Alpha</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-tab-2-p3100.html">Galaxy-Tab-2-P3100</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-tab-3-7-0-p3200.html">Galaxy-Tab-3-7.0-P3200</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-tab-3-8-0-t3110.html">Galaxy-Tab-3-8.0-T3110</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/samsung/galaxy-tab-7-0-plus-p6200.html">Galaxy-Tab-7.0-Plus-P6200</option>
+      </optgroup>
+      <optgroup label="Nokia">
+      <option value="http://www.bhishoom.com/shop/mobile-skin/nokia/lumia-720.html">Lumia 720</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/nokia/lumia-925.html">Lumia 925</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/nokia/lumia-1020.html">Lumia 1020</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/nokia/lumia-1520.html">Lumia 1520</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/nokia/lumia-1320.html">Lumia 1320</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/nokia/lumia-920.html">Lumia 920</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/nokia/lumia-630.html">Lumia 630</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/nokia/lumia-520.html">Lumia 520</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/nokia/lumia-620.html">Lumia 620</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/nokia/lumia-625.html">Lumia 625</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/nokia/lumia-710.html">Lumia 710</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/nokia/lumia-510.html">Lumia 510</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/nokia/lumia-603.html">Lumia 603</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/nokia/lumia-610.html">Lumia 610</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/nokia/lumia-800.html">Lumia 800</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/nokia/lumia-820.html">Lumia 820</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/nokia/lumia-900.html">Lumia 900</option>
+      </optgroup>
+      <optgroup label="HTC">
+      <option value="http://www.bhishoom.com/shop/mobile-skin/htc/htc-one-m7.html">HTC One M7</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/htc/htc-one-m8.html">HTC One M8</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/htc/htc-one-mini.html">HTC One Mini</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/htc/htc-one-s.html">HTC One S</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/htc/htc-one-x.html">HTC One X</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/htc/htc-sensation-xl-g21.html">HTC Sensation XL G21</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/htc/htc-butterfly.html">HTC Butterfly</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/htc/htc-butterfly-s.html">HTC Butterfly S</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/htc/htc-desire-s.html">HTC Desire S</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/htc/htc-desire-hd.html">HTC Desire HD</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/htc/htc-desire-hd-2.html">HTC Desire HD 2</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/htc/htc-desire-310.html">HTC Desire 310</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/htc/htc-desire-316.html">HTC Desire 316</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/htc/htc-desire-600.html">HTC Desire 600</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/htc/htc-desire-616.html">HTC Desire 616</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/htc/htc-desire-500.html">HTC Desire 500</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/htc/htc-desire-700.html">HTC Desire 700</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/htc/htc-desire-816.html">HTC Desire 816</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/htc/htc-one-e8.html">HTC One E8</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/htc/htc-one-v.html">HTC One V</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/htc/htc-one-max.html">HTC One Max</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/htc/htc-evo-3d.html">HTC Evo 3D</option>
+      </optgroup>
+      <optgroup label="Lenovo">
+      <option value="http://www.bhishoom.com/shop/mobile-skin/lenovo/a516.html">A516</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/lenovo/a680.html">A680</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/lenovo/a706.html">A706</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/lenovo/a850.html">A850</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/lenovo/s650.html">S650</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/lenovo/s660.html">S660</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/lenovo/s820.html">S820</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/lenovo/s850.html">S850</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/lenovo/s890.html">S890</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/lenovo/s920.html">S920</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/lenovo/k900.html">K900</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/lenovo/p780.html">P780</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/lenovo/vibe-x.html">Vibe X</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/lenovo/vibe-x2.html">Vibe X2</option>
+      </optgroup>
+      <optgroup label="LG">
+      <option value="http://www.bhishoom.com/shop/mobile-skin/lg/lg-g-pro-2.html">LG G Pro 2</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/lg/lg-optimus-l3-dual.html">LG OPTIMUS L3 Dual</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/lg/lg-optimus-l9.html">LG OPTIMUS L9</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/lg/lg-g3.html">LG G3</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/lg/lg-optimus-l70.html">LG OPTIMUS L70</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/lg/lg-optimus-l90.html">LG OPTIMUS L90</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/lg/lg-optimus-g2.html">LG OPTIMUS G2</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/lg/lg-optimus-l7-p700-705.html">LG OPTIMUS L7 (P700/705)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/lg/lg-g-flex-d958.html">LG G Flex D958</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/lg/lg-optimus-l7-2-dual.html">LG OPTIMUS L7 2 Dual</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/lg/lg-optimus-4x-hd-p880.html">LG OPTIMUS 4x HD P880</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/lg/lg-google-nexus-5.html">LG Google Nexus 5</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/lg/lg-google-nexus-4.html">LG Google Nexus 4</option>
+      </optgroup>
+      <optgroup label="Motorola">
+      <option value="http://www.bhishoom.com/shop/mobile-skin/motorola/moto-e.html">Moto E</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/motorola/moto-g.html">Moto G</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/motorola/moto-defy-me525-mb525.html">Moto Defy (ME525/MB525)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/motorola/moto-droid-razr-maxx-xt910-912.html">Moto Droid Razr Maxx (XT910/912)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/motorola/moto-razr-vxt-885-889.html">Moto Razr Vxt (885/889)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/motorola/moto-x.html">Moto X</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/motorola/moto-defy-xt535.html">Moto Defy (XT535)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/motorola/moto-g2.html">Moto G2</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/motorola/moto-atrix.html">Moto Atrix</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/motorola/moto-xt319.html">Moto XT319</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/motorola.html/moto-nexus-6.html/">Moto Nexus 6</option>
+      </optgroup>
+      <optgroup label="Sony">
+      <option value="http://www.bhishoom.com/shop/mobile-skin/sony/sony-xperia-m2.html">Xperia M2</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/sony/sony-xperia-z.html">Xperia Z</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/sony/sony-xperia-z2.html">Xperia Z2</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/sony/sony-xperia-z3.html">Xperia Z3</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/sony/sony-xperia-c.html">Xperia C</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/sony/sony-xperia-j.html">Xperia J</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/sony/sony-xperia-neo-l.html">Xperia Neo L</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/sony/sony-xperia-sola.html">Xperia Sola</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/sony/sony-xperia-t.html">Xperia T</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/sony/sony-xperia-t2-ultra.html">Xperia T2 Ultra</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/sony/sony-xperia-t3.html">Xperia T3</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/sony/sony-xperia-u.html">Xperia U</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/sony/xperia-p.html">Xperia P</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/sony/sony-xperia-s.html">Xperia S</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/sony/sony-xperia-sp.html">Xperia Sp</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/sony/sony-xperia-zl.html">Xperia Z1</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/sony/xperia-l.html">Xperia L</option>
+      </optgroup>
+      <optgroup label="Xiaomi">
+      <option value="http://www.bhishoom.com/shop/mobile-skin/xiaomi/xiaomi-mi2.html">XIAOMI mi2</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/xiaomi/xiaomi-mi3.html">XIAOMI mi3</option>
+      </optgroup>
+      <optgroup label="Oppo">
+      <option value="http://www.bhishoom.com/shop/mobile-skin/oppo/r1-r829t.html">R1 (R829T)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/oppo/find-5-x909.html">Find 5 (X909)</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/oppo/find-7.html">Find 7</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/oppo/n1.html">N1</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/oppo/n1-mini.html">N1 mini</option>
+      </optgroup>
+      <optgroup label="Gionee">
+      <option value="http://www.bhishoom.com/shop/mobile-skin/gionee/e3.html">E3</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/gionee/e6.html">E6</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/gionee/e7.html">E7</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/gionee/elife-e7-mini.html">Elife E7 Mini</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/gionee/elife-s5-5.html">Elife S5.5</option>
+      </optgroup>
+      <optgroup label="Blackberry">
+      <option value="http://www.bhishoom.com/shop/mobile-skin/blackberry/bb-z10.html">BB Z10</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/blackberry/bb-q10.html">BB Q10</option>
+      </optgroup>
+      <optgroup label="One Plus One">
+      <option value="http://www.bhishoom.com/shop/mobile-skin/one-plus-one/one-plus-one.html">One Plus One</option>
+      </optgroup>
+      <optgroup label="Google Nexus">
+      <option value="http://www.bhishoom.com/shop/mobile-skin/google-nexus/nexus-4.html">Nexus 4</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/google-nexus/nexus-5.html">Nexus 5</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/google-nexus/nexus-6.html">Nexus 6</option>
+      <option value="http://www.bhishoom.com/shop/mobile-skin/google-nexus/nexus-7.html">Nexus 7</option>
+      </optgroup>
+    </select>
+  </div>
+  
+</div>
+*/
+?>
+
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/highlight.pack.js');?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery.cookie.js');?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery.accordion.js');?>"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+      hljs.tabReplace = '    ';
+      hljs.initHighlightingOnLoad();
+      jQuery.fn.slideFadeToggle = function(speed, easing, callback) {
+        return this.animate({opacity: 'toggle', height: 'toggle'}, speed, easing, callback);
+      };
+            //accordion
+      jQuery('.accordion').accordion({
+       //defaultOpen: 'section1',
+       cookieName: 'accordion_nav',
+       speed: 'slow',
+       animateOpen: function (elem, opts) { //replace the standard slideUp with custom function
+        elem.next().stop(true, true).slideFadeToggle(opts.speed);
+       },
+       animateClose: function (elem, opts) { //replace the standard slideDown with custom function
+        elem.next().stop(true, true).slideFadeToggle(opts.speed);
+       }
+      });
+	  
+			jQuery( ".panel-collapse" ).mouseleave(function() {
+			  jQuery(this).removeClass("in")
+			  jQuery(this).addClass("collapse")
+			  
+			});
+  
+    });
+    
+    jQuery("body").click(function(e)
+    {
+    	if(e.target.id != "filter-panel")
+    	{
+    		// debugger;
+    		var elementModal = "";
+    		
+    		if((jQuery(e.target).prop("tagName") == "DIV") || (jQuery(e.target).prop("tagName") == "SPAN"))
+    		{
+    			elementModal = jQuery(e.target).closest("#Model");
+    		}
+    		// Check for not hiding particular div with id="Model"
+    		if(elementModal.length > 0)
+    		{
+    			return false;
+    		}
+    		//jQuery(".panel-title a").addClass("collapsed");
+    		//jQuery(".panel div.panel-collapse").removeClass("in");
+    		//jQuery(".panel div.panel-collapse in").addClass("panel-collapse collapse");
+    		//jQuery(".panel div.panel-collapse").css("height","0px");
+    		//jQuery(".panel div.panel-collapse").css("display","none");
+    	}
+    });
+    
+        function magejump(targ,selObj,restore){
+         eval(targ+".location='"+selObj.options[selObj.selectedIndex].value+"'");
+         if (restore) selObj.selectedIndex=0;
+        }
+        
+        jQuery('.filter_div').hide();
+        //jquery('div').hide();
+        jQuery('.filter_lbl').bind('mouseover', function() {
+        	jQuery('.filter_div').hide();
+        	jQuery('#'+jQuery(this).attr('id')+'content').show();
+        });         
+
+function changeIconPlusMinus(id)
+ { 
+      if(jQuery( '#'+id ).css( 'display' ) == 'none') {
+	    jQuery( '#'+id+'' ).slideDown('slow');	  
+	    jQuery( '#'+id+'_Span' ).removeClass('glyphicon-plus');
+	    jQuery( '#'+id+'_Span' ).addClass('glyphicon-minus');
+		}	
+	  else {
+	    jQuery( '#'+id+'' ).slideUp('slow');
+	    jQuery( '#'+id+'_Span' ).removeClass('glyphicon-minus');
+	    jQuery( '#'+id+'_Span' ).addClass('glyphicon-plus');
+		}
+ }
+
+function goToUrl(ele,prdId)
+{
+
+	var checkbox = jQuery(ele).find('input');
+	checkbox.attr('checked', !checkbox.attr('checked'));
+	jQuery('#filter_loading_image').show();
+
+  texturedPrdStr = '<?php echo trim($_GET['texturedPrdStr'])?>';
+  if(texturedPrdStr != ''){
+	
+	texturedPrdStrArray = JSON.parse("[" + texturedPrdStr + "]");
+	prdIdIndex = texturedPrdStrArray.indexOf(prdId)
+	if(prdIdIndex > -1){
+		texturedPrdStrArray.splice(prdIdIndex, 1);
+		texturedPrdStr = texturedPrdStrArray.join(",");
+	}
+	else
+	{
+		texturedPrdStr = texturedPrdStr+','+prdId;	
+	}
+	
+  }	
+  else
+	texturedPrdStr = prdId;
+	
+   currentUrl = window.location.href.split('#')[0];
+   currentUrl = currentUrl.split('&texturedPrdStr')[0];
+   currentUrl = currentUrl.split('?texturedPrdStr')[0];
+   //currentUrl = window.location.href.split('?')[0];
+   //currentUrl = currentUrl.split('#')[0];
+   if(currentUrl.indexOf("?") > 0)
+    window.location.href = currentUrl+'&texturedPrdStr='+texturedPrdStr		
+   else
+    window.location.href = currentUrl+'?texturedPrdStr='+texturedPrdStr
+	
+}
+
+</script>	
+
+<?php }?>	
